@@ -97,13 +97,13 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
 6. Launch the installer:
 
 Arguments description:
-"-dist <distribution>": selects the linux distro (mandatory)
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)
-"-img <path>": set the path to the disk image such as: ~/linuxloops/distro.img
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)
-"-z" <number>: size of the swap (optional) (optional, no swap by default)
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)
+"-dist <distribution>": selects the linux distro (mandatory)  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
+"-img <path>": set the path to the disk image such as: ~/linuxloops/distro.img  
+"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
+"-z" <number>: size of the swap (optional) (optional, no swap by default)  
+"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
+"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
 `sudo bash linuxloops -dist ubuntu -env kde-full -img ~/linuxloops/ubuntu.img -s 24 -z 4 -e`
 
