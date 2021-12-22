@@ -21,7 +21,7 @@ In some cases, you might want to include some packages during the LinuxLoops ins
 
 `CUSTOM_PACKAGES="broadcom-sta-dkms" sudo bash linuxloops ....`
 
-## The needed package is not available in a different repository, on github ...
+## The needed package is not available in the main linux distro repository but exists in a different repository, on github ...
 
 In that case you will need to create a custom script.
 
