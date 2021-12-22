@@ -5,6 +5,8 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
+# LinuxLoops
+
 <!-- Special Thanks -->
 
 ## Special Thanks
@@ -56,28 +58,24 @@ If you decide to setup encryption, you will receive an encryption password promp
 ## Install Instructions
 This guide has been split into seperate sections, please follow one of the links below for a guide suitable to your current operating system.
 
-### [![Install with Linux]][linux-guide]  [Install with Linux][linux-guide]
-### [![Install with Windows]][windows-guide]  [Install with Windows][windows-guide]
-### [![Install with Brunch (singleboot)]][brunch-guide]  [Install with Brunch (singleboot)][brunch-guide]
-### [![Install with ChromeOS]][chromeos-guide]  [Install with ChromeOS][chromeos-guide]
+### [Install with Linux][linux-guide]
+### [Install with Windows][windows-guide]
+### [Install with Brunch (singleboot)][brunch-guide]
+### [Install with ChromeOS][chromeos-guide]
 
 
 ## Complementary instructions
 You will find below additional instructions aiming to improve your LinuxLoops experience.
 
-### [![Custom install parameters]][custom-guide]  [Custom install parameters][custom-guide]
-### [![Use the image in a virtual machine]][vm-guide]  [Use the image in a virtual machine][vm-guide]
-### [![Data recovery from an image]][recovery-guide]  [Data recovery from an image][recovery-guide]
+### [Custom install parameters][custom-guide]
+### [Use the image in a virtual machine][vm-guide]
+### [Data recovery from an image][recovery-guide]
 
 ## Support
 
 Support for LinuxLoops is currently provided in the LinuxLoops section of the brunch Discord:
 
 [![Discord][discord-shield]][discord-url]
-
-Additional troubleshooting and support tips can be found at the following page:
-
-### [![Troubleshooting][decon-icon-24]][troubleshooting-and-faqs]  [Troubleshooting and Support][troubleshooting-and-faqs]
 
 ### Pull requests
 
