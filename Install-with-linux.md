@@ -38,7 +38,7 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
   
 4. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
   
 5. Launch the GUI installer:
 
@@ -88,7 +88,7 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
   
 4. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
 
 5. List available distros and desktop environments:
 
@@ -152,7 +152,7 @@ Arguments description:
   
 4. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
 
 5. Download the USB bootloader template image.
 
@@ -196,7 +196,7 @@ Arguments description:
 
 4. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
 
 5. Download the USB bootloader template image.
 
