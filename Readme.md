@@ -12,10 +12,10 @@
 ## Special Thanks
 
 First of all, thanks goes to:
-- The lxc/lxd project for maintaining Linux container rootfs archives.
-- The [Linux-Surface crew][linux-surface] for greatly improving Linux support on Surface devices.
-- MrChromebox for its awesome Chromebooks custom firmwares.
-- The Chromebrew framework which allows encryption support for brunch / chromeos.
+- The [lxc/lxd][lxc-link] project for maintaining Linux container rootfs archives.
+- The [Linux-Surface crew][linux-surface link] for greatly improving Linux support on Surface devices.
+- [MrChromebox][MrChromebox link] for its awesome Chromebooks custom firmwares.
+- The [Chromebrew][Chromebrew link] framework which allows encryption support for brunch / chromeos.
 
 <!-- About This Project -->
 ## About This Project
@@ -90,15 +90,18 @@ If you need something else, read about custom scripts or feel free to make your 
 
 <!-- Reference Links -->
 <!-- Badges -->
-[license-shield]: https://img.shields.io/github/license/sebanc/brunch?label=License&logo=Github&style=flat-square
+[license-shield]: https://img.shields.io/github/license/sebanc/linuxloops-beta?label=License&logo=Github&style=flat-square
 [license-url]: ./LICENSE
-[issues-shield]: https://img.shields.io/github/issues/sebanc/brunch?label=Issues&logo=Github&style=flat-square
+[issues-shield]: https://img.shields.io/github/issues/sebanc/linuxloops-beta?label=Issues&logo=Github&style=flat-square
 [issues-url]: https://github.com/sebanc/brunch/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
 
 <!-- Outbound Links -->
-[linux-surface]: https://github.com/linux-surface/linux-surface
+[lxc link]: https://linuxcontainers.org/
+[linux-surface link]: https://github.com/linux-surface/linux-surface
+[MrChromebox link]: https://mrchromebox.tech/
+[Chromebrew link]: https://github.com/skycocker/chromebrew
 
 <!-- Internal Links -->
 [windows-guide]: ./Install-with-windows.md
