@@ -5,7 +5,7 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
-# LinuxLoops
+# LinuxLoops (beta)
 
 <!-- Special Thanks -->
 
