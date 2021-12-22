@@ -96,7 +96,7 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
 
 6. Launch the installer:
 
-Arguments description:
+Arguments description:  
 "-dist <distribution>": selects the linux distro (mandatory)  
 "-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
 "-img <path>": set the path to the disk image such as: ~/linuxloops/distro.img  
@@ -208,7 +208,7 @@ Arguments description:
 
 7. Launch the installer:
 
-Arguments description:
+Arguments description:  
 "-dist <distribution>": selects the linux distro (mandatory)  
 "-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
 "-img <path>": set the path to the disk image such as: ~/linuxloops/distro.img  
