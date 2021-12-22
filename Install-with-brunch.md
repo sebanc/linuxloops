@@ -94,14 +94,16 @@ sudo edit-grub-config -g
 
 3. Create a directory for linuxloops images on the unencrypted part of the data partition:
 
-`mkdir /mnt/stateful_partition/unencrypted/linuxloops`
+`sudo mkdir /mnt/stateful_partition/unencrypted/linuxloops`
   
 4. Install the linuxloops script:
 
-`sudo chown 1000:1000 /usr/local`
-`mkdir -p /usr/local/bin`
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/local/bin/linuxloops`
-`chmod 0755 /usr/local/bin/linuxloops`
+```
+sudo chown 1000:1000 /usr/local
+mkdir -p /usr/local/bin
+curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/local/bin/linuxloops
+chmod 0755 /usr/local/bin/linuxloops
+```
 
 5. Download the USB bootloader template image.
 
