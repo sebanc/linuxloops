@@ -39,7 +39,7 @@ If you installed brunch as dual boot, you need to install linuxloops from your m
 ```
 sudo chown 1000:1000 /usr/local
 mkdir -p /usr/local/bin
-curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/local/bin/linuxloops
+curl -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops -o /usr/local/bin/linuxloops
 chmod 0755 /usr/local/bin/linuxloops
 ```
 
@@ -101,7 +101,7 @@ sudo edit-grub-config -g
 ```
 sudo chown 1000:1000 /usr/local
 mkdir -p /usr/local/bin
-curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/local/bin/linuxloops
+curl -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops -o /usr/local/bin/linuxloops
 chmod 0755 /usr/local/bin/linuxloops
 ```
 
