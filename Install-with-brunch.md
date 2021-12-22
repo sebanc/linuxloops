@@ -32,7 +32,7 @@ If you installed brunch as dual boot, you need to install linuxloops from your m
 
 3. Create a directory for linuxloops images on the unencrypted part of the data partition:
 
-`mkdir /mnt/stateful_partition/unencrypted/linuxloops`
+`sudo mkdir /mnt/stateful_partition/unencrypted/linuxloops`
   
 4. Install the linuxloops script:
 
