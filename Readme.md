@@ -104,7 +104,7 @@ If you need something else, read about custom scripts or feel free to make your 
 [windows-guide]: ./Install-with-windows.md
 [linux-guide]: ./Install-with-linux.md
 [brunch-guide]: ./Install-with-brunch.md
-[chromeos-guide]: ./Install-with-chromeos.md
+[chromeos-guide]: ./Install-with-chromebook.md
 [custom-guide]: ./Custom-install.md
 [vm-guide]: ./Virtual-Machines.md
 [recovery-guide]: ./Data-Recovery.md
