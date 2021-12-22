@@ -39,7 +39,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
   
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
   
 4. Launch the GUI installer:
 
@@ -75,7 +75,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
   
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
 
 4. List available distros and desktop environments:
 
@@ -125,7 +125,7 @@ Arguments description:
   
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
 
 4. Download the USB bootloader template image.
 
@@ -165,7 +165,7 @@ Arguments description:
 
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
 
 4. Download the USB bootloader template image.
 
