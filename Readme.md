@@ -107,4 +107,4 @@ If you need something else, read about custom scripts or feel free to make your 
 [chromeos-guide]: ./Install-with-chromebook.md
 [custom-guide]: ./Custom-install.md
 [vm-guide]: ./Virtual-Machines.md
-[recovery-guide]: ./Data-Recovery.md
+[recovery-guide]: ./Data-recovery.md
