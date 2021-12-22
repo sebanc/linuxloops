@@ -79,7 +79,7 @@ Support for LinuxLoops is currently provided in the LinuxLoops section of the br
 
 ### Pull requests
 
-Clearly in its current state, LinuxLoops is not perfect and I am counting on the community to help by submitting pull requests. However, those needs to respect the ground project principles:
+Clearly, in its current state, LinuxLoops is not perfect and I am counting on the community to help by submitting pull requests. However, those needs to respect the ground project principles:
 - LinuxLoops partitioning scheme is fixed, it has been defined to limit as much as possible dependencies and to ensure a good performance.
 - All distros / desktop environments should offer basic support for all devices (gfx, sound, wifi, bluetooth, ... packages) as long as they are available directly within distro's official repositories.
 - Basic desktop environment targets should be debloated (the DE, a terminal and a file browser).
