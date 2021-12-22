@@ -83,14 +83,14 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
 
 5. Launch the installer:
 
-Arguments description:
-"-dist <distribution>": selects the linux distro (mandatory)
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)
-"-img <path>": set the path to the disk image. The image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img (mandatory)
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)
-"-z" <number>: size of the swap (optional) (optional, no swap by default)
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)
+Arguments description:  
+"-dist <distribution>": selects the linux distro (mandatory)  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
+"-img <path>": set the path to the disk image. The image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img (mandatory)  
+"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
+"-z" <number>: size of the swap (optional) (optional, no swap by default)  
+"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
+"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
 `sudo bash linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
 
@@ -177,14 +177,14 @@ Arguments description:
 
 6. Launch the installer:
 
-Arguments description:
-"-dist <distribution>": selects the linux distro (mandatory)
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)
-"-img <path>": set the path to the disk image. The image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img (mandatory)
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)
-"-z" <number>: size of the swap (optional) (optional, no swap by default)
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)
+Arguments description:  
+"-dist <distribution>": selects the linux distro (mandatory)  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
+"-img <path>": set the path to the disk image. The image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img (mandatory)  
+"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
+"-z" <number>: size of the swap (optional) (optional, no swap by default)  
+"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
+"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
 `sudo bash linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
 
