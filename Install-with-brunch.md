@@ -103,7 +103,7 @@ sudo edit-grub-config -g
 
 5. Download the USB bootloader template image.
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/usb_bootloader.img`
+`curl -O -L https://github.com/sebanc/linuxloops-beta/raw/main/usb_bootloader.img`
   
 6. List available distros and desktop environments:
 
