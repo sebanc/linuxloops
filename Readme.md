@@ -12,7 +12,7 @@
 ## Special Thanks
 
 First of all, thanks goes to:
-- The [lxc/lxd][lxc-link] project for maintaining Linux container rootfs archives.
+- The [lxc/lxd][lxc link] project for maintaining Linux container rootfs archives.
 - The [Linux-Surface crew][linux-surface link] for greatly improving Linux support on Surface devices.
 - [MrChromebox][MrChromebox link] for its awesome Chromebooks custom firmwares.
 - The [Chromebrew][Chromebrew link] framework which allows encryption support for brunch / chromeos.
