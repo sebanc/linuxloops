@@ -93,7 +93,7 @@ If you need something else, read about custom scripts or feel free to make your 
 [license-shield]: https://img.shields.io/github/license/sebanc/linuxloops-beta?label=License&logo=Github&style=flat-square
 [license-url]: ./LICENSE
 [issues-shield]: https://img.shields.io/github/issues/sebanc/linuxloops-beta?label=Issues&logo=Github&style=flat-square
-[issues-url]: https://github.com/sebanc/brunch/issues
+[issues-url]: https://github.com/sebanc/linuxloops-beta/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
 
