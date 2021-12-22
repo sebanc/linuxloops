@@ -51,7 +51,7 @@ The data in LinuxLoops images can be encrypted (rootfs and swap, leaving only th
 
 Encryption is highly recommended as it protects physical access to your personal data, however it slightly impacts performance.
   
-If you decide to setup encryption, you will receive an encryption password prompt early in the boot process while your keyboard will be in Qwerty, as such:
+If you decide to setup encryption, you will receive an encryption password prompt early in the boot process while the keyboard is setup with a Qwerty layout, as such:
 - Either Learn how to type your password as if your keyboard was Qwerty.
 - Or choose a password which is identical when typed on a Qwerty keyboard.
 
