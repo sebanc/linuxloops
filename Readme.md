@@ -82,8 +82,8 @@ Support for LinuxLoops is currently provided in the LinuxLoops section of the br
 Clearly, in its current state, LinuxLoops is not perfect and I am counting on the community to help by submitting pull requests. However, those needs to respect the ground project principles:
 - LinuxLoops partitioning scheme is fixed, it has been defined to limit as much as possible dependencies and to ensure a good performance.
 - Basic desktop environment targets should be debloated (the DE, a terminal and a file browser).
-- Full desktops are not based on users preferences but on the choices of the distro managers.
-- Lightdm is used by default for basic targets as it is lightweight and widely compatible (aside from gnome desktops which often depends on gdm).
+- Full desktop environment targets are not based on users preferences but on the choices of the distro managers.
+- Lightdm is used by default for basic targets as it is lightweight and widely compatible (aside from gnome desktop targets which often depends on gdm).
 
 If you need something else, read about custom scripts or feel free to make your own fork of LinuxLoops. 
 
