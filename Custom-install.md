@@ -40,9 +40,9 @@ This script will be run at the end of the installation process as "root" so make
 
 <!-- Reference Links -->
 <!-- Badges -->
-[license-shield]: https://img.shields.io/github/license/sebanc/brunch?label=License&logo=Github&style=flat-square
+[license-shield]: https://img.shields.io/github/license/sebanc/linuxloops-beta?label=License&logo=Github&style=flat-square
 [license-url]: ./LICENSE
-[issues-shield]: https://img.shields.io/github/issues/sebanc/brunch?label=Issues&logo=Github&style=flat-square
-[issues-url]: https://github.com/sebanc/brunch/issues
+[issues-shield]: https://img.shields.io/github/issues/sebanc/linuxloops-beta?label=Issues&logo=Github&style=flat-square
+[issues-url]: https://github.com/sebanc/linuxloops-beta/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
