@@ -2454,7 +2454,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-g
 	'kde-full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base kubuntu-full
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base kubuntu-desktop
 "
 	;;
 	'lxde')
