@@ -6,21 +6,21 @@
 [![Discord][discord-shield]][discord-url]
 
 <!-- Installation Guides -->
-This guide is for installing LinuxLoops on your computer from a Chromebook. This method requires a custom firmware (RW_LEGACY or ALT FW depending on your chromebook, refer to MrChromebox website for more information) with HDD boot as default.
+This guide is for installing LinuxLoops on your computer from a Chromebook. It requires the RW_LEGACY firmware with HDD boot as default, please make sure your chromebook supports RW_LEGACY firmware on MrChromebox website before following the below steps.
 
 <details>
-  <summary>Click to open the LinuxLoops command line install guide with MrChromebox custom firmware</summary>
+  <summary>Click to open the LinuxLoops command line install guide with MrChromebox RW_LEGACY firmware</summary>
 
 ### Requirements
 - Developer mode.
-- MrChromebox custom firmware (RW_LEGACY or ALT FW depending on your chromebook, refer to MrChromebox website for more information)
+- MrChromebox RW_LEGACY firmware
 - 10 GB available space.
 - An entry level understanding of the linux terminal.
   - This guide aims to make this process as easy as possible, but knowing the basics is expected.
 
 ### Installation steps
 
-1. Install MrChromebox custom firmware (RW_LEGACY or ALT FW depending on your chromebook, refer to MrChromebox website for more information) with HDD boot as default.
+1. Install MrChromebox RW_LEGACY custom firmware with HDD boot as default.
 
 2. (Optional) If you want to the linuxloops image to be encrypted (highly recommended) install Chromebrew and the "cryptsetup" Chromebrew package (refer to Chromebrew online resources).
 
