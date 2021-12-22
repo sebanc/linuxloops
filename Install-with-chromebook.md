@@ -34,10 +34,12 @@ This guide is for installing LinuxLoops on your computer from a Chromebook. This
   
 5. Install the linuxloops script:
 
-`sudo chown 1000:1000 /usr/local`
-`mkdir -p /usr/local/bin`
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/local/bin/linuxloops`
-`chmod 0755 /usr/local/bin/linuxloops`
+```
+sudo chown 1000:1000 /usr/local
+mkdir -p /usr/local/bin
+curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/local/bin/linuxloops
+chmod 0755 /usr/local/bin/linuxloops
+```
 
 6. List available distros and desktop environments:
 
