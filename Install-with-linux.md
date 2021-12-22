@@ -48,16 +48,17 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
 
 7. Create a copy of your existing 40_custom file.
 
-sudo cp /etc/grub.d/40_custom /etc/grub.d/99_linuxloops
+`sudo cp /etc/grub.d/40_custom /etc/grub.d/99_linuxloops`
 
 8. Open the 99_linuxloops file in an editor. For this guide we'll be using nano but you can use gedit, vi, or any editor of your choice.
-sudo nano /etc/grub.d/99_brunch
+
+`sudo nano /etc/grub.d/99_brunch`
 
 9. Copy/Paste the Grub Boot Entries displayed in the installer in the file and press Ctrl + X, then Y to save and Enter to confirm.
 
 10. After saving, commit the new entries to Grub.
 
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+`sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
 11. Reboot your computer and start the LinuxLoops grub entry from your distro's grub menu.
 
@@ -108,16 +109,17 @@ Arguments description:
 
 7. Create a copy of your existing 40_custom file.
 
-sudo cp /etc/grub.d/40_custom /etc/grub.d/99_linuxloops
+`sudo cp /etc/grub.d/40_custom /etc/grub.d/99_linuxloops`
 
 8. Open the 99_linuxloops file in an editor. For this guide we'll be using nano but you can use gedit, vi, or any editor of your choice.
-sudo nano /etc/grub.d/99_brunch
+
+`sudo nano /etc/grub.d/99_brunch`
 
 9. Copy/Paste the Grub Boot Entries displayed in the installer in the file and press Ctrl + X, then Y to save and Enter to confirm.
 
 10. After saving, commit the new entries to Grub.
 
-sudo grub-mkconfig -o /boot/grub/grub.cfg
+`sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
 11. Reboot your computer and start the LinuxLoops grub entry from your distro's grub menu.
 
