@@ -30,7 +30,7 @@ This guide is for installing LinuxLoops on your computer from a Chromebook. This
 
 4. Create a directory for linuxloops images on the unencrypted part of the data partition:
 
-`mkdir /mnt/stateful_partition/unencrypted/linuxloops`
+`sudo mkdir /mnt/stateful_partition/unencrypted/linuxloops`
   
 5. Install the linuxloops script:
 
