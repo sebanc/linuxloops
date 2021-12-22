@@ -2777,7 +2777,9 @@ elif [ ! -z "$chromeos" ]; then
 	mkdir -p /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	mount "$source" /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	rm -r /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/*
-	tar zxf ./chromebook_boot.tar.gz -C /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
+	curl -L https://github.com/sebanc/linuxloops-beta/raw/main/chromebook_boot.tar.gz -o /home/chronos/user/Downloads/chromebook_boot.tar.gz
+	tar zxf /home/chronos/user/Downloads/chromebook_boot.tar.gz -C /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
+	rm -f /home/chronos/user/Downloads/chromebook_boot.tar.gz
 	echo -e "set timeout=2\n"> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
 	echo "$config" >> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
 	umount /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
