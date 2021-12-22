@@ -49,14 +49,14 @@ chmod 0755 /usr/local/bin/linuxloops
 
 6. Launch the installer:
 
-Arguments description:
-"-dist <distribution>": selects the linux distro (mandatory)
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)
-"-img <path>": set the path to the disk image such as: /mnt/stateful_partition/unencrypted/linuxloops/distro.img
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)
-"-z" <number>: size of the swap (optional) (optional, no swap by default)
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)
+Arguments description:  
+"-dist <distribution>": selects the linux distro (mandatory)  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
+"-img <path>": set the path to the disk image such as: /mnt/stateful_partition/unencrypted/linuxloops/distro.img  
+"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
+"-z" <number>: size of the swap (optional) (optional, no swap by default)  
+"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
+"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
 `sudo bash linuxloops -dist ubuntu -env kde-full -img /mnt/stateful_partition/unencrypted/linuxloops/ubuntu.img -s 24 -z 4 -e`
 
@@ -115,14 +115,14 @@ chmod 0755 /usr/local/bin/linuxloops
 
 7. Launch the installer:
 
-Arguments description:
-"-dist <distribution>": selects the linux distro (mandatory)
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)
-"-img <path>": set the path to the disk image such as: /mnt/stateful_partition/unencrypted/linuxloops/distro.img
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)
-"-z" <number>: size of the swap (optional) (optional, no swap by default)
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)
+Arguments description:  
+"-dist <distribution>": selects the linux distro (mandatory)  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
+"-img <path>": set the path to the disk image such as: /mnt/stateful_partition/unencrypted/linuxloops/distro.img  
+"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
+"-z" <number>: size of the swap (optional) (optional, no swap by default)  
+"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
+"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
 `sudo bash linuxloops -dist ubuntu -env kde-full -img /mnt/stateful_partition/unencrypted/linuxloops/ubuntu.img -s 24 -z 4 -e`
 
