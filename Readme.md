@@ -61,7 +61,7 @@ This guide has been split into seperate sections, please follow one of the links
 ### [Install with Linux][linux-guide]
 ### [Install with Windows][windows-guide]
 ### [Install with Brunch (singleboot)][brunch-guide]
-### [Install with ChromeOS][chromeos-guide]
+### [Install with ChromeOS (RW_LEGACY firmware needed)][chromeos-guide]
 
 
 ## Complementary instructions
