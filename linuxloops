@@ -714,14 +714,14 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'deepin-full')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal deepin-extra
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'enlightenment')
@@ -1676,14 +1676,14 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'deepin-full')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal deepin-extra
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'deepin-full')
