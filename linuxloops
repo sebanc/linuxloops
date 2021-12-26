@@ -614,6 +614,11 @@ yes | dnf remove $1
 dnf update
 yes | dnf install -y --allowerasing kernel-surface kernel-surface-devel iptsd libwacom-surface surface-control surface-dtx-daemon
 yes | dnf install git make automake gcc gcc-c++ kernel-devel libatomic dkms meson ninja-build pkg-config gnutls-devel openssl python3-pip python3-yaml python3-ply python3-jinja2 qt5-qtbase-devel libtiff-devel libevent-devel gstreamer1-devel gstreamer1-plugins-base-devel
+cat >>/etc/modprobe.d/ath10k.conf <<'ATH10K'
+# Board override and quirks for Microsoft Surface devices with ATK10K WiFi chip
+options ath10k_core skip_otp=y override_board=board-override.bin override_board2=none
+ATH10K
+curl -L https://github.com/sebanc/brunch/raw/r94/extra-firmwares/ath10k/QCA6174/hw3.0/surface_go.bin -o /lib/firmware/ath10k/QCA6174/hw3.0/board-override.bin
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.12.5.tar.gz | tar xvz -C /usr/src
 dkms add -m v4l2loopback -v 0.12.5
 ls /usr/lib/modules/*/vmlinuz | sed 's@/usr/lib/modules/@@g' | sed 's@/vmlinuz@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
@@ -700,14 +705,14 @@ case "$desktop" in
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter budgie-desktop arc-icon-theme nautilus tilix network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'cinnamon')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter cinnamon gnome-terminal nemo
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'deepin')
@@ -732,7 +737,7 @@ pacman -S --noconfirm bluez connman
 systemctl enable bluetooth
 systemctl enable connman
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'gnome')
@@ -751,7 +756,7 @@ systemctl enable gdm
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter plasma-desktop plasma-nm plasma-pa kwin dolphin konsole konqueror bluedevil powerdevil xdg-desktop-portal-kde systemsettings discover plasma-browser-integration packagekit
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'kde-full')
@@ -764,7 +769,7 @@ systemctl enable sddm
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'lxde-full')
@@ -777,7 +782,7 @@ systemctl enable lxdm
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet breeze-icons oxygen-icons
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'lxqt-full')
@@ -790,28 +795,28 @@ systemctl enable sddm
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter mate mate-terminal network-manager-applet mate-media mate-power-manager
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'mate-full')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter mate mate-terminal mate-extra network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'xfce')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter xfce4 network-manager-applet xfce4-pulseaudio-plugin
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'xfce-full')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter xfce4 xfce4-goodies network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 esac
@@ -1649,7 +1654,7 @@ icon-theme=\"Arc\"
 DCONF
 glib-compile-schemas /usr/share/glib-2.0/schemas/
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'budgie-full')
@@ -1662,14 +1667,14 @@ icon-theme=\"Arc\"
 DCONF
 glib-compile-schemas /usr/share/glib-2.0/schemas/
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'cinnamon')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter cinnamon manjaro-settings-manager manjaro-cinnamon-settings adapta-maia-theme kvantum-manjaro gnome-terminal nemo
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'deepin')
@@ -1690,7 +1695,7 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	install_desktop="
 pacman -S --noconfirm $desktop_base deepin deepin-extra deepin-manjaro deepin-terminal
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'enlightenment')
@@ -1701,7 +1706,7 @@ pacman -S --noconfirm bluez connman
 systemctl enable bluetooth
 systemctl enable connman
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'gnome')
@@ -1720,56 +1725,56 @@ systemctl enable gdm
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter plasma manjaro-kde-settings manjaro-settings-manager-knotifier manjaro-settings-manager-kcm dolphin konsole konqueror
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'kde-full')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter plasma kde-applications manjaro-kde-settings manjaro-settings-manager-knotifier manjaro-settings-manager-kcm dolphin konsole konqueror
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'lxde')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lxde manjaro-lxde-logout-banner manjaro-lxde-xfce4-notifyd manjaro-lxde-xfce4-volumed-pulse manjaro-settings-manager manjaro-settings-manager-notifier manjaro-lxde-desktop-settings arc-maia-icon-theme lxterminal pcmanfm network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'lxqt')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lxqt manjaro-lxqt-config manjaro-lxqt-desktop-settings manjaro-settings-manager-notifier manjaro-openbox-adapta-maia papirus-icon-theme papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'mate')
 	install_desktop="
 pacman -S --noconfirm  $desktop_base lightdm-gtk-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet mate-media mate-power-manager manjaro-settings-manager manjaro-settings-manager-notifier manjaro-mate-settings matcha-gtk-theme
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'mate-full')
 	install_desktop="
 pacman -S --noconfirm  $desktop_base lightdm-gtk-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet mate-media mate-power-manager manjaro-settings-manager manjaro-settings-manager-notifier manjaro-mate-settings matcha-gtk-theme
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'xfce')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter xfce4-gtk3 manjaro-xfce-gtk3-settings manjaro-settings-manager xfce4-terminal xfce4-notifyd-gtk3 xfce4-whiskermenu-plugin-gtk3 thunar xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'xfce-full')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter xfce4-gtk3 xfce4-goodies manjaro-xfce-gtk3-settings manjaro-settings-manager xfce4-terminal xfce4-notifyd-gtk3 xfce4-whiskermenu-plugin-gtk3 thunar xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet
 systemctl enable lightdm
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 esac
