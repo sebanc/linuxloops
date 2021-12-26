@@ -2731,7 +2731,6 @@ if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 linuxloopsdir="$(eval echo ~$SUDO_USER)"/linuxloops
 mkdir -p "$linuxloopsdir"
-mkdir 
 if [ ! -z "$zenity" ]; then
 	local path
 	if  [ ! -z "$wsl" ]; then
