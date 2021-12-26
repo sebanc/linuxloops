@@ -29,7 +29,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
 
 ### Installation steps
 
-1. Open Ubuntu WSL2 and install curl, cryptsetup, fdisk, tar and zenity packages.
+1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `zenity` packages.
 
 `sudo apt update && sudo apt -y install curl cryptsetup fdisk tar zenity`
 
@@ -43,7 +43,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
   
 4. Launch the GUI installer:
 
-`sudo bash linuxloops`
+`sudo bash ./linuxloops`
 
 5. Follow the installer menu, choosing the distro, desktop environment, image path... (the image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img)
 
@@ -65,7 +65,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
   - This guide aims to make this process as easy as possible, but knowing the basics is expected.
 
 ### Installation steps
-1. Open Ubuntu WSL2 and install curl, cryptsetup, fdisk and tar packages.
+1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk` and `tar` packages.
 
 `sudo apt update && sudo apt -y install curl cryptsetup fdisk tar`
 
@@ -79,7 +79,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
 
 4. List available distros and desktop environments:
 
-`sudo bash linuxloops -l`
+`sudo bash ./linuxloops -l`
 
 5. Launch the installer:
 
@@ -92,7 +92,7 @@ Arguments description:
 "-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
 "-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
-`sudo bash linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
+`sudo bash ./linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
 
 6. Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file <distro>.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".
 
@@ -115,7 +115,7 @@ Arguments description:
 
 ### Installation steps
 
-1. Open Ubuntu WSL2 and install curl, cryptsetup, fdisk, tar and zenity packages.
+1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `zenity` packages.
 
 `sudo apt update && sudo apt -y install curl cryptsetup fdisk tar zenity`
 
@@ -133,7 +133,7 @@ Arguments description:
   
 5. Launch the GUI installer:
 
-`sudo bash linuxloops`
+`sudo bash ./linuxloops`
 
 6. Follow the installer menu, choosing the distro, desktop environment, image path... (the image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img)
 
@@ -155,7 +155,7 @@ Arguments description:
   - This guide aims to make this process as easy as possible, but knowing the basics is expected.
 
 ### Installation steps
-1. Open Ubuntu WSL2 and install curl, cryptsetup, fdisk and tar packages.
+1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk` and `tar` packages.
 
 `sudo apt update && sudo apt -y install curl cryptsetup fdisk tar`
 
@@ -173,7 +173,7 @@ Arguments description:
   
 5. List available distros and desktop environments:
 
-`sudo bash linuxloops -l`
+`sudo bash ./linuxloops -l`
 
 6. Launch the installer:
 
@@ -186,7 +186,7 @@ Arguments description:
 "-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
 "-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
-`sudo bash linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
+`sudo bash ./linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
 
 7. Install rufus and write usb_bootloader.img file from your Downloads folder to a USB flashdrive.
 
