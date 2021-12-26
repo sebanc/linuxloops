@@ -2700,7 +2700,7 @@ until false; do
 	if [ -z "$username" ]; then zenity --height=480 --width=640 --error --text="Please define your username.\n"; continue; fi
 	if [ -z "$userpass" ]; then zenity --height=480 --width=640 --error --text="Please define a password.\n"; continue; fi
 	if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then zenity --height=480 --width=640 --error --text="Username contains unsupported characters.\n"; continue; fi
-	if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-*/=~¨]'; then zenity --height=480 --width=640 --error --text="Password contains unsupported characters.\n"; continue; fi
+	if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then zenity --height=480 --width=640 --error --text="Password contains unsupported characters.\n"; continue; fi
 	if [ "$userpass" != "$verifuserpass" ]; then zenity --height=480 --width=640 --error --text="User account password verification does not match, try again.\n"; continue; fi
 	break
 done
@@ -2718,7 +2718,7 @@ until false; do
 	read -s -p "Verify your $password_text password: " verifuserpass
 	echo ""
 	if [ -z "$userpass" ]; then echo -e "Please define a password.\n\n"; continue; fi
-	if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
+	if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
 	if [ "$userpass" != "$verifuserpass" ]; then echo -e "User account password verification does not match, try again.\n\n"; continue; fi
 	break
 done
