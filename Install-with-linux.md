@@ -105,7 +105,7 @@ Arguments description:
 "-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
 "-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
-`sudo bash linuxloops -dist ubuntu -env kde-full -img ~/linuxloops/ubuntu.img -s 24 -z 4 -e`
+`sudo bash ./linuxloops -dist ubuntu -env kde-full -img ~/linuxloops/ubuntu.img -s 24 -z 4 -e`
 
 7. Create a copy of your existing 40_custom file.
 
@@ -217,7 +217,7 @@ Arguments description:
 "-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
 "-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
 
-`sudo bash linuxloops -dist ubuntu -env kde-full -img ~/linuxloops/ubuntu.img -s 24 -z 4 -e`
+`sudo bash ./linuxloops -dist ubuntu -env kde-full -img ~/linuxloops/ubuntu.img -s 24 -z 4 -e`
 
 8. Use 'dd' to write usb_bootloader.img file from your Downloads folder to a USB flashdrive.
 
