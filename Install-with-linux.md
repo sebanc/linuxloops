@@ -26,7 +26,7 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
 
 ### Installation steps
 
-1. Make sure the curl, cryptsetup, fdisk, nano, tar and zenity packages/binaries are installed in your Linux distro.
+1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano`, `tar` and `zenity` packages/binaries are installed.
 
 2. Change the directory to your Downloads folder.
 
@@ -42,7 +42,7 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
   
 5. Launch the GUI installer:
 
-`sudo bash linuxloops`
+`sudo bash ./linuxloops`
 
 6. Follow the installer menu, choosing the distro, desktop environment, image path... (in this example the image path would be /home/username/linuxloops)
 
@@ -76,7 +76,7 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
 
 ### Installation steps
 
-1. Make sure the curl, cryptsetup, fdisk, nano, tar and zenity packages/binaries are installed in your Linux distro.
+1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano` and `tar` packages/binaries are installed.
 
 2. Change the directory to your Downloads folder.
 
@@ -92,7 +92,7 @@ LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the 
 
 5. List available distros and desktop environments:
 
-`sudo bash linuxloops -l`
+`sudo bash ./linuxloops -l`
 
 6. Launch the installer:
 
@@ -140,7 +140,7 @@ Arguments description:
 
 ### Installation steps
 
-1. Make sure the curl, cryptsetup, fdisk, nano, tar and zenity packages/binaries are installed in your Linux distro.
+1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano`, `tar` and `zenity` packages/binaries are installed.
 
 2. Change the directory to your Downloads folder.
 
@@ -160,7 +160,7 @@ Arguments description:
   
 6. Launch the GUI installer:
 
-`sudo bash linuxloops`
+`sudo bash ./linuxloops`
 
 7. Follow the installer menu, choosing the distro, desktop environment, image path... (in this example the image path would be /home/username/linuxloops)
 
@@ -184,7 +184,7 @@ Arguments description:
 
 ### Installation steps
 
-1. Make sure the curl, cryptsetup, fdisk, nano, tar and zenity packages/binaries are installed in your Linux distro.
+1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano`, `tar` and `zenity` packages/binaries are installed.
 
 2. Change the directory to your Downloads folder.
 
@@ -204,7 +204,7 @@ Arguments description:
   
 6. List available distros and desktop environments:
 
-`sudo bash linuxloops -l`
+`sudo bash ./linuxloops -l`
 
 7. Launch the installer:
 
