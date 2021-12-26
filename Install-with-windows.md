@@ -39,7 +39,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
   
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
   
 4. Launch the GUI installer:
 
@@ -75,7 +75,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
   
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
 
 4. List available distros and desktop environments:
 
@@ -125,11 +125,11 @@ Arguments description:
   
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
 
 4. Download the USB bootloader template image.
 
-`curl -O -L https://github.com/sebanc/linuxloops-beta/raw/main/usb_bootloader.img`
+`curl -O -L https://github.com/sebanc/linuxloops/raw/main/usb_bootloader.img`
   
 5. Launch the GUI installer:
 
@@ -165,11 +165,11 @@ Arguments description:
 
 3. Download the linuxloops script:
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops-beta/main/linuxloops`
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
 
 4. Download the USB bootloader template image.
 
-`curl -O -L https://github.com/sebanc/linuxloops-beta/raw/main/usb_bootloader.img`
+`curl -O -L https://github.com/sebanc/linuxloops/raw/main/usb_bootloader.img`
   
 5. List available distros and desktop environments:
 
@@ -206,9 +206,9 @@ In case you run into issues while installing or using LinuxLoops, you can find s
 
 <!-- Reference Links -->
 <!-- Badges -->
-[license-shield]: https://img.shields.io/github/license/sebanc/linuxloops-beta?label=License&logo=Github&style=flat-square
+[license-shield]: https://img.shields.io/github/license/sebanc/linuxloops?label=License&logo=Github&style=flat-square
 [license-url]: ./LICENSE
-[issues-shield]: https://img.shields.io/github/issues/sebanc/linuxloops-beta?label=Issues&logo=Github&style=flat-square
-[issues-url]: https://github.com/sebanc/linuxloops-beta/issues
+[issues-shield]: https://img.shields.io/github/issues/sebanc/linuxloops?label=Issues&logo=Github&style=flat-square
+[issues-url]: https://github.com/sebanc/linuxloops/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M

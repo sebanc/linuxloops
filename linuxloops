@@ -86,19 +86,17 @@ if [ ! -z "$desktop" ] && [ -z "$(echo $available_desktops | grep -w $desktop)" 
 download_image()
 {
 local found=0
-#available_builds=$(curl -L https://images.linuxcontainers.org/images/"$1"/"$2"/amd64/default/ | grep 'alt="\[DIR]"' | tr '>' '\n' | grep '<a href' | cut -d'/' -f 2 | sort -r)
 available_builds=$(curl -L https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/ | grep 'alt="\[DIR]"' | tr '>' '\n' | grep '<a href' | cut -d'/' -f 2 | sort -r)
 for build in $available_builds; do
-	echo "Trying to download rootfs image from https://images.linuxcontainers.org/images/$1/$2/amd64/$3/$build/rootfs.tar.xz..."
-	if curl -L --output /dev/null --silent --head --fail https://images.linuxcontainers.org/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz; then
+	echo "Trying to download rootfs image from https://uk.lxd.images.canonical.com/images/$1/$2/amd64/$3/$build/rootfs.tar.xz..."
+	if curl -L --output /dev/null --silent --head --fail https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz; then
 		found=1
-		#curl -L https://images.linuxcontainers.org/images/"$1"/"$2"/amd64/default/"$build"/rootfs.tar.xz -o "$1".tar.xz
 		curl -L https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz -o "$1".tar.xz
-		tar xf "$1".tar.xz -C ./chroot/
+		tar xf "$1".tar.xz -C "$linuxloopsdir"/chroot/
 		rm "$1".tar.xz
 		break
 	else
-		echo "Downloading rootfs image from https://images.linuxcontainers.org/images/$1/$2/amd64/$3/$build/rootfs.tar.xz failed."
+		echo "Downloading rootfs image from https://uk.lxd.images.canonical.com/images/$1/$2/amd64/$3/$build/rootfs.tar.xz failed."
 	fi
 done
 if [ -z "$found" ]; then
@@ -122,8 +120,8 @@ fi
 
 install_efi()
 {
-mkdir -p ./chroot/boot/efi/efi/boot
-cat >./chroot/boot/efi/efi/boot/grub.cfg <<VMGRUB
+mkdir -p "$linuxloopsdir"/chroot/boot/efi/efi/boot
+cat >"$linuxloopsdir"/chroot/boot/efi/efi/boot/grub.cfg <<VMGRUB
 set timeout=2
 
 menuentry "$distro" --class "$distro" {
@@ -153,40 +151,40 @@ menuentry "Boot with kernel \$kernel in linuxloops debug mode" {
 done
 }
 VMGRUB
-curl -L https://github.com/sebanc/brunch/raw/r94/efi-partition/efi/boot/grubx64.efi -o ./chroot/boot/efi/efi/boot/bootx64.efi
+curl -L https://github.com/sebanc/brunch/raw/r94/efi-partition/efi/boot/grubx64.efi -o "$linuxloopsdir"/chroot/boot/efi/efi/boot/bootx64.efi
 }
 
 umount_chroot()
 {
-if mountpoint -q ./chroot/boot/efi; then umount ./chroot/boot/efi; fi
-if mountpoint -q ./chroot/boot; then umount ./chroot/boot; fi
-if mountpoint -q ./chroot/tmp; then umount ./chroot/tmp; fi
-if mountpoint -q ./chroot/dev/shm; then umount ./chroot/dev/shm; fi
-if mountpoint -q ./chroot/dev/pts; then umount ./chroot/dev/pts; fi
-if mountpoint -q ./chroot/dev; then umount ./chroot/dev; fi
-if mountpoint -q ./chroot/sys; then umount ./chroot/sys; fi
-if mountpoint -q ./chroot/proc; then umount ./chroot/proc; fi
-if mountpoint -q ./chroot; then umount ./chroot; fi
+if mountpoint -q "$linuxloopsdir"/chroot/boot/efi; then umount "$linuxloopsdir"/chroot/boot/efi; fi
+if mountpoint -q "$linuxloopsdir"/chroot/boot; then umount "$linuxloopsdir"/chroot/boot; fi
+if mountpoint -q "$linuxloopsdir"/chroot/tmp; then umount "$linuxloopsdir"/chroot/tmp; fi
+if mountpoint -q "$linuxloopsdir"/chroot/dev/shm; then umount "$linuxloopsdir"/chroot/dev/shm; fi
+if mountpoint -q "$linuxloopsdir"/chroot/dev/pts; then umount "$linuxloopsdir"/chroot/dev/pts; fi
+if mountpoint -q "$linuxloopsdir"/chroot/dev; then umount "$linuxloopsdir"/chroot/dev; fi
+if mountpoint -q "$linuxloopsdir"/chroot/sys; then umount "$linuxloopsdir"/chroot/sys; fi
+if mountpoint -q "$linuxloopsdir"/chroot/proc; then umount "$linuxloopsdir"/chroot/proc; fi
+if mountpoint -q "$linuxloopsdir"/chroot; then umount "$linuxloopsdir"/chroot; fi
 }
 
 mount_chroot()
 {
-mount -t proc none ./chroot/proc
-mount -t sysfs none ./chroot/sys
-mount -t devtmpfs none ./chroot/dev
-mount -t devpts none ./chroot/dev/pts
-mount -t tmpfs -o mode=1777,nosuid,nodev,strictatime none ./chroot/dev/shm
-mount -t tmpfs none ./chroot/tmp
-mkdir -p ./chroot/boot
-mount "$destination_loop"p2 ./chroot/boot
-mkdir -p ./chroot/boot/efi
-mount "$destination_loop"p1 ./chroot/boot/efi
+mount -t proc none "$linuxloopsdir"/chroot/proc
+mount -t sysfs none "$linuxloopsdir"/chroot/sys
+mount -t devtmpfs none "$linuxloopsdir"/chroot/dev
+mount -t devpts none "$linuxloopsdir"/chroot/dev/pts
+mount -t tmpfs -o mode=1777,nosuid,nodev,strictatime none "$linuxloopsdir"/chroot/dev/shm
+mount -t tmpfs none "$linuxloopsdir"/chroot/tmp
+mkdir -p "$linuxloopsdir"/chroot/boot
+mount "$destination_loop"p2 "$linuxloopsdir"/chroot/boot
+mkdir -p "$linuxloopsdir"/chroot/boot/efi
+mount "$destination_loop"p1 "$linuxloopsdir"/chroot/boot/efi
 install_efi
 }
 
 add_linuxloops_init()
 {
-cat >>./chroot/tmp/install_initramfs <<'INITSCRIPT'
+cat >>"$linuxloopsdir"/chroot/tmp/install_initramfs <<'INITSCRIPT'
 printk_levels="$(cat /proc/sys/kernel/printk)"
 echo 0 0 0 0 > /proc/sys/kernel/printk
 printf "\033c"
@@ -284,7 +282,7 @@ INITSCRIPT
 
 install_initcpio()
 {
-cat >./chroot/tmp/install_initramfs <<INITCPIOSTART
+cat >"$linuxloopsdir"/chroot/tmp/install_initramfs <<INITCPIOSTART
 if [ "$root_device" == "/dev/mapper/root" ]; then
 sed -i 's@HOOKS=(base udev@HOOKS=(base udev linuxloops encrypt@g' /etc/mkinitcpio.conf
 else
@@ -358,15 +356,15 @@ cat >/etc/initcpio/hooks/linuxloops <<'RUNHOOK'
 run_hook() {
 INITCPIOSTART
 add_linuxloops_init
-echo -e "}\nRUNHOOK" >> ./chroot/tmp/install_initramfs
-echo -e "chmod 0755 /etc/initcpio/hooks/linuxloops" >> ./chroot/tmp/install_initramfs
-echo -e "mkinitcpio -P" >> ./chroot/tmp/install_initramfs
-chmod 0755 ./chroot/tmp/install_initramfs
+echo -e "}\nRUNHOOK" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+echo -e "chmod 0755 /etc/initcpio/hooks/linuxloops" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+echo -e "mkinitcpio -P" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_initramfs
 }
 
 install_initramfstools()
 {
-cat >./chroot/tmp/install_initramfs <<INITRAMFSTOOLSSTART
+cat >"$linuxloopsdir"/chroot/tmp/install_initramfs <<INITRAMFSTOOLSSTART
 echo "BUSYBOX=n" >> /etc/initramfs-tools/initramfs.conf
 cat >/etc/initramfs-tools/hooks/linuxloops <<INSTALLHOOK
 #!/bin/bash
@@ -453,15 +451,15 @@ esac
 
 INITRAMFSTOOLSSTART
 add_linuxloops_init
-echo -e "RUNHOOK" >> ./chroot/tmp/install_initramfs
-echo -e "chmod 0755 /etc/initramfs-tools/scripts/init-premount/linuxloops" >> ./chroot/tmp/install_initramfs
-echo -e "update-initramfs -u -k all" >> ./chroot/tmp/install_initramfs
-chmod 0755 ./chroot/tmp/install_initramfs
+echo -e "RUNHOOK" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+echo -e "chmod 0755 /etc/initramfs-tools/scripts/init-premount/linuxloops" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+echo -e "update-initramfs -u -k all" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_initramfs
 }
 
 install_dracut()
 {
-cat >./chroot/tmp/install_initramfs <<INITDRACUT
+cat >"$linuxloopsdir"/chroot/tmp/install_initramfs <<INITDRACUT
 echo 'omit_dracutmodules+=" busybox "' >> /etc/dracut.conf
 mkdir /usr/lib/dracut/modules.d/30linuxloops
 cat >/usr/lib/dracut/modules.d/30linuxloops/module-setup.sh <<INSTALLHOOK
@@ -546,16 +544,15 @@ cat >/usr/lib/dracut/modules.d/30linuxloops/linuxloops.sh <<'RUNHOOK'
 
 INITDRACUT
 add_linuxloops_init
-echo -e "RUNHOOK" >> ./chroot/tmp/install_initramfs
-echo -e "chmod 0755 /usr/lib/dracut/modules.d/30linuxloops/linuxloops.sh" >> ./chroot/tmp/install_initramfs
-#echo -e "dracut -f --regenerate-all" >> ./chroot/tmp/install_initramfs
-echo -e "dracut --no-hostonly -f --regenerate-all" >> ./chroot/tmp/install_initramfs
-chmod 0755 ./chroot/tmp/install_initramfs
+echo -e "RUNHOOK" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+echo -e "chmod 0755 /usr/lib/dracut/modules.d/30linuxloops/linuxloops.sh" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+echo -e "dracut --no-hostonly -f --regenerate-all" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_initramfs
 }
 
 install_surface_pacman()
 {
-cat >./chroot/tmp/install_surface <<SURFACEPACMAN
+cat >"$linuxloopsdir"/chroot/tmp/install_surface <<SURFACEPACMAN
 curl -s https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | pacman-key --add -
 pacman-key --finger 56C464BAAC421453
 pacman-key --lsign-key 56C464BAAC421453
@@ -579,14 +576,13 @@ ninja -C build
 ninja -C build install
 cd /
 usermod -aG video '$username'
-#mkinitcpio -P
 SURFACEPACMAN
-chmod 0755 ./chroot/tmp/install_surface
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_surface
 }
 
 install_surface_apt()
 {
-cat >./chroot/tmp/install_surface <<SURFACEAPT
+cat >"$linuxloopsdir"/chroot/tmp/install_surface <<SURFACEAPT
 if [ "\$(grep -o 'UBUNTU_CODENAME=[^ ,]\+' /etc/os-release | cut -d'=' -f2)" == "focal" ]; then
 add-apt-repository ppa:tj/bugfixes -y
 apt-get update
@@ -606,14 +602,13 @@ ninja -C build
 ninja -C build install
 cd /
 usermod -aG video '$username'
-#update-initramfs -u -k all
 SURFACEAPT
-chmod 0755 ./chroot/tmp/install_surface
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_surface
 }
 
 install_surface_dnf()
 {
-cat >./chroot/tmp/install_surface <<SURFACEDNF
+cat >"$linuxloopsdir"/chroot/tmp/install_surface <<SURFACEDNF
 dnf config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
 yes | dnf remove $1
 dnf update
@@ -621,8 +616,6 @@ yes | dnf install -y --allowerasing kernel-surface kernel-surface-devel iptsd li
 yes | dnf install git make automake gcc gcc-c++ kernel-devel libatomic dkms meson ninja-build pkg-config gnutls-devel openssl python3-pip python3-yaml python3-ply python3-jinja2 qt5-qtbase-devel libtiff-devel libevent-devel gstreamer1-devel gstreamer1-plugins-base-devel
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.12.5.tar.gz | tar xvz -C /usr/src
 dkms add -m v4l2loopback -v 0.12.5
-#dkms build -m v4l2loopback -v 0.12.5
-#dkms install -m v4l2loopback -v 0.12.5
 ls /usr/lib/modules/*/vmlinuz | sed 's@/usr/lib/modules/@@g' | sed 's@/vmlinuz@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 git clone https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
@@ -631,14 +624,13 @@ ninja -C build
 ninja -C build install
 cd /
 usermod -aG video '$username'
-#dracut -f --regenerate-all
 SURFACEDNF
-chmod 0755 ./chroot/tmp/install_surface
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_surface
 }
 
 cleanup()
 {
-cat >./chroot/tmp/cleanup <<CLEANUP
+cat >"$linuxloopsdir"/chroot/tmp/cleanup <<CLEANUP
 rm -f /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
 rm -f /usr/share/xsessions/lightdm-xsession.desktop
 rm -f /etc/pacman.d/gnupg/S.gpg-agent
@@ -646,7 +638,7 @@ rm -f /home/'$username'/.gnupg/S.gpg-agent
 rm -f /home/'$username'/.gnupg/S.dirmngr
 sleep 5
 CLEANUP
-chmod 0755 ./chroot/tmp/cleanup
+chmod 0755 "$linuxloopsdir"/chroot/tmp/cleanup
 }
 
 chroot_archlinux()
@@ -655,7 +647,7 @@ download_image archlinux current default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'ARCHLINUXINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'ARCHLINUXINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
@@ -678,19 +670,13 @@ systemctl enable thermald
 if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
 if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
-#pacman -R --noconfirm $(pacman -Qdtq)
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#pkill gpg-agent
-#pkill dirmngr
-#bash
-#sleep 5
 exit
 ARCHLINUXINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<ARCHUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<ARCHUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
@@ -702,7 +688,7 @@ polkit.addAdminRule(function(action, subject) {
 });
 POLKIT
 ARCHUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 desktop_base="xorg-server alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf pulseaudio-alsa adwaita-icon-theme ttf-dejavu udisks2"
@@ -822,17 +808,17 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<ARCHDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<ARCHDESKTOP
 #!/bin/bash
 $install_desktop
 ARCHDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "pacman -S --noconfirm $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "pacman -S --noconfirm $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_pacman "linux"; fi
 
@@ -845,7 +831,7 @@ install_initcpio
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -856,14 +842,12 @@ download_image debian sid default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'DEBIANINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'DEBIANINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "debian-linuxloops" > /etc/hostname
-#bash
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
-#sed 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
@@ -890,19 +874,17 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#sleep 5
 exit
 DEBIANINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<DEBIANUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<DEBIANUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG sudo '$username'
 DEBIANUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 desktop_base="xserver-xorg xserver-xorg-legacy xserver-xorg-video-all mesa-vulkan-drivers va-driver-all vdpau-driver-all libasound2 alsa-utils alsa-ucm-conf alsa-topology-conf pulseaudio desktop-base network-manager at-spi2-core adwaita-icon-theme udisks2"
@@ -963,7 +945,6 @@ echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
 	'kde-full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-#yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-kde-desktop kwin-x11 systemsettings plasma-nm plasma-discover powerdevil kmix
 yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-kde-desktop
 "
 	;;
@@ -1016,17 +997,17 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-xfce-desktop
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<DEBIANDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<DEBIANDESKTOP
 #!/bin/bash
 $install_desktop
 DEBIANDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-headers-* linux-image-*"; fi
 
@@ -1039,7 +1020,7 @@ install_initramfstools
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -1050,33 +1031,23 @@ download_image ubuntu focal default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'ELEMENTARYINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'ELEMENTARYINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "elementary-linuxloops" > /etc/hostname
-#bash
 mkdir -p /run/systemd/resolve
 echo "nameserver 8.8.8.8" > /run/systemd/resolve/stub-resolv.conf
-#sed 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
 LOCALE
-#cat >/etc/apt/preferences.d/kernelstub <<'KERNELSTUB'
-#Package: kernelstub
-#Pin: release *
-#Pin-Priority: -1
-#KERNELSTUB
 yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 add-apt-repository ppa:elementary-os/stable -y
 add-apt-repository ppa:elementary-os/os-patches -y
 yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall apt
-#yes | apt purge kernelstub
-#apt list --installed | cut --delimiter=/ --fields=1 | xargs apt reinstall
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-#bash
 yes | apt install linux-generic-hwe-20.04-edge linux-firmware ntfs-3g sudo network-manager cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
 /tmp/install_user
 /tmp/install_desktop
@@ -1086,21 +1057,18 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 ELEMENTARYINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<ELEMENTARYUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<ELEMENTARYUSER
 #!/bin/bash
 userdel -r -f ubuntu
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG sudo '$username'
 ELEMENTARYUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
@@ -1111,17 +1079,17 @@ yes | DEBIAN_FRONTEND=noninteractive apt purge gdm3 ubuntu-session
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<ELEMENTARYDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<ELEMENTARYDESKTOP
 #!/bin/bash
 $install_desktop
 ELEMENTARYDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
@@ -1134,7 +1102,7 @@ install_initramfstools
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -1145,15 +1113,13 @@ download_image fedora 35 default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'FEDORAINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'FEDORAINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "fedora-linuxloops" > /etc/hostname
-#bash
 mkdir -p /run/systemd/resolve
 echo "nameserver 8.8.8.8" > /run/systemd/resolve/resolv.conf
-#localedef -v -c -i en_US -f UTF-8 en_US.UTF-8
 yes | dnf update
 yes | dnf install kernel linux-firmware ntfs-3g sudo NetworkManager-bluetooth NetworkManager-wifi cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald ca-certificates gpg bash-completion dnf-plugins-core ipw2100-firmware ipw2200-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl3945-firmware iwl4965-firmware iwl5000-firmware iwl5150-firmware iwl6000-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware iwlax2xx-firmware b43-openfwwf
 systemctl disable systemd-networkd-wait-online
@@ -1166,21 +1132,18 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 yes | dnf autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 FEDORAINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<FEDORAUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<FEDORAUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG wheel '$username'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 FEDORAUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 desktop_base="xorg-x11-drivers mesa-dri-drivers xorg-x11-drv-amdgpu xdg-user-dirs-gtk alsa-lib alsa-utils alsa-sof-firmware alsa-topology alsa-ucm pipewire-pulseaudio udisks2 dejavu-sans-mono-fonts dejavu-serif-fonts"
@@ -1259,17 +1222,17 @@ yes | dnf install $desktop_base @xfce-desktop-environment
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<FEDORADESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<FEDORADESKTOP
 #!/bin/bash
 $install_desktop
 FEDORADESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | dnf install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | dnf install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_dnf "kernel"; fi
 
@@ -1282,7 +1245,7 @@ install_dracut
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -1293,15 +1256,13 @@ download_image gentoo current systemd
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'GENTOOINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'GENTOOINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "gentoo-linuxloops" > /etc/hostname
-#bash
 mkdir -p /run/systemd/resolve
 echo "nameserver 8.8.8.8" > /run/systemd/resolve/resolv.conf
-#bash
 echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
@@ -1329,14 +1290,11 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 GENTOOINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<GENTOOUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<GENTOOUSER
 #!/bin/bash
 sed -i 's/^password/#password/g' /etc/pam.d/system-auth
 echo 'password       required        pam_unix.so nullok sha512 shadow' >> /etc/pam.d/system-auth
@@ -1345,7 +1303,7 @@ echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG wheel '$username'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 GENTOOUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 case "$desktop" in
@@ -1396,17 +1354,17 @@ systemctl enable lightdm
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<GENTOODESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<GENTOODESKTOP
 #!/bin/bash
 $install_desktop
 GENTOODESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "emerge $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "emerge $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
 kernel_prefix="vmlinuz-"
@@ -1417,7 +1375,7 @@ install_dracut
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -1428,14 +1386,12 @@ download_image kali current default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'KALIINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'KALIINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "kali-linuxloops" > /etc/hostname
-#bash
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
-#sed 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
@@ -1462,20 +1418,17 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 KALIINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<KALIUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<KALIUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG sudo '$username'
 KALIUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 desktop_base="xserver-xorg xserver-xorg-legacy xserver-xorg-video-all mesa-vulkan-drivers va-driver-all vdpau-driver-all libasound2 alsa-utils alsa-ucm-conf alsa-topology-conf pulseaudio desktop-base network-manager at-spi2-core adwaita-icon-theme udisks2 kali-defaults-desktop kali-themes-common"
@@ -1582,17 +1535,17 @@ echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<KALIDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<KALIDESKTOP
 #!/bin/bash
 $install_desktop
 KALIDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-headers-* linux-image-*"; fi
 
@@ -1605,7 +1558,7 @@ install_initramfstools
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -1616,7 +1569,7 @@ download_image archlinux current default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'MANJAROINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'MANJAROINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
@@ -1628,7 +1581,6 @@ locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
 LOCALE
-#bash
 pacman -Rdd --noconfirm pacman-mirrorlist
 echo 'Server = https://mirrors.manjaro.org/repo/stable/$repo/$arch' > /etc/pacman.d/mirrorlist
 curl -L https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?inline=false -o /usr/share/pacman/keyrings/manjaro.gpg
@@ -1645,12 +1597,8 @@ pacman-key --init
 pacman-key --populate
 pacman -Syy
 pacman -Qnq | pacman -S --noconfirm -
-#bash
-#pacman-key --init
-#pacman-key --populate
 pacman -Syu --noconfirm linux510 linux-firmware ntfs-3g sudo iwd modemmanager networkmanager cryptsetup nano acpid curl thermald bash-completion ca-certificates gnupg polkit
 systemctl enable acpid
-#systemctl enable gdm
 systemctl enable NetworkManager
 systemctl enable thermald
 /tmp/install_user
@@ -1658,17 +1606,13 @@ systemctl enable thermald
 if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
 if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
-#pacman -R --noconfirm $(pacman -Qdtq)
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 MANJAROINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<MANJAROUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<MANJAROUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
@@ -1680,7 +1624,7 @@ polkit.addAdminRule(function(action, subject) {
 });
 POLKIT
 MANJAROUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 desktop_base="xorg-server alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf pulseaudio-alsa adwaita-icon-theme ttf-dejavu udisks2"
@@ -1815,17 +1759,17 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<MANJARODESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<MANJARODESKTOP
 #!/bin/bash
 $install_desktop
 MANJARODESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "pacman -S --noconfirm $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "pacman -S --noconfirm $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_pacman "linux510"; fi
 
@@ -1838,7 +1782,7 @@ install_initcpio
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -1849,15 +1793,13 @@ download_image mint uma default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'MINTINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'MINTINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "mint-linuxloops" > /etc/hostname
-#bash
 mkdir -p /run/systemd/resolve
 echo "nameserver 8.8.8.8" > /run/systemd/resolve/stub-resolv.conf
-#sed 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
@@ -1868,7 +1810,6 @@ APT::Get::Install-Recommends "false";
 RECOMMENDS
 apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-#yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-generic linux-firmware initramfs-tools ntfs-3g sudo network-manager cryptsetup nano acpid thermald bash-completion
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04-edge linux-firmware initramfs-tools ntfs-3g sudo cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
 yes | DEBIAN_FRONTEND=noninteractive apt purge vim
 /tmp/install_user
@@ -1880,21 +1821,18 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 MINTINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<MINTUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<MINTUSER
 #!/bin/bash
 userdel -r -f ubuntu
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG sudo '$username'
 MINTUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 desktop_base="xserver-xorg xserver-xorg-legacy xserver-xorg-video-all mesa-vulkan-drivers alsa alsa-utils alsa-ucm-conf alsa-topology-conf pulseaudio desktop-base network-manager at-spi2-core adwaita-icon-theme-full papirus-icon-theme language-selector-common udisks2 ttf-ubuntu-font-family mint-themes mint-x-icons mint-y-icons mint-backgrounds-uma"
@@ -1977,17 +1915,17 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base xfce-desktop-envi
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<MINTDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<MINTDESKTOP
 #!/bin/bash
 $install_desktop
 MINTDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
@@ -2000,7 +1938,7 @@ install_initramfstools
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -2011,25 +1949,18 @@ download_image opensuse tumbleweed default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'OPENSUSEINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'OPENSUSEINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "opensuse-linuxloops" > /etc/hostname
-#bash
 mkdir -p /var/run/netconfig
 echo "nameserver 8.8.8.8" > /var/run/netconfig/resolv.conf
-#bash
-#echo 'en_US.UTF-8 UTF-8' > /etc/locale.gen
-#locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
 LOCALE
-#sed -i 's@DISPLAYMANAGER_XSERVER="Xorg"@DISPLAYMANAGER_XSERVER="Wayland"@g' /etc/sysconfig/displaymanager
 zypper refresh
 zypper install --no-confirm kernel-default kernel-firmware-all patterns-base-base nano ntfs-3g sudo pulseaudio alsa-utils alsa-firmware cryptsetup nano e2fsprogs ntfsprogs device-mapper cantarell-fonts dejavu-fonts acpid curl thermald bash-completion ca-certificates gpg2 polkit
-#yast
-#update-alternatives --set default-displaymanager /usr/lib/X11/displaymanagers/gdm
 systemctl enable acpid
 systemctl enable thermald
 /tmp/install_user
@@ -2038,14 +1969,11 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 OPENSUSEINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<OPENSUSEUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<OPENSUSEUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
@@ -2059,7 +1987,7 @@ polkit.addAdminRule(function(action, subject) {
 });
 POLKIT
 OPENSUSEUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
 case "$desktop" in
@@ -2138,17 +2066,17 @@ systemctl enable NetworkManager
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<OPENSUSEDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<OPENSUSEDESKTOP
 #!/bin/bash
 $install_desktop
 OPENSUSEDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "zypper install --no-confirm $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "zypper install --no-confirm $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
 kernel_prefix="vmlinuz-"
@@ -2159,7 +2087,7 @@ install_dracut
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -2170,15 +2098,13 @@ download_image ubuntu hirsute default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'POP_OSINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'POP_OSINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "pop_os-linuxloops" > /etc/hostname
-#bash
 mkdir -p /run/systemd/resolve
 echo "nameserver 8.8.8.8" > /run/systemd/resolve/stub-resolv.conf
-#sed 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
@@ -2190,18 +2116,9 @@ Pin-Priority: -1
 KERNELSTUB
 yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 add-apt-repository ppa:system76/pop -y
-#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 63C46DF0140D738961429F4E204DD8AEC33A7AFF
-#add-apt-repository "deb http://apt.pop-os.org/proprietary $(lsb_release -cs) main" -y
-#add-apt-repository "deb http://apt.pop-os.org/release $(lsb_release -cs) main" -y
-#add-apt-repository "deb http://apt.pop-os.org/ubuntu $(lsb_release -cs) main multiverse restricted universe" -y
-#add-apt-repository "deb http://apt.pop-os.org/ubuntu $(lsb_release -cs)-security main multiverse restricted universe" -y
-#add-apt-repository "deb http://apt.pop-os.org/ubuntu $(lsb_release -cs)-updates main multiverse restricted universe" -y
 yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall apt
-#yes | apt purge kernelstub
-#apt list --installed | cut --delimiter=/ --fields=1 | xargs apt reinstall
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-#yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-generic linux-firmware ntfs-3g sudo network-manager cryptsetup nano curl thermald bash-completion ca-certificates gpg curl
 /tmp/install_user
 /tmp/install_desktop
 if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
@@ -2210,21 +2127,18 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 POP_OSINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<POP_OSUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<POP_OSUSER
 #!/bin/bash
 userdel -r -f ubuntu
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG sudo '$username'
 POP_OSUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
@@ -2232,17 +2146,17 @@ case "$desktop" in
 	install_desktop=""
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<POP_OSDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<POP_OSDESKTOP
 #!/bin/bash
 $install_desktop
 POP_OSDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | apt install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
@@ -2255,7 +2169,7 @@ install_initramfstools
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -2266,14 +2180,12 @@ download_image rockylinux 8 default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'ROCKYLINUXINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'ROCKYLINUXINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "rockylinux-linuxloops" > /etc/hostname
-#bash
 echo "nameserver 8.8.8.8" > /etc/resolv.conf
-#localedef -v -c -i en_US -f UTF-8 en_US.UTF-8
 rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
 yes | dnf install https://www.elrepo.org/elrepo-release-8.el8.elrepo.noarch.rpm
 yes | dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
@@ -2287,21 +2199,18 @@ if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
 yes | dnf autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 ROCKYLINUXINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<ROCKYLINUXUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<ROCKYLINUXUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG wheel '$username'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 ROCKYLINUXUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
@@ -2315,17 +2224,17 @@ systemctl set-default graphical
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<ROCKYLINUXDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<ROCKYLINUXDESKTOP
 #!/bin/bash
 $install_desktop
 ROCKYLINUXDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | dnf install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | dnf install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 cmdline_extra="selinux=0 $CUSTOM_CMDLINE_PARAMS"
 kernel_prefix="vmlinuz-"
@@ -2336,7 +2245,7 @@ install_dracut
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -2347,15 +2256,13 @@ download_image ubuntu impish default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'UBUNTUINIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'UBUNTUINIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "ubuntu-linuxloops" > /etc/hostname
-#bash
 mkdir -p /run/systemd/resolve
 echo "nameserver 8.8.8.8" > /run/systemd/resolve/stub-resolv.conf
-#sed 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
@@ -2377,21 +2284,18 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 UBUNTUINIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<UBUNTUUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<UBUNTUUSER
 #!/bin/bash
 userdel -r -f ubuntu
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG sudo '$username'
 UBUNTUUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="ubuntu"; fi
 desktop_base="xserver-xorg xserver-xorg-legacy xserver-xorg-video-all mesa-vulkan-drivers alsa alsa-utils alsa-ucm-conf alsa-topology-conf pulseaudio desktop-base network-manager at-spi2-core adwaita-icon-theme-full language-selector-common udisks2 ttf-ubuntu-font-family"
@@ -2519,17 +2423,17 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base xubuntu-desktop
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<UBUNTUDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<UBUNTUDESKTOP
 #!/bin/bash
 $install_desktop
 UBUNTUDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
@@ -2542,7 +2446,7 @@ install_initramfstools
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -2553,41 +2457,25 @@ download_image ubuntu focal default
 
 mount_chroot
 
-cat >./chroot/tmp/init <<'ZORININIT'
+cat >"$linuxloopsdir"/chroot/tmp/init <<'ZORININIT'
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
 echo "zorin-linuxloops" > /etc/hostname
-#bash
 mkdir -p /run/systemd/resolve
 echo "nameserver 8.8.8.8" > /run/systemd/resolve/stub-resolv.conf
-#sed 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
 locale-gen
 cat >/etc/locale.conf <<'LOCALE'
 LANG=en_US.UTF-8
 LOCALE
-#cat >/etc/apt/preferences.d/kernelstub <<'KERNELSTUB'
-#Package: kernelstub
-#Pin: release *
-#Pin-Priority: -1
-#KERNELSTUB
 yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 add-apt-repository ppa:zorinos/stable -y
 add-apt-repository ppa:zorinos/patches -y
 add-apt-repository ppa:zorinos/apps -y
 add-apt-repository ppa:zorinos/drivers -y
-#apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 63C46DF0140D738961429F4E204DD8AEC33A7AFF
-#add-apt-repository "deb http://apt.pop-os.org/proprietary $(lsb_release -cs) main" -y
-#add-apt-repository "deb http://apt.pop-os.org/release $(lsb_release -cs) main" -y
-#add-apt-repository "deb http://apt.pop-os.org/ubuntu $(lsb_release -cs) main multiverse restricted universe" -y
-#add-apt-repository "deb http://apt.pop-os.org/ubuntu $(lsb_release -cs)-security main multiverse restricted universe" -y
-#add-apt-repository "deb http://apt.pop-os.org/ubuntu $(lsb_release -cs)-updates main multiverse restricted universe" -y
 yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall apt
-#yes | apt purge kernelstub
-#apt list --installed | cut --delimiter=/ --fields=1 | xargs apt reinstall
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-#bash
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04-edge linux-firmware ntfs-3g sudo network-manager cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
 /tmp/install_user
 /tmp/install_desktop
@@ -2597,21 +2485,18 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
 echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
-#bash
-#rm -f /etc/pacman.d/gnupg/S.gpg-agent
-#sleep 5
 exit
 ZORININIT
-chmod 0755 ./chroot/tmp/init
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >./chroot/tmp/install_user <<ZORINUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<ZORINUSER
 #!/bin/bash
 userdel -r -f ubuntu
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG sudo '$username'
 ZORINUSER
-chmod 0755 ./chroot/tmp/install_user
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
@@ -2621,17 +2506,17 @@ yes | DEBIAN_FRONTEND=noninteractive apt install zorin-os-desktop
 "
 	;;
 esac
-cat >./chroot/tmp/install_desktop <<ZORINDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<ZORINDESKTOP
 #!/bin/bash
 $install_desktop
 ZORINDESKTOP
-chmod 0755 ./chroot/tmp/install_desktop
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
-	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> ./chroot/tmp/install_desktop
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
 fi
 
-if [ -f ./custom_script ]; then cp ./custom_script ./chroot/tmp/install_custom; chmod 0755 ./chroot/tmp/install_custom; fi
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
@@ -2644,7 +2529,7 @@ install_initramfstools
 
 cleanup
 
-chroot ./chroot /tmp/init
+chroot "$linuxloopsdir"/chroot /tmp/init
 
 umount_chroot
 }
@@ -2654,13 +2539,10 @@ install_image()
 umount_chroot
 echo "Creating image file"
 dd if=/dev/zero of="$fullpath" bs=1G seek=$image_size count=0 status=none
-#dd if=/dev/zero of="$fullpath" bs=1G count=$image_size status=none
 echo "Creating partition table..."
 write_partition_table "$fullpath"
 destination_loop=$(losetup --show -fP "$fullpath")
-mkdir -p ./chroot
-#mount -o,ro "$source" ./tmp
-#mount -o,ro ./tmp/arch/x86_64/airootfs.sfs ./tmp2
+mkdir -p "$linuxloopsdir"/chroot
 if [ "$root_device" == "/dev/mapper/root" ]; then
 mkfs.fat -F 12 -n 'efi' "$destination_loop"p1
 mkfs.ext4 -F -L "boot" "$destination_loop"p2
@@ -2673,7 +2555,7 @@ echo -n "$userpass" | cryptsetup luksOpen "$destination_loop"p4 swap_"$(echo $de
 mkswap /dev/mapper/swap_"$(echo $destination_loop | sed 's@/dev/@@g')"
 cryptsetup luksClose swap_"$(echo $destination_loop | sed 's@/dev/@@g')"
 fi
-mount /dev/mapper/root_"$(echo $destination_loop | sed 's@/dev/@@g')" ./chroot
+mount /dev/mapper/root_"$(echo $destination_loop | sed 's@/dev/@@g')" "$linuxloopsdir"/chroot
 else
 mkfs.fat -F 12 -n 'efi' "$destination_loop"p1
 mkfs.ext4 -F -L "boot" "$destination_loop"p2
@@ -2681,33 +2563,19 @@ mkfs.ext4 -F -L "root" "$destination_loop"p3
 if [ -b "$destination_loop"p4 ]; then
 mkswap -L "swap" "$destination_loop"p4
 fi
-mount "$destination_loop"p3 ./chroot
+mount "$destination_loop"p3 "$linuxloopsdir"/chroot
 fi
-#cp -a ./tmp2/* ./chroot/
-#tar xf "$source" -C ./chroot/
-#chroot_arch
 chroot_"$distro"
-#mkdir ./tmp3/dev ./tmp3/proc ./tmp3/sys
-#rsync -av --info=progress2 ./tmp2/* ./tmp3/
-#cp linuxloops.img ./tmp3/boot/
 if [ "$root_device" == "/dev/mapper/root" ]; then
 cryptsetup luksClose root_"$(echo $destination_loop | sed 's@/dev/@@g')"
 fi
 losetup -d $destination_loop
-#umount ./tmp2
-#umount ./tmp
 }
 
 grub_config()
 {
 if [ ! -z "$wsl" ]; then
-#	if [ ! -z "$zenity" ]; then
-#		img_uuid=$(zenity  --height=480 --width=640 --title="LinuxLoops installer" --entry --text "The $distro disk image has been created.\n\n In order to prepare the dual boot grub configuration, right click on the start menu icon, select Windows Terminal, run the command in the below textbox and replace the text with the command output.\n(only the figures and dashes like: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX)" --entry-text "mountvol $(echo ${fullpath:5:1} | tr a-z A-Z):\\ /L")
-#	else
-#		read -p "The $distro disk image has been created."$'\n'$'\n'"In order to prepare the dual boot grub configuration, right click on the start menu icon, select Windows Terminal, run the command \"mountvol $(echo ${fullpath:5:1} | tr a-z A-Z):\\ /L\" and copy the output here (only the figures and dashes like: XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX):"$'\n' img_uuid
-#		echo -e ""
-#	fi
-	img_uuid=$(su $(getent passwd $SUDO_UID | cut -d: -f1) -c "PATH=$PATH:/mnt/c/Windows/System32 mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1")
+	img_uuid=$(su "$SUDO_USER" -c "PATH=$PATH:/mnt/c/Windows/System32 mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1")
 else
 	img_uuid=$(blkid -s PARTUUID -o value "$(df "$fullpath" --output=source | sed 1d)")
 fi
@@ -2743,10 +2611,10 @@ done
 echo "$config" > "$fullpath".grub.txt
 if [ -f ./usb_bootloader.img ]; then
 	usbboot_loop=$(losetup --show -fP ./usb_bootloader.img)
-	mount "$usbboot_loop"p1 ./chroot
-	echo -e "set timeout=2\n"> ./chroot/efi/boot/grub.cfg
-	echo "$config" >> ./chroot/efi/boot/grub.cfg
-	umount ./chroot
+	mount "$usbboot_loop"p1 "$linuxloopsdir"/chroot
+	echo -e "set timeout=2\n"> "$linuxloopsdir"/chroot/efi/boot/grub.cfg
+	echo "$config" >> "$linuxloopsdir"/chroot/efi/boot/grub.cfg
+	umount "$linuxloopsdir"/chroot
 	losetup -d $usbboot_loop
 	finalise="The grub config to boot $distro has been installed in the usb_bootloader.img file. Write this file to a usb flashdrive with Rufus, dd or any other image writing tool and boot from it."
 	if [ ! -z "$zenity" ]; then
@@ -2777,7 +2645,7 @@ elif [ ! -z "$chromeos" ]; then
 	mkdir -p /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	mount "$source" /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	rm -r /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/*
-	curl -L https://github.com/sebanc/linuxloops-beta/raw/main/chromebook_boot.tar.gz -o /home/chronos/user/Downloads/chromebook_boot.tar.gz
+	curl -L https://github.com/sebanc/linuxloops/raw/main/chromebook_boot.tar.gz -o /home/chronos/user/Downloads/chromebook_boot.tar.gz
 	tar zxf /home/chronos/user/Downloads/chromebook_boot.tar.gz -C /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	rm -f /home/chronos/user/Downloads/chromebook_boot.tar.gz
 	echo -e "set timeout=2\n"> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
@@ -2847,14 +2715,17 @@ create_image()
 {
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
+linuxloopsdir="$(eval echo ~$SUDO_USER)"/linuxloops
+mkdir -p "$linuxloopsdir"
+mkdir 
 if [ ! -z "$zenity" ]; then
 	local path
-	if  [ -z "$wsl" ]; then
-		path=$(su $(getent passwd "$SUDO_UID" | cut -d: -f1) -c "zenity --height=480 --width=640 --file-selection --save --title=\"Select the path to store the $distro disk image\" --file-filter=*.img --filename=\"$(getent passwd $SUDO_UID | cut -d: -f6)/$distro.img\"")
+	if  [ ! -z "$wsl" ]; then
+		path=$(su "$SUDO_USER" -c "zenity --height=480 --width=640 --file-selection --save --title=\"Select the path to store the $distro disk image\" --file-filter=*.img --filename=\"/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/$distro.img\"")
 	elif [ ! -z "$chromeos" ] || [ ! -z "$brunch" ]; then
-		path=$(su $(getent passwd "$SUDO_UID" | cut -d: -f1) -c "zenity --height=480 --width=640 --file-selection --save --title=\"Select the path to store the $distro disk image\" --file-filter=*.img --filename=\"/mnt/stateful_partition/unencrypted/$distro.img\"")
+		path=$(su "$SUDO_USER" -c "zenity --height=480 --width=640 --file-selection --save --title=\"Select the path to store the $distro disk image\" --file-filter=*.img --filename=\"/mnt/stateful_partition/unencrypted/$distro.img\"")
 	else
-		path=$(su $(getent passwd "$SUDO_UID" | cut -d: -f1) -c "zenity --height=480 --width=640 --file-selection --save --title=\"Select the path to store the $distro disk image\" --file-filter=*.img --filename=\"/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/$distro.img\"")
+		path=$(su "$SUDO_USER" -c "zenity --height=480 --width=640 --file-selection --save --title=\"Select the path to store the $distro disk image\" --file-filter=*.img --filename=\"$linuxloopsdir/$distro.img\"")
 	fi
 	if [ -z "$path" ]; then exit 1; else destination="$path"; fi
 	if [[ "$destination" == *"/"* ]] && ([ -z "$(realpath $destination 2> /dev/null)" ] || [ ! -d "$(echo $(realpath $destination) | sed 's@[^/]*$@@')" ]); then zenity --height=480 --width=640 --error --text="Desination path does not exist, please provide an existing path."; create_image; return; fi
@@ -2908,14 +2779,10 @@ else
 		case "$1" in
 			-dist | --distribution)
 			shift
-			#if [ ! -f "$1" ]; then echo "ChromeOS recovery image $1 not found"; exit 1; fi
-			#if [ ! $(dd if="$1" bs=1 count=4 status=none | od -A n -t x1 | sed 's/ //g') == '33c0fa8e' ] || [ $(cgpt show -i 12 -b "$1") -eq 0 ] || [ $(cgpt show -i 13 -b "$1") -gt 0 ] || [ ! $(cgpt show -i 3 -l "$1") == 'ROOT-A' ]; then echo "$1 is not a valid ChromeOS recovey image (have you unzipped it ?)"; exit 1; fi
 			distro="$1"
 			;;
 			-env | --environment)
 			shift
-			#if [ ! -f "$1" ]; then echo "ChromeOS recovery image $1 not found"; exit 1; fi
-			#if [ ! $(dd if="$1" bs=1 count=4 status=none | od -A n -t x1 | sed 's/ //g') == '33c0fa8e' ] || [ $(cgpt show -i 12 -b "$1") -eq 0 ] || [ $(cgpt show -i 13 -b "$1") -gt 0 ] || [ ! $(cgpt show -i 3 -l "$1") == 'ROOT-A' ]; then echo "$1 is not a valid ChromeOS recovey image (have you unzipped it ?)"; exit 1; fi
 			desktop="$1"
 			;;
 			-img | --imagepath)
