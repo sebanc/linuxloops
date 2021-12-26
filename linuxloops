@@ -26,7 +26,7 @@ list_desktops()
 {
 case "$1" in
 	'archlinux')
-	available_desktops="none budgie cinnamon deepin enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
+	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	;;
 	'debian')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
@@ -44,7 +44,7 @@ case "$1" in
 	available_desktops="none cinnamon cinnamon-full enlightenment enlightenment-full gnome gnome-full kde kde-full lxde lxde-full mate mate-full xfce xfce-full"
 	;;
 	'manjaro')
-	available_desktops="none budgie budgie-full cinnamon deepin deepin-full enlightenment gnome gnome-full kde kde-full lxde lxqt mate mate-full xfce xfce-full"
+	available_desktops="none budgie budgie-full cinnamon deepin deepin-full deepin-full enlightenment gnome gnome-full kde kde-full lxde lxqt mate mate-full xfce xfce-full"
 	;;
 	'mint')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome kde lxde lxqt mate mate-full ubuntu xfce xfce-full"
@@ -712,7 +712,14 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	;;
 	'deepin')
 	install_desktop="
-pacman -S --noconfirm $desktop_base deepin deepin-terminal
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal
+systemctl enable lightdm
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'deepin-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal deepin-extra
 systemctl enable lightdm
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
 "
@@ -1667,7 +1674,14 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	;;
 	'deepin')
 	install_desktop="
-pacman -S --noconfirm $desktop_base deepin deepin-manjaro deepin-terminal
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal
+systemctl enable lightdm
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'deepin-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal deepin-extra
 systemctl enable lightdm
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\n' > /etc/lightdm/lightdm.conf
 "
