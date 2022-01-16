@@ -2978,7 +2978,7 @@ mkfs.ext4 -F -L "LL-BOOT" "$destination_loop"p2
 echo -n "$userpass" | cryptsetup --cipher aes-cbc-plain --key-size 256 --hash ripemd160 luksFormat "$destination_loop"p3 -
 echo -n "$userpass" | cryptsetup luksOpen "$destination_loop"p3 root_"$(echo $destination_loop | sed 's@/dev/@@g')" -
 mkfs.ext4 -F -L "LL-ROOT" /dev/mapper/root_"$(echo $destination_loop | sed 's@/dev/@@g')"
-if [ ! -z "$swap_size" ]; then
+if [ ! -z "$swap_size" ] && [ "$swap_size" -ne 0 ]; then
 echo -n "$userpass" | cryptsetup --cipher aes-cbc-plain --key-size 256 --hash ripemd160 luksFormat "$destination_loop"p4 -
 echo -n "$userpass" | cryptsetup luksOpen "$destination_loop"p4 swap_"$(echo $destination_loop | sed 's@/dev/@@g')" -
 mkswap -L "LL-SWAP" /dev/mapper/swap_"$(echo $destination_loop | sed 's@/dev/@@g')"
@@ -2989,7 +2989,7 @@ else
 mkfs.fat -F 12 -n 'LL-EFI' "$destination_loop"p1
 mkfs.ext4 -F -L "LL-BOOT" "$destination_loop"p2
 mkfs.ext4 -F -L "LL-ROOT" "$destination_loop"p3
-if [ ! -z "$swap_size" ]; then
+if [ ! -z "$swap_size" ] && [ "$swap_size" -ne 0 ]; then
 mkswap -L "LL-SWAP" "$destination_loop"p4
 fi
 mount "$destination_loop"p3 "$linuxloopsdir"/chroot
