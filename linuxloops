@@ -20,7 +20,7 @@ usage()
 	echo "-h, --help					Display this menu"
 }
 
-available_distros="archlinux debian elementary fedora gentoo kali manjaro mint opensuse pop_os rockylinux ubuntu zorin"
+available_distros="archlinux debian elementary fedora gentoo kali manjaro mint nixos opensuse pop_os rockylinux tails ubuntu zorin"
 surface_supported="archlinux debian elementary fedora kali manjaro mint pop_os ubuntu zorin"
 list_desktops()
 {
@@ -49,6 +49,9 @@ case "$1" in
 	'mint')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome kde lxde lxqt mate mate-full ubuntu xfce xfce-full"
 	;;
+	'nixos')
+	available_desktops="none gnome-full kde-full"
+	;;
 	'opensuse')
 	available_desktops="none budgie cinnamon enlightenment gnome kde lxde lxqt mate xfce"
 	;;
@@ -57,6 +60,9 @@ case "$1" in
 	;;
 	'rockylinux')
 	available_desktops="none full"
+	;;
+	'tails')
+	available_desktops="full"
 	;;
 	'ubuntu')
 	available_desktops="none budgie budgie-full cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full studio-full ubuntu ubuntu-full xfce xfce-full"
@@ -81,9 +87,19 @@ check_parameters()
 if [ -z "$distro" ] || [ -z "$(echo $available_distros | grep -w $distro)" ]; then echo -e "Please select a distro from the below list:\n$available_distros.\n"; exit 1; fi
 list_desktops "$distro"
 if [ ! -z "$desktop" ] && [ -z "$(echo $available_desktops | grep -w $desktop)" ]; then echo -e "$desktop desktop environment is not available, please choose from:\n$available_desktops.\n"; exit 1; fi
+if [ "$surface" == "Yes" ] && [ -z "$(echo $surface_supported | grep -w $distro)" ]; then echo -e "Linux Surface patches are currently only supported with:\n$surface_supported.\n"; exit 1; fi
+kernel_part=2
+initramfs_format="\$initramfs_prefix\$kernel\$initramfs_suffix"
+if [ "$distro" == "tails" ]; then
+	kernel_part=3
+	initramfs_format="\$initramfs_prefix\$initramfs_suffix"
+	rootfs_size=6
+	if [ "$encryption" == "Yes" ]; then echo -e "rootfs encryption is not supported with tails but the persistent storage will be encrypted by default.\n"; exit 1; fi
+	if [ ! -z "$swap_size" ]; then echo -e "Swap should not be enabled with tails for security reasons.\n"; exit 1; fi
+fi
 }
 
-download_image()
+download_lxc_image()
 {
 local found=0
 available_builds=$(curl -L https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/ | grep 'alt="\[DIR]"' | tr '>' '\n' | grep '<a href' | cut -d'/' -f 2 | sort -r)
@@ -92,7 +108,8 @@ for build in $available_builds; do
 	if curl -L --output /dev/null --silent --head --fail https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz; then
 		found=1
 		curl -L https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz -o "$1".tar.xz
-		tar xf "$1".tar.xz -C "$linuxloopsdir"/chroot/
+		mkdir -p "$linuxloopsdir"/chroot"$4"
+		tar xf "$1".tar.xz -C "$linuxloopsdir"/chroot"$4"/
 		rm "$1".tar.xz
 		break
 	else
@@ -108,7 +125,11 @@ fi
 write_partition_table()
 {
 if [ -z "$swap_size" ] || [ "$swap_size" -eq 0 ]; then
-	echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nw" | fdisk "$1"
+	if [ "$distro" != "tails" ]; then
+		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nw" | fdisk "$1"
+	else
+		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n+${rootfs_size}G\nn\n4\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nt\n4\n27\nx\nn\n4\nTailsData\nr\nw" | fdisk "$1"
+	fi
 else
 	if [ "$root_device" == "/dev/mapper/root" ]; then
 		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n-${swap_size}G\nn\n4\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nt\n4\n20\nw" | fdisk "$1"
@@ -120,71 +141,94 @@ fi
 
 install_efi()
 {
-mkdir -p "$linuxloopsdir"/chroot/boot/efi/efi/boot
-cat >"$linuxloopsdir"/chroot/boot/efi/efi/boot/grub.cfg <<VMGRUB
+if [ -z "$1" ]; then
+bootpath="$linuxloopsdir"/chroot/boot/efi/efi/boot
+else
+bootpath="$linuxloopsdir"/chroot"$1"/mnt/boot/efi/efi/boot
+fi
+mkdir -p "$bootpath"
+cat >"$bootpath"/grub.cfg <<VMGRUB
 set timeout=2
 
 menuentry "$distro" --class "$distro" {
 regexp --set disk "(^.+)(,gpt)" \$root
-source (\$disk,2)/linuxloops/config
+disk_type=\$disk
+root_device=$vm_root_device
+source (\$disk_type,2)/linuxloops/config
 kernel=\$default_kernel
-linux (\$disk,2)/\$kernel_prefix\$kernel\$kernel_suffix root="\$vm_root_device" rw quiet
-initrd (\$disk,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+linux \$kernel_prefix\$kernel\$kernel_suffix root=\$root_device $cmdline_extra rw quiet
+initrd $initramfs_format
 }
 
 submenu "Advanced options for $distro" --class "$distro" {
 regexp --set disk "(^.+)(,gpt)" \$root
-source (\$disk,2)/linuxloops/config
+disk_type=\$disk
+root_device=$vm_root_device
+source (\$disk_type,2)/linuxloops/config
 for kernel in \$kernels; do
 menuentry "Boot with kernel \$kernel" {
-	linux (\$disk,2)/\$kernel_prefix\$kernel\$kernel_suffix root="\$vm_root_device" rw quiet
-	initrd (\$disk,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+	linux \$kernel_prefix\$kernel\$kernel_suffix root=\$root_device $cmdline_extra rw quiet
+	initrd $initramfs_format
 }
 menuentry "Boot with kernel \$kernel in recovery mode" {
-	linux (\$disk,2)/\$kernel_prefix\$kernel\$kernel_suffix root="\$vm_root_device" rw systemd.unit=multi-user.target
-	initrd (\$disk,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+	linux \$kernel_prefix\$kernel\$kernel_suffix root=\$root_device $cmdline_extra rw systemd.unit=multi-user.target
+	initrd $initramfs_format
 }
 menuentry "Boot with kernel \$kernel in linuxloops debug mode" {
-	linux (\$disk,2)/\$kernel_prefix\$kernel\$kernel_suffix root="\$vm_root_device" rw linuxloops_debug=1
-	initrd (\$disk,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+	linux \$kernel_prefix\$kernel\$kernel_suffix root=\$root_device $cmdline_extra rw linuxloops_debug=1
+	initrd $initramfs_format
 }
 done
 }
 VMGRUB
-curl -L https://github.com/sebanc/brunch/raw/r94/efi-partition/efi/boot/grubx64.efi -o "$linuxloopsdir"/chroot/boot/efi/efi/boot/bootx64.efi
+curl -L https://github.com/sebanc/brunch/raw/r94/efi-partition/efi/boot/grubx64.efi -o "$bootpath"/bootx64.efi
 }
 
 umount_chroot()
 {
+install_efi "$1"
+if [ -z "$1" ]; then
 if mountpoint -q "$linuxloopsdir"/chroot/boot/efi; then umount "$linuxloopsdir"/chroot/boot/efi; fi
 if mountpoint -q "$linuxloopsdir"/chroot/boot; then umount "$linuxloopsdir"/chroot/boot; fi
-if mountpoint -q "$linuxloopsdir"/chroot/tmp; then umount "$linuxloopsdir"/chroot/tmp; fi
-if mountpoint -q "$linuxloopsdir"/chroot/dev/shm; then umount "$linuxloopsdir"/chroot/dev/shm; fi
-if mountpoint -q "$linuxloopsdir"/chroot/dev/pts; then umount "$linuxloopsdir"/chroot/dev/pts; fi
-if mountpoint -q "$linuxloopsdir"/chroot/dev; then umount "$linuxloopsdir"/chroot/dev; fi
-if mountpoint -q "$linuxloopsdir"/chroot/sys; then umount "$linuxloopsdir"/chroot/sys; fi
-if mountpoint -q "$linuxloopsdir"/chroot/proc; then umount "$linuxloopsdir"/chroot/proc; fi
-if mountpoint -q "$linuxloopsdir"/chroot; then umount "$linuxloopsdir"/chroot; fi
+else
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/mnt/boot/efi; then umount "$linuxloopsdir"/chroot"$1"/mnt/boot/efi; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/mnt/boot; then umount "$linuxloopsdir"/chroot"$1"/mnt/boot; fi
+fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/tmp; then umount "$linuxloopsdir"/chroot"$1"/tmp; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/dev/shm; then umount "$linuxloopsdir"/chroot"$1"/dev/shm; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/dev/pts; then umount "$linuxloopsdir"/chroot"$1"/dev/pts; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/dev; then umount "$linuxloopsdir"/chroot"$1"/dev; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/sys; then umount "$linuxloopsdir"/chroot"$1"/sys; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/proc; then umount "$linuxloopsdir"/chroot"$1"/proc; fi
 }
 
 mount_chroot()
 {
-mount -t proc none "$linuxloopsdir"/chroot/proc
-mount -t sysfs none "$linuxloopsdir"/chroot/sys
-mount -t devtmpfs none "$linuxloopsdir"/chroot/dev
-mount -t devpts none "$linuxloopsdir"/chroot/dev/pts
-mount -t tmpfs -o mode=1777,nosuid,nodev,strictatime none "$linuxloopsdir"/chroot/dev/shm
-mount -t tmpfs none "$linuxloopsdir"/chroot/tmp
+mkdir -p "$linuxloopsdir"/chroot"$1"/dev/pts "$linuxloopsdir"/chroot"$1"/dev/shm "$linuxloopsdir"/chroot"$1"/etc "$linuxloopsdir"/chroot"$1"/proc "$linuxloopsdir"/chroot"$1"/sys "$linuxloopsdir"/chroot"$1"/tmp
+mount -t proc none "$linuxloopsdir"/chroot"$1"/proc
+mount -t sysfs none "$linuxloopsdir"/chroot"$1"/sys
+mount -t devtmpfs none "$linuxloopsdir"/chroot"$1"/dev
+mount -t devpts none "$linuxloopsdir"/chroot"$1"/dev/pts
+mount -t tmpfs -o mode=1777,nosuid,nodev,strictatime none "$linuxloopsdir"/chroot"$1"/dev/shm
+mount -t tmpfs none "$linuxloopsdir"/chroot"$1"/tmp
+if [ -z "$1" ]; then
 mkdir -p "$linuxloopsdir"/chroot/boot
 mount "$destination_loop"p2 "$linuxloopsdir"/chroot/boot
 mkdir -p "$linuxloopsdir"/chroot/boot/efi
 mount "$destination_loop"p1 "$linuxloopsdir"/chroot/boot/efi
-install_efi
+else
+mkdir -p "$linuxloopsdir"/chroot"$1"/mnt/boot
+mount "$destination_loop"p2 "$linuxloopsdir"/chroot"$1"/mnt/boot
+mkdir -p "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
+mount "$destination_loop"p1 "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
+fi
+#mount --make-rprivate "$linuxloopsdir"/chroot/boot/efi
 }
 
 add_linuxloops_init()
 {
-cat >>"$linuxloopsdir"/chroot/tmp/install_initramfs <<'INITSCRIPT'
+touch "$linuxloopsdir"/chroot"$1"/tmp/install_initramfs
+cat >>"$linuxloopsdir"/chroot"$1"/tmp/install_initramfs <<'INITSCRIPT'
 printk_levels="$(cat /proc/sys/kernel/printk)"
 echo 0 0 0 0 > /proc/sys/kernel/printk
 printf "\033c"
@@ -223,7 +267,7 @@ fi
 if [ -b /dev/sda4 ] && [ ! -z "$cryptopass" ]; then
 	echo -n "$cryptopass" | cryptsetup luksOpen /dev/sda4 swap -
 	swapon /dev/mapper/swap || { echo "The swap device could not be enabled."; recovery_shell; }
-elif [ -b /dev/sda4 ]; then
+elif [ -b /dev/sda4 ] && [ "$(blkid -s TYPE -o value /dev/sda4)" == "LL-SWAP" ]; then
 	swapon /dev/sda4 || { echo "The swap device could not be enabled."; recovery_shell; }
 fi
 else
@@ -267,7 +311,7 @@ if [ -f /mainroot/"$img_path" ]; then
 	if [ -b /dev/loop0p4 ] && [ ! -z "$cryptopass" ]; then
 		echo -n "$cryptopass" | cryptsetup luksOpen /dev/loop0p4 swap -
 		swapon /dev/mapper/swap || { echo "The swap device could not be enabled."; recovery_shell; }
-	elif [ -b /dev/loop0p4 ]; then
+	elif [ -b /dev/loop0p4 ] && [ "$(blkid -s TYPE -o value /dev/loop0p4)" == "LL-SWAP" ]; then
 		swapon /dev/loop0p4 || { echo "The swap device could not be enabled."; recovery_shell; }
 	fi
 else
@@ -288,7 +332,7 @@ sed -i 's@HOOKS=(base udev@HOOKS=(base udev linuxloops encrypt@g' /etc/mkinitcpi
 else
 sed -i 's@HOOKS=(base udev@HOOKS=(base udev linuxloops@g' /etc/mkinitcpio.conf
 fi
-cat >/etc/initcpio/install/linuxloops <<INSTALLHOOK
+cat >/etc/initcpio/install/linuxloops <<'INSTALLHOOK'
 #!/bin/bash
 
 build() {
@@ -305,7 +349,9 @@ build() {
 	add_binary 'swapon'
 
 	add_module '8250_dw'
+	add_module 'aes'
 	add_module 'atkbd'
+	add_module 'cbc'
 	add_module 'dm_crypt'
 	add_module 'exfat'
 	add_module 'fuse'
@@ -319,6 +365,7 @@ build() {
 	add_module 'quota_v1'
 	add_module 'quota_v2'
 	add_module 'serio'
+	add_module 'sha256'
 	add_module 'surface_aggregator'
 	add_module 'surface_aggregator_registry'
 	add_module 'surface_hid'
@@ -329,15 +376,12 @@ build() {
 	add_runscript
 
 	mkdir -p /boot/linuxloops
-	for kernel in \\\$(ls /boot/vmlinuz-* | sed 's@/boot/vmlinuz-@@g' | sort -V); do
-		default_kernel="\\\$kernel"
-		kernels="\n\\\$kernel\\\$kernels"
+	for kernel in \$(ls /boot/vmlinuz-* | sed 's@/boot/vmlinuz-@@g' | sort -V); do
+		default_kernel="\$kernel"
+		kernels="\n\$kernel\$kernels"
 	done
-	echo -e "root_device=\"$root_device\"" > /boot/linuxloops/config
-	echo -e "vm_root_device=\"$vm_root_device\"" >> /boot/linuxloops/config
-	echo -e "cmdline_extra=\"$cmdline_extra\"" >> /boot/linuxloops/config
-	echo -e "default_kernel=\"\\\$default_kernel\"" >> /boot/linuxloops/config
-	echo -e "kernels=\"\\\$kernels\n\"" >> /boot/linuxloops/config
+	echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+	echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
 	echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
 	echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
 	echo -e "initramfs_prefix=\"$initramfs_prefix\"" >> /boot/linuxloops/config
@@ -366,15 +410,15 @@ install_initramfstools()
 {
 cat >"$linuxloopsdir"/chroot/tmp/install_initramfs <<INITRAMFSTOOLSSTART
 echo "BUSYBOX=n" >> /etc/initramfs-tools/initramfs.conf
-cat >/etc/initramfs-tools/hooks/linuxloops <<INSTALLHOOK
+cat >/etc/initramfs-tools/hooks/linuxloops <<'INSTALLHOOK'
 #!/bin/bash
 PREREQ=""
 prereqs()
 {
-   echo "\\\$PREREQ"
+   echo "\$PREREQ"
 }
 
-case \\\$1 in
+case \$1 in
 prereqs)
    prereqs
    exit 0
@@ -384,20 +428,22 @@ esac
 . /usr/share/initramfs-tools/hook-functions
 # Begin real processing below this line
 
-copy_exec \\\$(command -v bash)
-copy_exec \\\$(command -v blkid)
-copy_exec \\\$(command -v cryptsetup)
-copy_exec \\\$(command -v cut)
-copy_exec \\\$(command -v e2fsck)
-copy_exec \\\$(command -v grep)
-copy_exec \\\$(command -v losetup)
-copy_exec \\\$(command -v lsblk)
-copy_exec \\\$(command -v ntfs-3g)
-copy_exec \\\$(command -v ntfsfix)
-copy_exec \\\$(command -v swapon)
+copy_exec \$(command -v bash)
+copy_exec \$(command -v blkid)
+copy_exec \$(command -v cryptsetup)
+copy_exec \$(command -v cut)
+copy_exec \$(command -v e2fsck)
+copy_exec \$(command -v grep)
+copy_exec \$(command -v losetup)
+copy_exec \$(command -v lsblk)
+copy_exec \$(command -v ntfs-3g)
+copy_exec \$(command -v ntfsfix)
+copy_exec \$(command -v swapon)
 
 manual_add_modules 8250_dw
+manual_add_modules aes
 manual_add_modules atkbd
+manual_add_modules cbc
 manual_add_modules dm-crypt
 manual_add_modules exfat
 manual_add_modules fuse
@@ -411,6 +457,7 @@ manual_add_modules pinctrl_amd
 manual_add_modules quota_v1
 manual_add_modules quota_v2
 manual_add_modules serio
+manual_add_modules sha256
 manual_add_modules surface_aggregator
 manual_add_modules surface_aggregator_registry
 manual_add_modules surface_hid
@@ -419,15 +466,12 @@ manual_add_modules usbhid
 manual_add_modules xhci_pci
 
 mkdir -p /boot/linuxloops
-for kernel in \\\$(ls /boot/vmlinuz-* | sed 's@/boot/vmlinuz-@@g' | sort -V); do
-	default_kernel="\\\$kernel"
-	kernels="\n\\\$kernel\\\$kernels"
+for kernel in \$(ls /boot/vmlinuz-* | sed 's@/boot/vmlinuz-@@g' | sort -V); do
+	default_kernel="\$kernel"
+	kernels="\n\$kernel\$kernels"
 done
-echo -e "root_device=\"$root_device\"" > /boot/linuxloops/config
-echo -e "vm_root_device=\"$vm_root_device\"" >> /boot/linuxloops/config
-echo -e "cmdline_extra=\"$cmdline_extra\"" >> /boot/linuxloops/config
-echo -e "default_kernel=\"\\\$default_kernel\"" >> /boot/linuxloops/config
-echo -e "kernels=\"\\\$kernels\n\"" >> /boot/linuxloops/config
+echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
 echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
 echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
 echo -e "initramfs_prefix=\"$initramfs_prefix\"" >> /boot/linuxloops/config
@@ -462,7 +506,7 @@ install_dracut()
 cat >"$linuxloopsdir"/chroot/tmp/install_initramfs <<INITDRACUT
 echo 'omit_dracutmodules+=" busybox "' >> /etc/dracut.conf
 mkdir /usr/lib/dracut/modules.d/30linuxloops
-cat >/usr/lib/dracut/modules.d/30linuxloops/module-setup.sh <<INSTALLHOOK
+cat >/usr/lib/dracut/modules.d/30linuxloops/module-setup.sh <<'INSTALLHOOK'
 #!/bin/bash
 
 check() {
@@ -471,7 +515,9 @@ check() {
 
 installkernel() {
 	instmods '8250_dw'
+	instmods 'aes'
 	instmods 'atkbd'
+	instmods 'cbc'
 	instmods 'dm-crypt'
 	instmods 'exfat'
 	instmods 'fuse'
@@ -485,6 +531,7 @@ installkernel() {
 	instmods 'quota_v1'
 	instmods 'quota_v2'
 	instmods 'serio'
+	instmods 'sha256'
 	instmods 'surface_aggregator'
 	instmods 'surface_aggregator_registry'
 	instmods 'surface_hid'
@@ -494,39 +541,36 @@ installkernel() {
 }
 
 install() {
-	inst "\\\$(command -v bash)" /bin/bash
-	inst "\\\$(command -v blkid)" /sbin/blkid
-	inst "\\\$(command -v cryptsetup)" /sbin/cryptsetup
-	inst "\\\$(command -v cut)" /sbin/cut
-	inst "\\\$(command -v e2fsck)" /sbin/e2fsck
-	inst "\\\$(command -v grep)" /sbin/grep
-	inst "\\\$(command -v losetup)" /sbin/losetup
-	inst "\\\$(command -v lsblk)" /sbin/lsblk
-	inst "\\\$(command -v ntfs-3g)" /sbin/ntfs-3g
-	inst "\\\$(command -v ntfsfix)" /sbin/ntfsfix
-	inst "\\\$(command -v swapon)" /sbin/swapon
-	inst_hook pre-trigger 30 "\\\$moddir/init-linuxloops.sh"
-	inst_script "\\\$moddir/linuxloops.sh" "/sbin/linuxloops.sh"
+	inst "\$(command -v bash)" /bin/bash
+	inst "\$(command -v blkid)" /sbin/blkid
+	inst "\$(command -v cryptsetup)" /sbin/cryptsetup
+	inst "\$(command -v cut)" /sbin/cut
+	inst "\$(command -v e2fsck)" /sbin/e2fsck
+	inst "\$(command -v grep)" /sbin/grep
+	inst "\$(command -v losetup)" /sbin/losetup
+	inst "\$(command -v lsblk)" /sbin/lsblk
+	inst "\$(command -v ntfs-3g)" /sbin/ntfs-3g
+	inst "\$(command -v ntfsfix)" /sbin/ntfsfix
+	inst "\$(command -v swapon)" /sbin/swapon
+	inst_hook pre-trigger 30 "\$moddir/init-linuxloops.sh"
+	inst_script "\$moddir/linuxloops.sh" "/sbin/linuxloops.sh"
 
 	mkdir -p /boot/linuxloops
-if [ "\\\$(grep -o '^NAME=[^,]\+' /etc/os-release | sed 's@"@@g' | cut -d'=' -f2)" == "Fedora Linux" ] || [ "\\\$(grep -o '^NAME=[^,]\+' /etc/os-release | sed 's@"@@g' | cut -d'=' -f2)" == "Rocky Linux" ]; then
+if [ "\$(grep -o '^NAME=[^,]\+' /etc/os-release | sed 's@"@@g' | cut -d'=' -f2)" == "Fedora Linux" ] || [ "\$(grep -o '^NAME=[^,]\+' /etc/os-release | sed 's@"@@g' | cut -d'=' -f2)" == "Rocky Linux" ]; then
 	rm -f /boot/vmlinuz*
-	for kernel in \\\$(ls /lib/modules/*/vmlinuz | sed 's@/lib/modules/@@g' | sed 's@/vmlinuz@@g' | sort -V); do
-		cp "/lib/modules/\\\$kernel/vmlinuz" "/boot/vmlinuz-\\\$kernel"
-		default_kernel="\\\$kernel"
-		kernels="\n\\\$kernel\\\$kernels"
+	for kernel in \$(ls /lib/modules/*/vmlinuz | sed 's@/lib/modules/@@g' | sed 's@/vmlinuz@@g' | sort -V); do
+		cp "/lib/modules/\$kernel/vmlinuz" "/boot/vmlinuz-\$kernel"
+		default_kernel="\$kernel"
+		kernels="\n\$kernel\$kernels"
 	done
 else
-	for kernel in \\\$(ls /boot/vmlinuz-* | sed 's@/boot/vmlinuz-@@g' | sort -V); do
-		default_kernel="\\\$kernel"
-		kernels="\n\\\$kernel\\\$kernels"
+	for kernel in \$(ls /boot/vmlinuz-* | sed 's@/boot/vmlinuz-@@g' | sort -V); do
+		default_kernel="\$kernel"
+		kernels="\n\$kernel\$kernels"
 	done
 fi
-	echo -e "root_device=\"$root_device\"" > /boot/linuxloops/config
-	echo -e "vm_root_device=\"$vm_root_device\"" >> /boot/linuxloops/config
-	echo -e "cmdline_extra=\"$cmdline_extra\"" >> /boot/linuxloops/config
-	echo -e "default_kernel=\"\\\$default_kernel\"" >> /boot/linuxloops/config
-	echo -e "kernels=\"\\\$kernels\n\"" >> /boot/linuxloops/config
+	echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+	echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
 	echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
 	echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
 	echo -e "initramfs_prefix=\"$initramfs_prefix\"" >> /boot/linuxloops/config
@@ -548,6 +592,146 @@ echo -e "RUNHOOK" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
 echo -e "chmod 0755 /usr/lib/dracut/modules.d/30linuxloops/linuxloops.sh" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
 echo -e "dracut --no-hostonly -f --regenerate-all" >> "$linuxloopsdir"/chroot/tmp/install_initramfs
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_initramfs
+}
+
+install_nixos_config ()
+{
+#touch "$linuxloopsdir"/chroot/installroot/tmp/install_initramfs
+add_linuxloops_init /installroot
+mkdir -p "$linuxloopsdir"/chroot/installroot/mnt/etc/nixos
+cat >"$linuxloopsdir"/chroot/installroot/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
+# Edit this configuration file to define what should be installed on
+# your system.  Help is available in the configuration.nix(5) man page
+# and in the NixOS manual (accessible by running ‘nixos-help’).
+
+{ config, pkgs, ... }:
+
+{
+imports = [ ./linuxloops.nix ];
+
+boot.kernelPackages = pkgs.linuxPackages_latest;
+boot.kernelModules = [ "kvm-amd" ];
+
+users.users.$username = {
+isNormalUser = true;
+extraGroups = [ "wheel" ];
+};
+
+networking.hostName = "nixos-linuxloops";
+networking.networkmanager.enable = true;
+networking.useDHCP = false;
+
+sound.enable = true;
+hardware.pulseaudio.enable = true;
+
+services.printing.enable = true;
+
+powerManagement.cpuFreqGovernor = "ondemand";
+
+$nixos_desktop
+
+# This value determines the NixOS release from which the default
+# settings for stateful data, like file locations and database versions
+# on your system were taken. It‘s perfectly fine and recommended to leave
+# this value at the release version of the first install of this system.
+# Before changing this value read the documentation for this option
+# (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
+system.stateVersion = "21.11"; # Did you read the comment?
+}
+NIXOSCONFIGURATION
+cat >"$linuxloopsdir"/chroot/installroot/mnt/etc/nixos/linuxloops.nix <<NIXOSLINUXLOOPS
+# Do not modify this file which contains the linuxloops configuration.
+# Please make changes to /etc/nixos/configuration.nix instead.
+{ config, lib, pkgs, modulesPath, ... }:
+
+{
+fileSystems."/" = {
+	label = "LL-ROOT";
+	fsType = "ext4";
+};
+
+fileSystems."/boot" = {
+	label = "LL-BOOT";
+	fsType = "ext4";
+};
+
+boot.loader = {
+	efi = {
+		canTouchEfiVariables = false;
+		efiSysMountPoint = "/boot/efi";
+	};
+	grub = {
+		efiSupport = true;
+		device = "nodev";
+		enable = true;
+		extraGrubInstallArgs = [ "--help" ];
+		extraPrepareConfig = ''
+mkdir -p /boot/linuxloops
+rm -f /boot/vmlinuz*
+for kernel in \$(ls /boot/kernels/*Image | sed 's@/boot/kernels/@@g' | sort -V); do
+kernel_ver="\$(echo \$kernel | cut -d'-' -f3)"
+ln -s "./kernels/\$kernel" "/boot/vmlinuz-\$kernel_ver"
+default_kernel="\$kernel_ver"
+kernels="\n\$kernel_ver\$kernels"
+done
+rm -f /boot/initrd*
+for initrd in \$(ls /boot/kernels/*initrd | sed 's@/boot/kernels/@@g' | sort -V); do
+initrd_ver="\$(echo \$initrd | cut -d'-' -f4)"
+ln -s "./kernels/\$initrd" "/boot/initrd-\$initrd_ver"
+done
+rm -f /init
+ln -s "\$(find /nix | grep '\-nixos\-system\-.*/init$' | head -1)" /init
+echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
+echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
+echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
+echo -e "initramfs_prefix=\"$initramfs_prefix\"" >> /boot/linuxloops/config
+echo -e "initramfs_suffix=\"$initramfs_suffix\"" >> /boot/linuxloops/config
+'';
+	};
+};
+
+boot.initrd.availableKernelModules = [ "8250_dw" "aes" "atkbd" "cbc" "dm_crypt" "encrypted_keys" "exfat" "fuse" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "ntfs3" "nvme" "pinctrl_amd" "quota_v1" "quota_v2" "serio" "sha256" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "usbhid" "xhci_pci" ];
+boot.initrd.extraUtilsCommands = ''
+copy_bin_and_libs \${pkgs.bash}/bin/bash
+copy_bin_and_libs \${pkgs.util-linux}/bin/blkid
+copy_bin_and_libs \${pkgs.coreutils}/bin/coreutils
+copy_bin_and_libs \${pkgs.cryptsetup}/bin/cryptsetup
+copy_bin_and_libs \${pkgs.coreutils}/bin/cut
+copy_bin_and_libs \${pkgs.e2fsprogs}/bin/e2fsck
+copy_bin_and_libs \${pkgs.gnugrep}/bin/grep
+copy_bin_and_libs \${pkgs.util-linux}/bin/losetup
+copy_bin_and_libs \${pkgs.util-linux}/bin/lsblk
+copy_bin_and_libs \${pkgs.ntfs3g}/bin/ntfs-3g
+copy_bin_and_libs \${pkgs.ntfs3g}/bin/ntfsfix
+copy_bin_and_libs \${pkgs.util-linux}/bin/swapon
+'';
+boot.initrd.postDeviceCommands = ''
+$(cat "$linuxloopsdir"/chroot/installroot/tmp/install_initramfs)
+'';
+
+hardware.enableAllFirmware = true;
+nixpkgs.config.allowUnfree = true;
+nix.autoOptimiseStore = true;
+nix.useSandbox = false;
+}
+NIXOSLINUXLOOPS
+}
+
+install_iso_init ()
+{
+add_linuxloops_init /installroot
+cat >"$linuxloopsdir"/chroot/installroot/tmp/install_boot <<INITISO
+#!/bin/bash
+mkdir /mnt/boot/linuxloops
+echo -e "default_kernel=\"vmlinuz\"" >> /mnt/boot/linuxloops/config
+echo -e "kernels=\"vmlinuz\"" >> /mnt/boot/linuxloops/config
+echo -e "kernel_prefix=\"$kernel_prefix\"" >> /mnt/boot/linuxloops/config
+echo -e "kernel_suffix=\"$kernel_suffix\"" >> /mnt/boot/linuxloops/config
+echo -e "initramfs_prefix=\"$initramfs_prefix\"" >> /mnt/boot/linuxloops/config
+echo -e "initramfs_suffix=\"$initramfs_suffix\"" >> /mnt/boot/linuxloops/config
+INITISO
+chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/install_boot
 }
 
 install_surface_pacman()
@@ -635,7 +819,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_surface
 
 cleanup()
 {
-cat >"$linuxloopsdir"/chroot/tmp/cleanup <<CLEANUP
+cat >"$linuxloopsdir"/chroot"$1"/tmp/cleanup <<CLEANUP
 rm -f /usr/lib/NetworkManager/conf.d/10-globally-managed-devices.conf
 rm -f /usr/share/xsessions/lightdm-xsession.desktop
 rm -f /etc/pacman.d/gnupg/S.gpg-agent
@@ -643,12 +827,12 @@ rm -f /home/'$username'/.gnupg/S.gpg-agent
 rm -f /home/'$username'/.gnupg/S.dirmngr
 sleep 5
 CLEANUP
-chmod 0755 "$linuxloopsdir"/chroot/tmp/cleanup
+chmod 0755 "$linuxloopsdir"/chroot"$1"/tmp/cleanup
 }
 
 chroot_archlinux()
 {
-download_image archlinux current default
+download_lxc_image archlinux current default
 
 mount_chroot
 
@@ -676,7 +860,7 @@ if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
 if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 ARCHLINUXINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -835,9 +1019,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_pacman "linux"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initramfs-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initramfs-"
 initramfs_suffix=".img"
 install_initcpio
 
@@ -850,7 +1034,7 @@ umount_chroot
 
 chroot_debian()
 {
-download_image debian sid default
+download_lxc_image debian sid default
 
 mount_chroot
 
@@ -885,7 +1069,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 DEBIANINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -1024,9 +1208,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-headers-* linux-image-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd.img-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
 initramfs_suffix=""
 install_initramfstools
 
@@ -1039,7 +1223,7 @@ umount_chroot
 
 chroot_elementary()
 {
-download_image ubuntu focal default
+download_lxc_image ubuntu focal default
 
 mount_chroot
 
@@ -1068,7 +1252,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 ELEMENTARYINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -1106,9 +1290,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd.img-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
 initramfs_suffix=""
 install_initramfstools
 
@@ -1121,7 +1305,7 @@ umount_chroot
 
 chroot_fedora()
 {
-download_image fedora 35 default
+download_lxc_image fedora 35 default
 
 mount_chroot
 
@@ -1143,7 +1327,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 yes | dnf autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 FEDORAINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -1249,9 +1433,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_dnf "kernel"; fi
 
 cmdline_extra="selinux=0 $CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initramfs-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initramfs-"
 initramfs_suffix=".img"
 install_dracut
 
@@ -1264,7 +1448,7 @@ umount_chroot
 
 chroot_gentoo()
 {
-download_image gentoo current systemd
+download_lxc_image gentoo current systemd
 
 mount_chroot
 
@@ -1301,7 +1485,7 @@ systemctl enable thermald
 if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 GENTOOINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -1379,9 +1563,9 @@ fi
 if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initramfs-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initramfs-"
 initramfs_suffix=".img"
 install_dracut
 
@@ -1394,7 +1578,7 @@ umount_chroot
 
 chroot_kali()
 {
-download_image kali current default
+download_lxc_image kali current default
 
 mount_chroot
 
@@ -1429,7 +1613,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 KALIINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -1562,9 +1746,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-headers-* linux-image-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd.img-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
 initramfs_suffix=""
 install_initramfstools
 
@@ -1577,7 +1761,7 @@ umount_chroot
 
 chroot_manjaro()
 {
-download_image archlinux current default
+download_lxc_image archlinux current default
 
 mount_chroot
 
@@ -1619,7 +1803,7 @@ if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
 if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 MANJAROINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -1793,9 +1977,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_pacman "linux510"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initramfs-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initramfs-"
 initramfs_suffix=".img"
 install_initcpio
 
@@ -1808,7 +1992,7 @@ umount_chroot
 
 chroot_mint()
 {
-download_image mint uma default
+download_lxc_image mint uma default
 
 mount_chroot
 
@@ -1829,6 +2013,10 @@ APT::Get::Install-Recommends "false";
 RECOMMENDS
 apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
+yes | DEBIAN_FRONTEND=noninteractive apt install mintsystem
+cp /usr/share/linuxmint/mintsystem/apt/official-package-repositories.pref /etc/apt/preferences.d/official-package-repositories.pref
+cp /etc/apt/sources.list /etc/apt/sources.list.d/official-package-repositories.list
+echo '' > /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04-edge linux-firmware initramfs-tools ntfs-3g sudo cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
 yes | DEBIAN_FRONTEND=noninteractive apt purge vim
 /tmp/install_user
@@ -1839,7 +2027,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 MINTINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -1877,7 +2065,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-g
 	;;
 	'cinnamon-full')
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base cinnamon-desktop-environment
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-gtk-greeter cinnamon-desktop-environment
 "
 	;;
 	'enlightenment')
@@ -1949,9 +2137,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd.img-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
 initramfs_suffix=""
 install_initramfstools
 
@@ -1962,9 +2150,122 @@ chroot "$linuxloopsdir"/chroot /tmp/init
 umount_chroot
 }
 
+chroot_nixos()
+{
+mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot
+mount --make-rprivate "$linuxloopsdir"/chroot
+mkdir -p "$linuxloopsdir"/chroot/installroot/mnt
+mount --bind "$linuxloopsdir"/chroot/installroot "$linuxloopsdir"/chroot/installroot
+mount --make-rprivate "$linuxloopsdir"/chroot/installroot
+
+download_lxc_image archlinux current default /installroot
+
+mount --rbind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
+mount --make-rprivate "$linuxloopsdir"/chroot/installroot/mnt
+
+mount_chroot /installroot
+
+cat >"$linuxloopsdir"/chroot/installroot/tmp/init <<'NIXOSINIT'
+#!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+mkdir -p /run/systemd/resolve
+echo "nameserver 8.8.8.8" > /run/systemd/resolve/resolv.conf
+useradd -s /bin/bash -m 'temp'
+echo -e 'temp\ntemp' | passwd 'temp'
+echo "temp      ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/90-wheel
+groupadd -g 30000 --system nixbld
+for i in $(seq 1 32); do
+  useradd \
+    --home-dir /var/empty \
+    --gid 30000 \
+    --groups nixbld \
+    --no-user-group \
+    --system \
+    --shell /usr/sbin/nologin \
+    --uid $((30000 + i)) \
+    --password "!" \
+    nixbld$i
+done
+sudo -i -u temp bash << NIX_INSTALL
+sudo mkdir -p /nix && sudo chown -R temp /nix
+curl -L https://nixos.org/nix/install | sh
+. /home/temp/.nix-profile/etc/profile.d/nix.sh
+nix-channel --remove nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-21.11 nixos
+nix-channel --update
+nix-env -iA nixos.nixos-install-tools
+sudo nixos-install -I nixpkgs=/nix/var/nix/profiles/per-user/temp/channels/nixos --root /mnt
+sudo nixos-enter << NIX_PASSWD
+mkdir /tmp
+nix-channel --update
+/installroot/tmp_linuxloops/install_user
+if [ -f /installroot/tmp_linuxloops/install_desktop ]; then /installroot/tmp_linuxloops/install_desktop; fi
+if [ -f /installroot/tmp_linuxloops/install_custom ]; then /installroot/tmp_linuxloops/install_custom; fi
+exit
+NIX_PASSWD
+NIX_INSTALL
+/tmp/cleanup
+exit
+NIXOSINIT
+chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/init
+
+mkdir "$linuxloopsdir"/chroot/installroot/tmp_linuxloops
+
+cat >"$linuxloopsdir"/chroot/installroot/tmp_linuxloops/install_user <<NIXOSUSER
+echo -e '$userpass\n$userpass' | passwd '$username'
+NIXOSUSER
+chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp_linuxloops/install_user
+
+if [ -z "$desktop" ]; then desktop="gnome-full"; fi
+case "$desktop" in
+	'none')
+	nixos_desktop=""
+	;;
+	'gnome-full')
+	nixos_desktop="
+services.xserver.enable = true;
+services.xserver.displayManager.gdm.enable = true;
+services.xserver.desktopManager.gnome.enable = true;
+"
+	;;
+	'kde-full')
+	nixos_desktop="
+services.xserver.enable = true;
+services.xserver.displayManager.sddm.enable = true;
+services.xserver.desktopManager.plasma5.enable = true;
+"
+	;;
+esac
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "nix-env -iA $CUSTOM_PACKAGES" > "$linuxloopsdir"/chroot/installroot/tmp_linuxloops/install_desktop
+fi
+
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/installroot/tmp_linuxloops/install_custom; chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp_linuxloops/install_custom; fi
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
+kernel_suffix=""
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd-"
+initramfs_suffix=""
+install_nixos_config
+
+cleanup /installroot
+
+chroot "$linuxloopsdir"/chroot/installroot /tmp/init
+
+umount_chroot /installroot
+
+umount -R "$linuxloopsdir"/chroot/installroot/mnt
+umount "$linuxloopsdir"/chroot/installroot
+rm -r "$linuxloopsdir"/chroot/installroot
+umount "$linuxloopsdir"/chroot
+}
+
 chroot_opensuse()
 {
-download_image opensuse tumbleweed default
+download_lxc_image opensuse tumbleweed default
 
 mount_chroot
 
@@ -1987,7 +2288,7 @@ systemctl enable thermald
 if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 OPENSUSEINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -2098,9 +2399,9 @@ fi
 if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd-"
 initramfs_suffix=""
 install_dracut
 
@@ -2113,7 +2414,7 @@ umount_chroot
 
 chroot_pop_os()
 {
-download_image ubuntu hirsute default
+download_lxc_image ubuntu hirsute default
 
 mount_chroot
 
@@ -2145,7 +2446,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 POP_OSINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -2180,9 +2481,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd.img-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
 initramfs_suffix=""
 install_initramfstools
 
@@ -2195,7 +2496,7 @@ umount_chroot
 
 chroot_rockylinux()
 {
-download_image rockylinux 8 default
+download_lxc_image rockylinux 8 default
 
 mount_chroot
 
@@ -2217,7 +2518,7 @@ if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
 /tmp/install_initramfs
 yes | dnf autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 ROCKYLINUXINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -2256,9 +2557,9 @@ fi
 if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 cmdline_extra="selinux=0 $CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initramfs-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initramfs-"
 initramfs_suffix=".img"
 install_dracut
 
@@ -2269,9 +2570,117 @@ chroot "$linuxloopsdir"/chroot /tmp/init
 umount_chroot
 }
 
+chroot_tails()
+{
+echo -n "$userpass" | cryptsetup --cipher aes-cbc-plain --key-size 256 --hash ripemd160 luksFormat "$destination_loop"p4 -
+cryptsetup config "$destination_loop"p4 --label "TailsData"
+echo -n "$userpass" | cryptsetup luksOpen "$destination_loop"p4 data_"$(echo $destination_loop | sed 's@/dev/@@g')" -
+mkfs.ext4 -F -L "TailsData" /dev/mapper/data_"$(echo $destination_loop | sed 's@/dev/@@g')"
+
+mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot
+mount --make-rprivate "$linuxloopsdir"/chroot
+mkdir -p "$linuxloopsdir"/chroot/installroot/mnt
+mount --bind "$linuxloopsdir"/chroot/installroot "$linuxloopsdir"/chroot/installroot
+mount --make-rprivate "$linuxloopsdir"/chroot/installroot
+
+download_lxc_image archlinux current default /installroot
+
+mount --rbind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
+mount --make-rprivate "$linuxloopsdir"/chroot/installroot/mnt
+
+mount_chroot /installroot
+
+cat >"$linuxloopsdir"/chroot/installroot/tmp/init <<'TAILSINIT'
+#!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+mkdir -p /run/systemd/resolve
+echo "nameserver 8.8.8.8" > /run/systemd/resolve/resolv.conf
+sed -i 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
+locale-gen
+cat >/etc/locale.conf <<'LOCALE'
+LANG=en_US.UTF-8
+LOCALE
+pacman-key --init
+pacman-key --populate
+pacman -Syu --noconfirm cpio
+mkdir -p /isomount/tmp
+curl -L http://dl.amnesia.boum.org/tails/stable/tails-amd64-4.26/tails-amd64-4.26.img -o /isomount/tails.img
+isomount="$(losetup --show -fP /isomount/tails.img)"
+mount "$isomount"p1 /isomount/tmp
+cp -r /isomount/tmp/* /mnt/
+/tmp/install_boot
+mkdir -p /tmp/initramfs/scripts/init-premount /tmp/initramfs/scripts/init-bottom
+echo '/scripts/init-premount/linuxloops "$@"' > /tmp/initramfs/scripts/init-premount/ORDER
+chmod 0755 /tmp/initramfs/scripts/init-premount/ORDER
+mv /tmp/install_initramfs /tmp/initramfs/scripts/init-premount/linuxloops
+chmod 0755 /tmp/initramfs/scripts/init-premount/linuxloops
+echo '/scripts/init-bottom/persistencefix "$@"' > /tmp/initramfs/scripts/init-bottom/ORDER
+chmod 0755 /tmp/initramfs/scripts/init-bottom/ORDER
+echo "sed -i 's#loop|##g' /root/lib/live/boot/*" > /tmp/initramfs/scripts/init-bottom/persistencefix
+chmod 0755 /tmp/initramfs/scripts/init-bottom/persistencefix
+(cd /tmp/initramfs && find . | cpio -o -H newc | gzip > /mnt/boot/linuxloops.img)
+umount /isomount/tmp
+losetup -d "$isomount"
+/tmp/persistence
+/tmp/cleanup
+exit
+TAILSINIT
+chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/init
+
+cat >"$linuxloopsdir"/chroot/installroot/tmp/persistence <<TAILSPERSISTENCE
+#!/bin/bash
+mkdir -p /tmp/chroot
+mount /mnt/live/filesystem.squashfs /tmp/chroot
+mount /dev/mapper/data_"$(echo $destination_loop | sed 's@/dev/@@g')" /tmp/chroot/tmp
+cat >/tmp/chroot/tmp/init <<'PERSISTENCEINIT'
+#!/bin/bash
+chown root:root /tmp
+chmod 0775 /tmp
+setfacl -m u:tails-persistence-setup:rwx /tmp
+cat >/tmp/persistence.conf <<'PERSISTENCEFILE'
+/home/amnesia                                        source=amnesia
+/etc/NetworkManager/system-connections               source=nm-system-connections
+/etc/cups                                            source=cups-configuration
+/var/cache/apt/archives                              source=apt/cache
+/var/lib/apt/lists                                   source=apt/lists
+PERSISTENCEFILE
+chown tails-persistence-setup:tails-persistence-setup /tmp/persistence.conf
+chmod 0600 /tmp/persistence.conf
+cp -r /etc/skel /tmp/amnesia
+chown -R 1000:1000 /tmp/amnesia
+PERSISTENCEINIT
+chmod 0755 ./tmp/chroot/tmp/init
+chroot ./tmp/chroot /tmp/init
+rm -f ./tmp/chroot/tmp/init
+umount /tmp/chroot/tmp
+umount /tmp/chroot
+TAILSPERSISTENCE
+chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/persistence
+
+cmdline_extra="boot=live config live-media=\$root_device nopersistence noprompt timezone=Etc/UTC noautologin module=Tails slab_nomerge slub_debug=FZP mce=0 vsyscall=none page_poison=1 init_on_free=1 mds=full,nosmt $CUSTOM_CMDLINE_PARAMS"
+kernel_prefix="(\\\$disk_type,$kernel_part)/live/"
+kernel_suffix=""
+initramfs_prefix="(\\\$disk_type,$kernel_part)/live/initrd.img (\\\$disk_type,2)/linuxloops.img"
+initramfs_suffix=""
+install_iso_init
+
+cleanup /installroot
+
+chroot "$linuxloopsdir"/chroot/installroot /tmp/init
+
+umount_chroot /installroot
+
+umount -R "$linuxloopsdir"/chroot/installroot/mnt
+umount "$linuxloopsdir"/chroot/installroot
+rm -r "$linuxloopsdir"/chroot/installroot
+umount "$linuxloopsdir"/chroot
+cryptsetup luksClose data_"$(echo $destination_loop | sed 's@/dev/@@g')"
+}
+
 chroot_ubuntu()
 {
-download_image ubuntu impish default
+download_lxc_image ubuntu impish default
 
 mount_chroot
 
@@ -2302,7 +2711,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 UBUNTUINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -2347,7 +2756,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-g
 	'cinnamon-full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base cinnamon-desktop-environment
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-gtk-greeter cinnamon-desktop-environment
 "
 	;;
 	'enlightenment')
@@ -2457,9 +2866,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd.img-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
 initramfs_suffix=""
 install_initramfstools
 
@@ -2472,7 +2881,7 @@ umount_chroot
 
 chroot_zorin()
 {
-download_image ubuntu focal default
+download_lxc_image ubuntu focal default
 
 mount_chroot
 
@@ -2503,7 +2912,7 @@ if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
 /tmp/install_initramfs
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 /tmp/cleanup
-echo 'LABEL=boot /boot ext4 defaults 0 2' > /etc/fstab
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
 exit
 ZORININIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
@@ -2540,9 +2949,9 @@ if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/i
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
-kernel_prefix="vmlinuz-"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
 kernel_suffix=""
-initramfs_prefix="initrd.img-"
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
 initramfs_suffix=""
 install_initramfstools
 
@@ -2556,6 +2965,7 @@ umount_chroot
 install_image()
 {
 umount_chroot
+if mountpoint -q "$linuxloopsdir"/chroot; then umount "$linuxloopsdir"/chroot; fi
 echo "Creating image file"
 dd if=/dev/zero of="$fullpath" bs=1G seek=$image_size count=0 status=none
 echo "Creating partition table..."
@@ -2563,28 +2973,29 @@ write_partition_table "$fullpath"
 destination_loop=$(losetup --show -fP "$fullpath")
 mkdir -p "$linuxloopsdir"/chroot
 if [ "$root_device" == "/dev/mapper/root" ]; then
-mkfs.fat -F 12 -n 'efi' "$destination_loop"p1
-mkfs.ext4 -F -L "boot" "$destination_loop"p2
+mkfs.fat -F 12 -n 'LL-EFI' "$destination_loop"p1
+mkfs.ext4 -F -L "LL-BOOT" "$destination_loop"p2
 echo -n "$userpass" | cryptsetup --cipher aes-cbc-plain --key-size 256 --hash ripemd160 luksFormat "$destination_loop"p3 -
 echo -n "$userpass" | cryptsetup luksOpen "$destination_loop"p3 root_"$(echo $destination_loop | sed 's@/dev/@@g')" -
-mkfs.ext4 -F -L "root" /dev/mapper/root_"$(echo $destination_loop | sed 's@/dev/@@g')"
-if [ -b "$destination_loop"p4 ]; then
+mkfs.ext4 -F -L "LL-ROOT" /dev/mapper/root_"$(echo $destination_loop | sed 's@/dev/@@g')"
+if [ ! -z "$swap_size" ]; then
 echo -n "$userpass" | cryptsetup --cipher aes-cbc-plain --key-size 256 --hash ripemd160 luksFormat "$destination_loop"p4 -
 echo -n "$userpass" | cryptsetup luksOpen "$destination_loop"p4 swap_"$(echo $destination_loop | sed 's@/dev/@@g')" -
-mkswap /dev/mapper/swap_"$(echo $destination_loop | sed 's@/dev/@@g')"
+mkswap -L "LL-SWAP" /dev/mapper/swap_"$(echo $destination_loop | sed 's@/dev/@@g')"
 cryptsetup luksClose swap_"$(echo $destination_loop | sed 's@/dev/@@g')"
 fi
 mount /dev/mapper/root_"$(echo $destination_loop | sed 's@/dev/@@g')" "$linuxloopsdir"/chroot
 else
-mkfs.fat -F 12 -n 'efi' "$destination_loop"p1
-mkfs.ext4 -F -L "boot" "$destination_loop"p2
-mkfs.ext4 -F -L "root" "$destination_loop"p3
-if [ -b "$destination_loop"p4 ]; then
-mkswap -L "swap" "$destination_loop"p4
+mkfs.fat -F 12 -n 'LL-EFI' "$destination_loop"p1
+mkfs.ext4 -F -L "LL-BOOT" "$destination_loop"p2
+mkfs.ext4 -F -L "LL-ROOT" "$destination_loop"p3
+if [ ! -z "$swap_size" ]; then
+mkswap -L "LL-SWAP" "$destination_loop"p4
 fi
 mount "$destination_loop"p3 "$linuxloopsdir"/chroot
 fi
 chroot_"$distro"
+if mountpoint -q "$linuxloopsdir"/chroot; then umount "$linuxloopsdir"/chroot; fi
 if [ "$root_device" == "/dev/mapper/root" ]; then
 cryptsetup luksClose root_"$(echo $destination_loop | sed 's@/dev/@@g')"
 fi
@@ -2593,37 +3004,45 @@ losetup -d $destination_loop
 
 grub_config()
 {
-if [ ! -z "$wsl" ]; then
-	img_uuid=$(su "$SUDO_USER" -c "PATH=$PATH:/mnt/c/Windows/System32 mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1")
-else
-	img_uuid=$(blkid -s PARTUUID -o value "$(df "$fullpath" --output=source | sed 1d)")
-fi
+#if [ ! -z "$wsl" ]; then
+#	img_uuid=$(su "$SUDO_USER" -c "PATH=$PATH:/mnt/c/Windows/System32 mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1")
+#else
+#	img_uuid=$(blkid -s PARTUUID -o value "$(df "$fullpath" --output=source | sed 1d)")
+#fi
 img_path=$(if [ $(findmnt -n -o TARGET -T "$fullpath") == "/" ]; then echo $(realpath "$fullpath"); else echo $(realpath "$fullpath") | sed "s#$(findmnt -n -o TARGET -T "$fullpath")##g"; fi)
 config="menuentry \"$distro\" --class \"$distro\" {
-search --no-floppy --set=root --file "$img_path"
+img_path="$img_path"
+search --no-floppy --set=root --file "\$img_path"
+probe --set img_uuid --part-uuid (\$root)
 loopback loop "$img_path"
-source (loop,2)/linuxloops/config
+disk_type=loop
+root_device=$root_device
+source (\$disk_type,2)/linuxloops/config
 kernel=\$default_kernel
-linux (loop,2)/\$kernel_prefix\$kernel\$kernel_suffix img_uuid="$img_uuid" img_path="$img_path" root="\$root_device" rw quiet "\$cmdline_extra"
-initrd (loop,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw quiet
+initrd $initramfs_format
 }
 
 submenu \"Advanced options for $distro\" --class \"$distro\" {
-search --no-floppy --set=root --file "$img_path"
+img_path="$img_path"
+search --no-floppy --set=root --file "\$img_path"
+probe --set img_uuid --part-uuid (\$root)
 loopback loop "$img_path"
-source (loop,2)/linuxloops/config
+disk_type=loop
+root_device=$root_device
+source (\$disk_type,2)/linuxloops/config
 for kernel in \$kernels; do
 menuentry \"Boot with kernel \$kernel\" {
-	linux (loop,2)/\$kernel_prefix\$kernel\$kernel_suffix img_uuid="$img_uuid" img_path="$img_path" root="\$root_device" rw quiet "\$cmdline_extra"
-	initrd (loop,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+	linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw quiet
+	initrd $initramfs_format
 }
 menuentry \"Boot with kernel \$kernel in recovery mode\" {
-	linux (loop,2)/\$kernel_prefix\$kernel\$kernel_suffix img_uuid="$img_uuid" img_path="$img_path" root="\$root_device" rw systemd.unit=multi-user.target "\$cmdline_extra"
-	initrd (loop,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+	linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw systemd.unit=multi-user.target
+	initrd $initramfs_format
 }
 menuentry \"Boot with kernel \$kernel in linuxloops debug mode\" {
-	linux (loop,2)/\$kernel_prefix\$kernel\$kernel_suffix img_uuid="$img_uuid" img_path="$img_path" root="\$root_device" rw linuxloops_debug=1 "\$cmdline_extra"
-	initrd (loop,2)/\$initramfs_prefix\$kernel\$initramfs_suffix
+	linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw linuxloops_debug=1
+	initrd $initramfs_format
 }
 done
 }"
@@ -2677,7 +3096,7 @@ elif [ ! -z "$chromeos" ]; then
 		echo -e "$grubinstall"
 	fi
 else
-	grubinstall="The grub config needed to boot $distro has been generated in the file \"$fullpath.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\nsudo cat /etc/grub.d/40_custom $fullpath.grub.txt | sudo tee /etc/grub.d/99_linuxloops; sudo chmod 0755 /etc/grub.d/99_linuxloops; sudo grub-mkconfig -o /boot/grub/grub.cfg\n\nOtherwise, add this grub config (lines between stars) manually to another grub bootloader:\n\n ****************************************************************************************** \n$config\n ****************************************************************************************** \n\nOnce the above actions are completed, you can reboot your computer and start $distro"
+	grubinstall="The grub config needed to boot $distro has been generated in the file \"$fullpath.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\nsudo cat /etc/grub.d/40_custom $fullpath.grub.txt | sudo tee /etc/grub.d/99_linuxloops; sudo chmod 0755 /etc/grub.d/99_linuxloops; sudo grub-mkconfig -o /boot/grub/grub.cfg\n\nOtherwise, add this grub config (lines between stars) manually to another grub bootloader:\n\n ****************************************************************************************** \n$config\n ****************************************************************************************** \n\nOnce the above actions are completed, you can reboot your computer and start $distro".
 	if [ ! -z "$zenity" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Exit"
 	else
