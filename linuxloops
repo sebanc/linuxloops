@@ -88,15 +88,27 @@ if [ -z "$distro" ] || [ -z "$(echo $available_distros | grep -w $distro)" ]; th
 list_desktops "$distro"
 if [ ! -z "$desktop" ] && [ -z "$(echo $available_desktops | grep -w $desktop)" ]; then echo -e "$desktop desktop environment is not available, please choose from:\n$available_desktops.\n"; exit 1; fi
 if [ "$surface" == "Yes" ] && [ -z "$(echo $surface_supported | grep -w $distro)" ]; then echo -e "Linux Surface patches are currently only supported with:\n$surface_supported.\n"; exit 1; fi
-kernel_part=2
-initramfs_format="\$initramfs_prefix\$kernel\$initramfs_suffix"
 if [ "$distro" == "tails" ]; then
-	kernel_part=3
-	initramfs_format="\$initramfs_prefix\$initramfs_suffix"
-	rootfs_size=6
 	if [ "$encryption" == "Yes" ]; then echo -e "rootfs encryption is not supported with tails but the persistent storage will be encrypted by default.\n"; exit 1; fi
 	if [ ! -z "$swap_size" ]; then echo -e "Swap should not be enabled with tails for security reasons.\n"; exit 1; fi
 fi
+}
+
+dist_params()
+{
+case "$1" in
+	'tails')
+	kernel_part=3
+	initramfs_format="\$initramfs_prefix\$initramfs_suffix"
+	rootfs_size=6
+	swap_size=0
+	encryption="No"
+	;;
+	*)
+	kernel_part=2
+	initramfs_format="\$initramfs_prefix\$kernel\$initramfs_suffix"
+	;;
+esac
 }
 
 download_lxc_image()
@@ -222,7 +234,6 @@ mount "$destination_loop"p2 "$linuxloopsdir"/chroot"$1"/mnt/boot
 mkdir -p "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
 mount "$destination_loop"p1 "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
 fi
-#mount --make-rprivate "$linuxloopsdir"/chroot/boot/efi
 }
 
 add_linuxloops_init()
@@ -596,7 +607,6 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_initramfs
 
 install_nixos_config ()
 {
-#touch "$linuxloopsdir"/chroot/installroot/tmp/install_initramfs
 add_linuxloops_init /installroot
 mkdir -p "$linuxloopsdir"/chroot/installroot/mnt/etc/nixos
 cat >"$linuxloopsdir"/chroot/installroot/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
@@ -3004,54 +3014,50 @@ losetup -d $destination_loop
 
 grub_config()
 {
-#if [ ! -z "$wsl" ]; then
-#	img_uuid=$(su "$SUDO_USER" -c "PATH=$PATH:/mnt/c/Windows/System32 mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1")
-#else
-#	img_uuid=$(blkid -s PARTUUID -o value "$(df "$fullpath" --output=source | sed 1d)")
-#fi
 img_path=$(if [ $(findmnt -n -o TARGET -T "$fullpath") == "/" ]; then echo $(realpath "$fullpath"); else echo $(realpath "$fullpath") | sed "s#$(findmnt -n -o TARGET -T "$fullpath")##g"; fi)
-config="menuentry \"$distro\" --class \"$distro\" {
-img_path="$img_path"
-search --no-floppy --set=root --file "\$img_path"
-probe --set img_uuid --part-uuid (\$root)
-loopback loop "$img_path"
-disk_type=loop
-root_device=$root_device
-source (\$disk_type,2)/linuxloops/config
-kernel=\$default_kernel
-linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw quiet
-initrd $initramfs_format
-}
-
-submenu \"Advanced options for $distro\" --class \"$distro\" {
-img_path="$img_path"
-search --no-floppy --set=root --file "\$img_path"
-probe --set img_uuid --part-uuid (\$root)
-loopback loop "$img_path"
-disk_type=loop
-root_device=$root_device
-source (\$disk_type,2)/linuxloops/config
-for kernel in \$kernels; do
-menuentry \"Boot with kernel \$kernel\" {
+if [ -z "$wsl" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Zorin OS" ]); then remove_tpm="\n	rmmod tpm"; fi
+config="menuentry \"$distro\" --class \"$distro\" {$remove_tpm
+	img_path="$img_path"
+	search --no-floppy --set=root --file "\$img_path"
+	probe --set img_uuid --part-uuid (\$root)
+	loopback loop "$img_path"
+	disk_type=loop
+	root_device=$root_device
+	source (\$disk_type,2)/linuxloops/config
+	kernel=\$default_kernel
 	linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw quiet
 	initrd $initramfs_format
 }
-menuentry \"Boot with kernel \$kernel in recovery mode\" {
-	linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw systemd.unit=multi-user.target
-	initrd $initramfs_format
-}
-menuentry \"Boot with kernel \$kernel in linuxloops debug mode\" {
-	linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw linuxloops_debug=1
-	initrd $initramfs_format
-}
-done
+
+submenu \"Advanced options for $distro\" --class \"$distro\" {$remove_tpm
+	img_path="$img_path"
+	search --no-floppy --set=root --file "\$img_path"
+	probe --set img_uuid --part-uuid (\$root)
+	loopback loop "$img_path"
+	disk_type=loop
+	root_device=$root_device
+	source (\$disk_type,2)/linuxloops/config
+	for kernel in \$kernels; do
+	menuentry \"Boot with kernel \$kernel\" {
+		linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw quiet
+		initrd $initramfs_format
+	}
+	menuentry \"Boot with kernel \$kernel in recovery mode\" {
+		linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw systemd.unit=multi-user.target
+		initrd $initramfs_format
+	}
+	menuentry \"Boot with kernel \$kernel in linuxloops debug mode\" {
+		linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw linuxloops_debug=1
+		initrd $initramfs_format
+	}
+	done
 }"
-echo "$config" > "$fullpath".grub.txt
+echo -e "$config" > "$fullpath".grub.txt
 if [ -f ./usb_bootloader.img ]; then
 	usbboot_loop=$(losetup --show -fP ./usb_bootloader.img)
 	mount "$usbboot_loop"p1 "$linuxloopsdir"/chroot
 	echo -e "set timeout=2\n"> "$linuxloopsdir"/chroot/efi/boot/grub.cfg
-	echo "$config" >> "$linuxloopsdir"/chroot/efi/boot/grub.cfg
+	echo -e "$config" >> "$linuxloopsdir"/chroot/efi/boot/grub.cfg
 	umount "$linuxloopsdir"/chroot
 	losetup -d $usbboot_loop
 	finalise="The grub config to boot $distro has been installed in the usb_bootloader.img file. Write this file to a usb flashdrive with Rufus, dd or any other image writing tool and boot from it."
@@ -3087,7 +3093,7 @@ elif [ ! -z "$chromeos" ]; then
 	tar zxf /home/chronos/user/Downloads/chromebook_boot.tar.gz -C /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	rm -f /home/chronos/user/Downloads/chromebook_boot.tar.gz
 	echo -e "set timeout=2\n"> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
-	echo "$config" >> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
+	echo -e "$config" >> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
 	umount /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	grubinstall="The grub config needed to boot $distro has been added to your boot partition 12, if not already done, refer to MrChromebox instructions to allow booting from legacy hdd boot (through RW_LEGACY firmware or ALT firmware), then reboot your computer and press CTRL+L to start $distro."
 	if [ ! -z "$zenity" ]; then
@@ -3107,45 +3113,71 @@ fi
 
 set_credentials()
 {
-if [ "$root_device" == "/dev/mapper/root" ]; then
-	encrypted_text="You have requested encryption, please input your username and the encryption password.\nYour user account password will be set as the encryption password but you can change it later."
-	password_text="encrypted partitions password"
+if [ "$distro" == "tails" ]; then
+	if [ ! -z "$zenity" ]; then
+	until false; do
+		form=$(zenity --forms --title="Persistent storage" --text="Please define your persistent storage encryption password." --add-password="Input your persistent storage encryption password" --add-password="Confirm your persistent storage encryption password")
+		userpass="$(echo $form | cut -d'|' -f1)"
+		verifuserpass="$(echo $form | cut -d'|' -f2)"
+		if [ -z "$form" ]; then exit 0; fi
+		if [ -z "$userpass" ]; then zenity --height=480 --width=640 --error --text="Please define a password.\n"; continue; fi
+		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then zenity --height=480 --width=640 --error --text="Password contains unsupported characters.\n"; continue; fi
+		if [ "$userpass" != "$verifuserpass" ]; then zenity --height=480 --width=640 --error --text="Passwords do not match, try again.\n"; continue; fi
+		break
+	done
+	else
+	until false; do
+		read -s -p "Input your persistent storage encryption password: " userpass
+		echo ""
+		read -s -p "Verify your persistent storage encryption password " verifuserpass
+		echo ""
+		if [ -z "$userpass" ]; then echo -e "Please define a password.\n\n"; continue; fi
+		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
+		if [ "$userpass" != "$verifuserpass" ]; then echo -e "Passwords do not match, try again.\n\n"; continue; fi
+		break
+	done
+	fi
 else
-	encrypted_text="Please input your username and user account password."
-	password_text="user account password"
-fi
-if [ ! -z "$zenity" ]; then
-until false; do
-	form=$(zenity --forms --title="Create user" --text="$encrypted_text" --add-entry="Input your username" --add-password="Input your $password_text" --add-password="Confirm your $password_text")
-	username="$(echo $form | cut -d'|' -f1)"
-	userpass="$(echo $form | cut -d'|' -f2)"
-	verifuserpass="$(echo $form | cut -d'|' -f3)"
-	if [ -z "$form" ]; then exit 0; fi
-	if [ -z "$username" ]; then zenity --height=480 --width=640 --error --text="Please define your username.\n"; continue; fi
-	if [ -z "$userpass" ]; then zenity --height=480 --width=640 --error --text="Please define a password.\n"; continue; fi
-	if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then zenity --height=480 --width=640 --error --text="Username contains unsupported characters.\n"; continue; fi
-	if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then zenity --height=480 --width=640 --error --text="Password contains unsupported characters.\n"; continue; fi
-	if [ "$userpass" != "$verifuserpass" ]; then zenity --height=480 --width=640 --error --text="User account password verification does not match, try again.\n"; continue; fi
-	break
-done
-else
-echo -e "$encrypted_text"
-until false; do
-	read -p "Please enter your username: " username
-	if [ -z "$username" ]; then echo -e "Please define your username.\n\n"; continue; fi
-	if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then echo -e "Username contains unsupported characters.\n\n"; continue; fi
-	break
-done
-until false; do
-	read -s -p "Input your $password_text password: " userpass
-	echo ""
-	read -s -p "Verify your $password_text password: " verifuserpass
-	echo ""
-	if [ -z "$userpass" ]; then echo -e "Please define a password.\n\n"; continue; fi
-	if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
-	if [ "$userpass" != "$verifuserpass" ]; then echo -e "User account password verification does not match, try again.\n\n"; continue; fi
-	break
-done
+	if [ "$root_device" == "/dev/mapper/root" ]; then
+		encrypted_text="You have requested encryption, please input your username and the encryption password.\nYour user account password will be set as the encryption password but you can change it later."
+		password_text="encrypted partitions password"
+	else
+		encrypted_text="Please input your username and user account password."
+		password_text="user account password"
+	fi
+	if [ ! -z "$zenity" ]; then
+	until false; do
+		form=$(zenity --forms --title="Create user" --text="$encrypted_text" --add-entry="Input your username" --add-password="Input your $password_text" --add-password="Confirm your $password_text")
+		username="$(echo $form | cut -d'|' -f1)"
+		userpass="$(echo $form | cut -d'|' -f2)"
+		verifuserpass="$(echo $form | cut -d'|' -f3)"
+		if [ -z "$form" ]; then exit 0; fi
+		if [ -z "$username" ]; then zenity --height=480 --width=640 --error --text="Please define your username.\n"; continue; fi
+		if [ -z "$userpass" ]; then zenity --height=480 --width=640 --error --text="Please define a password.\n"; continue; fi
+		if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then zenity --height=480 --width=640 --error --text="Username contains unsupported characters.\n"; continue; fi
+		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then zenity --height=480 --width=640 --error --text="Password contains unsupported characters.\n"; continue; fi
+		if [ "$userpass" != "$verifuserpass" ]; then zenity --height=480 --width=640 --error --text="Passwords do not match, try again.\n"; continue; fi
+		break
+	done
+	else
+	echo -e "$encrypted_text"
+	until false; do
+		read -p "Please enter your username: " username
+		if [ -z "$username" ]; then echo -e "Please define your username.\n\n"; continue; fi
+		if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then echo -e "Username contains unsupported characters.\n\n"; continue; fi
+		break
+	done
+	until false; do
+		read -s -p "Input your $password_text password: " userpass
+		echo ""
+		read -s -p "Verify your $password_text password: " verifuserpass
+		echo ""
+		if [ -z "$userpass" ]; then echo -e "Please define a password.\n\n"; continue; fi
+		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
+		if [ "$userpass" != "$verifuserpass" ]; then echo -e "Passwords do not match, try again.\n\n"; continue; fi
+		break
+	done
+	fi
 fi
 }
 
@@ -3154,6 +3186,7 @@ create_image()
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 linuxloopsdir="$(eval echo ~$SUDO_USER)"/linuxloops
+dist_params "$distro"
 mkdir -p "$linuxloopsdir"
 if [ ! -z "$zenity" ]; then
 	local path
@@ -3174,11 +3207,11 @@ if [ ! -z "$zenity" ]; then
 	if [ $(( ($(df -k --output=avail "$path" | sed 1d) / 1024 / 1024) - 14 )) -lt 0 ]; then  zenity --height=480 --width=640 --error --text="Not enough space to create image file, the minimum size is 10 GB. Verify that the path you have selected points to a partition with more than 10GB available."; dualboot; fi
 	image_size=$(zenity --height=480 --width=640 --title="LinuxLoops" --scale --text "This partition has $(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) GB available.\n how much would you like to allocate for $distro ?\n (Around 10GB will be occupied by system files, the remaining space will be available).\n" --min-value=10 --max-value=$(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) --value=10 --step 1)
 	if [ -z "$image_size" ]; then exit 1; fi
-	swap_size=$(zenity --height=480 --width=640 --title="LinuxLoops" --scale --text "Please select here the swap partition size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( $image_size - 8 )) --value=0 --step 1)
+	if [ -z "$swap_size" ]; then swap_size=$(zenity --height=480 --width=640 --title="LinuxLoops" --scale --text "Please select here the swap partition size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( $image_size - 8 )) --value=0 --step 1); fi
 	if [ -z "$swap_size" ]; then exit 1; fi
 	if [ ! -z "$(echo $surface_supported | grep -w $distro)" ]; then surface=$(zenity --height=480 --width=640 --title "LinuxLoops" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
 	if [ -z "$surface" ]; then exit 1; fi
-	if [ ! -z $(which cryptsetup) ]; then encryption=$(zenity --height=480 --width=640 --title "LinuxLoops" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next"); else encryption="No"; fi
+	if [ -z "$encryption" ] && [ ! -z $(which cryptsetup) ]; then encryption=$(zenity --height=480 --width=640 --title "LinuxLoops" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next"); else encryption="No"; fi
 	if [ -z "$encryption" ]; then exit 1; fi
 else
 	if [ -z "$destination" ]; then echo "The -img argument has not been specified."; fi
