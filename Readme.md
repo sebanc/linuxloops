@@ -14,7 +14,7 @@ The purpose of LinuxLoops script is to install full linux x86_64 distros into di
 
 Supported setups:  
 |**OS used for Installation**|**supported fs for image**|**bootloader**|
-|----------------------------|--------------------------|---------------|
+|----------------------------|--------------------------|--------------|
 |Linux                       |ext4 ntfs exfat           |Linux distro grub or usb flashdrive|
 |Windows (WSL2)              |ntfs exfat                |Grub2Win or usb flashdrive|
 |Brunch singleboot           |ext4                      |Brunch grub or usb flashdrive|
@@ -22,21 +22,22 @@ Supported setups:
 
 Currently the below distros are supported:  
 |**Distro**|**Swap support**|**Encryption support**|**Linux-surface patches support**|**Specific notes**|
-|archlinux|✓|✓|✓||
-|debian|✓|✓|✓||
-|elementary|✓|✓|✓||
-|fedora|✓|✓|✓||
-|gentoo|✓|✓|||
-|kali|✓|✓|✓||
-|manjaro|✓|✓|✓||
-|mint|✓|✓|✓||
-|nixos|✓|✓|||
-|opensuse|✓|✓|||
-|pop_os|✓|✓|✓||
-|rockylinux|✓|✓|||
-|tails||||Tails images can only be booted from an ext4 partition|
-|ubuntu|✓|✓|✓||
-|zorin|✓|✓|✓||
+|----------|:--------------:|:--------------------:|:-------------------------------:|------------------|
+|archlinux |✓               |✓                     |✓                                |                  |
+|debian    |✓               |✓                     |✓                                |                  |
+|elementary|✓               |✓                     |✓                                |                  |
+|fedora    |✓               |✓                     |✓                                |                  |
+|gentoo    |✓               |✓                     |                                 |                  |
+|kali      |✓               |✓                     |✓                                |                  |
+|manjaro   |✓               |✓                     |✓                                |                  |
+|mint      |✓               |✓                     |✓                                |                  |
+|nixos     |✓               |✓                     |                                 |                  |
+|opensuse  |✓               |✓                     |                                 |                  |
+|pop_os    |✓               |✓                     |✓                                |                  |
+|rockylinux|✓               |✓                     |                                 |                  |
+|tails     |                |                      |                                 |Tails images can only be booted from an ext4 partition|
+|ubuntu    |✓               |✓                     |✓                                |                  |
+|zorin     |✓               |✓                     |✓                                |                  |
 
 ## How does it work ?
 
