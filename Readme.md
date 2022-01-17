@@ -23,8 +23,8 @@ Some use cases for LinuxLoops:
 Supported setups:  
 |**OS used for Installation**|**Supported filesystems to store the image**|**Bootloader**|
 |----------------------------|--------------------------------------------|--------------|
-|Linux                       |ext4 ntfs exfat                             |Linux distro grub or usb flashdrive|
-|Windows (WSL2)              |ntfs exfat                                  |Grub2Win or usb flashdrive|
+|Linux                       |ext4 exfat ntfs                             |Linux distro grub or usb flashdrive|
+|Windows (WSL2)              |exfat ntfs                                  |Grub2Win or usb flashdrive|
 |Brunch (singleboot)         |ext4                                        |Brunch grub or usb flashdrive|
 |ChromeOS                    |ext4                                        |Grub installed by linuxloops or usb flashdrive|
 
