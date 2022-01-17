@@ -12,6 +12,14 @@
 
 The purpose of LinuxLoops script is to install full linux x86_64 distros into disk images from Linux, Windows (WSL2) or ChromeOS (brunch singleboot / chromebook with dev mode + RW_LEGACY firmware).
 
+Some use cases for LinuxLoops:
+- To keep Windows or ChromeOS as the main OS on the computer and intall Linux without modifying the partition table.
+- To use separate linux environments for different purposes (work, gaming...) without having to deal with complex partition tables.
+- To easily setup Linux distros with fully encrypted rootfs and swap (the EFI and boot partitions are not encrypted).
+- To have a full Linux environment which can also be used as a VM from another OS.
+- For easy backup management, backing up a distro is as simple as copying a file.
+- You tell me...
+
 Supported setups:  
 |**OS used for Installation**|**supported fs for image**|**bootloader**|
 |----------------------------|--------------------------|--------------|
@@ -39,21 +47,13 @@ Currently the below distros are supported:
 |ubuntu    |✓               |✓                     |✓                                |                  |
 |zorin     |✓               |✓                     |✓                                |                  |
 
+**Warning: Keep in mind that even though they are stored in image files, LinuxLoops are full Linux distros with complete access to your hardware so don't do anything that you would not do in a standard Linux install. Moreover, the LinuxLoops init script has a few dependencies on Linux distros fundamentals (notably the kernel/initramfs naming convention and the presence of a few packages such as bash, cryptsetup and udev), a significant change on those basics should be very rare but might break your install. Even though, if something goes wrong you should always be able to recover your data by mounting the disk image from another LinuxLoops image or from a Linux live usb (see Data-recovery.md), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
+
 ## How does it work ?
 
 The LinuxLoops bash script will create a disk image containing a 16MB EFI partition, a 1GB boot partition, the main rootfs partition and an optional partition for swap. Distros will be installed in the image and an initramfs hook will allow booting the disk image through a specific grub config.
 
 The minimum size for a LinuxLoops image has been defined as 10GB (with at least 8GB for the main rootfs) as it should allow most distros to install without issue. However, if you intend to install gentoo you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
-
-Some use cases for LinuxLoops:
-- To keep Windows or ChromeOS as the main OS on the computer and intall Linux without modifying the partition table.
-- To use separate linux environments for different purposes (work, gaming...) without having to deal with complex partition tables.
-- To easily setup Linux distros with fully encrypted rootfs and swap (the EFI and boot partitions are not encrypted).
-- To have a full Linux environment which can also be used as a VM from another OS.
-- For easy backup management, backing up a distro is as simple as copying a file.
-- You tell me...
-
-**Warning: Keep in mind that even though they are stored in image files, LinuxLoops are full Linux distros with complete access to your hardware so don't do anything that you would not do in a standard Linux install. Moreover, the LinuxLoops init script has a few dependencies on Linux distros fundamentals (notably the kernel/initramfs naming convention and the presence of a few packages such as bash, cryptsetup and udev), a significant change on those basics should be very rare but might break your install. Even though, if something goes wrong you should always be able to recover your data by mounting the disk image from another LinuxLoops image or from a Linux live usb (see Data-recovery.md), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
 
 <!-- Supported Hardware -->
 ## Supported Hardware
