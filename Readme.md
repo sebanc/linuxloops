@@ -111,8 +111,6 @@ If you need something else, read about custom scripts or feel free to make your 
 <!-- Special Thanks -->
 
 ## Special Thanks
-
-First of all, thanks goes to:
 - The [lxc/lxd][lxc link] project for maintaining Linux container rootfs archives.
 - The [Linux-Surface crew][linux-surface link] for greatly improving Linux support on Surface devices.
 - [MrChromebox][MrChromebox link] for its awesome Chromebooks custom firmwares.
