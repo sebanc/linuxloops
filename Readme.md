@@ -12,14 +12,15 @@
 
 The purpose of LinuxLoops script is to install full linux x86_64 distros into disk images from Linux, Windows (WSL2) or ChromeOS (brunch singleboot / chromebook with dev mode + RW_LEGACY firmware).
 
-Supported setups:
-|**OS used from Installation**|**supported fs for image**|**bootloader**|
-|Linux|ext4 ntfs exfat|Linux distro grub or usb flashdrive|
-|Windows (WSL2)|ntfs exfat|Grub2Win or usb flashdrive|
-|Brunch singleboot|ext4|Brunch grub or usb flashdrive|
-|ChromeOS|ext4|Grub installed by linuxloops or usb flashdrive|
+Supported setups:  
+|**OS used for Installation**|**supported fs for image**|**bootloader**|
+|----------------------------|--------------------------|---------------|
+|Linux                       |ext4 ntfs exfat           |Linux distro grub or usb flashdrive|
+|Windows (WSL2)              |ntfs exfat                |Grub2Win or usb flashdrive|
+|Brunch singleboot           |ext4                      |Brunch grub or usb flashdrive|
+|ChromeOS                    |ext4                      |Grub installed by linuxloops or usb flashdrive|
 
-Currently the below distros are supported:
+Currently the below distros are supported:  
 |**Distro**|**Swap support**|**Encryption support**|**Linux-surface patches support**|**Specific notes**|
 |archlinux|✓|✓|✓||
 |debian|✓|✓|✓||
