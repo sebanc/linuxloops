@@ -25,7 +25,7 @@ Supported setups:
 |----------------------------|--------------------------------------------|--------------|
 |Linux                       |ext4 ntfs exfat                             |Linux distro grub or usb flashdrive|
 |Windows (WSL2)              |ntfs exfat                                  |Grub2Win or usb flashdrive|
-|Brunch singleboot           |ext4                                        |Brunch grub or usb flashdrive|
+|Brunch (singleboot)         |ext4                                        |Brunch grub or usb flashdrive|
 |ChromeOS                    |ext4                                        |Grub installed by linuxloops or usb flashdrive|
 
 Currently the below distros are supported:  
