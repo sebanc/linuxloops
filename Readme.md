@@ -21,12 +21,12 @@ Some use cases for LinuxLoops:
 - You tell me...
 
 Supported setups:  
-|**OS used for Installation**|**supported fs for image**|**bootloader**|
-|----------------------------|--------------------------|--------------|
-|Linux                       |ext4 ntfs exfat           |Linux distro grub or usb flashdrive|
-|Windows (WSL2)              |ntfs exfat                |Grub2Win or usb flashdrive|
-|Brunch singleboot           |ext4                      |Brunch grub or usb flashdrive|
-|ChromeOS                    |ext4                      |Grub installed by linuxloops or usb flashdrive|
+|**OS used for Installation**|**Supported filesystems to store the image**|**Bootloader**|
+|----------------------------|--------------------------------------------|--------------|
+|Linux                       |ext4 ntfs exfat                             |Linux distro grub or usb flashdrive|
+|Windows (WSL2)              |ntfs exfat                                  |Grub2Win or usb flashdrive|
+|Brunch singleboot           |ext4                                        |Brunch grub or usb flashdrive|
+|ChromeOS                    |ext4                                        |Grub installed by linuxloops or usb flashdrive|
 
 Currently the below distros are supported:  
 |**Distro**|**Swap support**|**Encryption support**|**Linux-surface patches support**|**Specific notes**|
