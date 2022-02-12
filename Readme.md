@@ -32,19 +32,24 @@ Currently the below distros are supported:
 |**Distro**|**Swap support**|**Encryption support**|**Linux-surface patches support**|**Specific notes**|
 |----------|:--------------:|:--------------------:|:-------------------------------:|------------------|
 |archlinux |✓               |✓                     |✓                                |                  |
+|artixlinux|✓               |✓                     |✓                                |                  |
 |debian    |✓               |✓                     |✓                                |                  |
+|devuan    |✓               |✓                     |✓                                |                  |
 |elementary|✓               |✓                     |✓                                |                  |
 |fedora    |✓               |✓                     |✓                                |                  |
 |gentoo    |✓               |✓                     |                                 |                  |
 |kali      |✓               |✓                     |✓                                |                  |
+|kde_neon  |✓               |✓                     |✓                                |                  |
 |manjaro   |✓               |✓                     |✓                                |                  |
 |mint      |✓               |✓                     |✓                                |                  |
+|mxlinux   |✓               |✓                     |✓                                |                  |
 |nixos     |✓               |✓                     |                                 |                  |
 |opensuse  |✓               |✓                     |                                 |                  |
 |pop_os    |✓               |✓                     |✓                                |                  |
 |rockylinux|✓               |✓                     |                                 |                  |
 |tails     |                |                      |                                 |Tails images can only be booted from an ext4 partition|
 |ubuntu    |✓               |✓                     |✓                                |                  |
+|voidlinux |✓               |✓                     |                                 |                  |
 |zorin     |✓               |✓                     |✓                                |                  |
 
 **Warning: Keep in mind that even though they are stored in image files, LinuxLoops are full Linux distros with complete access to your hardware so don't do anything that you would not do in a standard Linux install. Moreover, the LinuxLoops init script has a few dependencies on Linux distros fundamentals (notably the kernel/initramfs naming convention and the presence of a few packages such as bash, cryptsetup and udev), a significant change on those basics should be very rare but might break your install. Even though, if something goes wrong you should always be able to recover your data by mounting the disk image from another LinuxLoops image or from a Linux live usb (see Data-recovery.md), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
