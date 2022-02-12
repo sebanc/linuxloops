@@ -20,15 +20,21 @@ usage()
 	echo "-h, --help					Display this menu"
 }
 
-available_distros="archlinux debian elementary fedora gentoo kali manjaro mint nixos opensuse pop_os rockylinux tails ubuntu zorin"
-surface_supported="archlinux debian elementary fedora kali manjaro mint pop_os ubuntu zorin"
+available_distros="archlinux artixlinux debian devuan elementary fedora gentoo kali kde_neon manjaro mint mxlinux nixos opensuse pop_os rockylinux tails ubuntu voidlinux zorin"
+surface_supported="archlinux artixlinux debian devuan elementary fedora kali kde_neon manjaro mint mxlinux pop_os ubuntu zorin"
 list_desktops()
 {
 case "$1" in
 	'archlinux')
 	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	;;
+	'artixlinux')
+	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
+	;;
 	'debian')
+	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
+	;;
+	'devuan')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	;;
 	'elementary')
@@ -43,11 +49,17 @@ case "$1" in
 	'kali')
 	available_desktops="none cinnamon cinnamon-full enlightenment enlightenment-full gnome gnome-full kde kde-full lxde lxde-full mate mate-full xfce xfce-full"
 	;;
+	'kde_neon')
+	available_desktops="full"
+	;;
 	'manjaro')
 	available_desktops="none budgie budgie-full cinnamon deepin deepin-full deepin-full enlightenment gnome gnome-full kde kde-full lxde lxqt mate mate-full xfce xfce-full"
 	;;
 	'mint')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome kde lxde lxqt mate mate-full ubuntu xfce xfce-full"
+	;;
+	'mxlinux')
+	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	;;
 	'nixos')
 	available_desktops="none gnome-full kde-full"
@@ -67,6 +79,9 @@ case "$1" in
 	'ubuntu')
 	available_desktops="none budgie budgie-full cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full studio-full ubuntu ubuntu-full xfce xfce-full"
 	;;
+	'voidlinux')
+	available_desktops="none gnome gnome-full kde kde-full xfce"
+	;;
 	'zorin')
 	available_desktops="full"
 	;;
@@ -84,6 +99,7 @@ done
 
 check_parameters()
 {
+if [ -z "$destination" ]; then echo -e "Please provide a destination path for the image with \"-img\" or \"--imagepath\" argument.\n"; exit 1; fi
 if [ -z "$distro" ] || [ -z "$(echo $available_distros | grep -w $distro)" ]; then echo -e "Please select a distro from the below list:\n$available_distros.\n"; exit 1; fi
 list_desktops "$distro"
 if [ ! -z "$desktop" ] && [ -z "$(echo $available_desktops | grep -w $desktop)" ]; then echo -e "$desktop desktop environment is not available, please choose from:\n$available_desktops.\n"; exit 1; fi
@@ -200,11 +216,11 @@ umount_chroot()
 {
 install_efi "$1"
 if [ -z "$1" ]; then
-if mountpoint -q "$linuxloopsdir"/chroot/boot/efi; then umount "$linuxloopsdir"/chroot/boot/efi; fi
-if mountpoint -q "$linuxloopsdir"/chroot/boot; then umount "$linuxloopsdir"/chroot/boot; fi
+	if mountpoint -q "$linuxloopsdir"/chroot/boot/efi; then umount "$linuxloopsdir"/chroot/boot/efi; fi
+	if mountpoint -q "$linuxloopsdir"/chroot/boot; then umount "$linuxloopsdir"/chroot/boot; fi
 else
-if mountpoint -q "$linuxloopsdir"/chroot"$1"/mnt/boot/efi; then umount "$linuxloopsdir"/chroot"$1"/mnt/boot/efi; fi
-if mountpoint -q "$linuxloopsdir"/chroot"$1"/mnt/boot; then umount "$linuxloopsdir"/chroot"$1"/mnt/boot; fi
+	if mountpoint -q "$linuxloopsdir"/chroot"$1"/mnt/boot/efi; then umount "$linuxloopsdir"/chroot"$1"/mnt/boot/efi; fi
+	if mountpoint -q "$linuxloopsdir"/chroot"$1"/mnt/boot; then umount "$linuxloopsdir"/chroot"$1"/mnt/boot; fi
 fi
 if mountpoint -q "$linuxloopsdir"/chroot"$1"/tmp; then umount "$linuxloopsdir"/chroot"$1"/tmp; fi
 if mountpoint -q "$linuxloopsdir"/chroot"$1"/dev/shm; then umount "$linuxloopsdir"/chroot"$1"/dev/shm; fi
@@ -217,6 +233,7 @@ if mountpoint -q "$linuxloopsdir"/chroot"$1"/proc; then umount "$linuxloopsdir"/
 mount_chroot()
 {
 mkdir -p "$linuxloopsdir"/chroot"$1"/dev/pts "$linuxloopsdir"/chroot"$1"/dev/shm "$linuxloopsdir"/chroot"$1"/etc "$linuxloopsdir"/chroot"$1"/proc "$linuxloopsdir"/chroot"$1"/sys "$linuxloopsdir"/chroot"$1"/tmp
+chmod 1777 "$linuxloopsdir"/chroot"$1"/tmp
 mount -t proc none "$linuxloopsdir"/chroot"$1"/proc
 mount -t sysfs none "$linuxloopsdir"/chroot"$1"/sys
 mount -t devtmpfs none "$linuxloopsdir"/chroot"$1"/dev
@@ -224,15 +241,15 @@ mount -t devpts none "$linuxloopsdir"/chroot"$1"/dev/pts
 mount -t tmpfs -o mode=1777,nosuid,nodev,strictatime none "$linuxloopsdir"/chroot"$1"/dev/shm
 mount -t tmpfs none "$linuxloopsdir"/chroot"$1"/tmp
 if [ -z "$1" ]; then
-mkdir -p "$linuxloopsdir"/chroot/boot
-mount "$destination_loop"p2 "$linuxloopsdir"/chroot/boot
-mkdir -p "$linuxloopsdir"/chroot/boot/efi
-mount "$destination_loop"p1 "$linuxloopsdir"/chroot/boot/efi
+	mkdir -p "$linuxloopsdir"/chroot/boot
+	mount "$destination_loop"p2 "$linuxloopsdir"/chroot/boot
+	mkdir -p "$linuxloopsdir"/chroot/boot/efi
+	mount "$destination_loop"p1 "$linuxloopsdir"/chroot/boot/efi
 else
-mkdir -p "$linuxloopsdir"/chroot"$1"/mnt/boot
-mount "$destination_loop"p2 "$linuxloopsdir"/chroot"$1"/mnt/boot
-mkdir -p "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
-mount "$destination_loop"p1 "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
+	mkdir -p "$linuxloopsdir"/chroot"$1"/mnt/boot
+	mount "$destination_loop"p2 "$linuxloopsdir"/chroot"$1"/mnt/boot
+	mkdir -p "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
+	mount "$destination_loop"p1 "$linuxloopsdir"/chroot"$1"/mnt/boot/efi
 fi
 }
 
@@ -438,6 +455,8 @@ esac
 
 . /usr/share/initramfs-tools/hook-functions
 # Begin real processing below this line
+
+rm -f "\$DESTDIR/bin/losetup" "\$DESTDIR/sbin/losetup"
 
 copy_exec \$(command -v bash)
 copy_exec \$(command -v blkid)
@@ -875,7 +894,7 @@ exit
 ARCHLINUXINIT
 chmod 0755 "$linuxloopsdir"/chroot/tmp/init
 
-cat >"$linuxloopsdir"/chroot/tmp/install_user <<ARCHUSER
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<ARCHLINUXUSER
 #!/bin/bash
 useradd -s /bin/bash -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
@@ -886,7 +905,7 @@ polkit.addAdminRule(function(action, subject) {
     return ["unix-group:wheel"];
 });
 POLKIT
-ARCHUSER
+ARCHLINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 if [ -z "$desktop" ]; then desktop="gnome"; fi
@@ -936,7 +955,7 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	;;
 	'gnome')
 	install_desktop="
-pacman -S --noconfirm $desktop_base gdm gnome-shell gnome-terminal nautilus
+pacman -S --noconfirm $desktop_base gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal nautilus
 systemctl enable gdm
 "
 	;;
@@ -1014,10 +1033,253 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 "
 	;;
 esac
-cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<ARCHDESKTOP
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<ARCHLINUXDESKTOP
 #!/bin/bash
 $install_desktop
-ARCHDESKTOP
+ARCHLINUXDESKTOP
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "pacman -S --noconfirm $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
+fi
+
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
+
+if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_pacman "linux"; fi
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
+kernel_suffix=""
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initramfs-"
+initramfs_suffix=".img"
+install_initcpio
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot /tmp/init
+
+umount_chroot
+}
+
+chroot_artixlinux()
+{
+download_lxc_image archlinux current default
+
+mount_chroot
+
+cat >"$linuxloopsdir"/chroot/tmp/init <<'ARTIXLINUXINIT'
+#!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+echo "artixlinux-linuxloops" > /etc/hostname
+rm /etc/resolv.conf
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+sed -i 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen
+locale-gen
+cat >/etc/locale.conf <<'LOCALE'
+LANG=en_US.UTF-8
+LOCALE
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+curl https://gitea.artixlinux.org/packagesP/pacman/raw/branch/master/trunk/pacman.conf -o /etc/pacman.conf
+curl https://gitea.artixlinux.org/packagesA/artix-mirrorlist/raw/branch/master/trunk/mirrorlist -o /etc/pacman.d/mirrorlist
+sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
+sed -i 's@#RemoteFileSigLevel = Required@RemoteFileSigLevel = Optional@g' /etc/pacman.conf
+pacman -Scc --noconfirm && pacman -Syy
+pacman -S --noconfirm artix-keyring
+pacman-key --populate artix
+pacman-key --lsign-key 95AEC5D0C1E294FC9F82B253573A673A53C01BC2
+rm -f /etc/pacman.conf
+curl https://gitea.artixlinux.org/packagesP/pacman/raw/branch/master/trunk/pacman.conf -o /etc/pacman.conf
+pacman -Rdd --noconfirm systemd systemd-libs systemd-sysvcompat pacman-mirrorlist dbus
+curl https://gitea.artixlinux.org/packagesA/artix-mirrorlist/raw/branch/master/trunk/mirrorlist -o /etc/pacman.d/mirrorlist
+pacman -S --noconfirm base runit-system runit elogind-runit mkinitcpio archlinux-mirrorlist net-tools rsync nano lsb-release esysusers etmpfiles artix-branding-base
+rm -f /etc/artix-release /etc/arch-release
+pacman -S --noconfirm artix-archlinux-support
+pacman-key --populate archlinux
+cat >>/etc/pacman.conf <<'ARCHSUPPORT'
+#[testing]
+#Include = /etc/pacman.d/mirrorlist-arch
+
+
+[extra]
+Include = /etc/pacman.d/mirrorlist-arch
+
+
+#[community-testing]
+#Include = /etc/pacman.d/mirrorlist-arch
+
+
+[community]
+Include = /etc/pacman.d/mirrorlist-arch
+
+
+#[multilib-testing]
+#Include = /etc/pacman.d/mirrorlist-arch
+
+
+#[multilib]
+#Include = /etc/pacman.d/mirrorlist-arch
+ARCHSUPPORT
+pacman -Syy
+pacman -Sl system | grep installed | cut -d" " -f2 | pacman -S --noconfirm -
+pacman -Sl world | grep installed | cut -d" " -f2 | pacman -S --noconfirm -
+pacman -Sl galaxy | grep installed | cut -d" " -f2 | pacman -S --noconfirm -
+pacman -S --noconfirm linux linux-firmware ntfs-3g sudo iwd modemmanager networkmanager networkmanager-runit cryptsetup nano acpid curl thermald bash-completion ca-certificates gnupg polkit
+ln -s /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
+/tmp/install_user
+/tmp/install_desktop
+if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
+if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
+/tmp/install_initramfs
+/tmp/cleanup
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
+exit
+ARTIXLINUXINIT
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<ARTIXLINUXUSER
+#!/bin/bash
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG audio,wheel '$username'
+echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
+ARTIXLINUXUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+if [ -z "$desktop" ]; then desktop="gnome"; fi
+desktop_base="xorg-server alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf pulseaudio-alsa adwaita-icon-theme ttf-dejavu udisks2"
+case "$desktop" in
+	'none')
+	install_desktop=""
+	;;
+	'budgie')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter budgie-desktop arc-icon-theme nautilus tilix network-manager-applet
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'cinnamon')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter cinnamon gnome-terminal nemo
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'deepin')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'deepin-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal deepin-extra
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'enlightenment')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter enlightenment terminology
+pacman -R --noconfirm networkmanager
+pacman -S --noconfirm bluez connman
+systemctl enable bluetooth
+systemctl enable connman
+systemctl enable lightdm
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'gnome')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal nautilus
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'gnome-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit gnome
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'kde')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit plasma-desktop plasma-nm plasma-pa kwin dolphin konsole konqueror bluedevil powerdevil xdg-desktop-portal-kde systemsettings discover plasma-browser-integration packagekit
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'kde-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit plasma dolphin konsole konqueror
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxde')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxde-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit lxde network-manager-applet
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxqt')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet breeze-icons oxygen-icons
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxqt-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit lxqt network-manager-applet breeze-icons oxygen-icons
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'mate')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit mate mate-terminal network-manager-applet mate-media mate-power-manager
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'mate-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit mate mate-terminal mate-extra network-manager-applet
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'xfce')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit xfce4 network-manager-applet xfce4-pulseaudio-plugin
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'xfce-full')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+esac
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<ARTIXLINUXDESKTOP
+#!/bin/bash
+$install_desktop
+ARTIXLINUXDESKTOP
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
@@ -1044,7 +1306,7 @@ umount_chroot
 
 chroot_debian()
 {
-download_lxc_image debian sid default
+download_lxc_image debian bullseye default
 
 mount_chroot
 
@@ -1231,6 +1493,202 @@ chroot "$linuxloopsdir"/chroot /tmp/init
 umount_chroot
 }
 
+chroot_devuan()
+{
+download_lxc_image debian bullseye default
+
+mount_chroot
+
+cat >"$linuxloopsdir"/chroot/tmp/init <<'DEVUANINIT'
+#!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+echo "devuan-linuxloops" > /etc/hostname
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+locale-gen
+cat >/etc/locale.conf <<'LOCALE'
+LANG=en_US.UTF-8
+LOCALE
+cat >/etc/apt/sources.list <<'SOURCES'
+deb http://deb.devuan.org/merged chimaera main
+deb http://deb.devuan.org/merged chimaera-updates main
+deb http://deb.devuan.org/merged chimaera-security main
+#deb http://deb.devuan.org/merged chimaera-backports main
+SOURCES
+sed -i 's@ main@ main contrib non-free@g' /etc/apt/sources.list
+cat >/etc/apt/apt.conf.d/99linuxloops <<'RECOMMENDS'
+APT::Install-Recommends "0";
+APT::Get::Install-Recommends "false";
+RECOMMENDS
+apt-get update --allow-insecure-repositories
+yes | DEBIAN_FRONTEND=noninteractive apt-get install devuan-keyring --allow-unauthenticated
+yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall apt="$(apt show apt -a 2>/dev/null | grep Version | grep devuan | cut -d' ' -f2)" apt-transport-https="$(apt show apt -a 2>/dev/null | grep Version | grep devuan | cut -d' ' -f2)" apt-utils="$(apt show apt -a 2>/dev/null | grep Version | grep devuan | cut -d' ' -f2)"  libapt-pkg6.0="$(apt show apt -a 2>/dev/null | grep Version | grep devuan | cut -d' ' -f2)" init="$(apt show init -a 2>/dev/null | grep Version | grep devuan | cut -d' ' -f2)"
+yes | DEBIAN_FRONTEND=noninteractive apt install sysvinit-core eudev
+apt-get update
+yes | apt dist-upgrade
+yes | apt autoremove
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 firmware-linux-nonfree firmware-atheros firmware-iwlwifi firmware-realtek ntfs-3g bash sudo network-manager binfmt-support cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
+yes | DEBIAN_FRONTEND=noninteractive apt purge vim
+/tmp/install_user
+/tmp/install_desktop
+if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
+if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
+/tmp/install_initramfs
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt autoremove
+/tmp/cleanup
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
+exit
+DEVUANINIT
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<DEVUANUSER
+#!/bin/bash
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG sudo '$username'
+DEVUANUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+if [ -z "$desktop" ]; then desktop="gnome"; fi
+desktop_base="xserver-xorg xserver-xorg-legacy xserver-xorg-video-all mesa-vulkan-drivers va-driver-all vdpau-driver-all libasound2 alsa-utils alsa-ucm-conf alsa-topology-conf pulseaudio desktop-base network-manager at-spi2-core adwaita-icon-theme udisks2"
+case "$desktop" in
+	'none')
+	install_desktop=""
+	;;
+	'budgie')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm budgie-desktop arc-theme nautilus tilix paper-icon-theme
+cat >/usr/share/glib-2.0/schemas/99_budgie.gschema.override <<'DCONF'
+[org.gnome.desktop.interface]
+gtk-theme=\"Arc\"
+icon-theme=\"Arc\"
+DCONF
+glib-compile-schemas /usr/share/glib-2.0/schemas/
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'cinnamon')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm cinnamon gnome-terminal nemo
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'cinnamon-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-cinnamon-desktop
+"
+	;;
+	'enlightenment')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm enlightenment terminology
+yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install connman bluez
+find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'gnome')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme
+"
+	;;
+	'gnome-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-gnome-desktop
+"
+	;;
+	'kde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm kde-plasma-desktop kwin-x11 systemsettings plasma-nm plasma-discover konsole konqueror kwalletmanager qml-module-qt-labs-platform powerdevil kmix
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'kde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-kde-desktop
+"
+	;;
+	'lxde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome lxappearance
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-lxde-desktop
+"
+	;;
+	'lxqt')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lxqt-core qterminal pcmanfm-qt lxqt-theme-debian lxde-icon-theme network-manager-gnome mutter lxqt-powermanagement lxqt-themes
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxqt-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-lxqt-desktop network-manager-gnome
+"
+	;;
+	'mate')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm mate-desktop mate-session-manager marco mate-control-center mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja ayatana-indicator-application ayatana-indicator-bluetooth ayatana-indicator-datetime ayatana-indicator-power ayatana-indicator-session ayatana-indicator-sound network-manager-gnome mate-media mate-power-manager
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'mate-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-mate-desktop
+"
+	;;
+	'xfce')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd network-manager-gnome greybird-gtk-theme elementary-xfce-icon-theme
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'xfce-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-xfce-desktop
+"
+	;;
+esac
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<DEVUANDESKTOP
+#!/bin/bash
+$install_desktop
+DEVUANDESKTOP
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
+fi
+
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
+
+if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-headers-* linux-image-*"; fi
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
+kernel_suffix=""
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
+initramfs_suffix=""
+install_initramfstools
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot /tmp/init
+
+umount_chroot
+}
+
 chroot_elementary()
 {
 download_lxc_image ubuntu focal default
@@ -1254,7 +1712,7 @@ add-apt-repository ppa:elementary-os/os-patches -y
 yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall apt
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-yes | apt install linux-generic-hwe-20.04-edge linux-firmware ntfs-3g sudo network-manager cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
+yes | apt install linux-generic-hwe-20.04 linux-firmware ntfs-3g sudo network-manager cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
 /tmp/install_user
 /tmp/install_desktop
 if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
@@ -1769,6 +2227,93 @@ chroot "$linuxloopsdir"/chroot /tmp/init
 umount_chroot
 }
 
+chroot_kde_neon()
+{
+download_lxc_image ubuntu focal default
+
+mount_chroot
+
+cat >"$linuxloopsdir"/chroot/tmp/init <<'KDE_NEONINIT'
+#!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+echo "ubuntu-linuxloops" > /etc/hostname
+mkdir -p /run/systemd/resolve
+echo "nameserver 8.8.8.8" > /run/systemd/resolve/stub-resolv.conf
+locale-gen
+cat >/etc/locale.conf <<'LOCALE'
+LANG=en_US.UTF-8
+LOCALE
+apt update
+yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
+yes | DEBIAN_FRONTEND=noninteractive apt install gpg dirmngr gpg-agent
+cat >/etc/apt/sources.list.d/neon.list <<'RECOMMENDS'
+deb http://archive.neon.kde.org/user/ focal main
+RECOMMENDS
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E6D4736255751E5D
+apt update
+yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-firmware initramfs-tools ntfs-3g sudo cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
+yes | DEBIAN_FRONTEND=noninteractive apt purge vim
+/tmp/install_user
+/tmp/install_desktop
+if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
+if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
+/tmp/install_initramfs
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt autoremove
+/tmp/cleanup
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
+exit
+KDE_NEONINIT
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<KDE_NEONUSER
+#!/bin/bash
+userdel -r -f ubuntu
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG sudo '$username'
+KDE_NEONUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+if [ -z "$desktop" ]; then desktop="full"; fi
+#desktop_base="xserver-xorg xserver-xorg-legacy xserver-xorg-video-all mesa-vulkan-drivers alsa alsa-utils alsa-ucm-conf alsa-topology-conf pulseaudio desktop-base network-manager at-spi2-core adwaita-icon-theme-full language-selector-common udisks2 ttf-ubuntu-font-family"
+case "$desktop" in
+	'full')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install neon-desktop
+"
+	;;
+esac
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<KDE_NEONDESKTOP
+#!/bin/bash
+$install_desktop
+KDE_NEONDESKTOP
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
+fi
+
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
+
+if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
+kernel_suffix=""
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
+initramfs_suffix=""
+install_initramfstools
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot /tmp/init
+
+umount_chroot
+}
+
 chroot_manjaro()
 {
 download_lxc_image archlinux current default
@@ -2027,7 +2572,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install mintsystem
 cp /usr/share/linuxmint/mintsystem/apt/official-package-repositories.pref /etc/apt/preferences.d/official-package-repositories.pref
 cp /etc/apt/sources.list /etc/apt/sources.list.d/official-package-repositories.list
 echo '' > /etc/apt/sources.list
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04-edge linux-firmware initramfs-tools ntfs-3g sudo cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-firmware initramfs-tools ntfs-3g sudo cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
 yes | DEBIAN_FRONTEND=noninteractive apt purge vim
 /tmp/install_user
 /tmp/install_desktop
@@ -2145,6 +2690,199 @@ fi
 if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
 
 if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-generic-* linux-headers-* linux-image-* linux-modules-*"; fi
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
+kernel_suffix=""
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initrd.img-"
+initramfs_suffix=""
+install_initramfstools
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot /tmp/init
+
+umount_chroot
+}
+
+chroot_mxlinux()
+{
+download_lxc_image debian bullseye default
+
+mount_chroot
+
+cat >"$linuxloopsdir"/chroot/tmp/init <<'MXLINUXINIT'
+#!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+echo "mxlinux-linuxloops" > /etc/hostname
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+locale-gen
+cat >/etc/locale.conf <<'LOCALE'
+LANG=en_US.UTF-8
+LOCALE
+sed -i 's@ main@ main contrib non-free@g' /etc/apt/sources.list
+apt-get update
+yes | DEBIAN_FRONTEND=noninteractive apt install curl gnupg
+cat >>/etc/apt/sources.list <<'SOURCES'
+deb http://mxrepo.com/mx/repo/ bullseye main non-free
+SOURCES
+curl -L http://teharris.net/mx21repo.asc -o /tmp/mx21repo.asc
+apt-key add /tmp/mx21repo.asc
+cat >/etc/apt/apt.conf.d/99linuxloops <<'RECOMMENDS'
+APT::Install-Recommends "0";
+APT::Get::Install-Recommends "false";
+RECOMMENDS
+apt-get update
+yes | apt dist-upgrade
+yes | apt autoremove
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 firmware-linux-nonfree firmware-atheros firmware-iwlwifi firmware-realtek ntfs-3g bash sudo network-manager binfmt-support cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
+yes | DEBIAN_FRONTEND=noninteractive apt purge vim
+/tmp/install_user
+/tmp/install_desktop
+if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
+if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
+/tmp/install_initramfs
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt autoremove
+/tmp/cleanup
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
+exit
+MXLINUXINIT
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<MXLINUXUSER
+#!/bin/bash
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG audio,sudo '$username'
+MXLINUXUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+if [ -z "$desktop" ]; then desktop="gnome"; fi
+desktop_base="xserver-xorg xserver-xorg-legacy xserver-xorg-video-all mesa-vulkan-drivers va-driver-all vdpau-driver-all libasound2 alsa-utils alsa-ucm-conf alsa-topology-conf pulseaudio desktop-base network-manager at-spi2-core adwaita-icon-theme udisks2"
+case "$desktop" in
+	'none')
+	install_desktop=""
+	;;
+	'budgie')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm budgie-desktop arc-theme nautilus tilix paper-icon-theme
+cat >/usr/share/glib-2.0/schemas/99_budgie.gschema.override <<'DCONF'
+[org.gnome.desktop.interface]
+gtk-theme=\"Arc\"
+icon-theme=\"Arc\"
+DCONF
+glib-compile-schemas /usr/share/glib-2.0/schemas/
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'cinnamon')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm cinnamon gnome-terminal nemo
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'cinnamon-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-cinnamon-desktop
+"
+	;;
+	'enlightenment')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm enlightenment terminology
+yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install connman bluez
+find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'gnome')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme
+"
+	;;
+	'gnome-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-gnome-desktop
+"
+	;;
+	'kde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm kde-plasma-desktop kwin-x11 systemsettings plasma-nm plasma-discover konsole konqueror kwalletmanager qml-module-qt-labs-platform powerdevil kmix
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'kde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-kde-desktop
+"
+	;;
+	'lxde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome lxappearance
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-lxde-desktop
+"
+	;;
+	'lxqt')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lxqt-core qterminal pcmanfm-qt lxqt-theme-debian lxde-icon-theme network-manager-gnome mutter lxqt-powermanagement lxqt-themes
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'lxqt-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-lxqt-desktop network-manager-gnome
+"
+	;;
+	'mate')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm mate-desktop mate-session-manager marco mate-control-center mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja ayatana-indicator-application ayatana-indicator-bluetooth ayatana-indicator-datetime ayatana-indicator-power ayatana-indicator-session ayatana-indicator-sound network-manager-gnome mate-media mate-power-manager
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'mate-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-mate-desktop
+"
+	;;
+	'xfce')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd network-manager-gnome greybird-gtk-theme elementary-xfce-icon-theme
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' >> /etc/lightdm/lightdm.conf
+"
+	;;
+	'xfce-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base task-xfce-desktop
+"
+	;;
+esac
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<MXLINUXDESKTOP
+#!/bin/bash
+$install_desktop
+MXLINUXDESKTOP
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "yes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
+fi
+
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
+
+if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface_apt "linux-headers-* linux-image-*"; fi
 
 cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
 kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
@@ -2889,6 +3627,114 @@ chroot "$linuxloopsdir"/chroot /tmp/init
 umount_chroot
 }
 
+chroot_voidlinux()
+{
+download_lxc_image voidlinux current default
+
+mount_chroot
+
+cat >"$linuxloopsdir"/chroot/tmp/init <<'VOIDLINUXINIT'
+#!/bin/bash
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+echo "voidlinux-linuxloops" > /etc/hostname
+echo "nameserver 8.8.8.8" > /etc/resolv.conf
+xbps-install -Su xbps
+xbps-install -u
+xbps-install -y void-repo-nonfree
+xbps-install -y base-system ntfs-3g sudo cryptsetup nano acpid curl thermald bash-completion ca-certificates gnupg
+rm -r /etc/runit/runsvdir/default/dhclient-eth0
+ln -s /etc/sv/acpid /etc/runit/runsvdir/default/
+ln -s /etc/sv/dbus /etc/runit/runsvdir/default/
+ln -s /etc/sv/thermald /etc/runit/runsvdir/default/
+xbps-remove -y base-voidstrap
+/tmp/install_user
+/tmp/install_desktop
+if [ -f /tmp/install_custom ]; then /tmp/install_custom; fi
+/tmp/install_initramfs
+/tmp/cleanup
+echo 'LABEL=LL-BOOT /boot ext4 defaults 0 2' > /etc/fstab
+exit
+VOIDLINUXINIT
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<VOIDLINUXUSER
+#!/bin/bash
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG wheel '$username'
+echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
+VOIDLINUXUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+if [ -z "$desktop" ]; then desktop="gnome"; fi
+desktop_base="xorg NetworkManager alsa-firmware alsa-lib alsa-ucm-conf alsa-utils pulseaudio"
+case "$desktop" in
+	'none')
+	install_desktop=""
+	;;
+	'gnome')
+	install_desktop="
+xbps-install -y $desktop_base gdm gnome-shell nautilus gnome-terminal
+ln -s /etc/sv/gdm /etc/runit/runsvdir/default/
+ln -s /etc/sv/NetworkManager /etc/runit/runsvdir/default/
+"
+	;;
+	'gnome-full')
+	install_desktop="
+xbps-install -y $desktop_base gdm gnome
+ln -s /etc/sv/gdm /etc/runit/runsvdir/default/
+ln -s /etc/sv/NetworkManager /etc/runit/runsvdir/default/
+"
+	;;
+	'kde')
+	install_desktop="
+xbps-install -y $desktop_base sddm kde5 dolphin konsole konqueror
+ln -s /etc/sv/sddm /etc/runit/runsvdir/default/
+ln -s /etc/sv/NetworkManager /etc/runit/runsvdir/default/
+"
+	;;
+	'kde-full')
+	install_desktop="
+xbps-install -y $desktop_base sddm kde5 kde5-baseapps
+ln -s /etc/sv/sddm /etc/runit/runsvdir/default/
+ln -s /etc/sv/NetworkManager /etc/runit/runsvdir/default/
+"
+	;;
+	'xfce')
+	install_desktop="
+xbps-install -y $desktop_base lightdm lightdm-gtk-greeter xfce4 nm-applet
+ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
+ln -s /etc/sv/NetworkManager /etc/runit/runsvdir/default/
+"
+	;;
+esac
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<VOIDLINUXDESKTOP
+#!/bin/bash
+$install_desktop
+VOIDLINUXDESKTOP
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "xbps-install $CUSTOM_PACKAGES" >> "$linuxloopsdir"/chroot/tmp/install_desktop
+fi
+
+if [ -f ./custom_script ]; then cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom; chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom; fi
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+kernel_prefix="(\\\$disk_type,$kernel_part)/vmlinuz-"
+kernel_suffix=""
+initramfs_prefix="(\\\$disk_type,$kernel_part)/initramfs-"
+initramfs_suffix=".img"
+install_dracut
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot /tmp/init
+
+umount_chroot
+}
+
 chroot_zorin()
 {
 download_lxc_image ubuntu focal default
@@ -2914,7 +3760,7 @@ add-apt-repository ppa:zorinos/drivers -y
 yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall apt
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04-edge linux-firmware ntfs-3g sudo network-manager cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-firmware ntfs-3g sudo network-manager cryptsetup nano acpid curl thermald bash-completion ca-certificates gpg
 /tmp/install_user
 /tmp/install_desktop
 if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
@@ -3015,12 +3861,12 @@ losetup -d $destination_loop
 grub_config()
 {
 img_path=$(if [ $(findmnt -n -o TARGET -T "$fullpath") == "/" ]; then echo $(realpath "$fullpath"); else echo $(realpath "$fullpath") | sed "s#$(findmnt -n -o TARGET -T "$fullpath")##g"; fi)
-if [ -z "$wsl" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Zorin OS" ]); then remove_tpm="\n	rmmod tpm"; fi
+if [ -z "$wsl" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
 config="menuentry \"$distro\" --class \"$distro\" {$remove_tpm
 	img_path="$img_path"
 	search --no-floppy --set=root --file "\$img_path"
 	probe --set img_uuid --part-uuid (\$root)
-	loopback loop "$img_path"
+	loopback loop "\$img_path"
 	disk_type=loop
 	root_device=$root_device
 	source (\$disk_type,2)/linuxloops/config
@@ -3033,7 +3879,7 @@ submenu \"Advanced options for $distro\" --class \"$distro\" {$remove_tpm
 	img_path="$img_path"
 	search --no-floppy --set=root --file "\$img_path"
 	probe --set img_uuid --part-uuid (\$root)
-	loopback loop "$img_path"
+	loopback loop "\$img_path"
 	disk_type=loop
 	root_device=$root_device
 	source (\$disk_type,2)/linuxloops/config
