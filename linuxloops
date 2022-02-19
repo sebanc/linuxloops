@@ -26,10 +26,10 @@ list_desktops()
 {
 case "$1" in
 	'archlinux')
-	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
+	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full i3 kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	;;
 	'artixlinux')
-	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
+	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full i3 kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	;;
 	'debian')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
@@ -965,6 +965,13 @@ pacman -S --noconfirm $desktop_base gdm gnome
 systemctl enable gdm
 "
 	;;
+	'i3')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit i3-wm i3status dmenu rxvt-unicode
+systemctl enable lightdm
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
 	'kde')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter plasma-desktop plasma-nm plasma-pa kwin dolphin konsole konqueror bluedevil powerdevil xdg-desktop-portal-kde systemsettings discover plasma-browser-integration packagekit
@@ -1154,40 +1161,38 @@ case "$desktop" in
 	;;
 	'budgie')
 	install_desktop="
-pacman -S --noconfirm $desktop_base lightdm-gtk-greeter budgie-desktop arc-icon-theme nautilus tilix network-manager-applet
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit budgie-desktop arc-icon-theme nautilus tilix network-manager-applet
 ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'cinnamon')
 	install_desktop="
-pacman -S --noconfirm $desktop_base lightdm-gtk-greeter cinnamon gnome-terminal nemo
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit cinnamon gnome-terminal nemo
 ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'deepin')
 	install_desktop="
-pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit deepin deepin-terminal
 ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'deepin-full')
 	install_desktop="
-pacman -S --noconfirm $desktop_base lightdm-gtk-greeter deepin deepin-terminal deepin-extra
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit deepin deepin-terminal deepin-extra
 ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
 	'enlightenment')
 	install_desktop="
-pacman -S --noconfirm $desktop_base lightdm-gtk-greeter enlightenment terminology
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit enlightenment terminology
 pacman -R --noconfirm networkmanager
 pacman -S --noconfirm bluez connman
-systemctl enable bluetooth
-systemctl enable connman
-systemctl enable lightdm
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
 	;;
@@ -1201,6 +1206,13 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	'gnome-full')
 	install_desktop="
 pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit gnome
+ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
+echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
+"
+	;;
+	'i3')
+	install_desktop="
+pacman -S --noconfirm $desktop_base lightdm-gtk-greeter lightdm-runit i3-wm i3status dmenu rxvt-unicode
 ln -s /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter\n' > /etc/lightdm/lightdm.conf
 "
@@ -3860,12 +3872,17 @@ losetup -d $destination_loop
 
 grub_config()
 {
+if [ ! -z "$wsl" ]; then
+	img_uuid=$(su $(getent passwd $SUDO_UID | cut -d: -f1) -c "PATH=$PATH:/mnt/c/Windows/System32 mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1")
+else
+	img_uuid=$(blkid -s PARTUUID -o value "$(df "$fullpath" --output=source | sed 1d)")
+fi
 img_path=$(if [ $(findmnt -n -o TARGET -T "$fullpath") == "/" ]; then echo $(realpath "$fullpath"); else echo $(realpath "$fullpath") | sed "s#$(findmnt -n -o TARGET -T "$fullpath")##g"; fi)
 if [ -z "$wsl" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
 config="menuentry \"$distro\" --class \"$distro\" {$remove_tpm
 	img_path="$img_path"
+	img_uuid="$img_uuid"
 	search --no-floppy --set=root --file "\$img_path"
-	probe --set img_uuid --part-uuid (\$root)
 	loopback loop "\$img_path"
 	disk_type=loop
 	root_device=$root_device
@@ -3877,8 +3894,8 @@ config="menuentry \"$distro\" --class \"$distro\" {$remove_tpm
 
 submenu \"Advanced options for $distro\" --class \"$distro\" {$remove_tpm
 	img_path="$img_path"
+	img_uuid="$img_uuid"
 	search --no-floppy --set=root --file "\$img_path"
-	probe --set img_uuid --part-uuid (\$root)
 	loopback loop "\$img_path"
 	disk_type=loop
 	root_device=$root_device
