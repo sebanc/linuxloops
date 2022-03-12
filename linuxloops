@@ -3365,7 +3365,7 @@ pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm cpio
 mkdir -p /isomount/tmp
-curl -L http://dl.amnesia.boum.org/tails/stable/tails-amd64-4.26/tails-amd64-4.26.img -o /isomount/tails.img
+curl -L https://tails.darklab.sh/pub/tails/stable/tails-amd64-4.28/tails-amd64-4.28.img -o /isomount/tails.img
 isomount="$(losetup --show -fP /isomount/tails.img)"
 mount "$isomount"p1 /isomount/tmp
 cp -r /isomount/tmp/* /mnt/
