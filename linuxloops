@@ -326,7 +326,7 @@ else
 	mount -n -t "$fstype" "$img_part" /mainroot || { echo "The boot partition could not be mounted."; recovery_shell; }
 fi
 if [ -f /mainroot/"$img_path" ]; then
-	if [ ! -b /dev/loop0 ]; then mknod -m660 /dev/loop0 b 7 0 || { echo "The loop device could not be created."; recovery_shell; }; fi
+	if [ ! -b /dev/loop0 ]; then mknod -m 660 /dev/loop0 b 7 0 || { echo "The loop device could not be created."; recovery_shell; }; fi
 	losetup -P /dev/loop0 /mainroot"$img_path" || { echo "The loop device could not be setup."; recovery_shell; }
 	if [ "$root" = "/dev/mapper/root" ]; then
 		modprobe dm-crypt
@@ -408,7 +408,7 @@ build() {
 		default_kernel="\$kernel"
 		kernels="\n\$kernel\$kernels"
 	done
-	echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+	echo -e "default_kernel=\"\$default_kernel\"" > /boot/linuxloops/config
 	echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
 	echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
 	echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
@@ -500,7 +500,7 @@ for kernel in \$(ls /boot/vmlinuz-* | sed 's@/boot/vmlinuz-@@g' | sort -V); do
 	default_kernel="\$kernel"
 	kernels="\n\$kernel\$kernels"
 done
-echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+echo -e "default_kernel=\"\$default_kernel\"" > /boot/linuxloops/config
 echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
 echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
 echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
@@ -599,7 +599,7 @@ else
 		kernels="\n\$kernel\$kernels"
 	done
 fi
-	echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+	echo -e "default_kernel=\"\$default_kernel\"" > /boot/linuxloops/config
 	echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
 	echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
 	echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
@@ -710,7 +710,7 @@ ln -s "./kernels/\$initrd" "/boot/initrd-\$initrd_ver"
 done
 rm -f /init
 ln -s "\$(find /nix | grep '\-nixos\-system\-.*/init$' | head -1)" /init
-echo -e "default_kernel=\"\$default_kernel\"" >> /boot/linuxloops/config
+echo -e "default_kernel=\"\$default_kernel\"" > /boot/linuxloops/config
 echo -e "kernels=\"\$kernels\n\"" >> /boot/linuxloops/config
 echo -e "kernel_prefix=\"$kernel_prefix\"" >> /boot/linuxloops/config
 echo -e "kernel_suffix=\"$kernel_suffix\"" >> /boot/linuxloops/config
@@ -753,7 +753,7 @@ add_linuxloops_init /installroot
 cat >"$linuxloopsdir"/chroot/installroot/tmp/install_boot <<INITISO
 #!/bin/bash
 mkdir /mnt/boot/linuxloops
-echo -e "default_kernel=\"vmlinuz\"" >> /mnt/boot/linuxloops/config
+echo -e "default_kernel=\"vmlinuz\"" > /mnt/boot/linuxloops/config
 echo -e "kernels=\"vmlinuz\"" >> /mnt/boot/linuxloops/config
 echo -e "kernel_prefix=\"$kernel_prefix\"" >> /mnt/boot/linuxloops/config
 echo -e "kernel_suffix=\"$kernel_suffix\"" >> /mnt/boot/linuxloops/config
