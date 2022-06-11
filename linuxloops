@@ -116,6 +116,7 @@ case "$1" in
 	'tails')
 	kernel_part=3
 	initramfs_format="\$initramfs_prefix\$initramfs_suffix"
+	initramfs_subsection_format="\$initramfs_prefix\$initramfs_suffix"
 	rootfs_size=6
 	swap_size=0
 	encryption="No"
@@ -123,6 +124,7 @@ case "$1" in
 	*)
 	kernel_part=2
 	initramfs_format="\$initramfs_prefix\$kernel\$initramfs_suffix"
+	initramfs_subsection_format="\$initramfs_prefix\$2\$initramfs_suffix"
 	;;
 esac
 }
@@ -3901,17 +3903,17 @@ submenu \"Advanced options for $distro\" --class \"$distro\" {$remove_tpm
 	root_device=$root_device
 	source (\$disk_type,2)/linuxloops/config
 	for kernel in \$kernels; do
-	menuentry \"Boot with kernel \$kernel\" {
-		linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw quiet
-		initrd $initramfs_format
+	menuentry \"Boot with kernel \$kernel\" \$kernel {
+		linux \$kernel_prefix\$2\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw quiet
+		initrd $initramfs_subsection_format
 	}
-	menuentry \"Boot with kernel \$kernel in recovery mode\" {
-		linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw systemd.unit=multi-user.target
-		initrd $initramfs_format
+	menuentry \"Boot with kernel \$kernel in recovery mode\" \$kernel {
+		linux \$kernel_prefix\$2\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw systemd.unit=multi-user.target
+		initrd $initramfs_subsection_format
 	}
-	menuentry \"Boot with kernel \$kernel in linuxloops debug mode\" {
-		linux \$kernel_prefix\$kernel\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw linuxloops_debug=1
-		initrd $initramfs_format
+	menuentry \"Boot with kernel \$kernel in linuxloops debug mode\" \$kernel {
+		linux \$kernel_prefix\$2\$kernel_suffix img_uuid="\$img_uuid" img_path="\$img_path" root="\$root_device" "$cmdline_extra" rw linuxloops_debug=1
+		initrd $initramfs_subsection_format
 	}
 	done
 }"
