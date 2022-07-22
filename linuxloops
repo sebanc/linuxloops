@@ -155,16 +155,16 @@ fi
 write_partition_table()
 {
 if [ -z "$swap_size" ] || [ "$swap_size" -eq 0 ]; then
-	if [ "$distro" != "tails" ]; then
-		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nw" | fdisk "$1"
+	if [ "$distro" == "tails" ]; then
+		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n+${rootfs_size}G\nn\n4\n\n\nt\n1\nC12A7328-F81F-11D2-BA4B-00A0C93EC93B\nt\n2\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nt\n3\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nt\n4\n8DA63339-0007-60C0-C436-083AC8230908\nx\nn\n4\nTailsData\nr\nw" | fdisk "$1"
 	else
-		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n+${rootfs_size}G\nn\n4\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nt\n4\n27\nx\nn\n4\nTailsData\nr\nw" | fdisk "$1"
+		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n\nt\n1\nC12A7328-F81F-11D2-BA4B-00A0C93EC93B\nt\n2\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nt\n3\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nw" | fdisk "$1"
 	fi
 else
 	if [ "$root_device" == "/dev/mapper/root" ]; then
-		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n-${swap_size}G\nn\n4\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nt\n4\n20\nw" | fdisk "$1"
+		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n-${swap_size}G\nn\n4\n\n\nt\n1\nC12A7328-F81F-11D2-BA4B-00A0C93EC93B\nt\n2\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nt\n3\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nt\n4\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nw" | fdisk "$1"
 	else
-		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n-${swap_size}G\nn\n4\n\n\nt\n1\n1\nt\n2\n20\nt\n3\n20\nt\n4\n19\nw" | fdisk "$1"
+		echo -e "g\nn\n1\n\n+16M\nn\n2\n\n+1008M\nn\n3\n\n-${swap_size}G\nn\n4\n\n\nt\n1\nC12A7328-F81F-11D2-BA4B-00A0C93EC93B\nt\n2\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nt\n3\n0FC63DAF-8483-4772-8E79-3D69D8477DE4\nt\n4\n0657FD6D-A4AB-43C4-84E5-0933C84B4F4F\nw" | fdisk "$1"
 	fi
 fi
 }
