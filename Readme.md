@@ -52,13 +52,13 @@ Currently the below distros are supported:
 |voidlinux |✓               |✓                     |                                 |                  |
 |zorin     |✓               |✓                     |✓                                |                  |
 
-**Warning: Keep in mind that even though they are stored in image files, LinuxLoops are full Linux distros with complete access to your hardware so don't do anything that you would not do in a standard Linux install. Moreover, the LinuxLoops init script has a few dependencies on Linux distros fundamentals (notably the kernel/initramfs naming convention and the presence of a few packages such as bash, cryptsetup and udev), a significant change on those basics should be very rare but might break your install. Even though, if something goes wrong you should always be able to recover your data by mounting the disk image from another LinuxLoops image or from a Linux live usb (see Data-recovery.md), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
+**Warning: Keep in mind that even though they are stored in image files, LinuxLoops are full Linux distros with complete access to your hardware so don't do anything that you would not do in a standard Linux install. Moreover, the LinuxLoops init script has a few dependencies on Linux distros fundamentals (most notably on the initramfs generation process and udev), a significant change on those basics should be very rare but might break your install. Even though, if something goes wrong you should always be able to recover your data by mounting the disk image from another LinuxLoops image or from a Linux live usb (see Data recovery section), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
 
 ## How does it work ?
 
-The LinuxLoops bash script will create a disk image containing a 16MB EFI partition, a 1GB boot partition, the main rootfs partition and an optional partition for swap. Distros will be installed in the image and an initramfs hook will allow booting the disk image through a specific grub config.
+The LinuxLoops bash script will create a disk image containing a 512MB EFI partition, a 512MB boot partition and the main rootfs partition. Distros will be installed in the image and an initramfs hook will allow booting the disk image through a specific grub config.
 
-The minimum size for a LinuxLoops image has been defined as 10GB (with at least 8GB for the main rootfs) as it should allow most distros to install without issue. However, if you intend to install gentoo you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
+The minimum size for a LinuxLoops image has been defined as 10GB (with at least 8GB for the main rootfs) as it should allow most distros to install without issue. However, it might not be sufficient for all distros, notably if you intend to install gentoo you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
 
 <!-- Supported Hardware -->
 ## Supported Hardware
@@ -77,7 +77,7 @@ The data in LinuxLoops images can be encrypted (rootfs and swap, leaving only th
 
 Encryption is highly recommended as it protects physical access to your personal data, however it slightly impacts performance.
   
-If you decide to setup encryption, you will receive an encryption password prompt early in the boot process while the keyboard is setup with a Qwerty layout, as such:
+By default the keyboard layout will be in Qwerty, as such:
 - Either Learn how to type your password as if your keyboard was Qwerty.
 - Or choose a password which is identical when typed on a Qwerty keyboard.
 
@@ -107,9 +107,9 @@ Support for LinuxLoops is currently provided in the LinuxLoops section of the br
 
 Clearly, in its current state, LinuxLoops is not perfect and I am counting on the community to help by submitting pull requests. However, those needs to respect the ground project principles:
 - LinuxLoops partitioning scheme is fixed, it has been defined to limit as much as possible dependencies and to ensure a good performance.
-- Basic desktop environment targets should be debloated (the DE, a terminal and a file browser).
+- Basic desktop environment targets should be debloated (ideally the DE, a terminal and a file browser).
 - Full desktop environment targets are not based on users preferences but on the choices of the distro managers.
-- Lightdm is used by default for basic targets as it is lightweight and widely compatible (aside from gnome desktop targets which often depend on gdm).
+- Lightdm is used by default as it is lightweight and widely compatible (aside from gnome/kde which have dependencies respectively on gdm/sddm).
 
 If you need something else, read about custom scripts or feel free to make your own fork of LinuxLoops.
 
@@ -137,10 +137,10 @@ If you need something else, read about custom scripts or feel free to make your 
 [Chromebrew link]: https://github.com/skycocker/chromebrew
 
 <!-- Internal Links -->
-[windows-guide]: ./Install-with-windows.md
-[linux-guide]: ./Install-with-linux.md
-[brunch-guide]: ./Install-with-brunch.md
-[chromeos-guide]: ./Install-with-chromebook.md
-[custom-guide]: ./Custom-install.md
-[vm-guide]: ./Virtual-Machines.md
-[recovery-guide]: ./Data-recovery.md
+[windows-guide]: ./Readme/Install-with-windows.md
+[linux-guide]: ./Readme/Install-with-linux.md
+[brunch-guide]: ./Readme/Install-with-brunch.md
+[chromeos-guide]: ./Readme/Install-with-chromebook.md
+[custom-guide]: ./Readme/Custom-install.md
+[vm-guide]: ./Readme/Virtual-Machines.md
+[recovery-guide]: ./Readme/Data-recovery.md

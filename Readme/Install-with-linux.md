@@ -156,7 +156,7 @@ Arguments description:
 
 5. Download the USB bootloader template image.
 
-`curl -O -L https://github.com/sebanc/linuxloops/raw/main/usb_bootloader.img`
+`curl -O -L https://github.com/sebanc/linuxloops/raw/main/Bootloaders/usb_bootloader.img`
   
 6. Launch the GUI installer:
 
