@@ -20,16 +20,13 @@ usage()
 	echo "-h, --help					Display this menu"
 }
 
-available_distros="almalinux antixlinux archlinux artixlinux chromeos-flex clearlinux debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mxlinux nixos opensuse parrot pop-os rockylinux solus tails ubuntu ubuntu-lts voidlinux zorin"
-surface_supported="archlinux artixlinux debian devuan elementary fedora kali kde-neon manjaro mint mxlinux parrot pop-os ubuntu ubuntu-lts zorin"
+available_distros="almalinux archlinux artixlinux chromeos-flex debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mxlinux nixos opensuse parrot pop-os rockylinux solus tails ubuntu ubuntu-lts voidlinux zorin"
+surface_supported="archlinux debian elementary fedora kali kde-neon manjaro mint mxlinux parrot pop-os ubuntu ubuntu-lts zorin"
 list_desktops()
 {
 case "$1" in
 	'almalinux')
 	available_desktops="none full"
-	;;
-	'antixlinux')
-	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	;;
 	'archlinux')
 	available_desktops="none budgie cinnamon deepin deepin-full enlightenment gnome gnome-full i3 kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
@@ -39,9 +36,6 @@ case "$1" in
 	;;
 	'chromeos-flex')
 	available_desktops="full full-debug"
-	;;
-	'clearlinux')
-	available_desktops="none full"
 	;;
 	'debian')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
