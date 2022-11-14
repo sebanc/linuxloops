@@ -909,7 +909,8 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_surface
 cleanup_container()
 {
 cat >"$linuxloopsdir"/chroot"$1"/tmp/cleanup_container <<CLEANCONTAINER
-rm -rf /etc/cron* /etc/netplan /etc/network /etc/NetworkManager /etc/rc* /etc/runit /etc/systemd /etc/udev/hwdb.d /etc/udev/rules.d
+rm -rf /etc/cron* /etc/netplan/* /etc/network/* /etc/NetworkManager/* /etc/rc* /etc/runit/* /etc/systemd/* /etc/udev/hwdb.d/* /etc/udev/rules.d/*
+if [ -d /etc/netplan ]; then echo -e 'network:\n    version: 2\n    renderer: NetworkManager\n    ethernets:\n        zz-all-en:\n            match:\n                name: "en*"\n            dhcp4: true\n        zz-all-eth:\n            match:\n                name: "eth*"\n            dhcp4: true' > /etc/netplan/01-netcfg.yaml; fi
 if [ "$desktop" == "enlightenment" ] || [ "$desktop" == "enlightenment-full" ]; then
 	ln -sf /run/connman/resolv.conf /etc/resolv.conf
 	mkdir -p /run/connman
