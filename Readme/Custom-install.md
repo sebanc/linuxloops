@@ -8,12 +8,10 @@
 # Custom installs
   
   ***
-<!-- This *** line creates a divider so that the dropdown looks nice. 
-Empty lines between everything in <angle breackets> is intentional due to markdown issues -->
 
-In some cases, you might want to include some packages during the LinuxLoops installation process, this is mainly useful if you do not have wifi out of the box after a standard Linux install.
+In some cases, you might want to include additional packages or run a custom script during the LinuxLoops installation process.
 
-## The needed package is available in the main linux distro repository
+## Add specific packages
 
 1. Identify the needed package name by browsing the linux distro repositories / forums.
 
@@ -21,7 +19,7 @@ In some cases, you might want to include some packages during the LinuxLoops ins
 
 `sudo CUSTOM_PACKAGES="broadcom-sta-dkms" bash linuxloops ....`
 
-## The needed package is not available in the main linux distro repository but exists in a different repository, on github ...
+## Run a custom script
 
 In that case you will need to create a custom script.
 
@@ -30,6 +28,7 @@ In that case you will need to create a custom script.
 2. Add in this file all the commands needed to install your driver, for example:
 ```
 cd /tmp
+yes | DEBIAN_FRONTEND=noninteractive apt install git build-essential
 git clone https://github.com/aircrack-ng/rtl8814au.git
 cd rtl8814au
 make

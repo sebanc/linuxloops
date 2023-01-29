@@ -56,7 +56,8 @@ If you install the nvidia proprietary driver, the first boot after each kernel u
 
 If you intend to install gentoo with a desktop environment, you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
 
-### Specific note for gentoo installation on disk with secure boot enabled:
+### Specific note for gentoo installation on disk with secure boot enabled
+
 gentoo does not have secure boot support OOTB. Nevertheless, secureboot can be enabled manually by emerging `mokutil` and running the below commands:
 ```
 sudo mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
@@ -119,7 +120,7 @@ Reboot, enroll the key in shim and re-enable secureboot.
 steamos-like is not a real distro, it is just a 100% standard archlinux with a few specific configuration files (no binaries) allowing to launch a SteamOS Gamescope session. However, as it is intended for PC, it has been set to boot by default in Plasma for standard use and will allow you to launch the Gamescope session through a desktop shortcut.
 
 By design, this implementation of the gamescope session has some limitations similar to the ones on the Steamdeck: you can only have 1 user and auto-login through SDDM is mandatory.
-Nevertheless, as long as the above requirements are satisfied, it is 100% archlinux so you can enable install any native arch package and update them through pacman, the discover app...
+Nevertheless, as long as the above requirements are satisfied, it is 100% archlinux so you can install any native arch package and update them through pacman, the discover app...
 
 Currently, the SteamOS session through Gamescope is not fully stable on most GPU (due to different gamescope / steam issues):
 - AMD GPU: Generally well supported.

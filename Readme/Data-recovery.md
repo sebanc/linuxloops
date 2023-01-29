@@ -8,10 +8,8 @@
 # Data recovery from an image
   
   ***
-<!-- This *** line creates a divider so that the dropdown looks nice. 
-Empty lines between everything in <angle breackets> is intentional due to markdown issues -->
 
-If something goes wrong (or for some other reason), you might want to recover data from a linux loop image while booting from another Linux environment, LinuxLoops image or from a Linux live usb.
+If something goes wrong (or for some other reason), you might want to recover data from a linux loop image while booting from another Linux install, a LinuxLoops image or from a Linux live usb.
 
 <details>
   <summary>Recover data from an unencrypted linuxloops image</summary>

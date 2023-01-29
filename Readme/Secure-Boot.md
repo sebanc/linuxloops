@@ -15,9 +15,9 @@ In case you only want to enable secureboot for specific Windows 11 / games suppo
 
 ## Secure boot support for full disk installs
 
-If the chosen distro supports SecureBoot natively (not the case for archlinux, kali, nixos, solus), secureboot will be supported by default.
+If the chosen distro supports SecureBoot natively (notably the case for gentoo, kali, nixos, parrot), secureboot will be supported by default.
 
-During install, the Linuxloops script generates a basic secure boot key (which is used both for kernel and dkms modules signing) in /etc/secureboot_key directory and copies the secure boot DER Machine Owner Key certificate in the EFI partition.
+Otherwise, during install, the Linuxloops script generates a basic secure boot key (which is used both for kernel and dkms modules signing) in /etc/secureboot_key directory and copies the secure boot DER Machine Owner Key certificate in the EFI partition.
 
 On the first boot, a blue screen saying "Verification failed: Access Denied" will appear and you will have to enroll the secure boot key by selecting "OK->Enroll key from disk->EFI->MOK.der->Continue".
 
@@ -25,7 +25,7 @@ Reboot your device and the linux distro will start normally.
 
 ## Secure boot support for disk images installs
 
-Requirement: Booting through a linux distro with secureboot enabled through Shim.
+Requirement: Installed linux distro with secureboot enabled through Shim.
 
 In the case of disk images, SecureBoot support will rely on your main linux distribution shim bootloader.
 

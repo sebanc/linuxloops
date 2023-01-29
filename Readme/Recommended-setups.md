@@ -39,13 +39,13 @@ Format the unallocated space as "NTFS" or "ExFAT".
 
 press Shift + F10 keys to open a command prompt.
 
-Type "diskpart" into the command prompt.
+Type `diskpart` into the command prompt.
 
 use "list volume" and identify the drive letter of the newly created partition for the windows image.
 
-Type "create vdisk file="<drive letter>:\<file name>.vhdx" maximum=<size> type=fixed"
+Type `create vdisk file="<drive letter>:\<file name>.vhdx" maximum=<size>GB type=fixed`
 
-Then run "attach vdisk" and then "exit" to exit diskpart.
+Then run `attach vdisk` and then `exit` to exit diskpart.
 
 Close the command prompt.
 
@@ -53,7 +53,7 @@ Select the newly created virtual disk in the list and continue windows setup.
 
 Once Windows is installed, go to your UEFI BIOS settings and set your efi boot priority back to your main linux install.
 
-If not already the case, enable grub osprober in order to be able to boot windows from grub.
+If not already the case, enable grub osprober in your linux distro in order to be able to boot windows from grub.
 
 
 ## My main OS is Windows and I occasionality need a linux distro
@@ -64,7 +64,7 @@ Evaluate the space you will want to give to your linuxloops OS images, Open Wind
 
 Install Grub2Win.
 
-Install your disk images on the ExFAT partition and Copy the linuxloops grub configurations in Grub2Win.
+Install your disk images on the ExFAT partition and copy the linuxloops grub configurations in Grub2Win.
 
 Reboot and launch your linuxloops image from Grub2Win.
 

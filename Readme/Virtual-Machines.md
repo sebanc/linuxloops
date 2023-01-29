@@ -8,14 +8,15 @@
 # Running LinuxLoops images in Virtual Machines
   
   ***
-<!-- This *** line creates a divider so that the dropdown looks nice. 
-Empty lines between everything in <angle breackets> is intentional due to markdown issues -->
 
-LinuxLoops images can be run in Virtual Machines by treating them as raw disks. This section of the guide only covers VirtualBox for now and has to be completed for other virtualisation softwares.
-
+LinuxLoops images can be run in Virtual Machines by treating them as raw disks.
 **WARNING: Do not launch the currently running LinuxLoops image in a Virtual Machine. I don't see why anyone would want to do that but it will most likely break the image.**
 
-## Using LinuxLoops disk images in VirtualBox
+## QEMU and derivatives
+
+For QEMU and derivatives, the boot mode needs to be set to EFI and disk images can natively be selected as raw disk.
+
+## VirtualBox
 
 1. From the OS with VirtualBox installed, cd into the linuxloops image folder.
 
