@@ -5,235 +5,140 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
-<!-- Installation Guides -->
-This guide is for installing LinuxLoops on your computer from Linux. There are two variants, you can choose to install to boot LinuxLoops images directly from your HDD Linux distro grub or use an USB flashdrive as the LinuxLoops bootloader.
+<!-- Installation Guide -->
+# Installation from Linux
 
-# Before you start
+Linuxloops can install distros on drives or inside disk images.
 
-LinuxLoops can only boot from unencrypted ext4 partitions so make sure that the destination partition is in ext4 format.
-
-# 1st method: Using your installed Linux distro grub as bootloader (Boot the image from HDD)
-
-<details>
-  <summary>Click to open the LinuxLoops GUI install guide with your installed Linux distro grub as bootloader</summary>
+## Installation on a drive (hdd, sdcard, usb)
 
 ### Requirements
+- x86_64 based computer with UEFI BIOS.
 - Administrator access.
-- Secure boot disabled.
-- 10 GB available space on an unencrypted ext4 partition.
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
+- A drive with at least 14 GB available space.
 
-### Installation steps
+### Install guide
 
-1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano`, `tar` and `zenity` packages/binaries are installed.
+<details>
+  <summary>Click here to open the LinuxLoops install guide  on a drive (hdd, sdcard, usb).</summary>
+
+1. Make sure the `curl`, `cryptsetup`, `efibootmgr`, `fdisk`, `losetup`, `tar` and `xz`  binaries packages are installed.
+If you intend to use the GUI installer, also make sure `xhost` and `zenity` binaries packages are installed.
 
 2. Change the directory to your Downloads folder.
 
 `cd ~/Downloads`
 
-3. Create a directory for linuxloops images where you want (in this example we will create a LinuxLoops directory within the user account path)
-
-`mkdir ~/linuxloops`
-  
-4. Download the linuxloops script:
+3. Download the linuxloops script:
 
 `curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
   
-5. Launch the GUI installer:
+4. Launch Linuxloops install
+
+- To use the GUI installer, run:
 
 `sudo bash ./linuxloops`
 
-6. Follow the installer menu, choosing the distro, desktop environment, image path... (in this example the image path would be /home/username/linuxloops)
+Follow the installer menu choosing the distro, desktop environment, destination drive...
 
-7. Create a copy of your existing 40_custom file.
+- Otherwise using the command line:
 
-`sudo cp /etc/grub.d/40_custom /etc/grub.d/99_linuxloops`
+Linuxloops arguments description:  
+"-distro <distribution>": selects the linux distro (mandatory).  
+"-env <desktop_environment>": selects the default desktop environment (optional, otherwise gnome is usually selected by default).  
+"-dst <path>": destination is the target drive such as "/dev/sdX" (mandatory).  
+"-s" <number>: size of the install on drive in GB (optional, if not specified the full disk size is used).  
+"-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-e": enable rootfs and swap encryption (optional but highly recommended).  
+"-n": automatically install the latest nvidia proprietary driver (optional).  
+"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
 
-8. Open the 99_linuxloops file in an editor. For this guide we'll be using nano but you can use gedit, vi, or any editor of your choice.
+As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /dev/sdX -s 24 -z 4 -e` will install ubuntu with the complete kde environment on the drive /dev/sdX taking 24GB of storage (the remaining space is unallocated) out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
 
-`sudo nano /etc/grub.d/99_brunch`
+5. Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.
 
-9. Copy/Paste the Grub Boot Entries displayed in the installer in the file and press Ctrl + X, then Y to save and Enter to confirm.
-
-10. After saving, commit the new entries to Grub.
-
-`sudo grub-mkconfig -o /boot/grub/grub.cfg`
-
-11. Reboot your computer and start the LinuxLoops grub entry from your distro's grub menu.
+6. (Secure Boot enabled) You should see a blue screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.
 
 </details>
 
-<details>
-  <summary>Click to open the LinuxLoops command line install guide with your installed Linux distro grub as bootloader</summary>
+## Installation in a disk image
 
 ### Requirements
+- x86_64 based computer with UEFI BIOS.
 - Administrator access.
-- Secure boot disabled.
-- 10 GB available space on an unencrypted ext4 partition.
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
+- 14 GB available space on an unencrypted ext4, exfat or ntfs partition.
+- GRUB as Linux distro bootloader.
 
-### Installation steps
+### Install guide
 
-1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano` and `tar` packages/binaries are installed.
+<details>
+  <summary>Click here to open the LinuxLoops install guide in a disk image.</summary>
+
+1. Make sure the `curl`, `cryptsetup`, `efibootmgr`, `fdisk`, `losetup`, `tar` and `xz`  binaries packages are installed.
+If you intend to use the GUI installer, also make sure `xhost` and `zenity` binaries packages are installed.
 
 2. Change the directory to your Downloads folder.
 
 `cd ~/Downloads`
 
-3. Create a directory for linuxloops images where you want (in this example we will create a LinuxLoops directory within the user account path)
-
-`mkdir ~/linuxloops`
-  
-4. Download the linuxloops script:
+3. Download the linuxloops script:
 
 `curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
 
-5. List available distros and desktop environments:
+4. Create a directory for linuxloops images on an unencrypted partition (in ext4, exfat or ntfs format).
 
-`sudo bash ./linuxloops -l`
-
-6. Launch the installer:
-
-Arguments description:  
-"-dist <distribution>": selects the linux distro (mandatory)  
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
-"-img <path>": set the path to the disk image such as: ~/linuxloops/distro.img  
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
-"-z" <number>: size of the swap (optional) (optional, no swap by default)  
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
-
-`sudo bash ./linuxloops -dist ubuntu -env kde-full -img ~/linuxloops/ubuntu.img -s 24 -z 4 -e`
-
-7. Create a copy of your existing 40_custom file.
-
-`sudo cp /etc/grub.d/40_custom /etc/grub.d/99_linuxloops`
-
-8. Open the 99_linuxloops file in an editor. For this guide we'll be using nano but you can use gedit, vi, or any editor of your choice.
-
-`sudo nano /etc/grub.d/99_brunch`
-
-9. Copy/Paste the Grub Boot Entries displayed in the installer in the file and press Ctrl + X, then Y to save and Enter to confirm.
-
-10. After saving, commit the new entries to Grub.
-
-`sudo grub-mkconfig -o /boot/grub/grub.cfg`
-
-11. Reboot your computer and start the LinuxLoops grub entry from your distro's grub menu.
-
-</details>
-
-# 2nd method: Use an USB flashdrive as bootloader (Boot the image from USB)
-
-<details>
-  <summary>Click to open the LinuxLoops GUI install guide with an USB flashdrive as a bootloader</summary>
-
-### Requirements
-- Administrator access.
-- Secure boot disabled.
-- Windows 11 with Ubuntu WSL2 installed.
-- 10 GB available space on an unencrypted ext4 partition.
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
-
-### Installation steps
-
-1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano`, `tar` and `zenity` packages/binaries are installed.
-
-2. Change the directory to your Downloads folder.
-
-`cd ~/Downloads`
-
-3. Create a directory for linuxloops images where you want (in this example we will create a LinuxLoops directory within the user account path)
-
-`mkdir ~/linuxloops`
+As an example `mkdir ~/linuxloops` will create a LinuxLoops directory within the user account path.
   
-4. Download the linuxloops script:
+5. Launch Linuxloops install
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-
-5. Download the USB bootloader template image.
-
-`curl -O -L https://github.com/sebanc/linuxloops/raw/main/Bootloaders/usb_bootloader.img`
-  
-6. Launch the GUI installer:
+- To use the GUI installer, run:
 
 `sudo bash ./linuxloops`
 
-7. Follow the installer menu, choosing the distro, desktop environment, image path... (in this example the image path would be /home/username/linuxloops)
+Follow the installer menu choosing the distro, desktop environment, image path... (in this example the image path would be /home/username/linuxloops).
 
-8. Use 'dd' to write usb_bootloader.img file from your Downloads folder to a USB flashdrive.
+- Otherwise using the command line:
 
-`sudo dd if=usb_bootloader.img of=/dev/<your_usb_flashdrive>`
+Linuxloops arguments description:  
+"-distro <distribution>": selects the linux distro (mandatory).  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is usually selected by default).  
+"-dst <path>": destination is the image path such as "~/linuxloops/distro.img" (mandatory).  
+"-s" <number>: size of the disk image in GB (optional, 14GB by default).  
+"-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-e": enable rootfs and swap encryption (optional but highly recommended).  
+"-n": automatically install the latest nvidia proprietary driver (optional).  
+"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
 
-9. Reboot your computer and select your USB flashdrive as boot device in the BIOS.
+As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst ~/linuxloops/ubuntu.img -s 24 -z 4 -e` will install ubuntu with the complete kde environment a disk image located at path "~/linuxloops/ubuntu.img" of 24GB size out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
 
-</details>
+6. Create a the grub configuration needed to boot the image.
 
-<details>
-  <summary>Click to open the LinuxLoops command line install guide with an USB flashdrive as a bootloader</summary>
+`cat /etc/grub.d/40_custom <image_path>.grub.txt | sudo tee /etc/grub.d/99_linuxloops`
 
-### Requirements
-- Administrator access.
-- Secure boot disabled.
-- 10 GB available space on an unencrypted ext4 partition.
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
+According to the previous example:
 
-### Installation steps
+`cat /etc/grub.d/40_custom ~/linuxloops/ubuntu.img.grub.txt | sudo tee /etc/grub.d/99_linuxloops`
 
-1. Make sure the `curl`, `cryptsetup`, `fdisk`, `nano`, `tar` and `zenity` packages/binaries are installed.
+7. Commit the new entries to Grub.
 
-2. Change the directory to your Downloads folder.
+`sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
-`cd ~/Downloads`
+8. (Secure Boot enabled) Enroll the Secure Boot DER certificate.
 
-3. Create a directory for linuxloops images where you want (in this example we will create a LinuxLoops directory within the user account path)
+`sudo mokutil --import ~/linuxloops/ubuntu.img.der`
 
-`mkdir ~/linuxloops`
+Choose a password, reboot your computer, you should see a blue screen, select "Enroll MOK" and validate with your chosen password.
 
-4. Download the linuxloops script:
-
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-
-5. Download the USB bootloader template image.
-
-`curl -O -L https://github.com/sebanc/linuxloops/raw/main/usb_bootloader.img`
-  
-6. List available distros and desktop environments:
-
-`sudo bash ./linuxloops -l`
-
-7. Launch the installer:
-
-Arguments description:  
-"-dist <distribution>": selects the linux distro (mandatory)  
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
-"-img <path>": set the path to the disk image such as: ~/linuxloops/distro.img  
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
-"-z" <number>: size of the swap (optional) (optional, no swap by default)  
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
-
-`sudo bash ./linuxloops -dist ubuntu -env kde-full -img ~/linuxloops/ubuntu.img -s 24 -z 4 -e`
-
-8. Use 'dd' to write usb_bootloader.img file from your Downloads folder to a USB flashdrive.
-
-`sudo dd if=usb_bootloader.img of=/dev/<your_usb_flashdrive>`
-
-9. Reboot your computer and select your USB flashdrive as boot device in the BIOS.
+9. Reboot your computer and start the LinuxLoops grub entry from your distro's grub menu.
 
 </details>
 
-### What to do after installation
-- Get familiar with the package manager of the distro you have installed (refer to the chosen distro's online resources)
+## What to do after installation
 - Set-up your language and timezone (refer to the chosen distro's online resources)
 - Create additional users if needed.
-- Install your favorite software and enjoy.
+- Get familiar with the package manager of the distro you have installed (refer to the chosen distro's online resources) and install your favorite software.
 
-In case you run into issues while installing or using LinuxLoops, you can find support in the LinuxLoops section of the brunch discord group:
+In case you run into issues while installing or using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:
 
 [![Discord][discord-shield]][discord-url]
 

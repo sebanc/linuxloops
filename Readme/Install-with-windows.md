@@ -5,202 +5,134 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
-<!-- Installation Guides -->
-This guide is for installing LinuxLoops on your computer from Windows using WSL2. There are two variants, you can choose to install Grub2Win software to boot LinuxLoops images directly from HDD or use an USB flashdrive as the LinuxLoops bootloader. 
+<!-- Installation Guide -->
+# Installation from Windows
 
-# Before you start (recommended setup)
+Linuxloops can install distros on drives or inside disk images.
+
+## Installation on a usb flashdrive drive / sdcard
+
+### Requirements
+- x86_64 based computer with UEFI BIOS.
+- Administrator access.
+- Windows WSL2 installed.
+- 14GB hdd space and a usb flashdrive drive / sdcard with at least 14 GB available space.
+
+### Install guide
+
+<details>
+  <summary>Click here to open the LinuxLoops install guide for usb flashdrive drive / sdcard.</summary>
+
+1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `xz`.
+If you intend to use the GUI installer, also make sure `x11-xserver-utils` and `zenity` packages are installed.
+
+`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar x11-xserver-utils xz zenity`
+
+2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
+
+`cd /mnt/c/Users/<your_username>/Downloads`
+  
+3. Download the linuxloops script:
+
+`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+  
+4. Launch Linuxloops install
+
+- If your WSL version supports GUI applications, you can use the GUI installer by running:
+
+`sudo bash ./linuxloops`
+
+Follow the installer menu, choosing the distro, desktop environment, image path... (create the image in your Downloads folder: /mnt/c/Users/<your_username>/Downloads/distro.img)
+
+- Otherwise using the command line:
+
+Linuxloops arguments description:  
+"-distro <distribution>": selects the linux distro (mandatory).  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is usually selected by default).  
+"-dst <path>": destination is the image path such as "/mnt/c/Users/<your_username>/Downloads/distro.img" (mandatory).  
+"-s" <number>: size of the disk image in GB (optional, 14GB by default).  
+"-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-e": enable rootfs and swap encryption (optional but highly recommended).  
+"-n": automatically install the latest nvidia proprietary driver (optional).  
+"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
+
+As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /mnt/c/Users/username/Downloads/distro.img -s 24 -z 4 -e` will install ubuntu with the complete kde environment a disk image located at path "C:\Users\<your_username>\Downloads\distro.img" of 24GB size out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
+
+5. Install Rufus and flash the file C:\Users\<your_username>\Downloads\distro.img to your usb flashdrive drive / sdcard.
+
+6. Reboot your computer and choose your drive in the UEFI BIOS boot menu.
+
+7. (Secure Boot enabled) You should see a blue screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.
+
+</details>
+
+## Installation in a disk image
+
+### Requirements
+- x86_64 based computer with UEFI BIOS.
+- Administrator access.
+- Windows WSL2 installed.
+- Secure boot disabled.
+- 14 GB available space on an unencrypted exfat or ntfs partition.
+
+### Before you start (recommended setup)
 
 Windows locks NTFS partitions when fast startup and hibernation are enabled, therefore the suggested approach to install LinuxLoops from Windows is to use the disk manager to reduce the main storage and create an exfat partition to store images.
 
 Otherwise, you can install LinuxLoops on NTFS partitions but you have to make sure that bitlocker, fast startup and hibernation are disabled (refer to online resources).
 
-# 1st method: Using Grub2Win as bootloader (Boot the image from HDD)
+### Install guide
 
 <details>
-  <summary>Click to open the LinuxLoops GUI install guide with Grub2Win as a bootloader</summary>
+  <summary>Click here to open the LinuxLoops install guide in a disk image.</summary>
 
-### Requirements
-- Administrator access.
-- Secure boot disabled.
-- Windows 11 with Ubuntu WSL2 installed.
-- 10 GB available space on an unencrypted partition (bitlocker disabled).
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
+1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `xz`.
+If you intend to use the GUI installer, also make sure `x11-xserver-utils` and `zenity` packages are installed.
 
-### Installation steps
-
-1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `zenity` packages.
-
-`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar zenity`
+`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar x11-xserver-utils xz zenity`
 
 2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
 
-`cd /mnt/c/Users/username/Downloads`
+`cd /mnt/c/Users/<your_username>/Downloads`
   
 3. Download the linuxloops script:
 
 `curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
   
-4. Launch the GUI installer:
+4. Launch Linuxloops install
+
+- If your WSL version supports GUI applications, you can use the GUI installer by running:
 
 `sudo bash ./linuxloops`
 
-5. Follow the installer menu, choosing the distro, desktop environment, image path... (the image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img)
+Follow the installer menu, choosing the distro, desktop environment, image path... (the image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/<your_username>/linuxloops/distro.img or /mnt/d/linuxloops/distro.img)
 
-6. Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file <distro>.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".
+- Otherwise using the command line:
 
-7. Reboot your computer and start the LinuxLoops grub entry from Grub2Win menu.
+Linuxloops arguments description:  
+"-distro <distribution>": selects the linux distro (mandatory).  
+"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is usually selected by default).  
+"-dst <path>": destination is the image path such as "/mnt/c/Users/<your_username>/linuxloops/distro.img" (mandatory).  
+"-s" <number>: size of the disk image in GB (optional, 14GB by default).  
+"-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-e": enable rootfs and swap encryption (optional but highly recommended).  
+"-n": automatically install the latest nvidia proprietary driver (optional).  
+"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
 
-</details>
+As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /mnt/c/Users/<your_username>/linuxloops/distro.img -s 24 -z 4 -e` will install ubuntu with the complete kde environment a disk image located at path "C:\Users\<your_username>\linuxloops\distro.img" of 24GB size out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
 
-<details>
-  <summary>Click to open the LinuxLoops command line install guide with Grub2Win as a bootloader</summary>
+5. Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file C:\Users\<your_username>\linuxloops\distro.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".
 
-### Requirements
-- Administrator access.
-- Secure boot disabled.
-- Windows 11 with Ubuntu WSL2 installed.
-- 10 GB available space on an unencrypted partition (bitlocker disabled).
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
-
-### Installation steps
-1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk` and `tar` packages.
-
-`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar`
-
-2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
-
-`cd /mnt/c/Users/username/Downloads`
-  
-3. Download the linuxloops script:
-
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-
-4. List available distros and desktop environments:
-
-`sudo bash ./linuxloops -l`
-
-5. Launch the installer:
-
-Arguments description:  
-"-dist <distribution>": selects the linux distro (mandatory)  
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
-"-img <path>": set the path to the disk image. The image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img (mandatory)  
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
-"-z" <number>: size of the swap (optional) (optional, no swap by default)  
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
-
-`sudo bash ./linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
-
-6. Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file <distro>.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".
-
-7. Reboot your computer and start the LinuxLoops grub entry from Grub2Win menu.
+6. Reboot your computer and start the LinuxLoops grub entry from Grub2Win menu.
 
 </details>
 
-# 2nd method: Use an USB flashdrive as bootloader (Boot the image from USB)
-
-<details>
-  <summary>Click to open the LinuxLoops GUI install guide with an USB flashdrive as a bootloader</summary>
-
-### Requirements
-- Administrator access.
-- Secure boot disabled.
-- Windows 11 with Ubuntu WSL2 installed.
-- 10 GB available space on an unencrypted partition (bitlocker disabled).
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
-
-### Installation steps
-
-1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `zenity` packages.
-
-`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar zenity`
-
-2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
-
-`cd /mnt/c/Users/username/Downloads`
-  
-3. Download the linuxloops script:
-
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-
-4. Download the USB bootloader template image.
-
-`curl -O -L https://github.com/sebanc/linuxloops/raw/main/Bootloaders/usb_bootloader.img`
-  
-5. Launch the GUI installer:
-
-`sudo bash ./linuxloops`
-
-6. Follow the installer menu, choosing the distro, desktop environment, image path... (the image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img)
-
-7. Install rufus and write usb_bootloader.img file from your Downloads folder to a USB flashdrive.
-
-8. Reboot your computer and select your USB flashdrive as boot device in the BIOS.
-
-</details>
-
-<details>
-  <summary>Click to open the LinuxLoops command line install guide with an USB flashdrive as a bootloader</summary>
-
-### Requirements
-- Administrator access.
-- Secure boot disabled.
-- Windows 10/11 with Ubuntu WSL2 installed.
-- 10 GB available space on an unencrypted partition (bitlocker disabled).
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
-
-### Installation steps
-1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk` and `tar` packages.
-
-`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar`
-
-2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
-
-`cd /mnt/c/Users/username/Downloads`
-
-3. Download the linuxloops script:
-
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-
-4. Download the USB bootloader template image.
-
-`curl -O -L https://github.com/sebanc/linuxloops/raw/main/usb_bootloader.img`
-  
-5. List available distros and desktop environments:
-
-`sudo bash ./linuxloops -l`
-
-6. Launch the installer:
-
-Arguments description:  
-"-dist <distribution>": selects the linux distro (mandatory)  
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is generally selected by default)  
-"-img <path>": set the path to the disk image. The image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/username/linuxloops/distro.img or /mnt/d/linuxloops/distro.img (mandatory)  
-"-s" <number>: size of the disk image in GB (optional, 10GB by default)  
-"-z" <number>: size of the swap (optional) (optional, no swap by default)  
-"-e": enable rootfs and swap partitions encryption (optional but highly recommended)  
-"-S": automatically applied Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default)  
-
-`sudo bash ./linuxloops -dist ubuntu -env kde-full -img /mnt/c/Users/<username>/ubuntu.img -s 24 -z 4 -e`
-
-7. Install rufus and write usb_bootloader.img file from your Downloads folder to a USB flashdrive.
-
-8. Reboot your computer and select your USB flashdrive as boot device in the BIOS.
-
-</details>
-
-### What to do after installation
-- Get familiar with the package manager of the distro you have installed (refer to the chosen distro's online resources)
+## What to do after installation
 - Set-up your language and timezone (refer to the chosen distro's online resources)
 - Create additional users if needed.
-- Install your favorite software and enjoy.
+- Get familiar with the package manager of the distro you have installed (refer to the chosen distro's online resources) and install your favorite software.
 
-In case you run into issues while installing or using LinuxLoops, you can find support in the LinuxLoops section of the brunch discord group:
+In case you run into issues while installing or using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:
 
 [![Discord][discord-shield]][discord-url]
 

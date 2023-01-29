@@ -7,119 +7,129 @@
 
 # LinuxLoops (beta)
 
-<!-- About This Project -->
 ## About This Project
 
-The purpose of LinuxLoops script is to install full linux x86_64 distros into disk images from Linux, Windows (WSL2) or ChromeOS (brunch singleboot / chromebook with dev mode + RW_LEGACY firmware).
+Linuxloops is a custom linux distro installer.
 
-Some use cases for LinuxLoops:
-- To keep Windows or ChromeOS as the main OS on the computer and intall Linux without modifying the partition table.
-- To use separate linux environments for different purposes (work, gaming...) without having to deal with complex partition tables.
-- To easily setup Linux distros with fully encrypted rootfs and swap (the EFI and boot partitions are not encrypted).
-- To have a full Linux environment which can also be used as a VM from another OS.
-- For easy backup management, backing up a distro is as simple as copying a file.
-- You tell me...
+Why create a custom linux distro installer ?
+Most linux distros provide installers which are either focused on a specific DE and bloated with software you don't need or completely manual. Moreover, once installed there are very often specific pain points to have a fully working system (genrally needed config files, declarative configurations, dkms drivers signing for secure boot...).
 
-Supported setups:  
-|**OS used for Installation**|**Supported filesystems to store the image**|**Bootloader**|
-|----------------------------|--------------------------------------------|--------------|
-|Linux                       |ext4 exfat ntfs                             |Linux distro grub or usb flashdrive|
-|Windows (WSL2)              |exfat ntfs                                  |Grub2Win or usb flashdrive|
-|Brunch (singleboot)         |ext4                                        |Brunch grub or usb flashdrive|
-|ChromeOS                    |ext4                                        |Grub installed by linuxloops or usb flashdrive|
+The objective of Linuxloops is to:
+- Allow an easy installation of a choosen linux distro with full hardware support OOTB, the desktop environment of your choice, and either minimal apps (file manager and terminal when possible) or full standard distro installer packages depending on the choosen target (aside from predefined targets, you can also include additional packages or use a custom install script, see "Custom install" section).
+- In addition, Linuxloops supports installing linux distros in disk images files which can be booted natively from the GRUB bootloader (only on ext4, ntfs or exfat partitions) or in VMs.
 
-Currently the below distros are supported:  
-|**Distro**|**Swap support**|**Encryption support**|**Linux-surface patches support**|**Specific notes**|
-|----------|:--------------:|:--------------------:|:-------------------------------:|------------------|
-|archlinux |✓               |✓                     |✓                                |                  |
-|artixlinux|✓               |✓                     |✓                                |                  |
-|debian    |✓               |✓                     |✓                                |                  |
-|devuan    |✓               |✓                     |✓                                |                  |
-|elementary|✓               |✓                     |✓                                |                  |
-|fedora    |✓               |✓                     |✓                                |                  |
-|gentoo    |✓               |✓                     |                                 |                  |
-|kali      |✓               |✓                     |✓                                |                  |
-|kde_neon  |✓               |✓                     |✓                                |                  |
-|manjaro   |✓               |✓                     |✓                                |                  |
-|mint      |✓               |✓                     |✓                                |                  |
-|mxlinux   |✓               |✓                     |✓                                |                  |
-|nixos     |✓               |✓                     |                                 |                  |
-|opensuse  |✓               |✓                     |                                 |                  |
-|pop_os    |✓               |✓                     |✓                                |                  |
-|rockylinux|✓               |✓                     |                                 |                  |
-|tails     |                |                      |                                 |Tails images can only be booted from an ext4 partition|
-|ubuntu    |✓               |✓                     |✓                                |                  |
-|voidlinux |✓               |✓                     |                                 |                  |
-|zorin     |✓               |✓                     |✓                                |                  |
-
-**Warning: Keep in mind that even though they are stored in image files, LinuxLoops are full Linux distros with complete access to your hardware so don't do anything that you would not do in a standard Linux install. Moreover, the LinuxLoops init script has a few dependencies on Linux distros fundamentals (most notably on the initramfs generation process and udev), a significant change on those basics should be very rare but might break your install. Even though, if something goes wrong you should always be able to recover your data by mounting the disk image from another LinuxLoops image or from a Linux live usb (see Data recovery section), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
+On the other hand, the main limitation of Linuxloops is that in order to support a wide range of Linux distros, the partition table setup is limited to the basics (EFI partition and BOOT/ROOT ext4 partitions). As such, most advanced users needing a custom partition table would probably be better with a distro netinst iso or can customize the linuxloops script to their liking (it is just a bash script).
 
 ## How does it work ?
 
-The LinuxLoops bash script will create a disk image containing a 512MB EFI partition, a 512MB boot partition and the main rootfs partition. Distros will be installed in the image and an initramfs hook will allow booting the disk image through a specific grub config.
+The LinuxLoops bash script will create a standard partition table (with a 512MB EFI partition, a 1.5GB boot partition and the main rootfs partition), download rootfs images (usually lxc container rootfs or actual distribution isos) and install the necessary packages through a chroot process.
 
-The minimum size for a LinuxLoops image has been defined as 10GB (with at least 8GB for the main rootfs) as it should allow most distros to install without issue. However, it might not be sufficient for all distros, notably if you intend to install gentoo you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
+For security purpose, Linuxloops will not install packages/binaries which are not present in the official repositories. The only exceptions are:
+- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat derivatives which are enabled by default as they contain necessary packages for standard use.
+- For archlinux derivatives, the "shim-signed" AUR package in order to support Secure Boot.
 
-<!-- Supported Hardware -->
+The minimum size for a LinuxLoops image has been defined as 14GB (with at least 12GB allocated to the main rootfs) as it should allow most distros to install without issue. However, it might not be sufficient for all distros, notably if you intend to install gentoo with a desktop environment you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
+
+**Warning: Even though, if something goes wrong with your install you should always be able to recover your data by mounting the root partition from a Linux live usb (see Data recovery section), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
+
+
 ## Supported Hardware
 
 ✔ Base Requirements:
-- x86_64 based computer.
-- Secure boot disabled.
+- x86_64 based computer with UEFI BIOS.
 - Administrative privileges on the device.
-- 10 GB available space.
-- An entry level understanding of the linux terminal.
-  - This guide aims to make this process as easy as possible, but knowing the basics is expected.
+
+
+## Overview of supported distros and features
+
+|**Distro**|**Swap support**|**Encryption support**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Others**|
+|--------------|:--------------:|:--------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|--------------|
+|almalinux     |✓               |✓                     |✓                      |                                     |                                 |[almalinux notes][almalinux-notes]|
+|archlinux     |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[archlinux notes][archlinux-notes]|
+|artixlinux    |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |                                 |[artixlinux notes][artixlinux-notes]|
+|brunch        |                |✓ (distro specific)   |✓                      |                                     |✓ (partially included)           |[brunch notes][brunch-notes]|
+|chromeos-flex |                |✓ (distro specific)   |✓                      |                                     |                                 |[chromeos-flex notes][chromeos-flex-notes]|
+|debian        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|devuan        |✓               |✓                     |✓                      |✓                                    |                                 |              |
+|elementary    |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|fedora        |✓               |✓                     |✓                      |✓                                    |✓                                |[fedora notes][fedora-notes]|
+|gentoo-openrc |✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-openrc notes][gentoo-notes]|
+|gentoo-systemd|✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-systemd notes][gentoo-notes]|
+|kali          |✓               |✓                     |disk images only       |✓                                    |✓                                |[kali notes][kali-notes]|
+|kde_neon      |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|manjaro       |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[manjaro notes][manjaro-notes]|
+|mint          |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|mint-lmde     |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|mxlinux       |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|nixos         |✓               |✓                     |disk images only       |✓                                    |                                 |[nixos notes][nixos-notes]|
+|opensuse      |✓               |✓                     |✓                      |✓                                    |                                 |[opensuse notes][opensuse-notes]|
+|parrot        |✓               |✓                     |disk images only       |✓                                    |✓                                |[parrot notes][parrot-notes]|
+|pop_os        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|rockylinux    |✓               |✓                     |✓                      |                                     |                                 |[rockylinux notes][rockylinux-notes]|
+|steamos-like  |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[steamos-like notes][steamos-like-notes]|
+|tails         |                |✓ (distro specific)   |✓                      |                                     |                                 |[tails notes][tails-notes]|
+|ubuntu        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|ubuntu-lts    |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|voidlinux     |✓               |✓                     |                       |✓                                    |                                 |              |
+|zorin         |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+
 
 ## Encryption
 
-The data in LinuxLoops images can be encrypted (rootfs and swap, leaving only the efi and boot partitions unencrypted).
+Encryption is highly recommended as it protects physical access to your personal data.
 
-Encryption is highly recommended as it protects physical access to your personal data, however it slightly impacts performance.
+If selected, Linuxloops will setup encryption on the rootfs (including swap) using LUKS2. However, note that tails and brunch/chromeos-flex have their own encryption mechanism (and that in the case of brunch/chromeos-flex you will not have the necessary key to decrypt userdata from outside chromeos as it is generated by the system so ensure your data is synced on the cloud or make regular backups).
   
-By default the keyboard layout will be in Qwerty, as such:
+By default, after a Linuxloops install the keyboard layout will be in Qwerty, as such:
 - Either Learn how to type your password as if your keyboard was Qwerty.
 - Or choose a password which is identical when typed on a Qwerty keyboard.
 
-## Install Instructions
-This guide has been split into seperate sections, please follow one of the links below for a guide suitable to your current operating system.
 
-### [Install with Linux][linux-guide]
-### [Install with Windows][windows-guide]
-### [Install with Brunch (singleboot)][brunch-guide]
-### [Install with ChromeOS (RW_LEGACY firmware needed)][chromeos-guide]
+## Install instructions
+
+This guide has been split into seperate sections depending on your current operating system.
+
+### [Install from Linux][linux-guide]
+### [Install from Windows][windows-guide]
 
 
 ## Complementary instructions
-You will find below additional instructions aiming to improve your LinuxLoops experience.
+
+You will find below additional instructions to go further with Linuxloops.
 
 ### [Custom install parameters][custom-guide]
-### [Use the image in a virtual machine][vm-guide]
+### [Use a disk image in a virtual machine][vm-guide]
 ### [Data recovery from an image][recovery-guide]
+### [Recommended setups][recommended-setups]
+### [Secure Boot][secure-boot]
+
 
 ## Support
 
-Support for LinuxLoops is currently provided in the LinuxLoops section of the brunch Discord:
+Currently, support for LinuxLoops is provided in the off-topic channel of the brunch Discord:
 
 [![Discord][discord-shield]][discord-url]
 
+
 ## Pull requests
 
-Clearly, in its current state, LinuxLoops is not perfect and I am counting on the community to help by submitting pull requests. However, those needs to respect the ground project principles:
-- LinuxLoops partitioning scheme is fixed, it has been defined to limit as much as possible dependencies and to ensure a good performance.
-- Basic desktop environment targets should be debloated (ideally the DE, a terminal and a file browser).
-- Full desktop environment targets are not based on users preferences but on the choices of the distro managers.
-- Lightdm is used by default as it is lightweight and widely compatible (aside from gnome/kde which have dependencies respectively on gdm/sddm).
+Clearly, in its current state, LinuxLoops is not perfect and I am counting on the community to help by submitting pull requests, notably to:
+- Add new desktop environments / windows managers targets (especially windows managers as I do not have much experience with those).
+- Fiabilise the installed packages base for each target.
+- Extend Linuxloops customization principles.
+- Fix random bugs.
 
-If you need something else, read about custom scripts or feel free to make your own fork of LinuxLoops.
+However:
+- New linux distros will only be added if they present an effective interest (as Linuxloops is an installer, a distro which would mainly consist of a custom installer and a theme are not considered relevant).
+- Changes related to the default partitioning scheme can be discussed, however in order to support a wide range of distros only widely supported filesystems can be considered. BTRFS support notably would be interesting, however its very customizable structure through mount options makes it difficult to use (as linuxloops cannot guess existing configurations).
 
-<!-- Special Thanks -->
+You can also feel free to make your own fork of LinuxLoops and customize it to your needs (it is just a bash script).
+
 
 ## Special Thanks
 - The [lxc/lxd][lxc link] project for maintaining Linux container rootfs archives.
 - The [Linux-Surface crew][linux-surface link] for greatly improving Linux support on Surface devices.
-- [MrChromebox][MrChromebox link] for its awesome Chromebooks custom firmwares.
-- The [Chromebrew][Chromebrew link] framework which allows encryption support for brunch / chromeos.
+
 
 <!-- Reference Links -->
 <!-- Badges -->
@@ -130,17 +140,32 @@ If you need something else, read about custom scripts or feel free to make your 
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
 
-<!-- Outbound Links -->
-[lxc link]: https://linuxcontainers.org/
-[linux-surface link]: https://github.com/linux-surface/linux-surface
-[MrChromebox link]: https://mrchromebox.tech/
-[Chromebrew link]: https://github.com/skycocker/chromebrew
-
 <!-- Internal Links -->
-[windows-guide]: ./Readme/Install-with-windows.md
+[almalinux-notes]: ./Readme/Distro-notes.md#almalinux
+[archlinux-notes]: ./Readme/Distro-notes.md#archlinux
+[artixlinux-notes]: ./Readme/Distro-notes.md#artixlinux
+[brunch-notes]: ./Readme/Distro-notes.md#brunch
+[chromeos-flex-notes]: ./Readme/Distro-notes.md#chromeos-flex
+[fedora-notes]: ./Readme/Distro-notes.md#fedora
+[gentoo-notes]: ./Readme/Distro-notes.md#gentoo
+[kali-notes]: ./Readme/Distro-notes.md#kali
+[manjaro-notes]: ./Readme/Distro-notes.md#manjaro
+[nixos-notes]: ./Readme/Distro-notes.md#nixos
+[opensuse-notes]: ./Readme/Distro-notes.md#opensuse
+[parrot-notes]: ./Readme/Distro-notes.md#parrot
+[rockylinux-notes]: ./Readme/Distro-notes.md#rockylinux
+[steamos-like-notes]: ./Readme/Distro-notes.md#steamos-like
+[tails-notes]: ./Readme/Distro-notes.md#tails
+
 [linux-guide]: ./Readme/Install-with-linux.md
-[brunch-guide]: ./Readme/Install-with-brunch.md
-[chromeos-guide]: ./Readme/Install-with-chromebook.md
+[windows-guide]: ./Readme/Install-with-windows.md
+
 [custom-guide]: ./Readme/Custom-install.md
 [vm-guide]: ./Readme/Virtual-Machines.md
 [recovery-guide]: ./Readme/Data-recovery.md
+[recommended-setups]: ./Readme/Recommended-setups.md
+[secure-boot]: ./Readme/Secure-Boot.md
+
+<!-- Outbound Links -->
+[lxc link]: https://linuxcontainers.org/
+[linux-surface link]: https://github.com/linux-surface/linux-surface
