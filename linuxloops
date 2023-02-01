@@ -1330,7 +1330,7 @@ dnf reinstall -y "*"
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf update -y
-dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted
+dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted dosfstools
 dnf --enablerepo=crb install -y almalinux-sb-certs
 systemctl enable dbus.socket dbus-daemon.service named.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
@@ -1428,7 +1428,7 @@ pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm ca-certificates openssl
 pacman -Qnq | pacman -Syu --noconfirm -
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -1730,7 +1730,7 @@ pacman -Syu --noconfirm elogind-runit
 pacman -Qnq | pacman -S --noconfirm -
 pacman -Sy --noconfirm base runit-system runit elogind-runit mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 echo -e "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[community]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
 ln -s /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 dbus-uuidgen > /etc/machine-id
 /tmp/set_locale_and_timezone
@@ -2026,7 +2026,7 @@ export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib6
 /tmp/cleanup_container
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm ca-certificates openssl cpio unzip ntfs-3g parted
+pacman -Syu --noconfirm ca-certificates openssl cpio unzip ntfs-3g parted dosfstools
 /tmp/install
 /tmp/cleanup
 exit
@@ -2124,7 +2124,7 @@ export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib6
 /tmp/cleanup_container
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm ca-certificates openssl busybox cpio ntfs-3g parted sbsigntools
+pacman -Syu --noconfirm ca-certificates openssl busybox cpio ntfs-3g parted sbsigntools dosfstools
 /tmp/install
 /tmp/cleanup
 exit
@@ -2138,7 +2138,7 @@ if [ "$desktop" == "full-devmode" ]; then cmdline_extra="cros_debug $CUSTOM_CMDL
 cat >"$linuxloopsdir"/chroot/installroot/tmp/install <<CHROMEOSFLEXINSTALL
 #!/bin/bash
 set -e
-mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi
+mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi /isomount/tmp
 mkfs.ext4 -E nodiscard -F -b 4096 -L "H-STATE" "$partition_path"1
 mount "$partition_path"1 /isomount/data
 curl -L "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; return 1; }
@@ -2155,6 +2155,15 @@ for (( i=1; i<=12; i++ )); do
 			mkfs.ext4 -E nodiscard -F -b 4096 -L "ROOT-C" "$partition_path""\$i"
 			continue
 		;;
+		12)
+			mount "\$isomount"p12 /isomount/tmp
+			mkfs.fat -F 32 -n 'EFI' "$partition_path""\$i"
+			mount "$partition_path""\$i" /isomount/efi
+			cp -r /isomount/tmp/* /isomount/efi/
+			umount /isomount/efi
+			umount /isomount/tmp
+			continue
+		;;
 		*)
 			part_source=\$i
 		;;
@@ -2165,35 +2174,35 @@ losetup -d "\$isomount"
 rm -rf /isomount/data/*
 umount /isomount/data
 if [ "$install_type" == "image" ]; then
-mount "$partition_path"7 /isomount/rootc
-mkdir -p /isomount/rootc/initramfs
-cd /isomount/rootc/initramfs
-mkdir -p etc proc sys tmp usr/bin usr/lib usr/mbin usr/sbin
-ln -s /usr/bin bin
-ln -s /usr/lib lib
-ln -s /usr/lib lib64
-ln -s /usr/sbin sbin
-for i in \$(ldd /usr/bin/bash | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/bash ./usr/bin/
-for i in \$(ldd /usr/bin/busybox | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/busybox ./usr/bin/
-for i in \$(ldd /usr/bin/blkid | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/blkid ./usr/mbin/
-for i in \$(ldd /usr/bin/e2fsck | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/e2fsck ./usr/mbin/
-for i in \$(ldd /usr/bin/losetup | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/losetup ./usr/mbin/
-for i in \$(ldd /usr/bin/mkfs.ext4 | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/mkfs.ext4 ./usr/mbin/
-for i in \$(ldd /usr/bin/modprobe | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/modprobe ./usr/mbin/
-for i in \$(ldd /usr/bin/ntfs-3g | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/ntfs-3g ./usr/mbin/
-for i in \$(ldd /usr/bin/ntfsfix | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
-cp -a /usr/bin/ntfsfix ./usr/mbin/
-cp -a /usr/lib/ld-linux-x86-64.so.2 ./usr/lib/
-cp -a /usr/lib/libgcc_s.so.1 ./usr/lib/
-cat >./init <<'INITSCRIPT'
+	mount "$partition_path"7 /isomount/rootc
+	mkdir -p /isomount/rootc/initramfs
+	cd /isomount/rootc/initramfs
+	mkdir -p etc proc sys tmp usr/bin usr/lib usr/mbin usr/sbin
+	ln -s /usr/bin bin
+	ln -s /usr/lib lib
+	ln -s /usr/lib lib64
+	ln -s /usr/sbin sbin
+	for i in \$(ldd /usr/bin/bash | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/bash ./usr/bin/
+	for i in \$(ldd /usr/bin/busybox | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/busybox ./usr/bin/
+	for i in \$(ldd /usr/bin/blkid | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/blkid ./usr/mbin/
+	for i in \$(ldd /usr/bin/e2fsck | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/e2fsck ./usr/mbin/
+	for i in \$(ldd /usr/bin/losetup | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/losetup ./usr/mbin/
+	for i in \$(ldd /usr/bin/mkfs.ext4 | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/mkfs.ext4 ./usr/mbin/
+	for i in \$(ldd /usr/bin/modprobe | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/modprobe ./usr/mbin/
+	for i in \$(ldd /usr/bin/ntfs-3g | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/ntfs-3g ./usr/mbin/
+	for i in \$(ldd /usr/bin/ntfsfix | cut -d' ' -f3); do cp "\$i" ./usr/lib/; done
+	cp -a /usr/bin/ntfsfix ./usr/mbin/
+	cp -a /usr/lib/ld-linux-x86-64.so.2 ./usr/lib/
+	cp -a /usr/lib/libgcc_s.so.1 ./usr/lib/
+	cat >./init <<'INITSCRIPT'
 #!/usr/bin/bash
 export PATH=/usr/mbin:/usr/sbin:/usr/bin
 export LD_LIBRARY_PATH=/usr/lib
@@ -2306,27 +2315,27 @@ fi
 
 exec switch_root /chromeosroot /sbin/init "\$@"
 INITSCRIPT
-chmod 0755 ./init
-find . | cpio -o -H newc > /isomount/rootc/initramfs.img
-mount -o ro "$partition_path"3 /isomount/roota
-(cd /isomount/roota; find ./lib/firmware | cpio -o -H newc > /isomount/rootc/firmwares.img)
-(cd /isomount/roota; find ./lib/modules | cpio -o -H newc > /isomount/rootc/modules.img)
-umount /isomount/roota
-cd ../../..
-rm -r /isomount/rootc/initramfs
-umount /isomount/rootc
+	chmod 0755 ./init
+	find . | cpio -o -H newc > /isomount/rootc/initramfs.img
+	mount -o ro "$partition_path"3 /isomount/roota
+	(cd /isomount/roota; find ./lib/firmware | cpio -o -H newc > /isomount/rootc/firmwares.img)
+	(cd /isomount/roota; find ./lib/modules | cpio -o -H newc > /isomount/rootc/modules.img)
+	umount /isomount/roota
+	cd ../../..
+	rm -r /isomount/rootc/initramfs
+	umount /isomount/rootc
 fi
-if [ "$desktop" == "full-devmode" ]; then
 mount "$partition_path"12 /isomount/efi
-sed -i 's@defaultA=2@defaultA=0@g' /isomount/efi/efi/boot/grub.cfg
-sed -i 's@defaultB=3@defaultB=1@g' /isomount/efi/efi/boot/grub.cfg
-sed -i 's@menuentry "local image A" {@local_image_A="@g' /isomount/efi/efi/boot/grub.cfg
-sed -i 's@menuentry "local image B" {@local_image_B="@g' /isomount/efi/efi/boot/grub.cfg
-sed -i 's@menuentry "verified image A" {@verified_image_A="@g' /isomount/efi/efi/boot/grub.cfg
-sed -i 's@menuentry "verified image B" {@verified_image_B="@g' /isomount/efi/efi/boot/grub.cfg
-sed -i 's@menuentry "Alternate USB Boot" {@Alternate_USB_Boot="@g' /isomount/efi/efi/boot/grub.cfg
-sed -i 's@}@"@g' /isomount/efi/efi/boot/grub.cfg
-cat >>/isomount/efi/efi/boot/grub.cfg <<MODEDGRUB
+if [ "$desktop" == "full-devmode" ]; then
+	sed -i 's@defaultA=2@defaultA=0@g' /isomount/efi/efi/boot/grub.cfg
+	sed -i 's@defaultB=3@defaultB=1@g' /isomount/efi/efi/boot/grub.cfg
+	sed -i 's@menuentry "local image A" {@local_image_A="@g' /isomount/efi/efi/boot/grub.cfg
+	sed -i 's@menuentry "local image B" {@local_image_B="@g' /isomount/efi/efi/boot/grub.cfg
+	sed -i 's@menuentry "verified image A" {@verified_image_A="@g' /isomount/efi/efi/boot/grub.cfg
+	sed -i 's@menuentry "verified image B" {@verified_image_B="@g' /isomount/efi/efi/boot/grub.cfg
+	sed -i 's@menuentry "Alternate USB Boot" {@Alternate_USB_Boot="@g' /isomount/efi/efi/boot/grub.cfg
+	sed -i 's@}@"@g' /isomount/efi/efi/boot/grub.cfg
+	cat >>/isomount/efi/efi/boot/grub.cfg <<MODEDGRUB
 
 menuentry "local image A" {
   \\\$local_image_A $cmdline_extra
@@ -2344,6 +2353,7 @@ menuentry "verified image B" {
   \\\$verified_image_B $cmdline_extra
 }
 MODEDGRUB
+fi
 if [ "$install_type" == "image" ]; then
 	mkdir -p /mnt/etc/secureboot_key
 	sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/efi/boot/grubx64.efi
@@ -2351,7 +2361,6 @@ if [ "$install_type" == "image" ]; then
 	openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
 fi
 umount /isomount/efi
-fi
 CHROMEOSFLEXINSTALL
 chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/install
 
@@ -2392,7 +2401,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -2646,7 +2655,7 @@ echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debc
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install eudev sysvinit-core
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -2879,7 +2888,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -2978,7 +2987,7 @@ dnf install -y ca-certificates openssl fedora-release-identity-workstation --all
 dnf reinstall -y "*"
 dnf install -y distribution-gpg-keys dnf-plugins-core
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted
+dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools
 systemctl enable dbus.socket dbus-daemon.service getty@.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -3167,7 +3176,7 @@ echo "GRUB_PLATFORMS=\"efi-32 efi-64\"" >> /etc/portage/make.conf
 #echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
 echo -e "media-libs/libsndfile minimal\nnet-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
 eselect profile set default/linux/amd64/17.1
-emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools
+emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools
 for x in /etc/runlevels/default/net.* ; do rc-update del $(basename $x) default ; rc-service --ifstarted $(basename $x) stop; done
 rc-update add bluetooth default
 rc-update add NetworkManager default
@@ -3330,7 +3339,7 @@ echo "GRUB_PLATFORMS=\"efi-32 efi-64\"" >> /etc/portage/make.conf
 #echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
 echo -e "media-libs/libsndfile minimal\nnet-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
 eselect profile set default/linux/amd64/17.1
-emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools
+emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools
 systemctl enable bluetooth.service NetworkManager.service systemd-resolved.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
@@ -3485,7 +3494,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release systemd-resolved kali-themes sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release systemd-resolved kali-themes sbsigntool mokutil dosfstools
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -3732,7 +3741,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -3852,7 +3861,7 @@ curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf
 pacman-key --init
 pacman-key --populate
 pacman -Syy
-pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil
+pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -4106,7 +4115,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 yes | DEBIAN_FRONTEND=noninteractive apt update
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data sbsigntool mokutil dosfstools
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -4256,7 +4265,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 systemctl enable systemd-resolved.service
@@ -4377,7 +4386,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode sbsigntool mokutil dosfstools
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -4764,7 +4773,7 @@ zypper --non-interactive refresh
 zypper --non-interactive install ca-certificates openssl
 sed -i 's@# autoAgreeWithLicenses = no@autoAgreeWithLicenses = yes@g' /etc/zypp/zypper.conf
 zypper --non-interactive install -f $(rpm -q -a --qf '%{NAME} ' | sed 's@ gpg-pubkey@@g')
-zypper --non-interactive install kernel-default kernel-default-devel dkms kernel-firmware-all wireless-regdb glibc-i18ndata patterns-base-base nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez pulseaudio alsa-utils alsa-firmware cryptsetup nano e2fsprogs ntfsprogs device-mapper cantarell-fonts acpid curl thermald bash-completion gpg2 polkit postfix system-group-wheel xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim bind ucode-amd ucode-intel sbsigntools
+zypper --non-interactive install kernel-default kernel-default-devel dkms kernel-firmware-all wireless-regdb glibc-i18ndata patterns-base-base nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez pulseaudio alsa-utils alsa-firmware cryptsetup nano e2fsprogs ntfsprogs device-mapper cantarell-fonts acpid curl thermald bash-completion gpg2 polkit postfix system-group-wheel xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim bind ucode-amd ucode-intel sbsigntools dosfstools
 systemctl disable wicked.service
 systemctl enable named.service NetworkManager.service
 /tmp/set_locale_and_timezone
@@ -5028,7 +5037,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=fal
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release parrot-themes sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release parrot-themes sbsigntool mokutil dosfstools
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -5285,7 +5294,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 yes | DEBIAN_FRONTEND=noninteractive apt update
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil dosfstools
 echo 'autoinstall_all_kernels="y"' >> /etc/dkms/framework.conf
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
@@ -5385,7 +5394,7 @@ dnf reinstall -y "*"
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf update -y
-dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted
+dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted dosfstools
 dnf --enablerepo=crb install -y rocky-sb-certs
 systemctl enable dbus.socket dbus-daemon.service named.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
@@ -5486,7 +5495,7 @@ sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@\[multilib]\nIncl
 pacman-key --init
 pacman-key --populate
 pacman -Qnq | pacman -Syu --noconfirm -
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -6232,7 +6241,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -6501,7 +6510,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -6757,7 +6766,7 @@ xbps-install -y ca-certificates openssl
 xbps-remove -y base-voidstrap
 xbps-install -fy $(xbps-query -l | awk '{ print $2 }' | xargs -n1 xbps-uhelper getpkgname | sed -z 's@\n@ @g') void-repo-nonfree
 xbps-install -Syu
-xbps-install -y base-system linux linux-headers dkms linux-firmware crda bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober bind dnssec-anchors sbsigntool mokutil
+xbps-install -y base-system linux linux-headers dkms linux-firmware crda bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober bind dnssec-anchors sbsigntool mokutil dosfstools
 ln -s /etc/sv/agetty-tty1 /etc/sv/agetty-tty2 /etc/sv/agetty-tty3 /etc/sv/agetty-tty4 /etc/sv/agetty-tty5 /etc/sv/agetty-tty6 /etc/sv/dbus /etc/sv/dhcpcd /etc/sv/named /etc/sv/NetworkManager /etc/sv/polkitd /etc/sv/uuidd /etc/runit/runsvdir/default/
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
@@ -6919,7 +6928,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil dosfstools
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -7427,9 +7436,9 @@ case "$distro" in
 esac
 if [ $(( ($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024) - $available_space_needed )) -lt 0 ]; then
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "To install $distro you need $available_space_need GB of available space in your home directory but you only have ($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024) GB."
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "To install $distro you need $available_space_needed GB of available space in your home directory but you only have $(($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024)) GB."
 	else
-		echo -e "To install $distro you need $available_space_need GB of available space in your home directory but you only have ($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024) GB."
+		echo -e "To install $distro you need $available_space_needed GB of available space in your home directory but you only have $(($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024)) GB."
 	fi
 	exit 1
 fi
