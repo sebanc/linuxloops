@@ -2333,19 +2333,21 @@ mkdir -p chromeosroot
 mount "\$bootdevice"p"\$bootpart" /chromeosroot
 
 touch /chromeosroot/.nodelta
-cat >/chromeosroot/usr/share/cros/startup_utils.sh <<'STATEFUL'
-mount_var_and_home_chronos() {
-mkdir -p /mnt/stateful_partition/encrypted/var
-mount -n --bind /mnt/stateful_partition/encrypted/var /var || return 1
-mkdir -p /mnt/stateful_partition/encrypted/chronos
-mount -n --bind /mnt/stateful_partition/encrypted/chronos /home/chronos || return 1
-}
-umount_var_and_home_chronos() {
-umount /home/chronos
-umount /var
-}
-STATEFUL
-chmod 0755 /chromeosroot/usr/share/cros/startup_utils.sh
+cat >/chromeosroot/usr/sbin/mount-encrypted <<'MOUNTS'
+#!/bin/bash
+if [ \$# -eq 0 ]; then
+	if ! mountpoint -q /var && ! mountpoint -q /home/chronos; then
+		mkdir -p /mnt/stateful_partition/encrypted/var
+		mount -n --bind /mnt/stateful_partition/encrypted/var /var || exit 1
+		mkdir -p /mnt/stateful_partition/encrypted/chronos
+		mount -n --bind /mnt/stateful_partition/encrypted/chronos /home/chronos || exit 1
+	fi
+elif [ "\$1" == "umount" ]; then
+	umount /home/chronos
+	umount /var
+fi
+MOUNTS
+chmod 0755 /chromeosroot/usr/sbin/mount-encrypted
 mv /chromeosroot/bin/chroot /chromeosroot/bin/chroot.orig
 cat >/chromeosroot/bin/chroot <<'CHROOT'
 #!/bin/bash
