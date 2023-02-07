@@ -20,15 +20,18 @@ jobs:
           yes | DEBIAN_FRONTEND=noninteractive sudo apt install btrfs-progs curl cryptsetup dosfstools fdisk tar xz-utils zip
       - name: Checkout linuxloops script
         uses: actions/checkout@v3
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date '+%Y%m%d')"
       - name: Build Linuxloops Live Disk
-        run: sudo CUSTOM_PACKAGES="firefox gedit gparted evince" bash linuxloops -distro mint -env cinnamon -dst /tmp/linuxloops_live_$(date '+%Y%m%d').img -L -b
+        run: sudo CUSTOM_PACKAGES="firefox gedit gparted evince" bash linuxloops -distro mint -env cinnamon -dst /tmp/linuxloops_live_${{ steps.date.outputs.date }}.img -L -b
       - name: Compress Linuxloops Live Disk
-        run: zip /tmp/linuxloops_live_$(date '+%Y%m%d').zip /tmp/linuxloops_live_$(date '+%Y%m%d').img
+        run: zip /tmp/linuxloops_live_${{ steps.date.outputs.date }}.zip /tmp/linuxloops_live_${{ steps.date.outputs.date }}.img
       - name: Upload Linuxloops Live Disk
         uses: actions/upload-artifact@v3
         with:
           name: Linuxloops Live Disk
-          path: /tmp/linuxloops_live_$(date '+%Y%m%d').zip
+          path: /tmp/linuxloops_live_${{ steps.date.outputs.date }}.zip
           if-no-files-found: error
   release:
     name: Make a Linuxloops Live Disk release
