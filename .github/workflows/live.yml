@@ -29,7 +29,7 @@ jobs:
       - name: Upload Linuxloops Live Disk
         uses: actions/upload-artifact@v3
         with:
-          name: Linuxloops Live Disk
+          name: linuxloops-live-disk
           path: /tmp/linuxloops_live_${{ env.current_date }}.zip
           if-no-files-found: error
   release:
@@ -42,7 +42,7 @@ jobs:
       - name: Download built artifacts
         uses: actions/download-artifact@v3
         with:
-          name: build-live-disk
+          name: linuxloops-live-disk
       - name: Generate release details
         run: |
           RELEASE_FILE=$(ls linuxloops_live_*.zip)
