@@ -1,0 +1,61 @@
+name: Build Linuxloops Live Disk
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'linuxloops'
+concurrency:
+  group: environment-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  build-live-disk:
+    name: Build Linuxloops Live Disk
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install dependencies
+        run: |
+          yes | DEBIAN_FRONTEND=noninteractive sudo apt update
+          yes | DEBIAN_FRONTEND=noninteractive sudo apt install btrfs-progs curl cryptsetup dosfstools fdisk tar xz zip
+      - name: Checkout linuxloops script
+        uses: actions/checkout@v3
+      - name: Build Linuxloops Live Disk
+        run: sudo CUSTOM_PACKAGES="firefox gedit gparted evince" bash linuxloops -distro mint -env cinnamon -dst /tmp/linuxloops_live_$(date '+%Y%m%d').img -L -b
+      - name: Compress Linuxloops Live Disk
+        run: zip /tmp/linuxloops_live_$(date '+%Y%m%d').zip /tmp/linuxloops_live_$(date '+%Y%m%d').img
+      - name: Upload Linuxloops Live Disk
+        uses: actions/upload-artifact@v3
+        with:
+          name: Linuxloops Live Disk
+          path: /tmp/linuxloops_live_$(date '+%Y%m%d').zip
+          if-no-files-found: error
+  release:
+    name: Make a Linuxloops Live Disk release
+    permissions:
+      contents: write
+    needs: build-live-disk
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Download built artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: build-live-disk
+      - name: Generate release details
+        run: |
+          RELEASE_FILE=$(ls linuxloops_live_*.zip)
+          RELEASE_VERSION=$(echo "$RELEASE_FILE" | cut -d'.' -f1 | cut -d'_' -f2)
+          RELEASE_DATE=$(echo "$RELEASE_FILE" | cut -d'.' -f1 | cut -d'_' -f3)
+          echo "Found linuxloops release: ${RELEASE_FILE} with version ${RELEASE_VERSION} and date ${RELEASE_DATE}"
+          echo "RELEASE_FILE=${RELEASE_FILE}" >> $GITHUB_ENV
+          echo "RELEASE_TAG=linuxloops-${RELEASE_VERSION}-${RELEASE_DATE}" >> $GITHUB_ENV
+          echo "RELEASE_NAME=Linuxloops ${RELEASE_VERSION} ${RELEASE_DATE}" >> $GITHUB_ENV          
+      - name: Create a release and upload artifacts as assets
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ env.RELEASE_FILE }}"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false
+          tag: "${{ env.RELEASE_TAG }}"
+          name: "${{ env.RELEASE_NAME }}"
+          commit: "${{ github.ref_name }}"
+          body: "${{ github.event.head_commit.message }}"

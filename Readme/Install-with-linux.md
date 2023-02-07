@@ -22,8 +22,8 @@ Linuxloops can install distros on drives or inside disk images.
 <details>
   <summary>Click here to open the LinuxLoops install guide  on a drive (hdd, sdcard, usb).</summary>
 
-1. Make sure the `curl`, `cryptsetup`, `efibootmgr`, `fdisk`, `losetup`, `tar` and `xz`  binaries packages are installed.
-If you intend to use the GUI installer, also make sure `xhost` and `zenity` binaries packages are installed.
+1. Make sure `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz` binaries are installed.
+If you intend to use the GUI installer, also make sure `zenity` package is installed.
 
 2. Change the directory to your Downloads folder.
 
@@ -49,6 +49,7 @@ Linuxloops arguments description:
 "-dst <path>": destination is the target drive such as "/dev/sdX" (mandatory).  
 "-s" <number>: size of the install on drive in GB (optional, if not specified the full disk size is used).  
 "-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-b": use btrfs format for the root filesystem (instead of ext4)  
 "-e": enable rootfs and swap encryption (optional but highly recommended).  
 "-n": automatically install the latest nvidia proprietary driver (optional).  
 "-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
@@ -74,8 +75,8 @@ As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /dev/sdX
 <details>
   <summary>Click here to open the LinuxLoops install guide in a disk image.</summary>
 
-1. Make sure the `curl`, `cryptsetup`, `efibootmgr`, `fdisk`, `losetup`, `tar` and `xz`  binaries packages are installed.
-If you intend to use the GUI installer, also make sure `xhost` and `zenity` binaries packages are installed.
+1. Make sure `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz` binaries are installed.
+If you intend to use the GUI installer, also make sure `zenity` package is installed.
 
 2. Change the directory to your Downloads folder.
 
@@ -105,6 +106,7 @@ Linuxloops arguments description:
 "-dst <path>": destination is the image path such as "~/linuxloops/distro.img" (mandatory).  
 "-s" <number>: size of the disk image in GB (optional, 14GB by default).  
 "-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-b": use btrfs format for the root filesystem (instead of ext4)  
 "-e": enable rootfs and swap encryption (optional but highly recommended).  
 "-n": automatically install the latest nvidia proprietary driver (optional).  
 "-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  

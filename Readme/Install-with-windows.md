@@ -23,10 +23,10 @@ Linuxloops can install distros on drives or inside disk images.
 <details>
   <summary>Click here to open the LinuxLoops install guide for usb flashdrive drive / sdcard.</summary>
 
-1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `xz`.
-If you intend to use the GUI installer, also make sure `x11-xserver-utils` and `zenity` packages are installed.
+1. Open Ubuntu WSL2 and install `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz`.
+If you intend to use the GUI installer, also make sure `zenity` package is installed.
 
-`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar x11-xserver-utils xz zenity`
+`sudo apt update && sudo apt -y install btrfs-progs cryptsetup curl dosfstools fdisk tar xz zenity`
 
 2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
 
@@ -52,6 +52,7 @@ Linuxloops arguments description:
 "-dst <path>": destination is the image path such as "/mnt/c/Users/<your_username>/Downloads/distro.img" (mandatory).  
 "-s" <number>: size of the disk image in GB (optional, 14GB by default).  
 "-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-b": use btrfs format for the root filesystem (instead of ext4)  
 "-e": enable rootfs and swap encryption (optional but highly recommended).  
 "-n": automatically install the latest nvidia proprietary driver (optional).  
 "-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
@@ -86,8 +87,8 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
 <details>
   <summary>Click here to open the LinuxLoops install guide in a disk image.</summary>
 
-1. Open Ubuntu WSL2 and install `curl`, `cryptsetup`, `fdisk`, `tar` and `xz`.
-If you intend to use the GUI installer, also make sure `x11-xserver-utils` and `zenity` packages are installed.
+1. Open Ubuntu WSL2 and install `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz`.
+If you intend to use the GUI installer, also make sure `zenity` package is installed.
 
 `sudo apt update && sudo apt -y install curl cryptsetup fdisk tar x11-xserver-utils xz zenity`
 
@@ -112,9 +113,10 @@ Follow the installer menu, choosing the distro, desktop environment, image path.
 Linuxloops arguments description:  
 "-distro <distribution>": selects the linux distro (mandatory).  
 "-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is usually selected by default).  
-"-dst <path>": destination is the image path such as "/mnt/c/Users/<your_username>/linuxloops/distro.img" (mandatory).  
+"-dst <path>": destination is the image path such as "/mnt/c/Users/<your_username>/Downloads/distro.img" (mandatory).  
 "-s" <number>: size of the disk image in GB (optional, 14GB by default).  
 "-z" <number>: size of the swap (optional) (optional, no swap by default).  
+"-b": use btrfs format for the root filesystem (instead of ext4)  
 "-e": enable rootfs and swap encryption (optional but highly recommended).  
 "-n": automatically install the latest nvidia proprietary driver (optional).  
 "-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  

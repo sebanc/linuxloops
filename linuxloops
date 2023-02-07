@@ -10,15 +10,17 @@ Usage: sudo bash linuxloops -distro <distribution name> [-env <desktop environme
 -dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
 -s, --size <total install size>					(number in GB, minimum 14GB)
 -z, --swapsize <swap size>					(number in GB)
+-b, --btrfs							(Use btrfs format for the root filesystem)
+-e, --encrypt							(Encrypt the root filesystem)
 -n, --nvidia							(Install nvidia drivers)
 -S, --surface							(Add patches for Surface devices from github.com/linux-surface)
--e, --encrypt							(Encrypt the rootfs)
 -l, --list							(List available distros and desktop environments)
 -h, --help							(Display this menu)
 USAGE
 }
 
 available_distros="almalinux archlinux artixlinux brunch chromeos-flex debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux nixos opensuse parrot pop rockylinux steamos-like tails ubuntu ubuntu-lts voidlinux zorin"
+btrfs_supported="archlinux artixlinux debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux nixos opensuse parrot pop steamos-like ubuntu ubuntu-lts voidlinux zorin"
 nvidia_supported="archlinux artixlinux debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux nixos opensuse parrot pop steamos-like ubuntu ubuntu-lts voidlinux zorin"
 surface_supported="archlinux debian elementary fedora kali kde-neon manjaro mint mint-lmde mxlinux parrot pop steamos-like ubuntu ubuntu-lts zorin"
 list_desktops()
@@ -221,19 +223,19 @@ exit 1
 download_lxc_image()
 {
 local found=0
-available_builds=$(curl -L https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/ | grep 'alt="\[DIR]"' | tr '>' '\n' | grep '<a href' | cut -d'/' -f 2 | sort -r)
+available_builds=$(curl -L https://us.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/ | grep 'alt="\[DIR]"' | tr '>' '\n' | grep '<a href' | cut -d'/' -f 2 | sort -r)
 for build in $available_builds; do
-	echo "Trying to download rootfs image from https://uk.lxd.images.canonical.com/images/$1/$2/amd64/$3/$build/rootfs.tar.xz..."
-	if curl -L --output /dev/null --silent --head --fail https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz; then
+	echo "Trying to download rootfs image from https://us.lxd.images.canonical.com/images/$1/$2/amd64/$3/$build/rootfs.tar.xz..."
+	if curl -L --output /dev/null --silent --head --fail https://us.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz; then
 		found=1
-		curl -L https://uk.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz -o "$linuxloopsdir"/"$1".tar.xz
+		curl -L https://us.lxd.images.canonical.com/images/"$1"/"$2"/amd64/"$3"/"$build"/rootfs.tar.xz -o "$linuxloopsdir"/"$1".tar.xz
 		if ! xz -t "$linuxloopsdir"/"$1".tar.xz; then rm -f "$linuxloopsdir"/"$1".tar.xz; continue; fi
 		mkdir -p "$linuxloopsdir"/chroot"$4"
 		tar xf "$linuxloopsdir"/"$1".tar.xz -C "$linuxloopsdir"/chroot"$4"/
 		rm "$linuxloopsdir"/"$1".tar.xz
 		break
 	else
-		echo "Downloading rootfs image from https://uk.lxd.images.canonical.com/images/$1/$2/amd64/$3/$build/rootfs.tar.xz failed."
+		echo "Downloading rootfs image from https://us.lxd.images.canonical.com/images/$1/$2/amd64/$3/$build/rootfs.tar.xz failed."
 	fi
 done
 if [ -z "$found" ]; then exit_with_error "The rootfs image could not be downloaded, the LXC images server might be down."; fi
@@ -271,9 +273,10 @@ umount_chroot()
 {
 terminate
 if mountpoint -q "$linuxloopsdir"/chroot"$1"/isomount/data; then umount "$linuxloopsdir"/chroot"$1"/isomount/data; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/isomount/efi; then umount "$linuxloopsdir"/chroot"$1"/isomount/efi; fi
 if mountpoint -q "$linuxloopsdir"/chroot"$1"/isomount/roota; then umount "$linuxloopsdir"/chroot"$1"/isomount/roota; fi
 if mountpoint -q "$linuxloopsdir"/chroot"$1"/isomount/rootc; then umount "$linuxloopsdir"/chroot"$1"/isomount/rootc; fi
-if mountpoint -q "$linuxloopsdir"/chroot"$1"/isomount/efi; then umount "$linuxloopsdir"/chroot"$1"/isomount/efi; fi
+if mountpoint -q "$linuxloopsdir"/chroot"$1"/isomount/tmp; then umount "$linuxloopsdir"/chroot"$1"/isomount/tmp; fi
 if mountpoint -q "$linuxloopsdir"/chroot"$1"/isomount; then umount "$linuxloopsdir"/chroot"$1"/isomount; fi
 if [ -z "$1" ]; then
 	if mountpoint -q "$linuxloopsdir"/chroot/boot/efi; then umount "$linuxloopsdir"/chroot/boot/efi; fi
@@ -490,9 +493,11 @@ build() {
 	add_module "8250_dw"
 	add_module "aes"
 	add_module "atkbd"
+	add_module "btrfs"
 	add_module "cbc"
 	add_module "dm_crypt"
 	add_module "exfat"
+	add_module "ext4"
 	add_module "fuse"
 	add_module "i8042"
 	add_module "intel_lpss"
@@ -594,9 +599,11 @@ esac
 	manual_add_modules "8250_dw"
 	manual_add_modules "aes"
 	manual_add_modules "atkbd"
+	manual_add_modules "btrfs"
 	manual_add_modules "cbc"
 	manual_add_modules "dm-crypt"
 	manual_add_modules "exfat"
+	manual_add_modules "ext4"
 	manual_add_modules "fuse"
 	manual_add_modules "i8042"
 	manual_add_modules "intel_lpss"
@@ -680,9 +687,11 @@ installkernel() {
 	instmods "8250_dw"
 	instmods "aes"
 	instmods "atkbd"
+	instmods "btrfs"
 	instmods "cbc"
 	instmods "dm-crypt"
 	instmods "exfat"
+	instmods "ext4"
 	instmods "fuse"
 	instmods "i8042"
 	instmods "intel_lpss"
@@ -794,7 +803,7 @@ hardware.cpu.amd.updateMicrocode = true;
 hardware.enableAllFirmware = true;
 boot.kernelPackages = pkgs.linuxPackages_latest;
 
-networking.hostName = "nixos-linuxloops";
+networking.hostName = "$hostname";
 networking.networkmanager.enable = true;
 
 hardware.bluetooth.enable = true;
@@ -815,7 +824,7 @@ services.printing.enable = true;
 
 boot.plymouth.enable = true;
 
-environment.systemPackages = with pkgs; [ openssl sbsigntool $CUSTOM_PACKAGES ];
+environment.systemPackages = with pkgs; [ gnome.zenity ntfs3g openssl sbsigntool $CUSTOM_PACKAGES ];
 
 $nixos_desktop
 $nixos_nvidia
@@ -834,7 +843,34 @@ system.stateVersion = "22.11"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 if [ "$encryption" == "Yes" ]; then
-fstab="
+	if [ "$fstype" == "btrfs" ]; then
+		fstab="
+boot.initrd.luks.devices = {
+	luks-$(blkid -s UUID -o value "$partition_path"3) = {
+		device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3)\";
+	};
+};
+
+fileSystems.\"/\" = {
+	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3))\";
+	fsType = \"btrfs\";
+	options = [ \"subvol=@\" \"compress=zstd\" ];
+};
+
+fileSystems.\"/home\" = {
+	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3))\";
+	fsType = \"btrfs\";
+	options = [ \"subvol=@home\" \"compress=zstd\" ];
+};
+
+fileSystems.\"/swap\" = {
+	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3))\";
+	fsType = \"btrfs\";
+	options = [ \"subvol=@swap\" ];
+};
+"
+	else
+		fstab="
 boot.initrd.luks.devices = {
 	luks-$(blkid -s UUID -o value "$partition_path"3) = {
 		device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3)\";
@@ -846,13 +882,36 @@ fileSystems.\"/\" = {
 	fsType = \"ext4\";
 };
 "
+	fi
 else
-fstab="
+	if [ "$fstype" == "btrfs" ]; then
+		fstab="
+fileSystems.\"/\" = {
+	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3)\";
+	fsType = \"btrfs\";
+	options = [ \"subvol=@\" \"compress=zstd\" ];
+};
+
+fileSystems.\"/home\" = {
+	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3)\";
+	fsType = \"btrfs\";
+	options = [ \"subvol=@home\" \"compress=zstd\" ];
+};
+
+fileSystems.\"/swap\" = {
+	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3)\";
+	fsType = \"btrfs\";
+	options = [ \"subvol=@swap\" ];
+};
+"
+	else
+		fstab="
 fileSystems.\"/\" = {
 	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3)\";
 	fsType = \"ext4\";
 };
 "
+	fi
 fi
 fstab="$fstab
 
@@ -870,9 +929,9 @@ if [ "$swap_size" -ne 0 ]; then
 fstab="$fstab
 
 swapDevices =
-[ {
-	device = \"/swap\";
-	size = $swap_size * 1024;
+[
+  {
+	device = \"/swap/swapfile\";
   }
 ];
 "
@@ -888,7 +947,7 @@ $fstab
 boot.kernelParams = [ "$linuxloops_args" ];
 
 #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/profiles/all-hardware.nix
-boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "arcmsr" "ata_piix" "atkbd" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "fuse" "hv_storvsc" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "ntfs3" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "pinctrl_amd" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
+boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "ntfs3" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "pinctrl_amd" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
 
 boot.initrd.compressor="gzip";
 boot.initrd.extraUtilsCommands = ''
@@ -1258,7 +1317,7 @@ fi
 echo -e "nameserver 1.1.1.1\nnameserver 9.9.9.9" > /etc/resolv.conf
 mkdir -p /etc/network
 echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces
-echo "$distro-$RANDOM" > /etc/hostname
+echo "$hostname" > /etc/hostname
 echo -e "127.0.0.1 localhost\n127.0.1.1 \$(cat /etc/hostname)\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
 mkdir -p /etc/modprobe.d
 echo 'blacklist pcspkr' > /etc/modprobe.d/pcspkr.conf
@@ -1288,13 +1347,25 @@ set -e
 touch /etc/fstab
 chmod 0644 /etc/fstab
 if [ "$encryption" == "Yes" ]; then
-	echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) / ext4 errors=remount-ro 0 1' >> /etc/fstab
+	if [ "$fstype" == "btrfs" ]; then
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) / btrfs subvol=@,compress=zstd 0 0' >> /etc/fstab
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) /home btrfs subvol=@home,compress=zstd 0 0' >> /etc/fstab
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) /swap btrfs subvol=@swap 0 0' >> /etc/fstab
 	else
-	echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) / ext4 errors=remount-ro 0 1' >> /etc/fstab
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) / ext4 errors=remount-ro 0 1' >> /etc/fstab
+	fi
+else
+	if [ "$fstype" == "btrfs" ]; then
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) / btrfs subvol=@,compress=zstd 0 0' >> /etc/fstab
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) /home btrfs subvol=@home,compress=zstd 0 0' >> /etc/fstab
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) /swap btrfs subvol=@swap 0 0' >> /etc/fstab
+	else
+		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) / ext4 errors=remount-ro 0 1' >> /etc/fstab
+	fi
 fi
 echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"2) /boot ext4 defaults 0 2' >> /etc/fstab
 echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"1) /boot/efi vfat defaults 0 2' >> /etc/fstab
-if [ "$swap_size" -ne 0 ]; then echo -e '/swap none swap sw 0 0' >> /etc/fstab; fi
+if [ "$swap_size" -ne 0 ]; then echo -e '/swap/swapfile none swap sw 0 0' >> /etc/fstab; fi
 GENERATEFSTAB
 chmod 0755 "$linuxloopsdir"/chroot"$1"/tmp/generate_fstab
 }
@@ -1330,7 +1401,7 @@ dnf reinstall -y "*"
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf update -y
-dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted dosfstools
+dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted dosfstools zenity
 dnf --enablerepo=crb install -y almalinux-sb-certs
 systemctl enable dbus.socket dbus-daemon.service named.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
@@ -1428,7 +1499,7 @@ pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm ca-certificates openssl
 pacman -Qnq | pacman -Syu --noconfirm -
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -1730,7 +1801,7 @@ pacman -Syu --noconfirm elogind-runit
 pacman -Qnq | pacman -S --noconfirm -
 pacman -Sy --noconfirm base runit-system runit elogind-runit mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 echo -e "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[community]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 ln -s /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 dbus-uuidgen > /etc/machine-id
 /tmp/set_locale_and_timezone
@@ -2401,7 +2472,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs zenity
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -2655,7 +2726,7 @@ echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debc
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install eudev sysvinit-core
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs zenity
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -2865,7 +2936,7 @@ chroot_elementary()
 {
 return_value=0
 
-download_lxc_image ubuntu focal default
+download_lxc_image ubuntu jammy default
 
 mount_chroot
 
@@ -2888,7 +2959,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -2987,7 +3058,7 @@ dnf install -y ca-certificates openssl fedora-release-identity-workstation --all
 dnf reinstall -y "*"
 dnf install -y distribution-gpg-keys dnf-plugins-core
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools
+dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs zenity
 systemctl enable dbus.socket dbus-daemon.service getty@.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -3176,7 +3247,7 @@ echo "GRUB_PLATFORMS=\"efi-32 efi-64\"" >> /etc/portage/make.conf
 #echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
 echo -e "media-libs/libsndfile minimal\nnet-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
 eselect profile set default/linux/amd64/17.1
-emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools
+emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs gnome-extra/zenity
 for x in /etc/runlevels/default/net.* ; do rc-update del $(basename $x) default ; rc-service --ifstarted $(basename $x) stop; done
 rc-update add bluetooth default
 rc-update add NetworkManager default
@@ -3339,7 +3410,7 @@ echo "GRUB_PLATFORMS=\"efi-32 efi-64\"" >> /etc/portage/make.conf
 #echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
 echo -e "media-libs/libsndfile minimal\nnet-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
 eselect profile set default/linux/amd64/17.1
-emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools
+emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs gnome-extra/zenity
 systemctl enable bluetooth.service NetworkManager.service systemd-resolved.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
@@ -3494,7 +3565,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release systemd-resolved kali-themes sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release systemd-resolved kali-themes sbsigntool mokutil dosfstools btrfs-progs zenity
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -3741,7 +3812,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -3861,7 +3932,7 @@ curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf
 pacman-key --init
 pacman-key --populate
 pacman -Syy
-pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
+pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -4115,7 +4186,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 yes | DEBIAN_FRONTEND=noninteractive apt update
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -4265,7 +4336,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 systemctl enable systemd-resolved.service
@@ -4386,7 +4457,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode sbsigntool mokutil dosfstools btrfs-progs zenity
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -4684,6 +4755,7 @@ services.xserver.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.desktopManager.cinnamon.enable = true;
 "
+CUSTOM_PACKAGES="cinnamon.cinnamon-control-center $CUSTOM_PACKAGES"
 	;;
 	'gnome-full')
 	nixos_desktop="
@@ -4773,7 +4845,7 @@ zypper --non-interactive refresh
 zypper --non-interactive install ca-certificates openssl
 sed -i 's@# autoAgreeWithLicenses = no@autoAgreeWithLicenses = yes@g' /etc/zypp/zypper.conf
 zypper --non-interactive install -f $(rpm -q -a --qf '%{NAME} ' | sed 's@ gpg-pubkey@@g')
-zypper --non-interactive install kernel-default kernel-default-devel dkms kernel-firmware-all wireless-regdb glibc-i18ndata patterns-base-base nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez pulseaudio alsa-utils alsa-firmware cryptsetup nano e2fsprogs ntfsprogs device-mapper cantarell-fonts acpid curl thermald bash-completion gpg2 polkit postfix system-group-wheel xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim bind ucode-amd ucode-intel sbsigntools dosfstools
+zypper --non-interactive install kernel-default kernel-default-devel dkms kernel-firmware-all wireless-regdb glibc-i18ndata patterns-base-base nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez pulseaudio alsa-utils alsa-firmware cryptsetup nano e2fsprogs ntfsprogs device-mapper cantarell-fonts acpid curl thermald bash-completion gpg2 polkit postfix system-group-wheel xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim bind ucode-amd ucode-intel sbsigntools dosfstools btrfsprogs zenity
 systemctl disable wicked.service
 systemctl enable named.service NetworkManager.service
 /tmp/set_locale_and_timezone
@@ -5037,7 +5109,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=fal
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release parrot-themes sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release parrot-themes sbsigntool mokutil dosfstools btrfs-progs zenity
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -5294,7 +5366,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 yes | DEBIAN_FRONTEND=noninteractive apt update
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs zenity
 echo 'autoinstall_all_kernels="y"' >> /etc/dkms/framework.conf
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
@@ -5394,7 +5466,7 @@ dnf reinstall -y "*"
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf update -y
-dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted dosfstools
+dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl mokutil selinux-policy-targeted dosfstools zenity
 dnf --enablerepo=crb install -y rocky-sb-certs
 systemctl enable dbus.socket dbus-daemon.service named.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
@@ -5495,7 +5567,7 @@ sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@\[multilib]\nIncl
 pacman-key --init
 pacman-key --populate
 pacman -Qnq | pacman -Syu --noconfirm -
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -6241,7 +6313,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -6510,7 +6582,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -6766,7 +6838,7 @@ xbps-install -y ca-certificates openssl
 xbps-remove -y base-voidstrap
 xbps-install -fy $(xbps-query -l | awk '{ print $2 }' | xargs -n1 xbps-uhelper getpkgname | sed -z 's@\n@ @g') void-repo-nonfree
 xbps-install -Syu
-xbps-install -y base-system linux linux-headers dkms linux-firmware crda bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober bind dnssec-anchors sbsigntool mokutil dosfstools
+xbps-install -y base-system linux linux-headers dkms linux-firmware crda bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober bind dnssec-anchors sbsigntool mokutil dosfstools btrfs-progs zenity
 ln -s /etc/sv/agetty-tty1 /etc/sv/agetty-tty2 /etc/sv/agetty-tty3 /etc/sv/agetty-tty4 /etc/sv/agetty-tty5 /etc/sv/agetty-tty6 /etc/sv/dbus /etc/sv/dhcpcd /etc/sv/named /etc/sv/NetworkManager /etc/sv/polkitd /etc/sv/uuidd /etc/runit/runsvdir/default/
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
@@ -6928,7 +7000,7 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil dosfstools
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -7017,6 +7089,68 @@ umount_chroot
 return $return_value
 }
 
+live()
+{
+cat >"$linuxloopsdir"/chroot/usr/share/polkit-1/actions/org.linuxloops.policy <<'LIVEPOLKIT'
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE policyconfig PUBLIC
+ "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
+ "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
+<policyconfig>
+
+  <action id="org.linuxloops.pkexec.run-linuxloops-polkit-helper">
+    <description>Launch linuxloops</description>
+    <icon_name>package-x-generic</icon_name> 
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/linuxloops-polkit-helper</annotate>
+  </action>
+
+</policyconfig>
+LIVEPOLKIT
+cat >"$linuxloopsdir"/chroot/usr/bin/linuxloops-polkit-helper <<'LIVEPKEXEC'
+#!/bin/bash
+
+set -e
+
+if [[ $EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "$0" "$@"
+fi
+
+curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/bin/linuxloops.real
+chmod 0755 /usr/bin/linuxloops.real
+/usr/bin/linuxloops.real "$@"
+#DISPLAY=:0 /usr/bin/linuxloops.real "$@"
+LIVEPKEXEC
+chmod 0755 "$linuxloopsdir"/chroot/usr/bin/linuxloops-polkit-helper
+cat >"$linuxloopsdir"/chroot/usr/bin/linuxloops <<'LIVELAUNCHER'
+#!/bin/bash
+/usr/bin/linuxloops-polkit-helper
+LIVELAUNCHER
+chmod 0755 "$linuxloopsdir"/chroot/usr/bin/linuxloops
+cat >"$linuxloopsdir"/chroot/etc/lightdm/lightdm.conf <<'LIVEAUTOLOGIN'
+[Seat:*]
+autologin-user=live
+autologin-session=cinnamon
+LIVEAUTOLOGIN
+mkdir -p "$linuxloopsdir"/chroot/home/live/Desktop
+cat >"$linuxloopsdir"/chroot/home/live/Desktop/linuxloops.desktop <<'LIVEICON'
+[Desktop Entry]
+Name=Linuxloops installer
+Exec=linuxloops
+Icon=system-software-install
+Terminal=true
+Type=Application
+StartupNotify=false
+LIVEICON
+chmod 0755 "$linuxloopsdir"/chroot/home/live/Desktop/linuxloops.desktop
+chown -R 1000:1000 "$linuxloopsdir"/chroot/home/live
+}
+
 start_install()
 {
 local install_status
@@ -7040,7 +7174,8 @@ if [ "$install_type" == "disk" ]; then
 	fi
 else
 	echo "Creating image file"
-	dd if=/dev/urandom of="$fullpath" bs=1M count=$install_sizeMB status=progress || exit_with_error "The image file could not be created."
+	truncate -s 0 "$fullpath"
+	fallocate -l "$install_sizeMB"M "$fullpath"
 	chown $SUDO_UID:$SUDO_UID "$fullpath"
 	echo "Creating partition table..."
 	write_partition_table "$fullpath"
@@ -7064,21 +7199,53 @@ else
 		mkfs.ext4 -E nodiscard -F -L "BOOT" "$partition_path"2 || exit_with_error "Could not make filesystem for BOOT partition."
 		echo -n "$userpass" | cryptsetup --cipher aes-xts-plain64 --hash sha256 --key-size 256 luksFormat "$partition_path"3 - || exit_with_error "Could not make luks filesystem for ROOT partition."
 		echo -n "$userpass" | cryptsetup --cipher aes-xts-plain64 --hash sha256 --key-size 256 luksOpen "$partition_path"3 luks-"$(blkid -s UUID -o value "$partition_path"3)" - || exit_with_error "Could not open luks filesystem for ROOT partition."
-		mkfs.ext4 -E nodiscard -F -L "ROOT" /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" || exit_with_error "Could not make ext4 filesystem for ROOT partition."
-		mount /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount ROOT partition."
+		if [ "$fstype" == "btrfs" ]; then
+			mkfs.btrfs -K -L "ROOT" /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" || exit_with_error "Could not make btrfs filesystem for ROOT partition."
+			mount /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount btrfs ROOT partition."
+			btrfs subvolume create "$linuxloopsdir"/chroot/@ || exit_with_error "Could not create subvolume @."
+			btrfs subvolume create "$linuxloopsdir"/chroot/@home || exit_with_error "Could not create subvolume @home."
+			btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."
+			umount "$linuxloopsdir"/chroot || exit_with_error "Could not unmount btrfs ROOT partition."
+			mount -o subvol=@,compress=zstd /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount subvolume @."
+			mkdir -p "$linuxloopsdir"/chroot/home || exit_with_error "Could not make home directory."
+			mount -o subvol=@home,compress=zstd /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot/home || exit_with_error "Could not mount subvolume @home."
+			mkdir -p "$linuxloopsdir"/chroot/swap || exit_with_error "Could not make swap directory."
+			mount -o subvol=@swap /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot/swap || exit_with_error "Could not mount subvolume @swap."
+		else
+			mkfs.ext4 -E nodiscard -F -L "ROOT" /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" || exit_with_error "Could not make ext4 filesystem for ROOT partition."
+			mount /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount ROOT partition."
+		fi
 	else
 		mkfs.fat -F 32 -n 'EFI' "$partition_path"1 || exit_with_error "Could not make filesystem for EFI partition."
 		mkfs.ext4 -E nodiscard -F -L "BOOT" "$partition_path"2 || exit_with_error "Could not make filesystem for BOOT partition."
-		mkfs.ext4 -E nodiscard -F -L "ROOT" "$partition_path"3 || exit_with_error "Could not make ext4 filesystem for ROOT partition."
-		mount "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount ROOT partition."
+		if [ "$fstype" == "btrfs" ]; then
+			mkfs.btrfs -K -L "ROOT" "$partition_path"3 || exit_with_error "Could not make btrfs filesystem for ROOT partition."
+			mount "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount btrfs ROOT partition."
+			btrfs subvolume create "$linuxloopsdir"/chroot/@ || exit_with_error "Could not create subvolume @."
+			btrfs subvolume create "$linuxloopsdir"/chroot/@home || exit_with_error "Could not create subvolume @home."
+			btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."
+			umount "$linuxloopsdir"/chroot || exit_with_error "Could not unmount btrfs ROOT partition."
+			mount -o subvol=@,compress=zstd "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount subvolume @."
+			mkdir -p "$linuxloopsdir"/chroot/home || exit_with_error "Could not make home directory."
+			mount -o subvol=@home,compress=zstd "$partition_path"3 "$linuxloopsdir"/chroot/home || exit_with_error "Could not mount subvolume @home."
+			mkdir -p "$linuxloopsdir"/chroot/swap || exit_with_error "Could not make swap directory."
+			mount -o subvol=@swap "$partition_path"3 "$linuxloopsdir"/chroot/swap || exit_with_error "Could not mount subvolume @swap."
+		else
+			mkfs.ext4 -E nodiscard -F -L "ROOT" "$partition_path"3 || exit_with_error "Could not make ext4 filesystem for ROOT partition."
+			mount "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount ROOT partition."
+		fi
 	fi
 	chroot_"$distro" || install_status=1
+	if [ "$live" == "Yes" ]; then live; fi
 	if [ "$install_status" -eq 0 ]; then
 		if [ "$swap_size" -ne 0 ]; then
 			echo "Please wait while the swap file is being generated..."
-			dd if=/dev/zero of="$linuxloopsdir"/chroot/swap bs=1G count=$swap_size status=progress
-			chmod 0600 "$linuxloopsdir"/chroot/swap
-			mkswap "$linuxloopsdir"/chroot/swap
+			mkdir -p "$linuxloopsdir"/chroot/swap
+			truncate -s 0 "$linuxloopsdir"/chroot/swap/swapfile
+			if [ "$fstype" == "btrfs" ]; then chattr +C "$linuxloopsdir"/chroot/swap/swapfile; fi
+			fallocate -l "$swap_size"G "$linuxloopsdir"/chroot/swap/swapfile
+			chmod 0600 "$linuxloopsdir"/chroot/swap/swapfile
+			mkswap "$linuxloopsdir"/chroot/swap/swapfile
 		fi
 		if [ "$install_type" == "disk" ] && [ -f /sys/block/$(echo $destination | sed 's@/dev/@@g')/removable ] && [ "$(cat /sys/block/$(echo $destination | sed 's@/dev/@@g')/removable)" -eq 0 ] && [ ! -z $(command -v efibootmgr) ]; then
 			echo "Creating EFI boot manager entry..."
@@ -7087,6 +7254,8 @@ else
 	fi
 fi
 if [ "$install_type" == "image" ] && [ -f "$linuxloopsdir"/chroot/etc/secureboot_key/MOK.der ]; then cp "$linuxloopsdir"/chroot/etc/secureboot_key/MOK.der "$fullpath".der; chown $SUDO_UID:$SUDO_UID "$fullpath".der; fi
+if mountpoint -q "$linuxloopsdir"/chroot/swap; then umount "$linuxloopsdir"/chroot/swap; fi
+if mountpoint -q "$linuxloopsdir"/chroot/home; then umount "$linuxloopsdir"/chroot/home; fi
 if mountpoint -q "$linuxloopsdir"/chroot; then umount "$linuxloopsdir"/chroot; fi
 if [ "$encryption" == "Yes" ]; then cryptsetup luksClose luks-"$(blkid -s UUID -o value "$partition_path"3)"; fi
 if [ "$install_type" == "image" ]; then losetup -d "$destination_device"; fi
@@ -7198,7 +7367,7 @@ if [ -f ./usb_bootloader.img ]; then
 	losetup -d $usbboot_loop
 	finalise="The grub config to boot $distro has been installed in the usb_bootloader.img file. Write this file to a usb flashdrive with Rufus, dd or any other image writing tool and boot from it."
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$finalise" --ok-label="Exit"
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$finalise" --ok-label="Exit"
 	else
 		echo -e "$finalise"
 	fi
@@ -7206,8 +7375,8 @@ elif [ ! -z "$wsl" ]; then
 	grubinstall="The $distro dual boot disk image has been created and the config needed to boot $distro from Grub2Win has been generated in the file:\n$(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\n\nNow, install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\"."
 	finalise="Please note that $distro will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the $distro image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select $distro from the Grub2Win menu."
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Next"
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$finalise" --ok-label="Exit"
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Next"
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$finalise" --ok-label="Exit"
 	else
 		echo -e "$grubinstall"
 		echo -e ""
@@ -7216,7 +7385,7 @@ elif [ ! -z "$wsl" ]; then
 elif [ ! -z "$brunch" ]; then
 	grubinstall="The grub config needed to boot $distro has been generated in the file \"$fullpath.grub.txt\".\n\n ****************************************************************************************** \n$config\n ****************************************************************************************** \n\nNow copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.\n\nOnce done, press CTRL+X and then ENTER to save, reboot your computer and start $distro"
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Exit"
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Exit"
 	else
 		echo -e "$grubinstall"
 	fi
@@ -7233,7 +7402,7 @@ elif [ ! -z "$chromeos" ]; then
 	umount /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	grubinstall="The grub config needed to boot $distro has been added to your boot partition 12, if not already done, refer to MrChromebox instructions to allow booting from legacy hdd boot (through RW_LEGACY firmware or ALT firmware), then reboot your computer and press CTRL+L to start $distro."
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Exit"
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Exit"
 	else
 		echo -e "$grubinstall"
 	fi
@@ -7241,7 +7410,7 @@ else
 	if [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ]; then grub="grub2"; else grub="grub"; fi
 	grubinstall="The grub config needed to boot $distro has been generated in the file \"$fullpath.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\nsudo cat /etc/grub.d/40_custom $fullpath.grub.txt | sudo tee /etc/grub.d/99_linuxloops; sudo chmod 0755 /etc/grub.d/99_linuxloops; sudo $grub-mkconfig -o /boot/$grub/grub.cfg\n\nOtherwise, add this grub config (lines between stars) manually to another grub bootloader:\n\n ****************************************************************************************** \n$config\n ****************************************************************************************** \n\nOnce the above actions are completed, you can reboot your computer and start $distro."
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Exit"
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$grubinstall" --ok-label="Exit"
 	else
 		echo -e "$grubinstall"
 	fi
@@ -7250,7 +7419,11 @@ fi
 
 set_credentials()
 {
-if [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" != "tails" ]; then
+if [ "$live" == "Yes" ]; then
+	username="live"
+	userpass="linuxloops"
+	hostname="linuxloops"
+elif [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" != "tails" ]; then
 	if [ "$encryption" == "Yes" ]; then
 		encrypted_text="You have requested encryption, please input your username and the encryption password.\nYour user account password will be set as the encryption password but you can change it later."
 		password_text="encrypted partitions password"
@@ -7260,16 +7433,16 @@ if [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" 
 	fi
 	if [ ! -z "$zenity" ]; then
 	until false; do
-		form=$(zenity --forms --title="Create user" --text="$encrypted_text" --add-entry="Input your username" --add-password="Input your $password_text" --add-password="Confirm your $password_text")
+		form=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --title="Create user" --text="$encrypted_text" --add-entry="Input your username" --add-password="Input your $password_text" --add-password="Confirm your $password_text")
 		username="$(echo $form | cut -d'|' -f1)"
 		userpass="$(echo $form | cut -d'|' -f2)"
 		verifuserpass="$(echo $form | cut -d'|' -f3)"
 		if [ -z "$form" ]; then exit 0; fi
-		if [ -z "$username" ]; then zenity --height=480 --width=640 --error --text="Please define your username.\n"; continue; fi
-		if [ -z "$userpass" ]; then zenity --height=480 --width=640 --error --text="Please define a password.\n"; continue; fi
-		if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then zenity --height=480 --width=640 --error --text="Username contains unsupported characters.\n"; continue; fi
-		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then zenity --height=480 --width=640 --error --text="Password contains unsupported characters.\n"; continue; fi
-		if [ "$userpass" != "$verifuserpass" ]; then zenity --height=480 --width=640 --error --text="Passwords do not match, try again.\n"; continue; fi
+		if [ -z "$username" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define your username.\n"; continue; fi
+		if [ -z "$userpass" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define a password.\n"; continue; fi
+		if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Username contains unsupported characters.\n"; continue; fi
+		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Password contains unsupported characters.\n"; continue; fi
+		if [ "$userpass" != "$verifuserpass" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Passwords do not match, try again.\n"; continue; fi
 		break
 	done
 	else
@@ -7291,6 +7464,7 @@ if [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" 
 		break
 	done
 	fi
+	hostname="$distro-$RANDOM"
 fi
 }
 
@@ -7315,20 +7489,21 @@ if [ "$install_type" == "disk" ]; then
 			fi
 			t=$((t + 1))
 		done
-		dev=$(zenity --height=480 --width=640 --title="Brunch installer" --list --radiolist --text "Select the drive that you want to use for installation." --column "Select" --column "Device" --column "Size (in GB)" $test --ok-label="Next")
+		dev=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Select the drive that you want to use for installation." --column "Select" --column "Device" --column "Size (in GB)" $test --ok-label="Next")
 		if [ -z "$dev" ]; then exit 1; else destination="$dev"; fi
 		fullpath="$destination"
-		install_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE $destination) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for $distro ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE $destination) / 1024 /1024 / 1024) )) --value=14 --step 1)
+		install_size=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE $destination) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for $distro ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE $destination) / 1024 /1024 / 1024) )) --value=14 --step 1)
 		if [ -z "$install_size" ]; then exit 1; fi
 		if [ "$install_size" -eq $(( ($(lsblk -drnbpf -o SIZE $destination) / 1024 /1024 / 1024) )) ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE $destination) / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
 		if [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" != "tails" ]; then
-			if [ -z "$encryption" ] && [ ! -z $(command -v cryptsetup) ]; then encryption=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next"); else encryption="No"; fi
+			if [ -z "$fstype" ] && [ ! -z "$(echo $btrfs_supported | grep -w $distro)" ] && [ ! -z $(command -v btrfs) ] && [ ! -z $(command -v mkfs.btrfs) ]; then fstype=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next"); else fstype="ext4"; fi
+			if [ -z "$encryption" ] && [ ! -z $(command -v cryptsetup) ]; then encryption=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next"); else encryption="No"; fi
 			if [ -z "$encryption" ]; then exit 1; fi
-			if [ -z "$swap_size" ]; then swap_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( $install_size - 12 )) --value=0 --step 1); fi
+			if [ -z "$swap_size" ]; then swap_size=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( $install_size - 12 )) --value=0 --step 1); fi
 			if [ -z "$swap_size" ]; then exit 1; fi
-			if [ ! -z "$(echo $nvidia_supported | grep -w $distro)" ]; then nvidia=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
+			if [ ! -z "$(echo $nvidia_supported | grep -w $distro)" ]; then nvidia=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
 			if [ -z "$nvidia" ]; then exit 1; fi
-			if [ ! -z "$(echo $surface_supported | grep -w $distro)" ]; then surface=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
+			if [ ! -z "$(echo $surface_supported | grep -w $distro)" ]; then surface=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
 			if [ -z "$surface" ]; then exit 1; fi
 		else
 			encryption="No"
@@ -7343,6 +7518,7 @@ if [ "$install_type" == "disk" ]; then
 		if [ ! -z "$install_size" ]; then if [ $(( ($(lsblk -drnbpf -o SIZE "$destination") / 1024 /1024 / 1024) )) -lt "$install_size" ]; then echo "You have requested an install size of $install_size GB but this device only has $(( ($(lsblk -drnbpf -o SIZE $destination) / 1024 /1024 / 1024) ))GB available."; exit 1; fi; fi
 		if [ -z "$install_size" ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE "$destination") / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
 		if [ "$swap_size" -gt 0 ] && [ $(( install_size - swap_size )) -lt 12 ]; then echo "At least 12 GB should be available for the main partition, please increase the image size or reduce the swap size."; exit 1; fi
+		if [ "$fstype" == "btrfs" ] && [ -z "$(echo $btrfs_supported | grep -w $distro)" ]; then echo "btrfs is not available for this distro, supported distros are: $btrfs_supported."; exit 1; fi
 		if [ "$nvidia" == "Yes" ] && [ -z "$(echo $nvidia_supported | grep -w $distro)" ]; then echo "nvidia driver is not available for this distro, supported distros are: $nvidia_supported."; exit 1; fi
 		if [ "$surface" == "Yes" ] && [ -z "$(echo $surface_supported | grep -w $distro)" ]; then echo "Surface patches are not available for this distro, supported distros are: $surface_supported."; exit 1; fi
 	fi
@@ -7350,31 +7526,32 @@ else
 	if [ ! -z "$zenity" ]; then
 		local path
 		if [ ! -z "$wsl" ]; then
-			path=$(su "$SUDO_USER" -c "zenity --height=480 --width=640 --title=\"LinuxLoops installer - Select the path to store the $distro disk image\" --file-selection --save --file-filter=*.img --filename=\"/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/$distro.img\"")
+			path=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the $distro disk image" --file-selection --save --file-filter=*.img --filename="/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/$distro.img")
 		elif [ ! -z "$chromeos" ] || [ ! -z "$brunch" ]; then
-			path=$(su "$SUDO_USER" -c "zenity --height=480 --width=640 --title=\"LinuxLoops installer - Select the path to store the $distro disk image\" --file-selection --save --file-filter=*.img --filename=\"/mnt/stateful_partition/unencrypted/$distro.img\"")
+			path=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the $distro disk image" --file-selection --save --file-filter=*.img --filename="/mnt/stateful_partition/unencrypted/$distro.img")
 		else
-			path=$(su "$SUDO_USER" -c "zenity --height=480 --width=640 --title=\"LinuxLoops installer - Select the path to store the $distro disk image\" --file-selection --save --file-filter=*.img --filename=\"$(eval echo ~$SUDO_USER)/$distro.img\"")
+			path=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the $distro disk image" --file-selection --save --file-filter=*.img --filename="$(eval echo ~$SUDO_USER)/$distro.img")
 		fi
 		if [ -z "$path" ]; then exit 1; else destination="$path"; fi
-		if [[ "$destination" == *"/"* ]] && ([ -z "$(realpath $destination 2> /dev/null)" ] || [ ! -d "$(echo $(realpath $destination) | sed 's@[^/]*$@@')" ]); then zenity --height=480 --width=640 --error --text="Desination path does not exist, please provide an existing path."; install_parameters; return; fi
+		if [[ "$destination" == *"/"* ]] && ([ -z "$(realpath $destination 2> /dev/null)" ] || [ ! -d "$(echo $(realpath $destination) | sed 's@[^/]*$@@')" ]); then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path."; install_parameters; return; fi
 		rm -f "$destination" "$destination".der "$destination".grub.txt
 		if [[ ! $destination == *"/"* ]]; then path="$PWD"; else path="$(realpath "$destination")"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
 		fullpath="$path$(basename $destination)"
-		if [ ! -z "$wsl" ] && [ ! -z "${path##/mnt/*/*}" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..."; install_parameters; return; fi
-		if ([ ! -z "$chromeos" ] || [ ! -z "$brunch" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; install_parameters; return; fi
-		if [ $(( ($(df -k --output=avail "$path" | sed 1d) / 1024 / 1024) - 14 )) -lt 0 ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14GB available."; install_parameters; fi
-		install_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has $(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) GB available.\n How much would you like to allocate for $distro ?\n" --min-value=14 --max-value=$(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) --value=14 --step 1)
+		if [ ! -z "$wsl" ] && [ ! -z "${path##/mnt/*/*}" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..."; install_parameters; return; fi
+		if ([ ! -z "$chromeos" ] || [ ! -z "$brunch" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; install_parameters; return; fi
+		if [ $(( ($(df -k --output=avail "$path" | sed 1d) / 1024 / 1024) - 14 )) -lt 0 ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14GB available."; install_parameters; fi
+		install_size=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has $(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) GB available.\n How much would you like to allocate for $distro ?\n" --min-value=14 --max-value=$(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) --value=14 --step 1)
 		if [ -z "$install_size" ]; then exit 1; fi
 		install_sizeMB=$((install_size*1024))
 		if [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" != "tails" ]; then
-			if [ -z "$encryption" ] && [ ! -z $(command -v cryptsetup) ]; then encryption=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next"); else encryption="No"; fi
+			if [ -z "$fstype" ] && [ ! -z "$(echo $btrfs_supported | grep -w $distro)" ] && [ ! -z $(command -v btrfs) ] && [ ! -z $(command -v mkfs.btrfs) ]; then fstype=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next"); else fstype="ext4"; fi
+			if [ -z "$encryption" ] && [ ! -z $(command -v cryptsetup) ]; then encryption=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next"); else encryption="No"; fi
 			if [ -z "$encryption" ]; then exit 1; fi
-			if [ -z "$swap_size" ]; then swap_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( $install_size - 12 )) --value=0 --step 1); fi
+			if [ -z "$swap_size" ]; then swap_size=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( $install_size - 12 )) --value=0 --step 1); fi
 			if [ -z "$swap_size" ]; then exit 1; fi
-			if [ ! -z "$(echo $nvidia_supported | grep -w $distro)" ]; then nvidia=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
+			if [ ! -z "$(echo $nvidia_supported | grep -w $distro)" ]; then nvidia=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
 			if [ -z "$nvidia" ]; then exit 1; fi
-			if [ ! -z "$(echo $surface_supported | grep -w $distro)" ]; then surface=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
+			if [ ! -z "$(echo $surface_supported | grep -w $distro)" ]; then surface=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
 			if [ -z "$surface" ]; then exit 1; fi
 		else
 			encryption="No"
@@ -7391,14 +7568,15 @@ else
 		if [ ! -z "$wsl" ] && [ ! -z "${path##/mnt/*}" ]; then echo "The $distro disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/<drive letter>/..."; exit 1; fi
 		if [ ! -z "$chromeos" ] || [ ! -z "$brunch" ] && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then echo "The $distro disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; exit 1; fi
 		if [ $(( ($(df -k --output=avail "$path" | sed 1d) / 1024 / 1024) - $install_size )) -lt 0 ]; then echo "Not enough space to create image file, available space is $(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) GB. If you think that this is incorrect, verify that you have correctly mounted the destination partition or if the partition is in ext4 format that there is no reserved space (cf. https://odzangba.wordpress.com/2010/02/20/how-to-free-reserved-space-on-ext4-partitions)"; exit 1; else install_sizeMB=$((install_size*1024)); fi
+		if [ "$fstype" == "btrfs" ] && [ -z "$(echo $btrfs_supported | grep -w $distro)" ]; then echo "btrfs is not available for this distro, supported distros are: $btrfs_supported."; exit 1; fi
 		if [ "$nvidia" == "Yes" ] && [ -z "$(echo $nvidia_supported | grep -w $distro)" ]; then echo "nvidia driver is not available for this distro, supported distros are: $nvidia_supported."; exit 1; fi
 		if [ "$surface" == "Yes" ] && [ -z "$(echo $surface_supported | grep -w $distro)" ]; then echo "Surface patches are not available for this distro, supported distros are: $surface_supported."; exit 1; fi
 	fi
 fi
 set_credentials
 if [ ! -z "$zenity" ]; then
-	if [ "$install_type" == "disk" ]; then if ! zenity --height=480 --width=640 --title="LinuxLoops installer" --question --text="WARNING: All data on device $destination will be erased, are you sure you want to continue ?"; then exit 1; fi; fi
-	start_install >(zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing $distro with $desktop environment.\nYou can follow the install process in the terminal window." --percentage=100) || exit_with_error "Failed to install $distro in chroot."
+	if [ "$install_type" == "disk" ]; then if ! sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --question --text="WARNING: All data on device $destination will be erased, are you sure you want to continue ?"; then exit 1; fi; fi
+	start_install >(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing $distro with $desktop environment.\nYou can follow the install process in the terminal window." --percentage=100) || exit_with_error "Failed to install $distro in chroot."
 else
 	if [ "$install_type" == "disk" ]; then
 		read -p "WARNING: All data on device $destination will be erased, are you sure you want to continue ? (type yes to continue)"$'\n' confirm
@@ -7409,7 +7587,7 @@ fi
 if [ "$install_type" == "disk" ]; then
 	install_finished="Linuxloops installation process is finished.\nYou can now reboot your computer and start $distro by selecting your device in the UEFI boot menu."
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$install_finished" --ok-label="Exit"
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="$install_finished" --ok-label="Exit"
 	else
 		echo -e "$install_finished"
 	fi
@@ -7436,7 +7614,7 @@ case "$distro" in
 esac
 if [ $(( ($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024) - $available_space_needed )) -lt 0 ]; then
 	if [ ! -z "$zenity" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "To install $distro you need $available_space_needed GB of available space in your home directory but you only have $(($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024)) GB."
+		sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "To install $distro you need $available_space_needed GB of available space in your home directory but you only have $(($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024)) GB."
 	else
 		echo -e "To install $distro you need $available_space_needed GB of available space in your home directory but you only have $(($(df -k --output=avail $HOME | sed 1d) / 1024 / 1024)) GB."
 	fi
@@ -7481,19 +7659,19 @@ if [ $# -eq 0 ]; then
 	check_dependencies
 	if [ -z $(command -v zenity) ]; then echo "To use the GUI installer you need to install the \"zenity\" binary package."; usage; exit 1; fi
 	zenity=1
-	if ! curl --output /dev/null --silent --head --fail --doh-url https://1.1.1.1/dns-query?name=cloudflare.com https://uk.lxd.images.canonical.com; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Linuxloops cannot connect to the lxc server, please make sure you have internet connectivity."; exit 1; fi
-	if [ -z $(command -v cryptsetup) ]; then warning="$warningWARNING: \"cryptsetup\" not found, encryption will not be available.\n\n"; fi
+	if ! curl --output /dev/null --silent --head --fail --doh-url https://1.1.1.1/dns-query?name=cloudflare.com https://uk.lxd.images.canonical.com; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Linuxloops cannot connect to the lxc server, please make sure you have internet connectivity."; exit 1; fi
+	if [ -z $(command -v cryptsetup) ]; then warning="$warningWARNING: \"cryptsetup\" binary not found, encryption will not be available.\n\n"; fi
+	if [ -z $(command -v btrfs) ] || [ -z $(command -v mkfs.btrfs) ]; then warning="$warningWARNING: \"btrfs\" binary not found, btrfs filesystem will not be supported.\n\n"; fi
 	if [ -z $(command -v efibootmgr) ]; then warning="$warningWARNING: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created.\n\n"; fi
-	if [ -z $(command -v xhost) ]; then warning="$warningWARNING: \"xhost\" not found, the GUI installer might crash.\n\n"; else xhost +SI:localuser:root; fi
-	if ! zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer.\n\n$warning" --ok-label="Next"; then exit 0; fi
-	distro=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which Linux distribution do you want to install ?" --column "Distribution" $available_distros)
+	if ! sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer.\n\n$warning" --ok-label="Next"; then exit 0; fi
+	distro=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which Linux distribution do you want to install ?" --column "Distribution" $available_distros)
 	if [ -z "$distro" ]; then exit 0; fi
 	check_home_space
 	list_desktops $distro
-	desktop=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which desktop environment do you want to install ?" --column "Desktop environment" $available_desktops)
+	desktop=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which desktop environment do you want to install ?" --column "Desktop environment" $available_desktops)
 	if [ -z "$desktop" ]; then exit 0; fi
-	if [ -z "$wsl" ]; then install_type=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to install $distro on a disk or in an image file ?" --column "Choose install type" "disk" "image" --ok-label="Next"); else install_type="image"; fi
-	if [ "$install_type" == "disk" ] && [ ! -d /sys/firmware/efi ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Disk installs are possible when booted in UEFI mode."; exit 1; fi
+	if [ -z "$wsl" ]; then install_type=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to install $distro on a disk or in an image file ?" --column "Choose install type" "disk" "image" --ok-label="Next"); else install_type="image"; fi
+	if [ "$install_type" == "disk" ] && [ ! -d /sys/firmware/efi ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Disk installs are possible when booted in UEFI mode."; exit 1; fi
 	if [ -z "$install_type" ]; then exit 1; fi
 else
 	while [ $# -gt 0 ]; do
@@ -7532,8 +7710,12 @@ else
 				fi
 				swap_size=$1
 			;;
+			-b | --btrfs)
+				if [ -z $(command -v btrfs) ] || [ -z $(command -v mkfs.btrfs) ]; then echo "\"btrfs\" binary needs to be installed for btrfs filesystem support."; exit 1; fi
+				fstype="btrfs"
+			;;
 			-e | --encrypt)
-				if [ -z $(command -v cryptsetup) ]; then echo "\"cryptsetup\" program needs to be installed for encryption support."; exit 1; fi
+				if [ -z $(command -v cryptsetup) ]; then echo "\"cryptsetup\" binary needs to be installed for encryption support."; exit 1; fi
 				encryption="Yes"
 			;;
 			-n | --nvidia)
@@ -7545,6 +7727,9 @@ else
 			-l | --list)
 				list_all
 				exit 0
+			;;
+			-L | --live)
+				live="Yes"
 			;;
 			-h | --help)
 				usage
