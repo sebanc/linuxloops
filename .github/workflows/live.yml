@@ -5,6 +5,7 @@ on:
       - 'main'
     paths:
       - 'linuxloops'
+      - '.github/workflows/live.yml'
 concurrency:
   group: environment-${{ github.ref }}
   cancel-in-progress: true
