@@ -26,7 +26,7 @@ Linuxloops can install distros on drives or inside disk images.
 1. Open Ubuntu WSL2 and install `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz`.
 If you intend to use the GUI installer, also make sure `zenity` package is installed.
 
-`sudo apt update && sudo apt -y install btrfs-progs cryptsetup curl dosfstools fdisk tar xz zenity`
+`sudo apt update && sudo apt -y install btrfs-progs cryptsetup curl dosfstools fdisk tar xz-utils zenity`
 
 2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
 
@@ -90,7 +90,7 @@ Otherwise, you can install LinuxLoops on NTFS partitions but you have to make su
 1. Open Ubuntu WSL2 and install `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz`.
 If you intend to use the GUI installer, also make sure `zenity` package is installed.
 
-`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar x11-xserver-utils xz zenity`
+`sudo apt update && sudo apt -y install curl cryptsetup fdisk tar x11-xserver-utils xz-utils zenity`
 
 2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
 

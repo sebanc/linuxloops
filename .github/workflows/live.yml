@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           yes | DEBIAN_FRONTEND=noninteractive sudo apt update
-          yes | DEBIAN_FRONTEND=noninteractive sudo apt install btrfs-progs curl cryptsetup dosfstools fdisk tar xz zip
+          yes | DEBIAN_FRONTEND=noninteractive sudo apt install btrfs-progs curl cryptsetup dosfstools fdisk tar xz-utils zip
       - name: Checkout linuxloops script
         uses: actions/checkout@v3
       - name: Build Linuxloops Live Disk
