@@ -4,7 +4,7 @@ usage()
 {
 cat << USAGE
 LinuxLoops: Custom Linux distribution instraller.
-Usage: sudo bash linuxloops -distro <distribution name> [-env <desktop environment>] -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-n] [-S] [-e]
+Usage: sudo bash linuxloops -distro <distribution name> [-env <desktop environment>] -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-n] [-S]
 -distro, --distribution <distribution name>			(Distribution to install)
 -env, --environment <desktop environment>			(Desktop environment to install)
 -dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
@@ -2109,8 +2109,8 @@ cleanup_container /installroot
 cat >"$linuxloopsdir"/chroot/installroot/tmp/install <<BRUNCHINSTALL
 #!/bin/bash
 set -e
-mkdir -p /isomount/data
-mkfs.ext4 -E nodiscard -F -b 4096 -L "H-STATE" "$partition_path"1
+mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
+mkfs.ext4 -E nodiscard -F -L "H-STATE" "$partition_path"1
 mount "$partition_path"1 /isomount/data
 curl -L \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch download failed."; return 1; }
 mkdir -p /isomount/data/brunch
@@ -2134,14 +2134,24 @@ for (( i=1; i<=12; i++ )); do
 			continue
 		;;
 		7)
-			dd if=/isomount/data/brunch/rootc.img of="$partition_path""\$i" bs=1M conv=notrunc status=progress
+			mount /isomount/data/brunch/rootc.img /isomount/tmp
+			mkfs.ext4 -E nodiscard -F -L "ROOT-C" "$partition_path""\$i"
+			mount "$partition_path""\$i" /isomount/rootc
+			cp -r /isomount/tmp/* /isomount/rootc/
+			umount /isomount/rootc
+			umount /isomount/tmp
 			continue
 		;;
 		9|10|11)
 			continue
 		;;
 		12)
-			dd if=/isomount/data/brunch/efi_secure.img of="$partition_path""\$i" bs=1M conv=notrunc status=progress
+			mount /isomount/data/brunch/efi_secure.img /isomount/tmp
+			mkfs.fat -n 'EFI' "$partition_path""\$i"
+			mount "$partition_path""\$i" /isomount/efi
+			cp -r /isomount/tmp/* /isomount/efi/
+			umount /isomount/efi
+			umount /isomount/tmp
 			continue
 		;;
 		*)
@@ -2210,7 +2220,7 @@ cat >"$linuxloopsdir"/chroot/installroot/tmp/install <<CHROMEOSFLEXINSTALL
 #!/bin/bash
 set -e
 mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi /isomount/tmp
-mkfs.ext4 -E nodiscard -F -b 4096 -L "H-STATE" "$partition_path"1
+mkfs.ext4 -E nodiscard -F -L "H-STATE" "$partition_path"1
 mount "$partition_path"1 /isomount/data
 curl -L "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; return 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root || { echo -e "Failed to extract the recovery image."; return 1; }
@@ -2223,12 +2233,12 @@ for (( i=1; i<=12; i++ )); do
 			continue
 		;;
 		7)
-			mkfs.ext4 -E nodiscard -F -b 4096 -L "ROOT-C" "$partition_path""\$i"
+			mkfs.ext4 -E nodiscard -F -L "ROOT-C" "$partition_path""\$i"
 			continue
 		;;
 		12)
 			mount "\$isomount"p12 /isomount/tmp
-			mkfs.fat -F 32 -n 'EFI' "$partition_path""\$i"
+			mkfs.fat -n 'EFI' "$partition_path""\$i"
 			mount "$partition_path""\$i" /isomount/efi
 			cp -r /isomount/tmp/* /isomount/efi/
 			umount /isomount/efi
@@ -7093,52 +7103,22 @@ return $return_value
 
 live()
 {
-cat >"$linuxloopsdir"/chroot/usr/share/polkit-1/actions/org.linuxloops.policy <<'LIVEPOLKIT'
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE policyconfig PUBLIC
- "-//freedesktop//DTD PolicyKit Policy Configuration 1.0//EN"
- "http://www.freedesktop.org/standards/PolicyKit/1/policyconfig.dtd">
-<policyconfig>
-
-  <action id="org.linuxloops.pkexec.run-linuxloops-polkit-helper">
-    <description>Launch linuxloops</description>
-    <icon_name>package-x-generic</icon_name> 
-    <defaults>
-      <allow_any>yes</allow_any>
-      <allow_inactive>yes</allow_inactive>
-      <allow_active>yes</allow_active>
-    </defaults>
-    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/linuxloops-polkit-helper</annotate>
-  </action>
-
-</policyconfig>
-LIVEPOLKIT
-cat >"$linuxloopsdir"/chroot/usr/bin/linuxloops-polkit-helper <<'LIVEPKEXEC'
-#!/bin/bash
-
-set -e
-
-if [[ $EUID -ne 0 ]];
-then
-    exec pkexec --disable-internal-agent "$0" "$@"
-fi
-
-curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/bin/linuxloops.real
-chmod 0755 /usr/bin/linuxloops.real
-/usr/bin/linuxloops.real "$@"
-#DISPLAY=:0 /usr/bin/linuxloops.real "$@"
-LIVEPKEXEC
-chmod 0755 "$linuxloopsdir"/chroot/usr/bin/linuxloops-polkit-helper
-cat >"$linuxloopsdir"/chroot/usr/bin/linuxloops <<'LIVELAUNCHER'
-#!/bin/bash
-/usr/bin/linuxloops-polkit-helper
-LIVELAUNCHER
-chmod 0755 "$linuxloopsdir"/chroot/usr/bin/linuxloops
+echo "live ALL=(ALL) NOPASSWD: ALL" >> "$linuxloopsdir"/chroot/etc/sudoers
 cat >"$linuxloopsdir"/chroot/etc/lightdm/lightdm.conf <<'LIVEAUTOLOGIN'
 [Seat:*]
 autologin-user=live
 autologin-session=cinnamon
 LIVEAUTOLOGIN
+cat >"$linuxloopsdir"/chroot/usr/bin/linuxloops <<'LIVELAUNCHER'
+#!/bin/bash
+
+set -e
+
+sudo curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n"
+sudo chmod 0755 /usr/bin/linuxloops.real
+sudo bash linuxloops.real "$@"
+LIVELAUNCHER
+chmod 0755 "$linuxloopsdir"/chroot/usr/bin/linuxloops
 mkdir -p "$linuxloopsdir"/chroot/home/live/Desktop
 cat >"$linuxloopsdir"/chroot/home/live/Desktop/linuxloops.desktop <<'LIVEICON'
 [Desktop Entry]
@@ -7486,7 +7466,7 @@ if [ "$install_type" == "disk" ]; then
 			if [ $((t % 2)) == 1 ]; then
 				size=$((i / 1024 /1024 / 1024))
 				if [ ! -z "$device" ] && [ ! -z "$size" ] && [ $((size - 14)) -ge 0 ] && ! echo "$device" | grep -q "/dev/loop" && ! echo $device | grep -q $(basename $(realpath "/sys/class/block/$(lsblk -oMOUNTPOINT,PKNAME -rn | grep '/ ' | cut -d' ' -f2)/..")); then
-					if [ -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] || ([ ! -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] && [ "$device" != "$(lsblk -ndo pkname $(blkid --match-token PARTUUID=$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2) | cut -d':' -f1))" ]); then test="$test radio $device $size"; fi
+					if [ -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] || ([ ! -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] && [ "$device" != "/dev/$(lsblk -ndo pkname $(blkid --match-token PARTUUID=$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2) | cut -d':' -f1))" ]); then test="$test radio $device $size"; fi
 				fi
 			fi
 			t=$((t + 1))

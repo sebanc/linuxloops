@@ -17,20 +17,20 @@ jobs:
       - name: Install dependencies
         run: |
           yes | DEBIAN_FRONTEND=noninteractive sudo apt update
-          yes | DEBIAN_FRONTEND=noninteractive sudo apt install btrfs-progs curl cryptsetup dosfstools fdisk tar xz-utils zip
+          yes | DEBIAN_FRONTEND=noninteractive sudo apt install btrfs-progs curl cryptsetup dosfstools fdisk tar xz-utils p7zip-full
       - name: Checkout linuxloops script
         uses: actions/checkout@v3
       - name: Set current date
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk
-        run: sudo CUSTOM_PACKAGES="firefox gedit gparted evince" bash linuxloops -distro mint -env cinnamon -dst /tmp/linuxloops_live_${{ env.current_date }}.img -L -b
+        run: sudo CUSTOM_PACKAGES="firefox-esr gedit gparted evince" bash linuxloops -distro debian -env cinnamon -dst /tmp/linuxloops_live_${{ env.current_date }}.img -L -b
       - name: Compress Linuxloops Live Disk
-        run: zip /tmp/linuxloops_live_${{ env.current_date }}.zip /tmp/linuxloops_live_${{ env.current_date }}.img
+        run: 7z a /tmp/linuxloops_live_${{ env.current_date }}.7z /tmp/linuxloops_live_${{ env.current_date }}.img
       - name: Upload Linuxloops Live Disk
         uses: actions/upload-artifact@v3
         with:
           name: linuxloops-live-disk
-          path: /tmp/linuxloops_live_${{ env.current_date }}.zip
+          path: /tmp/linuxloops_live_${{ env.current_date }}.7z
           if-no-files-found: error
   release:
     name: Make a Linuxloops Live Disk release
@@ -45,7 +45,7 @@ jobs:
           name: linuxloops-live-disk
       - name: Generate release details
         run: |
-          RELEASE_FILE=$(ls linuxloops_live_*.zip)
+          RELEASE_FILE=$(ls linuxloops_live_*.7z)
           RELEASE_VERSION=$(echo "$RELEASE_FILE" | cut -d'.' -f1 | cut -d'_' -f2)
           RELEASE_DATE=$(echo "$RELEASE_FILE" | cut -d'.' -f1 | cut -d'_' -f3)
           echo "Found linuxloops release: ${RELEASE_FILE} with version ${RELEASE_VERSION} and date ${RELEASE_DATE}"
