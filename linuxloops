@@ -113,14 +113,14 @@ case "$1" in
 	distro_name="Manjaro"
 	;;
 	'mint')
-	available_desktops="none cinnamon mate xfce"
+	available_desktops="none cinnamon cinnamon-full mate mate-full xfce xfce-full"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	distro_name="Linux Mint"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
 	;;
 	'mint-lmde')
-	available_desktops="none cinnamon"
+	available_desktops="none cinnamon cinnamon-full"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
 	distro_name="Linux Mint Debian Edition"
@@ -392,6 +392,8 @@ add_linuxloops_main()
 {
 touch "$linuxloopsdir"/chroot"$1"/tmp/install_initramfs
 cat >>"$linuxloopsdir"/chroot"$1"/tmp/install_initramfs <<'INITSCRIPT'
+sleep 1
+
 if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 
 if [ ! -b /dev/disk/by-partuuid/"$img_uuid" ]; then echo "linuxloops: Boot partition was not found." > /dev/kmsg; recovery_shell; fi
@@ -794,9 +796,13 @@ boot.loader = {
 };
 
 users.users.$username = {
-isNormalUser = true;
-extraGroups = [ "wheel" "networkmanager" ];
+	isNormalUser = true;
+	extraGroups = [ "wheel" "networkmanager" ];
 };
+
+console.keyMap = "$CUSTOM_KEYMAP";
+i18n.defaultLocale = "$(echo "$CUSTOM_LOCALE" | cut -d' ' -f1)";
+time.timeZone = "$CUSTOM_TIMEZONE";
 
 hardware.cpu.intel.updateMicrocode = true;
 hardware.cpu.amd.updateMicrocode = true;
@@ -1207,6 +1213,7 @@ GRUB_CMDLINE_LINUX_DEFAULT="quiet splash $cmdline_extra"
 GRUB_TIMEOUT_STYLE=menu
 GRUB_TIMEOUT=5
 GRUB_DISABLE_OS_PROBER=true
+GRUB_ENABLE_BLSCFG=false
 GRUB_THEME=$grub_theme
 GRUBDEFAULTS
 if [ -d "/etc/default/grub.d" ]; then for cfgfile in /etc/default/grub.d/*.cfg; do echo '' > \$cfgfile; done; fi
@@ -1330,11 +1337,11 @@ set_locale_and_timezone()
 cat >"$linuxloopsdir"/chroot"$1"/tmp/set_locale_and_timezone <<SETLOCALE
 #!/bin/bash
 set -e
-if [ ! -f /etc/locale.gen ]; then echo "en_US.UTF-8 UTF-8" > /etc/locale.gen; else sed -i 's@#en_US.UTF-8 UTF-8@en_US.UTF-8 UTF-8@g' /etc/locale.gen; fi
-localedef -i en_US -f UTF-8 en_US.UTF-8
-echo "LANG=en_US.UTF-8" > /etc/locale.conf
-echo "KEYMAP=us" > /etc/vconsole.conf
-ln -sf /usr/share/zoneinfo/UTC /etc/localtime
+if [ ! -f /etc/locale.gen ]; then echo "$CUSTOM_LOCALE" > /etc/locale.gen; else sed -i 's@#"$CUSTOM_LOCALE"@"$CUSTOM_LOCALE"@g' /etc/locale.gen; fi
+localedef -i $(echo "$CUSTOM_LOCALE" | cut -d'.' -f1) -f $(echo "$CUSTOM_LOCALE" | cut -d' ' -f2) $(echo "$CUSTOM_LOCALE" | cut -d' ' -f1)
+echo "LANG=$(echo "$CUSTOM_LOCALE" | cut -d' ' -f1)" > /etc/locale.conf
+echo "KEYMAP=$CUSTOM_KEYMAP" > /etc/vconsole.conf
+ln -sf /usr/share/zoneinfo/"$CUSTOM_TIMEZONE" /etc/localtime
 SETLOCALE
 chmod 0755 "$linuxloopsdir"/chroot"$1"/tmp/set_locale_and_timezone
 }
@@ -3070,7 +3077,7 @@ dnf install -y ca-certificates openssl fedora-release-identity-workstation --all
 dnf reinstall -y "*"
 dnf install -y distribution-gpg-keys dnf-plugins-core
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
-dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs zenity
+dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs zenity
 systemctl enable dbus.socket dbus-daemon.service getty@.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -3179,6 +3186,7 @@ set -e
 if [ "$desktop" == "none" ]; then exit 0; fi
 $install_desktop
 systemctl enable $desktop_services
+if [ -f /usr/lib/systemd/user/gnome-keyring-daemon.service ]; then systemctl enable --global gnome-keyring-daemon.service; fi
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.mate.interface]
@@ -4243,6 +4251,12 @@ case "$desktop" in
 	'cinnamon')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-terminal nemo
+"
+	;;
+	'cinnamon-full')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-terminal nemo
 "
@@ -4250,11 +4264,23 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-gre
 	'mate')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-mate mint-info-mate mate-desktop-environment gnome-terminal nemo
+"
+	;;
+	'mate-full')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-mate mint-info-mate mate-desktop-environment gnome-terminal nemo
 "
 	;;
 	'xfce')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-power-manager xfce4-terminal thunar
+"
+	;;
+	'xfce-full')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -4394,6 +4420,12 @@ case "$desktop" in
 	'cinnamon')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo
+"
+	;;
+	'cinnamon-full')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo
 "
@@ -4404,8 +4436,8 @@ cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<MINTLMDEDESKTOP
 set -e
 if [ "$desktop" == "none" ]; then exit 0; fi
 $install_desktop
-mkdir -p /etc/lightdm
-echo -e '[Greeter]\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+mkdir -p /etc/lightdm/lightdm.conf.d
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 MINTLMDEDESKTOP
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
@@ -4767,7 +4799,6 @@ services.xserver.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.desktopManager.cinnamon.enable = true;
 "
-CUSTOM_PACKAGES="cinnamon.cinnamon-control-center $CUSTOM_PACKAGES"
 	;;
 	'gnome-full')
 	nixos_desktop="
@@ -5785,7 +5816,8 @@ else
 	echo >&2 "!! Failed to claim global gamescope stats session"
 fi
 
-gamescope \\
+#gamescope \\
+INTEL_DEBUG=noccs gamescope \\
 	--generate-drm-mode fixed \\
 	--xwayland-count 2 \\
 	-w 1280 -h 800 \\
@@ -7157,7 +7189,17 @@ if [ "$install_type" == "disk" ]; then
 else
 	echo "Creating image file"
 	truncate -s 0 "$fullpath"
-	fallocate -l "$install_sizeMB"M "$fullpath"
+	if [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ext4" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ntfs" ]; then
+		fallocate -l "$install_sizeMB"M "$fullpath" || exit_with_error "The image file could not be created."
+	#elif [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "exfat" ]; then
+	#	dd if=/dev/zero of="$fullpath" bs=1M seek=$install_sizeMB count=0 status=none || exit_with_error "The image file could not be created."
+	elif [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "btrfs" ]; then
+		chattr +C "$fullpath"
+		chattr -c "$fullpath"
+		dd if=/dev/urandom of="$fullpath" bs=1M count=$install_sizeMB status=progress || exit_with_error "The image file could not be created."
+	else
+		dd if=/dev/urandom of="$fullpath" bs=1M count=$install_sizeMB status=progress || exit_with_error "The image file could not be created."
+	fi
 	chown $SUDO_UID:$SUDO_UID "$fullpath"
 	echo "Creating partition table..."
 	write_partition_table "$fullpath"
@@ -7252,7 +7294,9 @@ if [ ! -z "$wsl" ]; then
 else
 	img_uuid=$(blkid -s PARTUUID -o value "$(df "$fullpath" --output=source | sed 1d)")
 fi
-img_path=$(if [ $(findmnt -n -o TARGET -T "$fullpath") == "/" ]; then echo $(realpath "$fullpath"); else echo $(realpath "$fullpath") | sed "s#$(findmnt -n -o TARGET -T "$fullpath")##g"; fi)
+img_path=$(if [ $(findmnt -n -o TARGET -T $fullpath) == "/" ]; then echo "$(realpath $fullpath)"; else echo "$(realpath $fullpath)" | sed "s#$(findmnt -n -o TARGET -T $fullpath)##g"; fi)
+if [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "btrfs" ] && [ ! -z $(command -v btrfs) ]; then img_subvol="$(btrfs subvolume show $(findmnt -n -o TARGET -T $fullpath) | grep Name: | sed 's@\t\| @@g' | cut -d':' -f2)"; fi
+if [ ! -z "$img_subvol" ]; then img_path="/$img_subvol$img_path"; fi
 if [ -z "$wsl" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
 if [ "$distro" == "brunch" ]; then
 config="submenu '$distro_name' {
@@ -7517,12 +7561,21 @@ else
 		if [ -z "$path" ]; then exit 1; else destination="$path"; fi
 		if [[ "$destination" == *"/"* ]] && ([ -z "$(realpath $destination 2> /dev/null)" ] || [ ! -d "$(echo $(realpath $destination) | sed 's@[^/]*$@@')" ]); then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path."; install_parameters; return; fi
 		rm -f "$destination" "$destination".der "$destination".grub.txt
+		sync
 		if [[ ! $destination == *"/"* ]]; then path="$PWD"; else path="$(realpath "$destination")"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
 		fullpath="$path$(basename $destination)"
 		if [ ! -z "$wsl" ] && [ ! -z "${path##/mnt/*/*}" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..."; install_parameters; return; fi
 		if ([ ! -z "$chromeos" ] || [ ! -z "$brunch" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; install_parameters; return; fi
-		if [ $(( ($(df -k --output=avail "$path" | sed 1d) / 1024 / 1024) - 14 )) -lt 0 ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14GB available."; install_parameters; fi
-		install_size=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has $(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) GB available.\n How much would you like to allocate for $distro ?\n" --min-value=14 --max-value=$(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) --value=14 --step 1)
+		if [ $(( ($(df -k --output=avail "$path" | sed 1d) / 1024 / 1024) - 14 )) -lt 0 ]; then
+			sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14GB available."
+			install_parameters
+			return
+		elif [ $(( ($(df -k --output=avail "$path" | sed 1d) / 1024 / 1024) - 14 )) -eq 0 ]; then
+			sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Exactly 14GB is available on this drive, the installer will proceed with the creation of a 14GB image." --ok-label="Next"
+			install_size=14
+		else
+			install_size=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has $(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) GB available.\n How much would you like to allocate for $distro ?\n" --min-value=14 --max-value=$(( ($(df -k --output=avail $path | sed 1d) / 1024 / 1024) )) --value=14 --step 1)
+		fi
 		if [ -z "$install_size" ]; then exit 1; fi
 		install_sizeMB=$((install_size*1024))
 		if [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" != "tails" ]; then
@@ -7544,7 +7597,8 @@ else
 		if [ -z "$destination" ]; then echo "The -dst argument has not been specified."; fi
 		if [ "$swap_size" -gt 0 ] && [ $(( install_size - swap_size )) -lt 12 ]; then echo "At least 12 GB should be available for the main partition, please increase the image size or reduce the swap size."; exit 1; fi
 		if [[ "$destination" == *"/"* ]] && ([ -z "$(realpath $destination 2> /dev/null)" ] || [ ! -d "$(echo $(realpath $destination) | sed 's![^/]*$!!')" ]); then echo "Desination path does not exist, please provide an existing path."; exit 1; fi
-		rm -rf "$destination"
+		rm -f "$destination" "$destination".der "$destination".grub.txt
+		sync
 		if [[ ! "$destination" == *"/"* ]]; then path="$PWD"; else path="$(echo $(realpath $destination) | sed 's![^/]*$!!')"; fi
 		fullpath="$path$(basename $destination)"
 		if [ ! -z "$wsl" ] && [ ! -z "${path##/mnt/*}" ]; then echo "The $distro disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/<drive letter>/..."; exit 1; fi
@@ -7635,6 +7689,9 @@ if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; 
 if [ -z $(command -v efibootmgr) ]; then echo "Warning: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created."; fi
 }
 
+if [ -z "$CUSTOM_LOCALE" ]; then CUSTOM_LOCALE="en_US.UTF-8 UTF-8"; fi
+if [ -z "$CUSTOM_KEYMAP" ]; then CUSTOM_KEYMAP="us"; fi
+if [ -z "$CUSTOM_TIMEZONE" ]; then CUSTOM_TIMEZONE="UTC"; fi
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 if [ $# -eq 0 ]; then

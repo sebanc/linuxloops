@@ -67,7 +67,7 @@ As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /dev/sdX
 ### Requirements
 - x86_64 based computer with UEFI BIOS.
 - Administrator access.
-- 14 GB available space on an unencrypted ext4, exfat or ntfs partition.
+- 14 GB available space on an unencrypted btrfs, ext4, exfat or ntfs partition.
 - GRUB as Linux distro bootloader.
 
 ### Install guide
@@ -86,7 +86,7 @@ If you intend to use the GUI installer, also make sure `zenity` package is insta
 
 `curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
 
-4. Create a directory for linuxloops images on an unencrypted partition (in ext4, exfat or ntfs format).
+4. Create a directory for linuxloops images on an unencrypted partition (in btrfs, ext4, exfat or ntfs format).
 
 As an example `mkdir ~/linuxloops` will create a LinuxLoops directory within the user account path.
   

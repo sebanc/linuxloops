@@ -12,11 +12,11 @@
 Linuxloops is a custom linux distro installer.
 
 Why create a custom linux distro installer ?
-Most linux distros provide installers which are either focused on a specific DE and bloated with software you don't need or completely manual. Moreover, once installed there are very often specific pain points to have a fully working system (genrally needed config files, declarative configurations, dkms drivers signing for secure boot...).
+Most linux distros provide installers which are either focused on a specific DE and bloated with software you don't need or completely manual. Moreover, once installed there are very often specific pain points to have a fully working system (generally needed config files, declarative configurations, dkms drivers signing for secure boot...).
 
 The objective of Linuxloops is to:
 - Allow an easy installation of a choosen linux distro with full hardware support OOTB, the desktop environment of your choice, and either minimal apps (file manager and terminal when possible) or full standard distro installer packages depending on the choosen target (aside from predefined targets, you can also include additional packages or use a custom install script, see "Custom install" section).
-- In addition, Linuxloops supports installing linux distros in disk images files which can be booted natively from the GRUB bootloader (only on ext4, ntfs or exfat partitions) or in VMs.
+- In addition, Linuxloops supports installing linux distros in disk image files which can be booted natively from the GRUB bootloader (only on btrfs, ext4, exfat or ntfs partitions) or in VMs.
 
 On the other hand, the main limitation of Linuxloops is that in order to support a wide range of Linux distros, the partition table setup is limited to the basics (EFI partition and BOOT/ROOT ext4 partitions). As such, most advanced users needing a custom partition table would probably be better with a distro netinst iso or can customize the linuxloops script to their liking (it is just a bash script).
 
@@ -121,7 +121,7 @@ Clearly, in its current state, LinuxLoops is not perfect and I am counting on th
 
 However:
 - New linux distros will only be added if they present an effective interest (as Linuxloops is an installer, a distro which would mainly consist of a custom installer and a theme are not considered relevant).
-- Changes related to the default partitioning scheme can be discussed, however in order to support a wide range of distros only widely supported filesystems can be considered. BTRFS support notably would be interesting, however its very customizable structure through mount options makes it difficult to use (as linuxloops cannot guess existing configurations).
+- Changes related to the default partitioning scheme can be discussed, however in order to support a wide range of distros only widely supported filesystems can be considered.
 
 You can also feel free to make your own fork of LinuxLoops and customize it to your needs (it is just a bash script).
 
