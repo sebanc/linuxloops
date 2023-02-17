@@ -117,17 +117,27 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## steamos-like
 
-steamos-like is not a real distro, it is just a 100% standard archlinux with a few specific configuration files (no binaries) allowing to launch a SteamOS Gamescope session. However, as it is intended for PC, it has been set to boot by default in Plasma for standard use and will allow you to launch the Gamescope session through a desktop shortcut.
+steamos-like is not a real distro, it is just a 100% standard archlinux with a few specific configuration files (no binaries) allowing to launch a SteamOS Gamescope session. However, as it is intended for PC, it has been set to boot by default in Plasma for standard use and will allow you to launch a Gamescope session through a desktop shortcut.
 
 By design, this implementation of the gamescope session has some limitations similar to the ones on the Steamdeck: you can only have 1 user and auto-login through SDDM is mandatory.
 Nevertheless, as long as the above requirements are satisfied, it is 100% archlinux so you can install any native arch package and update them through pacman, the discover app...
 
-Currently, the SteamOS session through Gamescope is not fully stable on most GPU (due to different gamescope / steam issues):
+Currently, the SteamOS session through Gamescope is not fully stable on all GPU (due to different gamescope / mesa / steam issues):
 - AMD GPU: Generally well supported.
 - Nvidia GPU: Buggy but should work if you install the nvidia proprietary drivers and opt-in the the Steam client beta (in the steam app preferences).
-- Intel GPU: An old version of gamescope needs to be installed (to be clarified).
+- Intel GPU: You currently need to replace mesa with a custom version. To do so, the easiest way is probably to build the mesa-git AUR package with a specific mesa branch which fixes this issue:
+```
+git clone https://aur.archlinux.org/mesa-git.git
+cd mesa-git/
+sed 's@https://gitlab.freedesktop.org/mesa/mesa.git#branch=main@https://gitlab.freedesktop.org/GL/mesa.git#branch=usage_checks_fixes@g' PKGBUILD
+makepkg -si
+```
 
-archlinux does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.
+On the first boot:
+- If you use wifi, connect to your wifi network through plasma network-manager, then go to plasma network settings and make the wifi connection "Available to all users".
+- Login your steam account.
+- Apply the above fixes for your GPU if needed.
+- Launch the gamescope session.
 
 
 ## tails

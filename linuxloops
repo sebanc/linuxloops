@@ -1442,7 +1442,6 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 ALMALINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
 	'full')
 	install_desktop="
@@ -1543,7 +1542,6 @@ POLKIT
 ARCHLINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
@@ -1853,7 +1851,6 @@ NETWORKMANAGER
 ARTIXLINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-runit cups cups-runit nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
@@ -2528,7 +2525,6 @@ usermod -aG sudo '$username'
 DEBIANUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -2781,7 +2777,6 @@ usermod -aG sudo '$username'
 DEVUANUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -3011,7 +3006,6 @@ usermod -aG sudo '$username'
 ELEMENTARYUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
 	'full')
 	install_desktop="
@@ -3111,7 +3105,6 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 FEDORAUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dmz-cursor-themes dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -3310,7 +3303,6 @@ POLKIT
 GENTOOUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf"
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "$desktop" in
@@ -3472,7 +3464,6 @@ POLKIT
 GENTOOUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus -elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf"
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "$desktop" in
@@ -3621,7 +3612,6 @@ usermod -aG sudo '$username'
 KALIUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -3867,7 +3857,6 @@ su $username -c "xdg-user-dirs-update"
 KDE_NEONUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
 	'essentials')
 	install_desktop="
@@ -3989,7 +3978,6 @@ POLKIT
 MANJAROUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
@@ -4241,7 +4229,6 @@ usermod -aG sudo '$username'
 MINTUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="cinnamon"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -4410,7 +4397,6 @@ usermod -aG sudo '$username'
 MINTLMDEUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="cinnamon"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -4537,7 +4523,6 @@ usermod -aG audio,sudo '$username'
 MXLINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -4791,7 +4776,6 @@ echo -e '$userpass\n$userpass' | passwd '$username'
 NIXOSUSER
 chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome-full"; fi
 case "$desktop" in
 	'cinnamon-full')
 	nixos_desktop="
@@ -4946,7 +4930,6 @@ BLUEMAN
 OPENSUSEUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="at-spi2-core avahi cups cups-filters nss-mdns system-config-printer"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze breeze-gtk dmz-icon-theme-cursors dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -5188,7 +5171,6 @@ usermod -aG sudo '$username'
 PARROTUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -5443,7 +5425,6 @@ usermod -aG sudo '$username'
 POPUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
 	'full')
 	install_desktop="
@@ -5543,7 +5524,6 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 ROCKYLINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
 	'full')
 	install_desktop="
@@ -5610,7 +5590,7 @@ sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@\[multilib]\nIncl
 pacman-key --init
 pacman-key --populate
 pacman -Qnq | pacman -Syu --noconfirm -
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity base-devel pkgconfig
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
@@ -6194,7 +6174,6 @@ chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-run-session
 STEAMOSLIKEFIXES
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_steamos_fixes
 
-if [ -z "$desktop" ]; then desktop="full"; fi
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
@@ -6391,7 +6370,6 @@ usermod -aG sudo '$username'
 UBUNTUUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="ubuntu"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -6660,7 +6638,6 @@ usermod -aG sudo '$username'
 UBUNTUUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="ubuntu"; fi
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
@@ -6912,7 +6889,6 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 VOIDLINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="gnome"; fi
 hardware_support="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-filters sof-firmware nss-mdns pulseaudio system-config-printer xorg"
 basic_packages="gvfs PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz dejavu-fonts-ttf noto-fonts-ttf fonts-roboto-ttf gnome-backgrounds oxygen-icons5 papirus-icon-theme"
@@ -7077,7 +7053,6 @@ usermod -aG sudo '$username'
 ZORINUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-if [ -z "$desktop" ]; then desktop="full"; fi
 case "$desktop" in
 	'core')
 	install_desktop="
@@ -7189,10 +7164,8 @@ if [ "$install_type" == "disk" ]; then
 else
 	echo "Creating image file"
 	truncate -s 0 "$fullpath"
-	if [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ext4" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ntfs" ]; then
+	if [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ext4" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "fuseblk" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ntfs" ]; then
 		fallocate -l "$install_sizeMB"M "$fullpath" || exit_with_error "The image file could not be created."
-	#elif [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "exfat" ]; then
-	#	dd if=/dev/zero of="$fullpath" bs=1M seek=$install_sizeMB count=0 status=none || exit_with_error "The image file could not be created."
 	elif [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "btrfs" ]; then
 		chattr +C "$fullpath"
 		chattr -c "$fullpath"
@@ -7664,6 +7637,7 @@ if [ -z "$destination" ]; then echo -e "Please provide a destination path for th
 if [ -z "$distro" ] || [ -z "$(echo $available_distros | sed -e 's@ @\n@g' | grep -x $distro)" ]; then echo -e "Please select a distro from the below list:\n$available_distros.\n"; exit 1; fi
 check_home_space
 list_desktops "$distro"
+if [ -z "$desktop" ]; then echo -e "Please select an environment from the below list:\n$available_desktops.\n"; exit 1; fi
 if [ ! -z "$desktop" ] && [ -z "$(echo $available_desktops | sed -e 's@ @\n@g' | grep -x $desktop)" ]; then echo -e "$desktop desktop environment is not available, please choose from:\n$available_desktops.\n"; exit 1; fi
 if [ "$nvidia" == "Yes" ] && [ -z "$(echo $nvidia_supported | sed -e 's@ @\n@g' | grep -x $distro)" ]; then echo -e "nvidia drivers are currently only supported with: \n$nvidia_supported.\n"; exit 1; fi
 if [ "$surface" == "Yes" ] && [ -z "$(echo $surface_supported | sed -e 's@ @\n@g' | grep -x $distro)" ]; then echo -e "Linux Surface patches are currently only supported with: \n$surface_supported.\n"; exit 1; fi
