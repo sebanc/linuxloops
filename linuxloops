@@ -5618,8 +5618,6 @@ pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb b
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
-mkdir -p /etc/systemd/system/systemd-networkd-wait-online.service.d
-echo -e '[Service]\nExecStart=\nExecStart=/usr/lib/systemd/systemd-networkd-wait-online --any' > /etc/systemd/system/systemd-networkd-wait-online.service.d/wait-for-only-one-interface.conf
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_steamos_fixes
