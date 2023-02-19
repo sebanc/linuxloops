@@ -45,7 +45,7 @@ case "$1" in
 	distro_name="Artix"
 	;;
 	'brunch')
-	available_desktops="rammus volteer zork"
+	available_desktops="stable-rammus stable-volteer stable-zork unstable-rammus unstable-volteer unstable-zork"
 	bootloader_id="boot"
 	bootloader_name="bootx64.efi"
 	distro_name="Brunch"
@@ -1412,6 +1412,7 @@ dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000
 dnf --enablerepo=crb install -y almalinux-sb-certs
 systemctl enable dbus.socket dbus-daemon.service named.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 systemctl enable --global dbus.socket dbus-daemon.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
@@ -1508,6 +1509,7 @@ pacman -Qnq | pacman -Syu --noconfirm -
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -2116,11 +2118,15 @@ set -e
 mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "$partition_path"1
 mount "$partition_path"1 /isomount/data
-curl -L \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch download failed."; return 1; }
+if [ "\$(echo $desktop | cut -d'-' -f1)" == "unstable" ]; then
+	curl -L \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch download failed."; return 1; }
+else
+	curl -L \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch download failed."; return 1; }
+fi
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch || { echo -e "Failed to extract Brunch archive."; return 1; }
 rm /isomount/data/brunch.tar.gz
-curl -L \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "$desktop" | sort -n | tail -1) -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; return 1; }
+curl -L \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$(echo $desktop | cut -d'-' -f2)" | sort -n | tail -1) -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; return 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root || { echo -e "Failed to extract the recovery image."; return 1; }
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
@@ -2140,6 +2146,9 @@ for (( i=1; i<=12; i++ )); do
 		7)
 			mount /isomount/data/brunch/rootc.img /isomount/tmp
 			mkfs.ext4 -E nodiscard -F -L "ROOT-C" "$partition_path""\$i"
+			if tune2fs -l "$partition_path""\$i" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "$partition_path""\$i"; fi
+			if tune2fs -l "$partition_path""\$i" | grep 'Filesystem features' | grep -q -w metadata_csum_seed; then tune2fs -O ^metadata_csum_seed "$partition_path""\$i"; fi
+			if tune2fs -l "$partition_path""\$i" | grep 'Filesystem features' | grep -q -w orphan_file; then tune2fs -O ^orphan_file "$partition_path""\$i"; fi
 			mount "$partition_path""\$i" /isomount/rootc
 			cp -r /isomount/tmp/* /isomount/rootc/
 			umount /isomount/rootc
@@ -2238,6 +2247,9 @@ for (( i=1; i<=12; i++ )); do
 		;;
 		7)
 			mkfs.ext4 -E nodiscard -F -L "ROOT-C" "$partition_path""\$i"
+			if tune2fs -l "$partition_path""\$i" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "$partition_path""\$i"; fi
+			if tune2fs -l "$partition_path""\$i" | grep 'Filesystem features' | grep -q -w metadata_csum_seed; then tune2fs -O ^metadata_csum_seed "$partition_path""\$i"; fi
+			if tune2fs -l "$partition_path""\$i" | grep 'Filesystem features' | grep -q -w orphan_file; then tune2fs -O ^orphan_file "$partition_path""\$i"; fi
 			continue
 		;;
 		12)
@@ -2494,6 +2506,7 @@ echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/sh
 chmod 0755 /etc/dkms/sign_helper.sh
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -2976,6 +2989,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -3074,6 +3088,7 @@ dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr bind nss-mdns systemd-networkd systemd-resolved dbus-daemon grub2-efi os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs zenity
 systemctl enable dbus.socket dbus-daemon.service getty@.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -3582,6 +3597,7 @@ echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/sh
 chmod 0755 /etc/dkms/sign_helper.sh
 systemctl enable bluetooth.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -3825,6 +3841,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -3944,6 +3961,7 @@ pacman -Syy
 pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -4197,6 +4215,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -4366,6 +4385,7 @@ echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -4493,6 +4513,7 @@ echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/sh
 chmod 0755 /etc/dkms/sign_helper.sh
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -5141,6 +5162,7 @@ echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/sh
 chmod 0755 /etc/dkms/sign_helper.sh
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -5395,6 +5417,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-gen
 echo 'autoinstall_all_kernels="y"' >> /etc/dkms/framework.conf
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -5494,6 +5517,7 @@ dnf install -y kernel kernel-headers dkms linux-firmware iwl100-firmware iwl1000
 dnf --enablerepo=crb install -y rocky-sb-certs
 systemctl enable dbus.socket dbus-daemon.service named.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 systemctl enable --global dbus.socket dbus-daemon.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
@@ -5593,6 +5617,9 @@ pacman -Qnq | pacman -Syu --noconfirm -
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity base-devel pkgconfig
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
+mkdir -p /etc/systemd/system/systemd-networkd-wait-online.service.d
+echo -e '[Service]\nExecStart=\nExecStart=/usr/lib/systemd/systemd-networkd-wait-online --any' > /etc/systemd/system/systemd-networkd-wait-online.service.d/wait-for-only-one-interface.conf
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_steamos_fixes
@@ -6339,6 +6366,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -6607,6 +6635,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -7023,6 +7052,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic-hwe-20.04 linux-headers-generic-hwe-20.04 dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs zenity
 systemctl enable systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
 /tmp/set_locale_and_timezone
 /tmp/install_desktop
 /tmp/install_user
@@ -7191,9 +7221,12 @@ if [ "$distro" == "brunch" ] || [ "$distro" == "chromeos-flex" ] || [ "$distro" 
 		fi
 	fi
 else
+	mkfs.fat -F 32 -n 'EFI' "$partition_path"1 || exit_with_error "Could not make filesystem for EFI partition."
+	mkfs.ext4 -E nodiscard -F -L "BOOT" "$partition_path"2 || exit_with_error "Could not make filesystem for BOOT partition."
+	if tune2fs -l "$partition_path"2 | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "$partition_path"2; fi
+	if tune2fs -l "$partition_path"2 | grep 'Filesystem features' | grep -q -w metadata_csum_seed; then tune2fs -O ^metadata_csum_seed "$partition_path"2; fi
+	if tune2fs -l "$partition_path"2 | grep 'Filesystem features' | grep -q -w orphan_file; then tune2fs -O ^orphan_file "$partition_path"2; fi
 	if [ "$encryption" == "Yes" ]; then
-		mkfs.fat -F 32 -n 'EFI' "$partition_path"1 || exit_with_error "Could not make filesystem for EFI partition."
-		mkfs.ext4 -E nodiscard -F -L "BOOT" "$partition_path"2 || exit_with_error "Could not make filesystem for BOOT partition."
 		echo -n "$userpass" | cryptsetup --cipher aes-xts-plain64 --hash sha256 --key-size 256 luksFormat "$partition_path"3 - || exit_with_error "Could not make luks filesystem for ROOT partition."
 		echo -n "$userpass" | cryptsetup --cipher aes-xts-plain64 --hash sha256 --key-size 256 luksOpen "$partition_path"3 luks-"$(blkid -s UUID -o value "$partition_path"3)" - || exit_with_error "Could not open luks filesystem for ROOT partition."
 		if [ "$fstype" == "btrfs" ]; then
@@ -7213,8 +7246,6 @@ else
 			mount /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount ROOT partition."
 		fi
 	else
-		mkfs.fat -F 32 -n 'EFI' "$partition_path"1 || exit_with_error "Could not make filesystem for EFI partition."
-		mkfs.ext4 -E nodiscard -F -L "BOOT" "$partition_path"2 || exit_with_error "Could not make filesystem for BOOT partition."
 		if [ "$fstype" == "btrfs" ]; then
 			mkfs.btrfs -K -L "ROOT" "$partition_path"3 || exit_with_error "Could not make btrfs filesystem for ROOT partition."
 			mount "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount btrfs ROOT partition."
