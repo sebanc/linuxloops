@@ -122,22 +122,20 @@ steamos-like is not a real distro, it is just a 100% standard archlinux with a f
 By design, this implementation of the gamescope session has some limitations similar to the ones on the Steamdeck: you can only have 1 user and auto-login through SDDM is mandatory.
 Nevertheless, as long as the above requirements are satisfied, it is 100% archlinux so you can install any native arch package and update them through pacman, the discover app...
 
-Currently, the SteamOS session through Gamescope is not fully stable on all GPU (due to different gamescope / mesa / steam issues):
-- AMD GPU: Generally well supported.
-- Nvidia GPU: Buggy but should work if you install the nvidia proprietary drivers and opt-in the the Steam client beta (in the steam app preferences).
-- Intel GPU: You currently need to replace mesa with a custom version. To do so, the easiest way is probably to build the mesa-git AUR package with a specific mesa branch which fixes this issue:
-```
-git clone https://aur.archlinux.org/mesa-git.git
-cd mesa-git/
-sed 's@https://gitlab.freedesktop.org/mesa/mesa.git#branch=main@https://gitlab.freedesktop.org/GL/mesa.git#branch=usage_checks_fixes@g' PKGBUILD
-makepkg -si
-```
-
 On the first boot:
 - If you use wifi, connect to your wifi network through plasma network-manager, then go to plasma network settings and make the wifi connection "Available to all users".
 - Login your steam account.
-- Apply the above fixes for your GPU if needed.
 - Launch the gamescope session.
+
+Currently, aside from AMD GPU which are generally well supported, the SteamOS session is not fully stable on all GPU (due to different gamescope / mesa / steam issues). The following should help fixing issues with Intel and NVIDIA gpus.
+- Opt-in the beta of the steam client (the option is in the first page in the application settings).
+- Build the below specific branch of mesa:
+```
+git clone https://aur.archlinux.org/mesa-git.git
+cd mesa-git/
+sed -i 's@https://gitlab.freedesktop.org/mesa/mesa.git#branch=main@https://gitlab.freedesktop.org/GL/mesa.git#branch=usage_checks_fixes@g' PKGBUILD
+makepkg -si
+```
 
 
 ## tails

@@ -7702,9 +7702,9 @@ if [ $# -eq 0 ]; then
 	if [ -z $(command -v zenity) ]; then echo "To use the GUI installer you need to install the \"zenity\" binary package."; usage; exit 1; fi
 	zenity=1
 	if ! curl --output /dev/null --silent --head --fail --doh-url https://1.1.1.1/dns-query?name=cloudflare.com https://uk.lxd.images.canonical.com; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Linuxloops cannot connect to the lxc server, please make sure you have internet connectivity."; exit 1; fi
-	if [ -z $(command -v cryptsetup) ]; then warning="$warningWARNING: \"cryptsetup\" binary not found, encryption will not be available.\n\n"; fi
-	if [ -z $(command -v btrfs) ] || [ -z $(command -v mkfs.btrfs) ]; then warning="$warningWARNING: \"btrfs\" binary not found, btrfs filesystem will not be supported.\n\n"; fi
-	if [ -z $(command -v efibootmgr) ]; then warning="$warningWARNING: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created.\n\n"; fi
+	if [ -z $(command -v cryptsetup) ]; then warning="${warning}WARNING: \"cryptsetup\" binary not found, encryption will not be available.\n\n"; fi
+	if [ -z $(command -v btrfs) ] || [ -z $(command -v mkfs.btrfs) ]; then warning="${warning}WARNING: \"btrfs\" binary not found, btrfs filesystem will not be supported.\n\n"; fi
+	if [ -z $(command -v efibootmgr) ]; then warning="${warning}WARNING: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created.\n\n"; fi
 	if ! sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer.\n\n$warning" --ok-label="Next"; then exit 0; fi
 	distro=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which Linux distribution do you want to install ?" --column "Distribution" $available_distros)
 	if [ -z "$distro" ]; then exit 0; fi
