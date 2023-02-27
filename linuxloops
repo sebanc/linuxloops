@@ -5657,6 +5657,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 cat >"$linuxloopsdir"/chroot/tmp/install_steamos_fixes <<STEAMOSLIKEFIXES
 #!/bin/bash
 set -e
+echo -e 'vm.max_map_count=1048576' > /etc/sysctl.d/99-steam.conf
 cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
 [Autologin]
 Relogin=true

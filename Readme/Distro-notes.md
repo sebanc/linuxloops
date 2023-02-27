@@ -127,7 +127,7 @@ On the first boot:
 - Login your steam account.
 - Launch the gamescope session.
 
-Currently, aside from AMD GPU which are generally well supported, the SteamOS session is not fully stable on all GPU (due to different gamescope / mesa / steam issues). The following should help fixing issues with Intel and NVIDIA gpus.
+Currently, aside from AMD GPU which are generally well supported, the SteamOS session is not fully stable on all GPU (due to different gamescope / mesa / steam issues). The following should help fixing issues with Intel and Nvidia GPUs.
 - Opt-in the beta of the steam client (the option is in the first page in the application settings).
 - Build the below specific branch of mesa:
 ```
