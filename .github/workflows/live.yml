@@ -23,26 +23,9 @@ jobs:
       - name: Set current date
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk
-        run: sudo CUSTOM_PACKAGES="firefox-esr gedit gparted evince" bash linuxloops -distro debian -env cinnamon -dst /tmp/linuxloops_live_${{ env.current_date }}.img -L -b
+        run: sudo CUSTOM_PACKAGES="firefox-esr gedit gparted evince" bash linuxloops -distro debian -env cinnamon -dst linuxloops_live_${{ env.current_date }}.img -L -b
       - name: Compress Linuxloops Live Disk
-        run: 7z a -mx=7 /tmp/linuxloops_live_${{ env.current_date }}.7z /tmp/linuxloops_live_${{ env.current_date }}.img
-      - name: Upload Linuxloops Live Disk
-        uses: actions/upload-artifact@v3
-        with:
-          name: linuxloops-live-disk
-          path: /tmp/linuxloops_live_${{ env.current_date }}.7z
-          if-no-files-found: error
-  release:
-    name: Make a Linuxloops Live Disk release
-    permissions:
-      contents: write
-    needs: build-live-disk
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Download built artifacts
-        uses: actions/download-artifact@v3
-        with:
-          name: linuxloops-live-disk
+        run: 7z a -t7z -m0=lzma -mx=7 linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
       - name: Generate release details
         run: |
           RELEASE_FILE=$(ls linuxloops_live_*.7z)
