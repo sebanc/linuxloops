@@ -412,7 +412,7 @@ fi
 if [ -f /linuxloops_root/"$img_path" ]; then
 	modprobe loop || { echo "linuxloops: Loop module is not available." > /dev/kmsg; recovery_shell; }
 	if [ ! -b /dev/loop0 ]; then mknod -m 660 /dev/loop0 b 7 0 || { echo "linuxloops: The loop device could not be created." > /dev/kmsg; recovery_shell; }; fi
-	losetup -P /dev/loop0 /linuxloops_root"$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
+	losetup --direct-io=off -P /dev/loop0 /linuxloops_root"$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
 else
 	echo "linuxloops: The rootfs image file was not found, it might be due to an incorrect GRUB config or unsupported configuration." > /dev/kmsg
 	recovery_shell
@@ -2340,7 +2340,7 @@ if [ -e "\$img_part" ] && [ ! -z "\$img_path" ]; then
 	fi
 	if [ -f /mainroot/"\$img_path" ]; then
 		if [ ! -b /dev/loop0 ]; then mknod -m660 /dev/loop0 b 7 0; fi
-		losetup -P /dev/loop0 /mainroot"\$img_path"
+		losetup --direct-io=off -P /dev/loop0 /mainroot"\$img_path"
 		bootdevice=/dev/loop0
 	else
 		echo "flex: ChromeOS loopfile \$img_path not found on device \$img_part..." > /dev/kmsg
@@ -5657,7 +5657,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 cat >"$linuxloopsdir"/chroot/tmp/install_steamos_fixes <<STEAMOSLIKEFIXES
 #!/bin/bash
 set -e
-echo -e 'vm.max_map_count=1048576' > /etc/sysctl.d/99-steam.conf
+echo -e 'vm.max_map_count=1048576\nvm.swappiness=1\nvm.compaction_proactiveness=0' > /etc/sysctl.d/99-steam.conf
 cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
 [Autologin]
 Relogin=true

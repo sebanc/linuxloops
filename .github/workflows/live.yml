@@ -25,7 +25,7 @@ jobs:
       - name: Build Linuxloops Live Disk
         run: sudo CUSTOM_PACKAGES="firefox-esr gedit gparted evince" bash linuxloops -distro debian -env cinnamon -dst /tmp/linuxloops_live_${{ env.current_date }}.img -L -b
       - name: Compress Linuxloops Live Disk
-        run: 7z a /tmp/linuxloops_live_${{ env.current_date }}.7z /tmp/linuxloops_live_${{ env.current_date }}.img
+        run: 7z a -mx=7 /tmp/linuxloops_live_${{ env.current_date }}.7z /tmp/linuxloops_live_${{ env.current_date }}.img
       - name: Upload Linuxloops Live Disk
         uses: actions/upload-artifact@v3
         with:
