@@ -7565,7 +7565,7 @@ else
 		if [[ "$destination" == *"/"* ]] && ([ -z "$(realpath $destination 2> /dev/null)" ] || [ ! -d "$(echo $(realpath $destination) | sed 's@[^/]*$@@')" ]); then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path."; install_parameters; return; fi
 		rm -f "$destination" "$destination".der "$destination".grub.txt
 		sync
-		if [[ ! $destination == *"/"* ]]; then path="$PWD"; else path="$(realpath "$destination")"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
+		if [[ ! $destination == *"/"* ]]; then path="$PWD/"; else path="$(realpath "$destination")"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
 		fullpath="$path$(basename $destination)"
 		if [ ! -z "$wsl" ] && [ ! -z "${path##/mnt/*/*}" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..."; install_parameters; return; fi
 		if ([ ! -z "$chromeos" ] || [ ! -z "$brunch" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The $distro disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; install_parameters; return; fi
@@ -7602,7 +7602,7 @@ else
 		if [[ "$destination" == *"/"* ]] && ([ -z "$(realpath $destination 2> /dev/null)" ] || [ ! -d "$(echo $(realpath $destination) | sed 's![^/]*$!!')" ]); then echo "Desination path does not exist, please provide an existing path."; exit 1; fi
 		rm -f "$destination" "$destination".der "$destination".grub.txt
 		sync
-		if [[ ! "$destination" == *"/"* ]]; then path="$PWD"; else path="$(echo $(realpath $destination) | sed 's![^/]*$!!')"; fi
+		if [[ ! "$destination" == *"/"* ]]; then path="$PWD/"; else path="$(echo $(realpath $destination) | sed 's![^/]*$!!')"; fi
 		fullpath="$path$(basename $destination)"
 		if [ ! -z "$wsl" ] && [ ! -z "${path##/mnt/*}" ]; then echo "The $distro disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/<drive letter>/..."; exit 1; fi
 		if [ ! -z "$chromeos" ] || [ ! -z "$brunch" ] && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then echo "The $distro disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; exit 1; fi
