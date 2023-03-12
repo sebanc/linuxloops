@@ -7191,7 +7191,8 @@ if [ "$install_type" == "disk" ]; then
 		partition_path="$destination_device"
 	fi
 else
-	echo "Creating image file"
+	echo "Creating image file on $(df -T "$fullpath" | tail -1 | cut -d' ' -f2) partition."
+	exit
 	truncate -s 0 "$fullpath"
 	if [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ext4" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "fuseblk" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ntfs" ]; then
 		fallocate -l "$install_sizeMB"M "$fullpath" || exit_with_error "The image file could not be created."
