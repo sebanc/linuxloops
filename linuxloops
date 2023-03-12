@@ -7191,11 +7191,12 @@ if [ "$install_type" == "disk" ]; then
 		partition_path="$destination_device"
 	fi
 else
-	echo "Creating image file on $(df -T "$fullpath" | tail -1 | cut -d' ' -f2) partition."
+	partition_format="$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)"
+	echo "Creating image file on $partition_format partition."
 	truncate -s 0 "$fullpath"
-	if [ -z "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ext4" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "fuseblk" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ntfs" ]; then
+	if [ -z "$partition_format" ] || [ "$partition_format" == "ext4" ] || [ "$partition_format" == "fuseblk" ] || [ "$partition_format" == "ntfs" ]; then
 		fallocate -l "$install_sizeMB"M "$fullpath" || exit_with_error "The image file could not be created."
-	elif [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "btrfs" ]; then
+	elif [ "$partition_format" == "btrfs" ]; then
 		chattr +C "$fullpath"
 		chattr -c "$fullpath"
 		dd if=/dev/urandom of="$fullpath" bs=1M count=$install_sizeMB status=progress || exit_with_error "The image file could not be created."

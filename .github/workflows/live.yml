@@ -25,7 +25,7 @@ jobs:
       - name: Build Linuxloops Live Disk
         run: sudo CUSTOM_PACKAGES="firefox-esr gedit gparted evince" bash linuxloops -distro debian -env cinnamon -dst linuxloops_live_${{ env.current_date }}.img -L -b
       - name: Compress Linuxloops Live Disk
-        run: 7z a -t7z -m0=lzma -mx=7 linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
+        run: 7z a linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
       - name: Generate release details
         run: |
           RELEASE_FILE=$(ls linuxloops_live_*.7z)
