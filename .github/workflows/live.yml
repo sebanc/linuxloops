@@ -28,7 +28,7 @@ jobs:
         run: 7z a linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
       - name: Generate release details
         run: |
-          RELEASE_FILE=$(ls linuxloops_live_*.7z)
+          RELEASE_FILE=linuxloops_live_${{ env.current_date }}.7z
           RELEASE_VERSION=$(echo "$RELEASE_FILE" | cut -d'.' -f1 | cut -d'_' -f2)
           RELEASE_DATE=$(echo "$RELEASE_FILE" | cut -d'.' -f1 | cut -d'_' -f3)
           echo "Found linuxloops release: ${RELEASE_FILE} with version ${RELEASE_VERSION} and date ${RELEASE_DATE}"
