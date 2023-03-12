@@ -7192,9 +7192,8 @@ if [ "$install_type" == "disk" ]; then
 	fi
 else
 	echo "Creating image file on $(df -T "$fullpath" | tail -1 | cut -d' ' -f2) partition."
-	exit
 	truncate -s 0 "$fullpath"
-	if [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ext4" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "fuseblk" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ntfs" ]; then
+	if [ -z "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ext4" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "fuseblk" ] || [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "ntfs" ]; then
 		fallocate -l "$install_sizeMB"M "$fullpath" || exit_with_error "The image file could not be created."
 	elif [ "$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)" == "btrfs" ]; then
 		chattr +C "$fullpath"
