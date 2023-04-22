@@ -869,7 +869,7 @@ fileSystems.\"/home\" = {
 	options = [ \"subvol=@home\" \"compress=zstd\" ];
 };
 
-fileSystems.\"/swap\" = {
+fileSystems.\"/var/swap\" = {
 	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3))\";
 	fsType = \"btrfs\";
 	options = [ \"subvol=@swap\" ];
@@ -904,7 +904,7 @@ fileSystems.\"/home\" = {
 	options = [ \"subvol=@home\" \"compress=zstd\" ];
 };
 
-fileSystems.\"/swap\" = {
+fileSystems.\"/var/swap\" = {
 	device = \"/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3)\";
 	fsType = \"btrfs\";
 	options = [ \"subvol=@swap\" ];
@@ -937,7 +937,7 @@ fstab="$fstab
 swapDevices =
 [
   {
-	device = \"/swap/swapfile\";
+	device = \"/var/swap/swapfile\";
   }
 ];
 "
@@ -1307,6 +1307,25 @@ INSTALLEFI
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_efi
 }
 
+selinux_fix()
+{
+cat >"$linuxloopsdir"/chroot/tmp/selinux_fix <<SELINUXFIX
+#!/bin/bash
+set -e
+echo "Please wait while selinux permissions are being applied..."
+if [ "$swap_size" -ne 0 ]; then
+	mkdir -p /var/swap
+	truncate -s 0 /var/swap/swapfile
+	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /
+	chcon -h system_u:object_r:swapfile_t:s0 /var/swap/swapfile
+	#chcon -t swapfile_t /var/swap/swapfile
+else
+	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /
+fi
+SELINUXFIX
+chmod 0755 "$linuxloopsdir"/chroot/tmp/selinux_fix
+}
+
 cleanup_container()
 {
 cat >"$linuxloopsdir"/chroot"$1"/tmp/cleanup_container <<CLEANCONTAINER
@@ -1357,7 +1376,7 @@ if [ "$encryption" == "Yes" ]; then
 	if [ "$fstype" == "btrfs" ]; then
 		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) / btrfs subvol=@,compress=zstd 0 0' >> /etc/fstab
 		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) /home btrfs subvol=@home,compress=zstd 0 0' >> /etc/fstab
-		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) /swap btrfs subvol=@swap 0 0' >> /etc/fstab
+		if [ "$swap_size" -ne 0 ]; then echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) /var/swap btrfs subvol=@swap 0 0' >> /etc/fstab; fi
 	else
 		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value /dev/mapper/luks-$(blkid -s UUID -o value "$partition_path"3)) / ext4 errors=remount-ro 0 1' >> /etc/fstab
 	fi
@@ -1365,14 +1384,14 @@ else
 	if [ "$fstype" == "btrfs" ]; then
 		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) / btrfs subvol=@,compress=zstd 0 0' >> /etc/fstab
 		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) /home btrfs subvol=@home,compress=zstd 0 0' >> /etc/fstab
-		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) /swap btrfs subvol=@swap 0 0' >> /etc/fstab
+		if [ "$swap_size" -ne 0 ]; then echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) /var/swap btrfs subvol=@swap 0 0' >> /etc/fstab; fi
 	else
 		echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"3) / ext4 errors=remount-ro 0 1' >> /etc/fstab
 	fi
 fi
 echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"2) /boot ext4 defaults 0 2' >> /etc/fstab
 echo -e '/dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"1) /boot/efi vfat defaults 0 2' >> /etc/fstab
-if [ "$swap_size" -ne 0 ]; then echo -e '/swap/swapfile none swap sw 0 0' >> /etc/fstab; fi
+if [ "$swap_size" -ne 0 ]; then echo -e '/var/swap/swapfile none swap sw 0 0' >> /etc/fstab; fi
 GENERATEFSTAB
 chmod 0755 "$linuxloopsdir"/chroot"$1"/tmp/generate_fstab
 }
@@ -1424,7 +1443,8 @@ if [ -f /tmp/install_custom_script ]; then /tmp/install_custom_script; fi
 /tmp/install_initramfs
 /tmp/install_efi
 dnf autoremove -y
-touch /.autorelabel
+if [ -f /tmp/selinux_fix ]; then /tmp/selinux_fix; fi
+#touch /.autorelabel
 /tmp/cleanup
 exit
 ALMALINUXINIT
@@ -1479,6 +1499,8 @@ install_dracut
 
 install_efi
 
+selinux_fix
+
 cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
@@ -1506,7 +1528,7 @@ pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm ca-certificates openssl
 pacman -Qnq | pacman -Syu --noconfirm -
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
@@ -1546,7 +1568,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
+basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="archlinux-wallpaper"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
@@ -1614,13 +1636,13 @@ systemctl enable lightdm.service
 	;;
 	'kde')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
 systemctl enable sddm.service
 "
 	;;
 	'kde-full')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm plasma dolphin konsole packagekit-qt5
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard plasma dolphin konsole packagekit-qt5
 systemctl enable sddm.service
 "
 	;;
@@ -1808,7 +1830,7 @@ pacman -Syu --noconfirm elogind-runit
 pacman -Qnq | pacman -S --noconfirm -
 pacman -Sy --noconfirm base runit-system runit elogind-runit mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 echo -e "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[community]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 ln -s /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 dbus-uuidgen > /etc/machine-id
 /tmp/set_locale_and_timezone
@@ -1855,7 +1877,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-runit cups cups-runit nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
+basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac-gtk"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="/etc/runit/sv/avahi-daemon /etc/runit/sv/cupsd"
@@ -1923,13 +1945,13 @@ ln -s $desktop_services /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	;;
 	'kde')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5 falkon
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5 falkon
 ln -s $desktop_services /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'kde-full')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm sddm-runit sddm-theme-artix plasma dolphin konsole falkon
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole falkon
 ln -s $desktop_services /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
@@ -2540,7 +2562,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
@@ -2792,7 +2814,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
@@ -3070,7 +3092,7 @@ chroot_fedora()
 {
 return_value=0
 
-download_lxc_image fedora 37 default
+download_lxc_image fedora 38 default
 
 mount_chroot
 
@@ -3101,7 +3123,7 @@ if [ -f /tmp/install_custom_script ]; then /tmp/install_custom_script; fi
 /tmp/install_initramfs
 /tmp/install_efi
 dnf autoremove -y
-touch /.autorelabel
+if [ -f /tmp/selinux_fix ]; then /tmp/selinux_fix; fi
 /tmp/cleanup
 exit
 FEDORAINIT
@@ -3120,9 +3142,9 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 FEDORAUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups nss-mdns system-config-printer xorg-x11-drivers"
+hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dmz-cursor-themes dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="dnfdragora dnf-plugin-system-upgrade f37-backgrounds plymouth-system-theme"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
@@ -3238,6 +3260,8 @@ cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
 install_dracut
 
 install_efi
+
+selinux_fix
 
 cleanup
 
@@ -3630,7 +3654,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic kali-defaults-desktop kali-themes-common"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
@@ -3958,7 +3982,7 @@ curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf
 pacman-key --init
 pacman-key --populate
 pacman -Syy
-pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
+pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
@@ -3998,7 +4022,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
+basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="manjaro-wallpapers-18.0 manjaro-settings-manager matcha-gtk-theme plymouth-theme-manjaro"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-daemon.service avahi-dnsconfd.service cups.service cups-browsed.service"
@@ -4050,7 +4074,7 @@ systemctl enable gdm.service
 	;;
 	'kde')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
 systemctl enable lightdm.service
 mkdir -p /etc/lightdm/lightdm.conf.d
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
@@ -4058,7 +4082,7 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	;;
 	'kde-full')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm plasma kde-applications manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard plasma kde-applications manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
 systemctl enable lightdm.service
 mkdir -p /etc/lightdm/lightdm.conf.d
 echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
@@ -4250,7 +4274,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-vera plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
@@ -4419,7 +4443,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-icons plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade grub2-theme-mint"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
@@ -4546,7 +4570,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes-mx synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx21-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
@@ -4953,7 +4977,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="at-spi2-core avahi cups cups-filters nss-mdns system-config-printer"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze breeze-gtk dmz-icon-theme-cursors dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze breeze-gtk dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="adobe-sourcecodepro-fonts plymouth-branding-openSUSE wallpaper-branding-openSUSE"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-dnsconfd.service cups-browsed.service udisks2.service"
@@ -5195,7 +5219,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic parrot-updater parrot-wallpapers"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
@@ -5529,7 +5553,8 @@ if [ -f /tmp/install_custom_script ]; then /tmp/install_custom_script; fi
 /tmp/install_initramfs
 /tmp/install_efi
 dnf autoremove -y
-touch /.autorelabel
+if [ -f /tmp/selinux_fix ]; then /tmp/selinux_fix; fi
+#touch /.autorelabel
 /tmp/cleanup
 exit
 ROCKYLINUXINIT
@@ -5584,6 +5609,8 @@ install_dracut
 
 install_efi
 
+selinux_fix
+
 cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
@@ -5614,7 +5641,7 @@ sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@\[multilib]\nIncl
 pacman-key --init
 pacman-key --populate
 pacman -Qnq | pacman -Syu --noconfirm -
-pacman -Syu --noconfirm linux linux-headers dkms linux-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity base-devel pkgconfig
+pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim bind amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs zenity base-devel pkgconfig
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
 systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
@@ -5826,7 +5853,6 @@ fi
 INTEL_DEBUG=noccs gamescope \\
 	--generate-drm-mode fixed \\
 	--xwayland-count 2 \\
-	-w 1280 -h 800 \\
 	--default-touch-mode 4 \\
 	--hide-cursor-delay 3000 \\
 	--max-scale 2 \\
@@ -6197,24 +6223,36 @@ fi
 steamos-run-session
 RUNSESSION
 chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-run-session
+cat >/usr/bin/steamos-polkit-helpers/steamos-update <<'FAKESTEAMUPDATE'
+#!/bin/bash
+
+exit 7
+FAKESTEAMUPDATE
+chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-update
+cat >/usr/bin/steamos-polkit-helpers/jupiter-biosupdate <<'FAKEBIOSUPDATE'
+#!/bin/bash
+
+exit 0
+FAKEBIOSUPDATE
+chmod 0755 /usr/bin/steamos-polkit-helpers/jupiter-biosupdate
 STEAMOSLIKEFIXES
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_steamos_fixes
 
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pulseaudio system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
-specific_packages="archlinux-wallpaper gamescope steam vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-fontconfig ttf-liberation wqy-zenhei xorg-server-xvfb"
+basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
+specific_packages="archlinux-wallpaper gamescope steam vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei xorg-server-xvfb"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
 case "$desktop" in
 	'core')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
 "
 	;;
 	'full')
 	install_desktop="
-pacman -S --noconfirm $desktop_base sddm plasma plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
+pacman -S --noconfirm $desktop_base sddm qt5-virtualkeyboard plasma plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
 "
 	;;
 esac
@@ -6343,7 +6381,7 @@ chroot_ubuntu()
 {
 return_value=0
 
-download_lxc_image ubuntu kinetic default
+download_lxc_image ubuntu lunar default
 
 mount_chroot
 
@@ -6399,7 +6437,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
@@ -6503,7 +6541,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base sddm ubuntustudio
 	;;
 	'ubuntu')
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 ubuntu-desktop-minimal gnome-terminal nautilus gnome-keyring libpam-gnome-keyring dmz-cursor-theme yaru-theme-gtk yaru-theme-icon yaru-theme-sound
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 ubuntu-desktop-minimal gnome-terminal nautilus gnome-keyring libpam-gnome-keyring yaru-theme-gtk yaru-theme-icon yaru-theme-sound
 "
 	;;
 	'ubuntu-full')
@@ -6668,7 +6706,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme dmz-cursor-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
@@ -6775,7 +6813,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base sddm ubuntustudio
 	;;
 	'ubuntu')
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 ubuntu-desktop-minimal gnome-terminal nautilus gnome-keyring libpam-gnome-keyring dmz-cursor-theme yaru-theme-gtk yaru-theme-icon yaru-theme-sound
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 ubuntu-desktop-minimal gnome-terminal nautilus gnome-keyring libpam-gnome-keyring yaru-theme-gtk yaru-theme-icon yaru-theme-sound
 "
 	;;
 	'ubuntu-full')
@@ -6919,7 +6957,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
 hardware_support="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-filters sof-firmware nss-mdns pulseaudio system-config-printer xorg"
 basic_packages="gvfs PackageKit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk breeze-icons xcursor-vanilla-dmz dejavu-fonts-ttf noto-fonts-ttf fonts-roboto-ttf gnome-backgrounds oxygen-icons5 papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk breeze-icons dejavu-fonts-ttf noto-fonts-ttf fonts-roboto-ttf gnome-backgrounds oxygen-icons5 papirus-icon-theme"
 specific_packages="font-adobe-source-code-pro plymouth"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="/etc/sv/avahi-daemon /etc/sv/bluetoothd /etc/sv/cupsd /etc/sv/cups-browsed"
@@ -7234,15 +7272,20 @@ else
 			mount /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount btrfs ROOT partition."
 			btrfs subvolume create "$linuxloopsdir"/chroot/@ || exit_with_error "Could not create subvolume @."
 			btrfs subvolume create "$linuxloopsdir"/chroot/@home || exit_with_error "Could not create subvolume @home."
-			btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."
+			if [ "$swap_size" -ne 0 ]; then btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."; fi
 			umount "$linuxloopsdir"/chroot || exit_with_error "Could not unmount btrfs ROOT partition."
 			mount -o subvol=@,compress=zstd /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount subvolume @."
 			mkdir -p "$linuxloopsdir"/chroot/home || exit_with_error "Could not make home directory."
 			mount -o subvol=@home,compress=zstd /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot/home || exit_with_error "Could not mount subvolume @home."
-			mkdir -p "$linuxloopsdir"/chroot/swap || exit_with_error "Could not make swap directory."
-			mount -o subvol=@swap /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot/swap || exit_with_error "Could not mount subvolume @swap."
+			if [ "$swap_size" -ne 0 ]; then
+				mkdir -p "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not make swap directory."
+				mount -o subvol=@swap /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not mount subvolume @swap."
+			fi
 		else
 			mkfs.ext4 -E nodiscard -F -L "ROOT" /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" || exit_with_error "Could not make ext4 filesystem for ROOT partition."
+			if tune2fs -l /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)"; fi
+			if tune2fs -l /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" | grep 'Filesystem features' | grep -q -w metadata_csum_seed; then tune2fs -O ^metadata_csum_seed /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)"; fi
+			if tune2fs -l /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" | grep 'Filesystem features' | grep -q -w orphan_file; then tune2fs -O ^orphan_file /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)"; fi
 			mount /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount ROOT partition."
 		fi
 	else
@@ -7251,15 +7294,20 @@ else
 			mount "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount btrfs ROOT partition."
 			btrfs subvolume create "$linuxloopsdir"/chroot/@ || exit_with_error "Could not create subvolume @."
 			btrfs subvolume create "$linuxloopsdir"/chroot/@home || exit_with_error "Could not create subvolume @home."
-			btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."
+			if [ "$swap_size" -ne 0 ]; then btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."; fi
 			umount "$linuxloopsdir"/chroot || exit_with_error "Could not unmount btrfs ROOT partition."
 			mount -o subvol=@,compress=zstd "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount subvolume @."
 			mkdir -p "$linuxloopsdir"/chroot/home || exit_with_error "Could not make home directory."
 			mount -o subvol=@home,compress=zstd "$partition_path"3 "$linuxloopsdir"/chroot/home || exit_with_error "Could not mount subvolume @home."
-			mkdir -p "$linuxloopsdir"/chroot/swap || exit_with_error "Could not make swap directory."
-			mount -o subvol=@swap "$partition_path"3 "$linuxloopsdir"/chroot/swap || exit_with_error "Could not mount subvolume @swap."
+			if [ "$swap_size" -ne 0 ]; then
+				mkdir -p "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not make swap directory."
+				mount -o subvol=@swap "$partition_path"3 "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not mount subvolume @swap."
+			fi
 		else
 			mkfs.ext4 -E nodiscard -F -L "ROOT" "$partition_path"3 || exit_with_error "Could not make ext4 filesystem for ROOT partition."
+			if tune2fs -l "$partition_path"3 | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "$partition_path"3; fi
+			if tune2fs -l "$partition_path"3 | grep 'Filesystem features' | grep -q -w metadata_csum_seed; then tune2fs -O ^metadata_csum_seed "$partition_path"3; fi
+			if tune2fs -l "$partition_path"3 | grep 'Filesystem features' | grep -q -w orphan_file; then tune2fs -O ^orphan_file "$partition_path"3; fi		
 			mount "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount ROOT partition."
 		fi
 	fi
@@ -7268,12 +7316,12 @@ else
 	if [ "$install_status" -eq 0 ]; then
 		if [ "$swap_size" -ne 0 ]; then
 			echo "Please wait while the swap file is being generated..."
-			mkdir -p "$linuxloopsdir"/chroot/swap
-			truncate -s 0 "$linuxloopsdir"/chroot/swap/swapfile
-			if [ "$fstype" == "btrfs" ]; then chattr +C "$linuxloopsdir"/chroot/swap/swapfile; fi
-			fallocate -l "$swap_size"G "$linuxloopsdir"/chroot/swap/swapfile
-			chmod 0600 "$linuxloopsdir"/chroot/swap/swapfile
-			mkswap "$linuxloopsdir"/chroot/swap/swapfile
+			mkdir -p "$linuxloopsdir"/chroot/var/swap
+			truncate -s 0 "$linuxloopsdir"/chroot/var/swap/swapfile
+			if [ "$fstype" == "btrfs" ]; then chattr +C "$linuxloopsdir"/chroot/var/swap/swapfile; fi
+			fallocate -l "$swap_size"G "$linuxloopsdir"/chroot/var/swap/swapfile
+			chmod 0600 "$linuxloopsdir"/chroot/var/swap/swapfile
+			mkswap "$linuxloopsdir"/chroot/var/swap/swapfile
 		fi
 		if [ "$install_type" == "disk" ] && [ -f /sys/block/$(echo $destination | sed 's@/dev/@@g')/removable ] && [ "$(cat /sys/block/$(echo $destination | sed 's@/dev/@@g')/removable)" -eq 0 ] && [ ! -z $(command -v efibootmgr) ]; then
 			echo "Creating EFI boot manager entry..."
@@ -7282,7 +7330,7 @@ else
 	fi
 fi
 if [ "$install_type" == "image" ] && [ -f "$linuxloopsdir"/chroot/etc/secureboot_key/MOK.der ]; then cp "$linuxloopsdir"/chroot/etc/secureboot_key/MOK.der "$fullpath".der; chown $SUDO_UID:$SUDO_UID "$fullpath".der; fi
-if mountpoint -q "$linuxloopsdir"/chroot/swap; then umount "$linuxloopsdir"/chroot/swap; fi
+if mountpoint -q "$linuxloopsdir"/chroot/var/swap; then umount "$linuxloopsdir"/chroot/var/swap; fi
 if mountpoint -q "$linuxloopsdir"/chroot/home; then umount "$linuxloopsdir"/chroot/home; fi
 if mountpoint -q "$linuxloopsdir"/chroot; then umount "$linuxloopsdir"/chroot; fi
 if [ "$encryption" == "Yes" ]; then cryptsetup luksClose luks-"$(blkid -s UUID -o value "$partition_path"3)"; fi
