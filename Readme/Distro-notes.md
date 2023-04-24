@@ -12,6 +12,8 @@
 
 ## almalinux
 
+On the first boot after install, almalinux will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and almalinux should boot normally on the second boot.
+
 ### Specific note for almalinux installation in a disk image with secure boot enabled
 
 Disk images use the actual almalinux secure boot key. When the almalinux secure boot key changes which should be very rare, you will need to disable secure boot temporarily and enroll the new key with mokutil by running:
@@ -44,6 +46,8 @@ The full-devmode target allows to enable developer mode by default.
 
 
 ## fedora
+
+On the first boot after install, fedora will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and fedora should boot normally on the second boot.
 
 If you install the nvidia proprietary driver, the first boot after each kernel update will be long as the nvidia kernel modules are being rebuilt.
 
@@ -99,6 +103,8 @@ parrot does not have secure boot support in full disk install.
 
 ## rockylinux
 
+On the first boot after install, rockylinux will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and fedora should boot normally on the second boot.
+
 ### Specific note for rockylinux installation in a disk image with secure boot enabled
 
 Disk images use the actual rockylinux secure boot key. When the rockylinux secure boot key changes which should be very rare, you will need to disable secure boot temporarily and enroll the new key with mokutil by running:
@@ -111,7 +117,7 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## steamos-like
 
-steamos-like is not a real distro, it is just a 100% standard archlinux install with a few specific configuration files (no binaries) allowing to launch a SteamOS Gamescope session. However, as it is intended for PC, it has been set to boot by default in Plasma for standard use and allows you to launch a Gamescope session through a desktop shortcut.
+steamos-like is not a real distro, it is just a 100% standard archlinux with a few specific configuration files (no binaries) allowing to launch a SteamOS Gamescope session. However, as it is intended for PC, it has been set to boot by default in Plasma for standard use and will allow you to launch a Gamescope session through a desktop shortcut.
 
 By design, this implementation of the gamescope session has some limitations similar to the ones on the Steamdeck: you can only have 1 user and auto-login through SDDM is mandatory.
 Nevertheless, as long as the above requirements are satisfied, it is 100% archlinux so you can install any native arch package and update them through pacman, the discover app...
