@@ -133,7 +133,7 @@ case "$1" in
 	distro_name="MX Linux"
 	;;
 	'nixos')
-	available_desktops="none cinnamon-full gnome-full kde-full lxqt-full mate-full pantheon-full xfce-full"
+	available_desktops="none budgie-full cinnamon-full deepin-full gnome-full kde-full lxqt-full mate-full pantheon-full xfce-full"
 	bootloader_id="nixos"
 	bootloader_name="grubx64.efi"
 	distro_name="NixOS"
@@ -213,9 +213,9 @@ done
 exit_with_error()
 {
 if [ ! -z "$zenity" ]; then
-	zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Installation failed. $1"
+	zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "$1\nInstallation failed."
 else
-	echo -e "Installation failed. $1"
+	echo -e "$1\nInstallation failed."
 fi
 exit 1
 }
@@ -852,14 +852,8 @@ boot.loader = {
 		extraGrubInstallArgs = [ "--modules=all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo" ];
 		fsIdentifier = "uuid";
 		useOSProber = false;
-		version = 2;
 	};
 };
-
-#users.users.$username = {
-#	isNormalUser = true;
-#	extraGroups = [ "wheel" "networkmanager" ];
-#};
 
 console.keyMap = "$CUSTOM_KEYMAP";
 i18n.defaultLocale = "$(echo "$CUSTOM_LOCALE" | cut -d' ' -f1)";
@@ -906,7 +900,7 @@ nixpkgs.config.allowUnfree = true;
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-system.stateVersion = "22.11"; # Did you read the comment?
+system.stateVersion = "23.05"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 if [ "$encryption" == "Yes" ]; then
@@ -1033,22 +1027,17 @@ copy_bin_and_libs "\${pkgs.util-linux}/bin/setsid"
 copy_bin_and_libs "\${pkgs.util-linux}/bin/swapon"
 '';
 
-system.activationScripts = {
-	"Sign kernel for SecureBoot" = {
-		text = ''
-			export PATH=\$PATH:\${pkgs.sbsigntool}/bin
-			if ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ ! -z "\$(command -v sbsign)" ] && [ ! -z "\$(command -v sbverify)" ]; then
-				for i in /boot/kernels/*-linux-*Image; do
-					if ! sbverify --list \$i | grep -q 'CN=Linuxloops Machine Owner Key'; then
-						sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \$i \$i
-					fi
-				done
+boot.loader.grub.extraInstallCommands = ''
+	if \${pkgs.coreutils}/bin/ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -x \${pkgs.sbsigntool}/bin/sbverify ]; then
+		for i in /boot/kernels/*-linux-*Image; do
+			if ! \${pkgs.sbsigntool}/bin/sbverify --list \$i | \${pkgs.gnugrep}/bin/grep -q 'CN=Linuxloops Machine Owner Key'; then
+				\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \$i \$i
 			fi
-			mkdir -p /boot/efi/EFI/nixos
-			cp /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/nixos/grubx64.efi
-		'';
-	};
-};
+		done
+	fi
+	\${pkgs.coreutils}/bin/mkdir -p /boot/efi/EFI/nixos
+	\${pkgs.coreutils}/bin/cp /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/nixos/grubx64.efi
+'';
 
 boot.initrd.preLVMCommands = ''
 $(cat "$linuxloopsdir"/chroot/installroot/tmp/install_initramfs)
@@ -1237,7 +1226,7 @@ else
 	openssl x509 -outform DER -in $2/etc/secureboot_key/MOK.crt -out $2/etc/secureboot_key/MOK.der
 	chmod 0640 $2/etc/secureboot_key/*
 	cp $2/etc/secureboot_key/MOK.der $2/boot/efi/
-	if [ "$distro" == "kali" ] || [ "$distro" == "nixos" ]; then
+	if [ "$distro" == "nixos" ]; then
 		exit 0
 	elif [ "$distro" == "debian" ] || [ "$distro" == "devuan" ] || [ "$distro" == "elementary" ] || [ "$distro" == "kali" ] || [ "$distro" == "kde-neon" ] || [ "$distro" == "mint" ] || [ "$distro" == "mint-lmde" ] || [ "$distro" == "mxlinux" ] || [ "$distro" == "parrot" ] || [ "$distro" == "pop" ] || [ "$distro" == "ubuntu" ] || [ "$distro" == "ubuntu-lts" ] || [ "$distro" == "zorin" ]; then
 		mkdir -p /var/lib/shim-signed/mok
@@ -1379,7 +1368,6 @@ if [ "$swap_size" -ne 0 ]; then
 	truncate -s 0 /var/swap/swapfile
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /
 	chcon -h system_u:object_r:swapfile_t:s0 /var/swap/swapfile
-	#chcon -t swapfile_t /var/swap/swapfile
 else
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /
 fi
@@ -1566,7 +1554,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -1850,7 +1838,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -2160,7 +2148,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -2802,7 +2790,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -3045,7 +3033,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -3154,7 +3142,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -3341,7 +3329,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -3506,7 +3494,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -3663,7 +3651,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -3910,7 +3898,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -4026,7 +4014,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -4266,7 +4254,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -4439,7 +4427,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -4584,7 +4572,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -4819,7 +4807,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -4830,30 +4818,6 @@ chroot_nixos()
 {
 return_value=0
 
-#mkdir -p "$linuxloopsdir"/chroot/installroot/mnt
-#mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
-#mount --make-slave "$linuxloopsdir"/chroot
-#mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
-#mount --make-private "$linuxloopsdir"/chroot/installroot/mnt
-#mount --bind "$linuxloopsdir"/chroot/home "$linuxloopsdir"/chroot/installroot/mnt/home
-#mount --make-private "$linuxloopsdir"/chroot/installroot/mnt/home
-#mount --bind "$linuxloopsdir"/chroot/var/swap "$linuxloopsdir"/chroot/installroot/mnt/var/swap
-#mount --make-private "$linuxloopsdir"/chroot/installroot/mnt/var/swap
-#mount --make-rslave "$linuxloopsdir"/chroot/installroot/mnt
-#mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot
-#mount --make-slave "$linuxloopsdir"/chroot
-#mount --bind "$linuxloopsdir"/chroot/installroot "$linuxloopsdir"/chroot/installroot
-#mount --make-slave "$linuxloopsdir"/chroot/installroot
-#if mountpoint -q "$linuxloopsdir"/chroot/home; then mount --bind "$linuxloopsdir"/chroot/home "$linuxloopsdir"/chroot/installroot/mnt/home; fi
-#if mountpoint -q "$linuxloopsdir"/chroot/var/swap; then mount --bind "$linuxloopsdir"/chroot/var/swap "$linuxloopsdir"/chroot/installroot/mnt/var/swap; fi
-
-#mount --rbind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
-#mount --make-private "$linuxloopsdir"/chroot/home
-#mount --bind "$linuxloopsdir"/chroot/home "$linuxloopsdir"/chroot/installroot/mnt/home
-#mount --make-private "$linuxloopsdir"/chroot/installroot/mnt/home
-#mount --make-private "$linuxloopsdir"/chroot/var/swap
-#mount --bind "$linuxloopsdir"/chroot/var/swap "$linuxloopsdir"/chroot/installroot/mnt/var/swap
-#mount --make-private "$linuxloopsdir"/chroot/installroot/mnt/var/swap
 mkdir -p "$linuxloopsdir"/chroot/installroot/mnt
 mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot
 mount --make-slave "$linuxloopsdir"/chroot
@@ -4861,17 +4825,7 @@ mount --bind "$linuxloopsdir"/chroot/installroot "$linuxloopsdir"/chroot/install
 mount --make-slave "$linuxloopsdir"/chroot/installroot
 mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
 
-#mount --bind "$linuxloopsdir"/chroot/installroot "$linuxloopsdir"/chroot/installroot
-#mount --make-private "$linuxloopsdir"/chroot/installroot
-
 download_lxc_image archlinux current default /installroot
-
-#mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
-#mount --make-private "$linuxloopsdir"/chroot/installroot/mnt
-#mount --make-rshared "$linuxloopsdir"/chroot/installroot/mnt
-#if mountpoint -q "$linuxloopsdir"/chroot/home; then mount --bind "$linuxloopsdir"/chroot/home "$linuxloopsdir"/chroot/installroot/mnt/home; fi
-#if mountpoint -q "$linuxloopsdir"/chroot/var/swap; then mount --bind "$linuxloopsdir"/chroot/var/swap "$linuxloopsdir"/chroot/installroot/mnt/var/swap; fi
-#mount --make-rprivate "$linuxloopsdir"/chroot/installroot/mnt
 
 mount_chroot /installroot
 umount "$linuxloopsdir"/chroot/installroot/mnt/boot/efi
@@ -4901,12 +4855,12 @@ su -l temp -c bash << NIXOSINSTALL
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-22.11 nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-23.05 nixpkgs
 nix-channel --update
 nix-env -f '<nixpkgs>' -iA nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install --root /mnt
-NIXOSINSTALL
 /tmp/install_user
+NIXOSINSTALL
 /tmp/cleanup
 exit
 NIXOSINIT
@@ -4916,24 +4870,35 @@ cleanup_container /installroot
 set_locale_and_timezone /installroot
 
 cat >"$linuxloopsdir"/chroot/installroot/tmp/install_user <<NIXOSUSER
-#!/bin/bash
-set -e
-su -l temp -c bash << NIXOSINSTALL
 sudo nixos-enter << NIXOSCHROOT
+set -e
 useradd -m '$username'
 echo -e '$userpass\n$userpass' | passwd '$username'
 usermod -aG wheel,networkmanager '$username'
 NIXOSCHROOT
-NIXOSINSTALL
 NIXOSUSER
 chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/install_user
 
 case "$desktop" in
+	'budgie-full')
+	nixos_desktop="
+services.xserver.enable = true;
+services.xserver.displayManager.lightdm.enable = true;
+services.xserver.desktopManager.budgie.enable = true;
+"
+	;;
 	'cinnamon-full')
 	nixos_desktop="
 services.xserver.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.desktopManager.cinnamon.enable = true;
+"
+	;;
+	'deepin-full')
+	nixos_desktop="
+services.xserver.enable = true;
+services.xserver.displayManager.lightdm.enable = true;
+services.xserver.desktopManager.deepin.enable = true;
 "
 	;;
 	'gnome-full')
@@ -4999,7 +4964,7 @@ umount "$linuxloopsdir"/chroot/installroot/mnt/boot
 losetup -d "$efi_loop"
 losetup -d "$boot_loop"
 
-create_swap /installroot
+[ "$return_value" -eq 0 ] && create_swap /installroot
 
 umount_chroot /installroot
 
@@ -5254,7 +5219,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -5512,7 +5477,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -5628,7 +5593,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -5733,7 +5698,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -6411,7 +6376,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -6763,7 +6728,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -7025,7 +6990,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -7176,7 +7141,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -7298,7 +7263,7 @@ cleanup
 
 chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 
-create_swap
+[ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
 
@@ -7405,12 +7370,6 @@ else
 			if [ "$swap_size" -ne 0 ]; then btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."; fi
 			umount "$linuxloopsdir"/chroot || exit_with_error "Could not unmount btrfs ROOT partition."
 			mount -o subvol=@,compress=zstd /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot || exit_with_error "Could not mount subvolume @."
-			#mkdir -p "$linuxloopsdir"/chroot/home || exit_with_error "Could not make home directory."
-			#mount -o subvol=@home,compress=zstd /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot/home || exit_with_error "Could not mount subvolume @home."
-			#if [ "$swap_size" -ne 0 ]; then
-			#	mkdir -p "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not make swap directory."
-			#	mount -o subvol=@swap /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not mount subvolume @swap."
-			#fi
 		else
 			mkfs.ext4 -E nodiscard -F -L "ROOT" /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" || exit_with_error "Could not make ext4 filesystem for ROOT partition."
 			if tune2fs -l /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir /dev/mapper/luks-"$(blkid -s UUID -o value "$partition_path"3)"; fi
@@ -7427,12 +7386,6 @@ else
 			if [ "$swap_size" -ne 0 ]; then btrfs subvolume create "$linuxloopsdir"/chroot/@swap || exit_with_error "Could not create subvolume @swap."; fi
 			umount "$linuxloopsdir"/chroot || exit_with_error "Could not unmount btrfs ROOT partition."
 			mount -o subvol=@,compress=zstd "$partition_path"3 "$linuxloopsdir"/chroot || exit_with_error "Could not mount subvolume @."
-			#mkdir -p "$linuxloopsdir"/chroot/home || exit_with_error "Could not make home directory."
-			#mount -o subvol=@home,compress=zstd "$partition_path"3 "$linuxloopsdir"/chroot/home || exit_with_error "Could not mount subvolume @home."
-			#if [ "$swap_size" -ne 0 ]; then
-			#	mkdir -p "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not make swap directory."
-			#	mount -o subvol=@swap "$partition_path"3 "$linuxloopsdir"/chroot/var/swap || exit_with_error "Could not mount subvolume @swap."
-			#fi
 		else
 			mkfs.ext4 -E nodiscard -F -L "ROOT" "$partition_path"3 || exit_with_error "Could not make ext4 filesystem for ROOT partition."
 			if tune2fs -l "$partition_path"3 | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "$partition_path"3; fi
@@ -7444,15 +7397,6 @@ else
 	chroot_"$distro" || install_status=1
 	if [ "$live" == "Yes" ]; then live; fi
 	if [ "$install_status" -eq 0 ]; then
-		#if [ "$swap_size" -ne 0 ]; then
-		#	echo "Please wait while the swap file is being generated..."
-		#	mkdir -p "$linuxloopsdir"/chroot/var/swap
-		#	truncate -s 0 "$linuxloopsdir"/chroot/var/swap/swapfile
-		#	if [ "$fstype" == "btrfs" ]; then chattr +C "$linuxloopsdir"/chroot/var/swap/swapfile; fi
-		#	fallocate -l "$swap_size"G "$linuxloopsdir"/chroot/var/swap/swapfile
-		#	chmod 0600 "$linuxloopsdir"/chroot/var/swap/swapfile
-		#	mkswap "$linuxloopsdir"/chroot/var/swap/swapfile
-		#fi
 		if [ "$install_type" == "disk" ] && [ -f /sys/block/$(echo $destination | sed 's@/dev/@@g')/removable ] && [ "$(cat /sys/block/$(echo $destination | sed 's@/dev/@@g')/removable)" -eq 0 ] && [ ! -z $(command -v efibootmgr) ]; then
 			echo "Creating EFI boot manager entry..."
 			efibootmgr -c -d "$destination" -p 1 -L "$distro_name" -l "\efi\\"$bootloader_id"\\"$bootloader_name""
@@ -7460,8 +7404,6 @@ else
 	fi
 fi
 if [ "$install_type" == "image" ] && [ -f "$linuxloopsdir"/chroot/etc/secureboot_key/MOK.der ]; then cp "$linuxloopsdir"/chroot/etc/secureboot_key/MOK.der "$fullpath".der; chown $SUDO_UID:$SUDO_UID "$fullpath".der; fi
-#if mountpoint -q "$linuxloopsdir"/chroot/var/swap; then umount "$linuxloopsdir"/chroot/var/swap; fi
-#if mountpoint -q "$linuxloopsdir"/chroot/home; then umount "$linuxloopsdir"/chroot/home; fi
 if mountpoint -q "$linuxloopsdir"/chroot; then umount "$linuxloopsdir"/chroot; fi
 if [ "$encryption" == "Yes" ]; then cryptsetup luksClose luks-"$(blkid -s UUID -o value "$partition_path"3)"; fi
 if [ "$install_type" == "image" ]; then losetup -d "$destination_device"; fi

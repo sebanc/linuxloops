@@ -42,36 +42,36 @@ The minimum size for a LinuxLoops image has been defined as 14GB (with at least 
 
 ## Overview of supported distros and features
 
-|**Distro**|**Swap support**|**Encryption support**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Others**|
-|--------------|:--------------:|:--------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|--------------|
-|almalinux     |✓               |✓                     |✓                      |                                     |                                 |[almalinux notes][almalinux-notes]|
-|archlinux     |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[archlinux notes][archlinux-notes]|
-|artixlinux    |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |                                 |[artixlinux notes][artixlinux-notes]|
-|brunch        |                |✓ (distro specific)   |✓                      |                                     |✓ (partially included)           |[brunch notes][brunch-notes]|
-|chromeos-flex |                |✓ (distro specific)   |✓                      |                                     |                                 |[chromeos-flex notes][chromeos-flex-notes]|
-|debian        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|devuan        |✓               |✓                     |✓                      |✓                                    |                                 |              |
-|elementary    |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|fedora        |✓               |✓                     |✓                      |✓                                    |✓                                |[fedora notes][fedora-notes]|
-|gentoo-openrc |✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-openrc notes][gentoo-notes]|
-|gentoo-systemd|✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-systemd notes][gentoo-notes]|
-|kali          |✓               |✓                     |disk images only       |✓                                    |✓                                |[kali notes][kali-notes]|
-|kde_neon      |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|manjaro       |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[manjaro notes][manjaro-notes]|
-|mint          |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|mint-lmde     |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|mxlinux       |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|nixos         |✓               |✓                     |disk images only       |✓                                    |                                 |[nixos notes][nixos-notes]|
-|opensuse      |✓               |✓                     |✓                      |✓                                    |                                 |[opensuse notes][opensuse-notes]|
-|parrot        |✓               |✓                     |disk images only       |✓                                    |✓                                |[parrot notes][parrot-notes]|
-|pop_os        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|rockylinux    |✓               |✓                     |✓                      |                                     |                                 |[rockylinux notes][rockylinux-notes]|
-|steamos-like  |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[steamos-like notes][steamos-like-notes]|
-|tails         |                |✓ (distro specific)   |✓                      |                                     |                                 |[tails notes][tails-notes]|
-|ubuntu        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|ubuntu-lts    |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|voidlinux     |✓               |✓                     |                       |✓                                    |                                 |              |
-|zorin         |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|**Distro**|**Version**|**Swap support**|**Encryption support**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
+|--------------|:--------------:|:--------------:|:--------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|--------------|
+|almalinux     |9               |✓               |✓                     |✓                      |                                     |                                 |[almalinux notes][almalinux-notes]|
+|archlinux     |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[archlinux notes][archlinux-notes]|
+|artixlinux    |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |                                 |[artixlinux notes][artixlinux-notes]|
+|brunch        |latest stable   |                |✓ (distro specific)   |✓                      |                                     |✓ (partially included)           |[brunch notes][brunch-notes]|
+|chromeos-flex |latest stable   |                |✓ (distro specific)   |✓                      |                                     |                                 |[chromeos-flex notes][chromeos-flex-notes]|
+|debian        |bullseye        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|devuan        |chimaera        |✓               |✓                     |✓                      |✓                                    |                                 |              |
+|elementary    |7               |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|fedora        |38              |✓               |✓                     |✓                      |✓                                    |✓                                |[fedora notes][fedora-notes]|
+|gentoo-openrc |current         |✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-openrc notes][gentoo-notes]|
+|gentoo-systemd|current         |✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-systemd notes][gentoo-notes]|
+|kali          |current         |✓               |✓                     |disk images only       |✓                                    |✓                                |[kali notes][kali-notes]|
+|kde_neon      |current         |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|manjaro       |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[manjaro notes][manjaro-notes]|
+|mint          |vera            |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|mint-lmde     |elsie           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|mxlinux       |21              |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|nixos         |23.05           |✓               |✓                     |✓                      |✓                                    |                                 |[nixos notes][nixos-notes]|
+|opensuse      |tumbleweed      |✓               |✓                     |✓                      |✓                                    |                                 |[opensuse notes][opensuse-notes]|
+|parrot        |5               |✓               |✓                     |disk images only       |✓                                    |✓                                |[parrot notes][parrot-notes]|
+|pop_os        |22.04           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|rockylinux    |9               |✓               |✓                     |✓                      |                                     |                                 |[rockylinux notes][rockylinux-notes]|
+|steamos-like  |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[steamos-like notes][steamos-like-notes]|
+|tails         |latest          |                |✓ (distro specific)   |✓                      |                                     |                                 |[tails notes][tails-notes]|
+|ubuntu        |23.04           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|ubuntu-lts    |22.04           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|voidlinux     |current         |✓               |✓                     |                       |✓                                    |                                 |              |
+|zorin         |16              |✓               |✓                     |✓                      |✓                                    |✓                                |              |
 
 
 ## Encryption
