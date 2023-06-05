@@ -7327,7 +7327,9 @@ else
 	truncate -s 0 "$fullpath"
 	partition_format="$(df -T "$fullpath" | tail -1 | cut -d' ' -f2)"
 	echo "Creating image file on $partition_format partition."
-	if [ -z "$partition_format" ] || [ "$partition_format" == "ext4" ] || [ "$partition_format" == "fuseblk" ] || [ "$partition_format" == "ntfs" ]; then
+	if [ -z "$partition_format" ]; then
+		dd if=/dev/urandom of="$fullpath" bs=1M count=$install_sizeMB status=progress || exit_with_error "The image file could not be created."
+	elif [ "$partition_format" == "ext4" ] || [ "$partition_format" == "fuseblk" ] || [ "$partition_format" == "ntfs" ]; then
 		fallocate -l "$install_sizeMB"M "$fullpath" || exit_with_error "The image file could not be created."
 	elif [ "$partition_format" == "btrfs" ]; then
 		chattr +C "$fullpath"
