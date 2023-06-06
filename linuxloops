@@ -1092,6 +1092,7 @@ pacman -S --noconfirm linux-surface linux-surface-headers iptsd base-devel git f
 git clone https://aur.archlinux.org/libwacom-surface.git /tmp/libwacom-surface
 chown -R 'nobody':'nobody' /tmp/libwacom-surface
 su -s /bin/bash nobody -c "HOME=/tmp gpg --recv-keys 594ABBA066118C7A02D10A80A8AF906D9307FBAD"
+su -s /bin/bash nobody -c "HOME=/tmp gpg --recv-keys 3C2C43D9447D5938EF4551EBE23B7E70B467F0BF"
 su -s /bin/bash nobody -c "cd /tmp/libwacom-surface && HOME=/tmp makepkg -s"
 yes | pacman -U /tmp/libwacom-surface/*.pkg.tar.*
 git clone https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
