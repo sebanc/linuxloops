@@ -1067,7 +1067,6 @@ echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/
 apt update
 yes | DEBIAN_FRONTEND=noninteractive apt purge $1
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev v4l2loopback-dkms
-systemctl enable iptsd.service
 git clone https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
 meson build -Dpipelines=uvcvideo,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true
@@ -1090,7 +1089,6 @@ SURFACEREPO
 pacman -Syu
 pacman -R --noconfirm $1
 pacman -S --noconfirm linux-surface linux-surface-headers iptsd base-devel git fakeroot meson python-pytest python-libevdev python-pyudev libc++ gst-plugins-base-libs python-yaml python-ply python-jinja gstreamer qt5-tools libevent clang v4l2loopback-dkms
-systemctl enable iptsd.service
 git clone https://aur.archlinux.org/libwacom-surface.git /tmp/libwacom-surface
 chown -R 'nobody':'nobody' /tmp/libwacom-surface
 su -s /bin/bash nobody -c "HOME=/tmp gpg --recv-keys 594ABBA066118C7A02D10A80A8AF906D9307FBAD"
@@ -4047,10 +4045,13 @@ rm -rf /etc/pacman.d/gnupg
 pacman-key --init
 pacman-key --populate
 rm /usr/share/pacman/keyrings/manjaro*
+# Bugfix: Community repo is still used in Manjaro for now
+echo -e '\n[community]\nInclude = /etc/pacman.d/mirrorlist' >> /etc/pacman.conf
 pacman -Syy
 pacman -Rdd --noconfirm systemd
-pacman -Qnq | pacman -S --noconfirm - manjaro-system pacman-mirrors systemd
-curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman.conf
+pacman -Qnq | pacman -S --noconfirm - systemd manjaro-system pacman-mirrors
+if [ -f /etc/pacman.conf.pacnew ]; then cp /etc/pacman.conf.pacnew /etc/pacman.conf; rm /etc/pacman.conf.pacnew; fi
+#curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman.conf
 pacman-key --init
 pacman-key --populate
 pacman -Syy
@@ -4134,13 +4135,13 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	;;
 	'gnome')
 	install_desktop="
-pacman -S --noconfirm $desktop_base gdm-plymouth gnome-shell gnome-control-center gnome-keyring gnome-software gnome-backgrounds gnome-terminal nautilus manjaro-gnome-settings
+pacman -S --noconfirm $desktop_base gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-backgrounds gnome-terminal nautilus manjaro-gnome-settings
 systemctl enable gdm.service
 "
 	;;
 	'gnome-full')
 	install_desktop="
-pacman -S --noconfirm $desktop_base gdm-plymouth gnome gnome-extra manjaro-gnome-settings
+pacman -S --noconfirm $desktop_base gdm gnome gnome-extra manjaro-gnome-settings
 systemctl enable gdm.service
 "
 	;;
@@ -4231,7 +4232,7 @@ chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
 install_secureboot
 if [ ! -z "$nvidia" ] && [ "$nvidia" == "Yes" ]; then install_nvidia; fi
-if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface "linux515 linux515-headers"; fi
+if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface "linux61 linux61-headers"; fi
 
 if [ ! -z "$CUSTOM_PACKAGES" ]; then
 	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm $CUSTOM_PACKAGES" > "$linuxloopsdir"/chroot/tmp/install_custom_packages
