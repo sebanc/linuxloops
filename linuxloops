@@ -1864,19 +1864,19 @@ pacman-key --populate
 pacman -Syu --noconfirm ca-certificates openssl
 rm -rf /var/cache/pacman/pkg/*
 rm /etc/pacman.conf /etc/pacman.d/mirrorlist
-curl https://gitea.artixlinux.org/packagesP/pacman/raw/branch/master/trunk/pacman.conf -o /etc/pacman.conf
-curl https://gitea.artixlinux.org/packagesA/artix-mirrorlist/raw/branch/master/trunk/mirrorlist -o /etc/pacman.d/mirrorlist
+curl https://gitea.artixlinux.org/packages/pacman/raw/branch/master/trunk/pacman.conf -o /etc/pacman.conf
+curl https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/trunk/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
 sed -i 's@#RemoteFileSigLevel = Required@RemoteFileSigLevel = Optional@g' /etc/pacman.conf
 pacman -Sy --noconfirm artix-keyring
 pacman-key --populate artix
 pacman -Scc --noconfirm && pacman -Syy
 rm -f /etc/pacman.conf
-curl https://gitea.artixlinux.org/packagesP/pacman/raw/branch/master/trunk/pacman.conf -o /etc/pacman.conf
+curl https://gitea.artixlinux.org/packages/pacman/raw/branch/master/trunk/pacman.conf -o /etc/pacman.conf
 echo -e '\n[universe]\nServer = https://universe.artixlinux.org/$arch\nServer = https://mirror1.artixlinux.org/universe/$arch\nServer = https://mirror.pascalpuffke.de/artix-universe/$arch\nServer = https://artixlinux.qontinuum.space/artixlinux/universe/os/$arch\nServer = https://mirror1.cl.netactuate.com/artix/universe/$arch\nServer = https://ftp.crifo.org/artix-universe/$arch' >> /etc/pacman.conf
 pacman -Rdd --noconfirm systemd systemd-libs systemd-sysvcompat pacman-mirrorlist dbus pam pambase
 rm -f /etc/arch-release
-curl https://gitea.artixlinux.org/packagesA/artix-mirrorlist/raw/branch/master/trunk/mirrorlist -o /etc/pacman.d/mirrorlist
+curl https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/trunk/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i '/https:\/\/mirrors.dotsrc.org/d' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm elogind-runit
 pacman -Qnq | pacman -S --noconfirm -
@@ -2231,9 +2231,6 @@ for (( i=1; i<=12; i++ )); do
 			umount /isomount/tmp
 			continue
 		;;
-		9|10|11)
-			continue
-		;;
 		12)
 			mount /isomount/data/brunch/efi_secure.img /isomount/tmp
 			mkfs.fat -n 'EFI' "$partition_path""\$i"
@@ -2241,6 +2238,9 @@ for (( i=1; i<=12; i++ )); do
 			cp -r /isomount/tmp/* /isomount/efi/
 			umount /isomount/efi
 			umount /isomount/tmp
+			continue
+		;;
+		6|9|10|11)
 			continue
 		;;
 		*)
@@ -2556,7 +2556,7 @@ chroot_debian()
 {
 return_value=0
 
-download_lxc_image debian bullseye default
+download_lxc_image debian bookworm default
 
 mount_chroot
 
@@ -2569,7 +2569,7 @@ export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib6
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install ca-certificates openssl
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-sed -i 's@ main@ main contrib non-free@g' /etc/apt/sources.list
+sed -i 's@ main@ main contrib non-free non-free-firmware@g' /etc/apt/sources.list
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall $(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g')
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
@@ -2596,7 +2596,6 @@ if [ -f /tmp/install_custom_script ]; then /tmp/install_custom_script; fi
 /tmp/install_efi
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt autoremove
-rm -f /etc/resolv.conf
 /tmp/cleanup
 exit
 DEBIANINIT
@@ -2614,7 +2613,7 @@ usermod -aG sudo '$username'
 DEBIANUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pipewire-audio system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
@@ -2646,7 +2645,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	;;
 	'gnome')
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme libpam-gnome-keyring gnome-packagekit
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'gnome-full')
@@ -2900,7 +2899,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	;;
 	'gnome')
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme libpam-gnome-keyring gnome-packagekit
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'gnome-full')
@@ -7418,7 +7417,7 @@ return $install_status
 grub_config()
 {
 if [ ! -z "$wsl" ]; then
-	img_uuid=$(su $(getent passwd $SUDO_UID | cut -d: -f1) -c "PATH=$PATH:/mnt/c/Windows/System32 mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1")
+	img_uuid=$(sudo -u $SUDO_USER /mnt/c/Windows/System32/mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1)
 else
 	img_uuid=$(blkid -s PARTUUID -o value "$(df "$fullpath" --output=source | sed 1d)")
 fi
@@ -7815,7 +7814,7 @@ if [ -z $(command -v losetup) ]; then echo "\"losetup\" program needs to be inst
 if [ -z $(command -v tar) ]; then echo "\"tar\" program needs to be installed first."; exit 1; fi
 if [ -z $(command -v xz) ]; then echo "\"xz\" program needs to be installed first."; exit 1; fi
 if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; exit 1; fi
-if [ -z $(command -v efibootmgr) ]; then echo "Warning: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created."; fi
+if [ -z "$wsl" ] && [ -z $(command -v efibootmgr) ]; then echo "Warning: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created."; fi
 }
 
 if [ -z "$CUSTOM_LOCALE" ]; then CUSTOM_LOCALE="en_US.UTF-8 UTF-8"; fi
@@ -7830,7 +7829,7 @@ if [ $# -eq 0 ]; then
 	if ! curl --output /dev/null --silent --head --fail --doh-url https://1.1.1.1/dns-query?name=cloudflare.com https://uk.lxd.images.canonical.com; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Linuxloops cannot connect to the lxc server, please make sure you have internet connectivity."; exit 1; fi
 	if [ -z $(command -v cryptsetup) ]; then warning="${warning}WARNING: \"cryptsetup\" binary not found, encryption will not be available.\n\n"; fi
 	if [ -z $(command -v btrfs) ] || [ -z $(command -v mkfs.btrfs) ]; then warning="${warning}WARNING: \"btrfs\" binary not found, btrfs filesystem will not be supported.\n\n"; fi
-	if [ -z $(command -v efibootmgr) ]; then warning="${warning}WARNING: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created.\n\n"; fi
+	if [ -z "$wsl" ] && [ -z $(command -v efibootmgr) ]; then warning="${warning}WARNING: \"efibootmgr\" not found, if you are installing a distro on a hdd the efi boot entries will not be automatically created.\n\n"; fi
 	if ! sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer.\n\n$warning" --ok-label="Next"; then exit 0; fi
 	distro=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which Linux distribution do you want to install ?" --column "Distribution" $available_distros)
 	if [ -z "$distro" ]; then exit 0; fi

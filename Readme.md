@@ -49,7 +49,7 @@ The minimum size for a LinuxLoops image has been defined as 14GB (with at least 
 |artixlinux    |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |                                 |[artixlinux notes][artixlinux-notes]|
 |brunch        |latest stable   |                |✓ (distro specific)   |✓                      |                                     |✓ (partially included)           |[brunch notes][brunch-notes]|
 |chromeos-flex |latest stable   |                |✓ (distro specific)   |✓                      |                                     |                                 |[chromeos-flex notes][chromeos-flex-notes]|
-|debian        |bullseye        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|debian        |bookworm        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
 |devuan        |chimaera        |✓               |✓                     |✓                      |✓                                    |                                 |              |
 |elementary    |7               |✓               |✓                     |✓                      |✓                                    |✓                                |              |
 |fedora        |38              |✓               |✓                     |✓                      |✓                                    |✓                                |[fedora notes][fedora-notes]|
