@@ -101,6 +101,11 @@ Reboot, enroll the key in shim and re-enable secureboot.
 parrot does not have secure boot support in full disk install.
 
 
+## qubes
+
+On the first boot you will be prompted to configure qubes, if you experience a crash after the first boot with the default qubes settings you should disable usb qubes in the configuration menu.
+
+
 ## rockylinux
 
 On the first boot after install, rockylinux will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and fedora should boot normally on the second boot.

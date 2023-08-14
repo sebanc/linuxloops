@@ -19,10 +19,10 @@ Usage: sudo bash linuxloops -distro <distribution name> [-env <desktop environme
 USAGE
 }
 
-available_distros="almalinux archlinux artixlinux brunch chromeos-flex debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux nixos opensuse parrot pop rockylinux steamos-like tails ubuntu ubuntu-lts voidlinux zorin"
-btrfs_supported="archlinux artixlinux debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux nixos opensuse parrot pop steamos-like ubuntu ubuntu-lts voidlinux zorin"
-nvidia_supported="archlinux artixlinux debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux nixos opensuse parrot pop steamos-like ubuntu ubuntu-lts voidlinux zorin"
-surface_supported="archlinux debian elementary fedora kali kde-neon manjaro mint mint-lmde mxlinux parrot pop steamos-like ubuntu ubuntu-lts zorin"
+available_distros="almalinux archlinux artixlinux brunch chromeos-flex debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux-sysvinit mxlinux-systemd nixos opensuse parrot pop proxmox qubes rockylinux steamos-like tails ubuntu ubuntu-lts voidlinux zorin"
+btrfs_supported="archlinux artixlinux debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux-sysvinit mxlinux-systemd nixos opensuse parrot pop proxmox qubes steamos-like ubuntu ubuntu-lts voidlinux zorin"
+nvidia_supported="archlinux artixlinux debian devuan elementary fedora gentoo-openrc gentoo-systemd kali kde-neon manjaro mint mint-lmde mxlinux-sysvinit mxlinux-systemd nixos opensuse parrot pop proxmox steamos-like ubuntu ubuntu-lts voidlinux zorin"
+surface_supported="archlinux debian elementary fedora kali kde-neon manjaro mint mint-lmde mxlinux-sysvinit mxlinux-systemd parrot pop proxmox steamos-like ubuntu ubuntu-lts zorin"
 list_desktops()
 {
 case "$1" in
@@ -45,7 +45,7 @@ case "$1" in
 	distro_name="Artix"
 	;;
 	'brunch')
-	available_desktops="stable-rammus stable-volteer stable-zork unstable-rammus unstable-volteer unstable-zork"
+	available_desktops="stable-shyvana stable-jinlon stable-voxel stable-gumboz unstable-shyvana unstable-jinlon unstable-voxel unstable-gumboz"
 	bootloader_id="boot"
 	bootloader_name="bootx64.efi"
 	distro_name="Brunch"
@@ -126,7 +126,13 @@ case "$1" in
 	distro_name="Linux Mint Debian Edition"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
 	;;
-	'mxlinux')
+	'mxlinux-sysvinit')
+	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
+	bootloader_id="debian"
+	bootloader_name="shimx64.efi"
+	distro_name="MX Linux"
+	;;
+	'mxlinux-systemd')
 	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
@@ -155,6 +161,18 @@ case "$1" in
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	distro_name="Pop!_OS"
+	;;
+	'proxmox')
+	available_desktops="none budgie cinnamon cinnamon-full enlightenment gnome gnome-full kde kde-full lxde lxde-full lxqt lxqt-full mate mate-full xfce xfce-full"
+	bootloader_id="debian"
+	bootloader_name="shimx64.efi"
+	distro_name="Proxmox VE"
+	;;
+	'qubes')
+	available_desktops="full"
+	bootloader_id="qubes"
+	bootloader_name="shimx64.efi"
+	distro_name="Qubes"
 	;;
 	'rockylinux')
 	available_desktops="none full"
@@ -474,6 +492,7 @@ if [ -f /linuxloops_root/"$img_path" ]; then
 	modprobe loop || { echo "linuxloops: Loop module is not available." > /dev/kmsg; recovery_shell; }
 	if [ ! -b /dev/loop0 ]; then mknod -m 660 /dev/loop0 b 7 0 || { echo "linuxloops: The loop device could not be created." > /dev/kmsg; recovery_shell; }; fi
 	losetup --direct-io=off -P /dev/loop0 /linuxloops_root"$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
+	#losetup -P /dev/loop0 /linuxloops_root"$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
 else
 	echo "linuxloops: The rootfs image file was not found, it might be due to an incorrect GRUB config or unsupported configuration." > /dev/kmsg
 	recovery_shell
@@ -597,6 +616,10 @@ build() {
 
 	cp "/usr/lib/linuxloops/linuxloops" "\$BUILDROOT/linuxloops"
 
+	for i in \$(find /usr/lib/udev/rules.d/*-linuxloops.rules 2>/dev/null); do
+		cp "\$i" "\$BUILDROOT\$i"
+	done
+
 	if ls /boot/vmlinuz-* >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ ! -z "\$(command -v sbsign)" ] && [ ! -z "\$(command -v sbverify)" ]; then
 		for i in /boot/vmlinuz-*; do
 			if ! sbverify --list \$i | grep -q 'CN=Linuxloops Machine Owner Key'; then
@@ -703,6 +726,10 @@ esac
 
 	cp "/usr/lib/linuxloops/linuxloops" "\$DESTDIR/linuxloops"
 
+	for i in \$(find /usr/lib/udev/rules.d/*-linuxloops.rules 2>/dev/null); do
+		cp "\$i" "\$DESTDIR\$i"
+	done
+
 	if ls /boot/vmlinuz-* >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ ! -z "\$(command -v sbsign)" ] && [ ! -z "\$(command -v sbverify)" ]; then
 		for i in /boot/vmlinuz-*; do
 			if ! sbverify --list \$i | grep -q 'CN=Linuxloops Machine Owner Key'; then
@@ -792,6 +819,10 @@ install() {
 	inst "\$(command -v swapon)" "/usr/sbin/swapon"
 
 	cp "/usr/lib/linuxloops/linuxloops" "\${initdir}/linuxloops"
+	
+	for i in \$(find /usr/lib/udev/rules.d/*-linuxloops.rules 2>/dev/null); do
+		cp "\$i" "\${initdir}\$i"
+	done
 
 	if ls /boot/vmlinuz-* >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ ! -z "\$(command -v sbsign)" ] && [ ! -z "\$(command -v sbverify)" ]; then
 		for i in /boot/vmlinuz-*; do
@@ -1259,18 +1290,20 @@ cat >/etc/default/grub <<GRUBDEFAULTS
 GRUB_DISTRIBUTOR="$distro_name"
 GRUB_CMDLINE_LINUX="$bootargs"
 GRUB_CMDLINE_LINUX_DEFAULT="quiet splash $cmdline_extra"
+GRUB_CMDLINE_XEN=""
+GRUB_CMDLINE_XEN_DEFAULT="$xen_cmdline_extra"
 GRUB_TIMEOUT_STYLE=menu
 GRUB_TIMEOUT=5
+GRUB_THEME=$grub_theme
 GRUB_DISABLE_OS_PROBER=true
 GRUB_ENABLE_BLSCFG=false
-GRUB_THEME=$grub_theme
 GRUBDEFAULTS
 if [ -d "/etc/default/grub.d" ]; then for cfgfile in /etc/default/grub.d/*.cfg; do echo '' > \$cfgfile; done; fi
 if [ -f /etc/grub.d/05_debian_theme ]; then chmod 0644 /etc/grub.d/05_debian_theme; fi
 if [ "$install_type" == "image" ] && [ -f /etc/grub.d/30_uefi-firmware ]; then chmod 0644 /etc/grub.d/30_uefi-firmware; fi
 if [ -d /boot/grub2 ]; then
 	grub2-mkconfig -o /boot/grub2/grub.cfg
-	if [ "$distro" == "almalinux" ] || [ "$distro" == "rockylinux" ]; then exit 0; fi
+	if [ "$distro" == "almalinux" ] || [ "$distro" == "qubes" ] || [ "$distro" == "rockylinux" ]; then exit 0; fi
 	if [ "$distro" == "opensuse" ]; then
 		shim-install --no-nvram --bootloader-id=$bootloader_id
 		exit 0
@@ -1279,10 +1312,10 @@ else
 	if [ ! -z \$(command -v debconf-set-selections) ]; then
 		echo "grub-efi-amd64 grub2/update_nvram boolean false" | debconf-set-selections
 		echo "grub-efi-amd64 grub-efi/install_devices multiselect /dev/disk/by-uuid/$(blkid -s UUID -o value "$partition_path"1)" | debconf-set-selections
-		dpkg-divert --local --rename --add /usr/sbin/grub-install
+		if [ "$distro" != "proxmox" ]; then dpkg-divert --divert /usr/sbin/grub-install.real --rename /usr/sbin/grub-install; fi
 		cat >/usr/sbin/grub-install <<'GRUBINSTALL'
 #!/bin/sh
-grub-install.distrib "\$@" --bootloader-id=$bootloader_id
+grub-install.real "\$@" --bootloader-id=$bootloader_id
 if [ -f /boot/efi/EFI/$bootloader_id/mmx64.efi ] && [ ! -f /boot/efi/EFI/BOOT/mmx64.efi ]; then cp /boot/efi/EFI/$bootloader_id/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi; fi
 GRUBINSTALL
 		chmod 0755 /usr/sbin/grub-install
@@ -1392,7 +1425,7 @@ echo -e "nameserver 1.1.1.1\nnameserver 9.9.9.9" > /etc/resolv.conf
 mkdir -p /etc/network
 echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces
 echo "$hostname" > /etc/hostname
-echo -e "127.0.0.1 localhost\n127.0.1.1 \$(cat /etc/hostname)\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
+echo -e "127.0.0.1 localhost\n127.0.1.1 $hostname\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
 mkdir -p /etc/modprobe.d
 echo 'blacklist pcspkr' > /etc/modprobe.d/pcspkr.conf
 CLEANCONTAINER
@@ -2191,6 +2224,12 @@ cleanup_container /installroot
 cat >"$linuxloopsdir"/chroot/installroot/tmp/install <<BRUNCHINSTALL
 #!/bin/bash
 set -e
+case "$(echo $desktop | cut -d'-' -f2)" in
+	'shyvana') board="rammus" ;;
+	'jinlon') board="hatch" ;;
+	'voxel') board="volteer" ;;
+	'gumboz') board="zork" ;;
+esac
 mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "$partition_path"1
 mount "$partition_path"1 /isomount/data
@@ -2202,7 +2241,7 @@ fi
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch || { echo -e "Failed to extract Brunch archive."; return 1; }
 rm /isomount/data/brunch.tar.gz
-curl -L \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$(echo $desktop | cut -d'-' -f2)" | sort -n | tail -1) -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; return 1; }
+curl -L \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; return 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root || { echo -e "Failed to extract the recovery image."; return 1; }
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
@@ -4093,9 +4132,9 @@ POLKIT
 MANJAROUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters nss-mdns pulseaudio system-config-printer xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
+basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k"
 specific_packages="manjaro-wallpapers-18.0 manjaro-settings-manager matcha-gtk-theme plymouth-theme-manjaro"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-daemon.service avahi-dnsconfd.service cups.service cups-browsed.service"
@@ -4282,7 +4321,7 @@ echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debc
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 rm -f /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/official-package-repositories.list <<'REPOS'
-deb http://packages.linuxmint.com vera main upstream import backport #id:linuxmint_main
+deb http://packages.linuxmint.com victoria main upstream import backport #id:linuxmint_main
 
 deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
 deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
@@ -4347,7 +4386,7 @@ usermod -aG sudo '$username'
 MINTUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-vera plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
@@ -4356,14 +4395,14 @@ case "$desktop" in
 	'cinnamon')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-terminal nemo
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-terminal nemo gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'cinnamon-full')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-terminal nemo
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-terminal nemo gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'mate')
@@ -4527,14 +4566,14 @@ case "$desktop" in
 	'cinnamon')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'cinnamon-full')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo gnome-keyring libpam-gnome-keyring
 "
 	;;
 esac
@@ -4580,11 +4619,246 @@ umount_chroot
 return $return_value
 }
 
-chroot_mxlinux()
+chroot_mxlinux-sysvinit()
 {
 return_value=0
 
-download_lxc_image debian bullseye default
+download_lxc_image debian bookworm default
+
+mount_chroot
+
+cat >"$linuxloopsdir"/chroot/tmp/init <<'MXLINUXINIT'
+#!/bin/bash
+set -e
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
+/tmp/cleanup_container
+yes | DEBIAN_FRONTEND=noninteractive apt update
+yes | DEBIAN_FRONTEND=noninteractive apt install ca-certificates openssl
+echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
+sed -i 's@ main@ main contrib non-free non-free-firmware@g' /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/mx.list <<'SOURCES'
+deb http://mxrepo.com/mx/repo/ bookworm main non-free
+#deb http://mxrepo.com/mx/repo/ bookworm ahs
+SOURCES
+echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt update --allow-insecure-repositories
+yes | DEBIAN_FRONTEND=noninteractive apt install mx23-archive-keyring --allow-unauthenticated
+yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall $(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g')
+yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
+echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
+yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod sysvinit-core
+yes | DEBIAN_FRONTEND=noninteractive apt update
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager network-manager-sysvinit-compat wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode sbsigntool mokutil dosfstools btrfs-progs zenity
+echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
+echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
+chmod 0755 /etc/dkms/sign_helper.sh
+/tmp/set_locale_and_timezone
+/tmp/install_desktop
+sed -i 's@id:2:initdefault:@id:5:initdefault:@g' /etc/inittab
+/tmp/install_user
+/tmp/install_secureboot
+if [ -f /tmp/install_nvidia ]; then /tmp/install_nvidia; fi
+if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
+if [ -f /tmp/install_custom_packages ]; then /tmp/install_custom_packages; fi
+if [ -f /tmp/install_custom_script ]; then /tmp/install_custom_script; fi
+/tmp/generate_fstab
+/tmp/install_initramfs
+/tmp/install_efi
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt autoremove
+/tmp/cleanup
+exit
+MXLINUXINIT
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
+
+cleanup_container
+set_locale_and_timezone
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<MXLINUXUSER
+#!/bin/bash
+set -e
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG audio,sudo '$username'
+MXLINUXUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx wireplumber system-config-printer xserver-xorg"
+basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="desktop-base synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
+desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
+case "$desktop" in
+	'budgie')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter budgie-desktop arc-theme nautilus tilix
+"
+	;;
+	'cinnamon')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter cinnamon gnome-terminal nemo blueman
+"
+	;;
+	'cinnamon-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter task-cinnamon-desktop blueman
+"
+	;;
+	'enlightenment')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter enlightenment terminology
+yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install connman
+find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
+"
+	;;
+	'gnome')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring
+"
+	;;
+	'gnome-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 task-gnome-desktop
+"
+	;;
+	'kde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base sddm sddm-theme-breeze kde-plasma-desktop kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings plasma-look-and-feel-theme-mx plasma-modified-defaults-mx desktop-defaults-mx-kde
+"
+	;;
+	'kde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base sddm sddm-theme-breeze task-kde-desktop plasma-look-and-feel-theme-mx plasma-modified-defaults-mx desktop-defaults-mx-kde
+"
+	;;
+	'lxde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome lxappearance lxinput blueman
+"
+	;;
+	'lxde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter task-lxde-desktop network-manager-gnome blueman
+"
+	;;
+	'lxqt')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian lxde-icon-theme network-manager-gnome mutter lxqt-powermanagement lxqt-themes oxygen-icon-theme blueman
+"
+	;;
+	'lxqt-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter task-lxqt-desktop network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt purge sddm
+"
+	;;
+	'mate')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome blueman mate-media mate-power-manager
+"
+	;;
+	'mate-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter task-mate-desktop blueman
+"
+	;;
+	'xfce')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd xfce4-whiskermenu-plugin network-manager-gnome blueman desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin
+"
+	;;
+	'xfce-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm lightdm-modified-init slick-greeter task-xfce-desktop network-manager-gnome blueman desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin
+"
+	;;
+esac
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<MXLINUXDESKTOP
+#!/bin/bash
+set -e
+if [ "$desktop" == "none" ]; then exit 0; fi
+$install_desktop
+mkdir -p /usr/share/glib-2.0/schemas
+cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
+[org.gnome.desktop.background:Budgie]
+picture-uri="file:///usr/share/backgrounds/honesty-muted.jpg"
+[org.gnome.desktop.interface:Budgie]
+gtk-theme="Arc"
+icon-theme="Papirus"
+[org.cinnamon.desktop.background]
+picture-uri="file:///usr/share/backgrounds/honesty-muted.jpg"
+[org.cinnamon.desktop.interface]
+gtk-theme="Materia"
+icon-theme="Papirus"
+[org.cinnamon.desktop.wm.preferences]
+theme="Materia"
+DCONF
+if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
+mkdir -p /etc/xdg/autostart
+cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
+[Desktop Entry]
+Type=Application
+Name=Nemo
+Comment=Start Nemo desktop at log in
+Exec=nemo-desktop
+OnlyShowIn=Budgie;
+AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
+X-GNOME-AutoRestart=true
+NoDisplay=true
+NEMODESKTOP
+mkdir -p /etc/lightdm/lightdm.conf.d
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+echo -e '[Greeter]\nbackground = /usr/share/backgrounds/THE_Dark_Metal.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+MXLINUXDESKTOP
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
+
+install_secureboot
+if [ ! -z "$nvidia" ] && [ "$nvidia" == "Yes" ]; then install_nvidia; fi
+if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface "linux-headers-* linux-image-*"; fi
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" > "$linuxloopsdir"/chroot/tmp/install_custom_packages
+	chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom_packages
+fi
+
+if [ -f ./custom_script ]; then
+	cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom_script
+	chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom_script
+fi
+
+generate_fstab
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+install_initramfstools
+
+install_efi
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
+
+[ "$return_value" -eq 0 ] && create_swap
+
+umount_chroot
+
+return $return_value
+}
+
+chroot_mxlinux-systemd()
+{
+return_value=0
+
+download_lxc_image debian bookworm default
 
 mount_chroot
 
@@ -4597,20 +4871,20 @@ export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib6
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install ca-certificates openssl
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-sed -i 's@ main@ main contrib non-free@g' /etc/apt/sources.list
+sed -i 's@ main@ main contrib non-free non-free-firmware@g' /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/mx.list <<'SOURCES'
-deb http://mxrepo.com/mx/repo/ bullseye main non-free
-#deb http://mxrepo.com/mx/repo/ bullseye ahs
+deb http://mxrepo.com/mx/repo/ bookworm main non-free
+#deb http://mxrepo.com/mx/repo/ bookworm ahs
 SOURCES
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt update --allow-insecure-repositories
-yes | DEBIAN_FRONTEND=noninteractive apt install mx21-archive-keyring --allow-unauthenticated
+yes | DEBIAN_FRONTEND=noninteractive apt install mx23-archive-keyring --allow-unauthenticated
 yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall $(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g')
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode sbsigntool mokutil dosfstools btrfs-progs zenity
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode sbsigntool mokutil dosfstools btrfs-progs zenity
 echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
 echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
 chmod 0755 /etc/dkms/sign_helper.sh
@@ -4647,10 +4921,10 @@ usermod -aG audio,sudo '$username'
 MXLINUXUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base plymouth-themes-mx synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx21-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
+specific_packages="desktop-base plymouth-themes-mx synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 case "$desktop" in
 	'budgie')
@@ -4780,6 +5054,7 @@ NoDisplay=true
 NEMODESKTOP
 mkdir -p /etc/lightdm/lightdm.conf.d
 echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+echo -e '[Greeter]\nbackground = /usr/share/backgrounds/THE_Dark_Metal.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
 MXLINUXDESKTOP
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
 
@@ -4995,7 +5270,7 @@ zypper --non-interactive refresh
 zypper --non-interactive install ca-certificates openssl
 sed -i 's@# autoAgreeWithLicenses = no@autoAgreeWithLicenses = yes@g' /etc/zypp/zypper.conf
 zypper --non-interactive install -f $(rpm -q -a --qf '%{NAME} ' | sed 's@ gpg-pubkey@@g')
-zypper --non-interactive install kernel-default kernel-default-devel dkms kernel-firmware-all wireless-regdb glibc-i18ndata patterns-base-base nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez pulseaudio alsa-utils alsa-firmware cryptsetup nano e2fsprogs ntfsprogs device-mapper cantarell-fonts acpid curl thermald bash-completion gpg2 polkit postfix system-group-wheel xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim bind ucode-amd ucode-intel sbsigntools dosfstools btrfsprogs zenity
+zypper --non-interactive install kernel-default kernel-default-devel dkms kernel-firmware-all wireless-regdb glibc-i18ndata patterns-base-base nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper cantarell-fonts acpid curl thermald bash-completion gpg2 polkit postfix system-group-wheel xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim bind ucode-amd ucode-intel sbsigntools dosfstools btrfsprogs zenity
 systemctl disable wicked.service
 systemctl enable named.service NetworkManager.service
 /tmp/set_locale_and_timezone
@@ -5053,9 +5328,9 @@ BLUEMAN
 OPENSUSEUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="at-spi2-core avahi cups cups-filters nss-mdns system-config-printer"
+hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze breeze-gtk dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze breeze-gtk dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme papirus-icon-theme"
 specific_packages="adobe-sourcecodepro-fonts plymouth-branding-openSUSE wallpaper-branding-openSUSE"
 desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
 desktop_services="avahi-dnsconfd.service cups-browsed.service udisks2.service"
@@ -5597,6 +5872,445 @@ chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
 [ "$return_value" -eq 0 ] && create_swap
 
 umount_chroot
+
+return $return_value
+}
+
+chroot_proxmox()
+{
+return_value=0
+
+download_lxc_image debian bookworm default
+
+mount_chroot
+
+cat >"$linuxloopsdir"/chroot/tmp/init <<'PROXMOXINIT'
+#!/bin/bash
+set -e
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+/tmp/cleanup_container
+echo -e "127.0.0.1 localhost\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
+yes | DEBIAN_FRONTEND=noninteractive apt update
+yes | DEBIAN_FRONTEND=noninteractive apt install ca-certificates openssl
+echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
+sed -i 's@ main@ main contrib non-free non-free-firmware@g' /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/pve-install-repo.list <<'SOURCES'
+deb http://download.proxmox.com/debian/pve bookworm pve-no-subscription
+SOURCES
+echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt update --allow-insecure-repositories
+yes | DEBIAN_FRONTEND=noninteractive apt install proxmox-archive-keyring --allow-unauthenticated
+yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall $(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g')
+yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
+echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
+yes | DEBIAN_FRONTEND=noninteractive apt install apt-utils console-setup kmod
+yes | DEBIAN_FRONTEND=noninteractive apt update
+yes | DEBIAN_FRONTEND=noninteractive apt install proxmox-ve postfix open-iscsi ifenslave dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs
+echo proxmox-kernel-helper hold | dpkg --set-selections
+echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
+echo -e '#!/bin/sh\n/lib/modules/"$1"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "$2"' > /etc/dkms/sign_helper.sh
+chmod 0755 /etc/dkms/sign_helper.sh
+systemctl enable systemd-resolved.service
+systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
+/tmp/set_locale_and_timezone
+/tmp/install_desktop
+/tmp/install_user
+/tmp/install_secureboot
+if [ -f /tmp/install_nvidia ]; then /tmp/install_nvidia; fi
+if [ -f /tmp/install_surface ]; then /tmp/install_surface; fi
+if [ -f /tmp/install_custom_packages ]; then /tmp/install_custom_packages; fi
+if [ -f /tmp/install_custom_script ]; then /tmp/install_custom_script; fi
+/tmp/generate_fstab
+/tmp/install_initramfs
+/tmp/install_efi
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt autoremove
+/tmp/cleanup
+exit
+PROXMOXINIT
+chmod 0755 "$linuxloopsdir"/chroot/tmp/init
+
+cleanup_container
+set_locale_and_timezone
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<PROXMOXUSER
+#!/bin/bash
+set -e
+echo -e '$userpass\n$userpass' | passwd root
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG audio,sudo '$username'
+PROXMOXUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="desktop-base plymouth-themes synaptic"
+desktop_base="$hardware_support $basic_packages $basic_themes $specific_packages"
+case "$desktop" in
+	'budgie')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter budgie-desktop arc-theme nemo tilix paper-icon-theme
+"
+	;;
+	'cinnamon')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter cinnamon cinnamon-core network-manager-gnome blueman gnome-terminal nemo
+"
+	;;
+	'cinnamon-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman
+"
+	;;
+	'enlightenment')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter enlightenment terminology
+yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install connman
+find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
+"
+	;;
+	'gnome')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
+"
+	;;
+	'gnome-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base gdm3 task-gnome-desktop
+"
+	;;
+	'kde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base sddm sddm-theme-breeze kde-plasma-desktop kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
+"
+	;;
+	'kde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base sddm sddm-theme-breeze task-kde-desktop
+"
+	;;
+	'lxde')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome blueman lxappearance
+"
+	;;
+	'lxde-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter task-lxde-desktop network-manager-gnome blueman
+"
+	;;
+	'lxqt')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian network-manager-gnome blueman openbox lxqt-powermanagement lxqt-themes
+"
+	;;
+	'lxqt-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter task-lxqt-desktop network-manager-gnome blueman
+"
+	;;
+	'mate')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome blueman mate-media mate-power-manager
+"
+	;;
+	'mate-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter task-mate-desktop blueman
+"
+	;;
+	'xfce')
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
+"
+	;;
+	'xfce-full')
+	install_desktop="
+rm -f /etc/apt/apt.conf.d/99linuxloops
+yes | DEBIAN_FRONTEND=noninteractive apt install $desktop_base lightdm slick-greeter task-xfce-desktop blueman
+"
+	;;
+esac
+cat >"$linuxloopsdir"/chroot/tmp/install_desktop <<PROXMOXDESKTOP
+#!/bin/bash
+set -e
+if [ "$desktop" == "none" ]; then exit 0; fi
+$install_desktop
+mkdir -p /usr/share/glib-2.0/schemas
+cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
+[org.gnome.desktop.background:Budgie]
+picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
+[org.gnome.desktop.interface:Budgie]
+gtk-theme="Arc"
+icon-theme="Papirus"
+[org.cinnamon.desktop.background]
+picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
+[org.cinnamon.desktop.interface]
+gtk-theme="Materia"
+icon-theme="Papirus"
+[org.cinnamon.desktop.wm.preferences]
+theme="Materia"
+[org.mate.interface]
+icon-theme='Papirus'
+gtk-theme='Materia'
+[org.mate.Marco.general]
+theme='Materia'
+DCONF
+if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
+mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
+cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xsettings" version="1.0">
+  <property name="Net" type="empty">
+    <property name="IconThemeName" type="string" value="Papirus"/>
+    <property name="ThemeName" type="string" value="Materia"/>
+  </property>
+</channel>
+XFCETHEME
+mkdir -p /etc/xdg/autostart
+cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
+[Desktop Entry]
+Type=Application
+Name=Nemo
+Comment=Start Nemo desktop at log in
+Exec=nemo-desktop
+OnlyShowIn=Budgie;
+AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
+X-GNOME-AutoRestart=true
+NoDisplay=true
+NEMODESKTOP
+mkdir -p /etc/lightdm/lightdm.conf.d
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+PROXMOXDESKTOP
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_desktop
+
+install_secureboot
+if [ ! -z "$nvidia" ] && [ "$nvidia" == "Yes" ]; then install_nvidia; fi
+if [ ! -z "$surface" ] && [ "$surface" == "Yes" ]; then install_surface "pve-kernel-*"; fi
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install $CUSTOM_PACKAGES" > "$linuxloopsdir"/chroot/tmp/install_custom_packages
+	chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom_packages
+fi
+
+if [ -f ./custom_script ]; then
+	cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom_script
+	chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom_script
+fi
+
+generate_fstab
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+install_initramfstools
+
+install_efi
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot /tmp/init || return_value=1
+
+[ "$return_value" -eq 0 ] && create_swap
+
+umount_chroot
+
+return $return_value
+}
+
+chroot_qubes()
+{
+return_value=0
+
+mount --bind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot
+mount --make-rprivate "$linuxloopsdir"/chroot
+mkdir -p "$linuxloopsdir"/chroot/installroot/mnt
+mount --bind "$linuxloopsdir"/chroot/installroot "$linuxloopsdir"/chroot/installroot
+mount --make-rprivate "$linuxloopsdir"/chroot/installroot
+
+curl -L https://ftp.qubes-os.org/iso/Qubes-R4.1.2-x86_64.iso -o "$linuxloopsdir"/qubes.iso
+mkdir -p "$linuxloopsdir"/tmpmountpoint "$linuxloopsdir"/tmpmountpoint2 "$linuxloopsdir"/tmpmountpoint3
+mount "$linuxloopsdir"/qubes.iso "$linuxloopsdir"/tmpmountpoint
+mount "$linuxloopsdir"/tmpmountpoint/LiveOS/squashfs.img "$linuxloopsdir"/tmpmountpoint2
+mount "$linuxloopsdir"/tmpmountpoint2/LiveOS/rootfs.img "$linuxloopsdir"/tmpmountpoint3
+cp -aT "$linuxloopsdir"/tmpmountpoint3 "$linuxloopsdir"/chroot/installroot
+mkdir -p "$linuxloopsdir"/chroot/tmp/updates
+cp -a "$linuxloopsdir"/tmpmountpoint/Packages "$linuxloopsdir"/chroot/tmp/updates/
+cp -a "$linuxloopsdir"/tmpmountpoint/repodata "$linuxloopsdir"/chroot/tmp/updates/
+sync
+umount "$linuxloopsdir"/tmpmountpoint3
+umount "$linuxloopsdir"/tmpmountpoint2
+umount "$linuxloopsdir"/tmpmountpoint
+rm -f "$linuxloopsdir"/qubes.iso
+
+mount --rbind "$linuxloopsdir"/chroot "$linuxloopsdir"/chroot/installroot/mnt
+mount --make-rprivate "$linuxloopsdir"/chroot/installroot/mnt
+
+mount_chroot /installroot
+
+umount "$linuxloopsdir"/chroot/installroot/mnt/boot/efi
+umount "$linuxloopsdir"/chroot/installroot/mnt/boot
+boot_loop="$(losetup --show -fP "$partition_path"2)"
+efi_loop="$(losetup --show -fP "$partition_path"1)"
+mount "$boot_loop" "$linuxloopsdir"/chroot/installroot/mnt/boot
+mount "$efi_loop" "$linuxloopsdir"/chroot/installroot/mnt/boot/efi
+
+cat >"$linuxloopsdir"/chroot/installroot/tmp/init <<'QUBESINIT'
+#!/bin/bash
+set -e
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+/tmp/cleanup_container
+mkdir -p /mnt/dev/pts /mnt/dev/shm /mnt/etc /mnt/proc /mnt/sys /mnt/tmp
+chmod 1777 /mnt/tmp
+mount -t proc none /mnt/proc
+mount -t sysfs none /mnt/sys
+mount -t devtmpfs none /mnt/dev
+mount -t devpts none /mnt/dev/pts
+mount -t tmpfs -o mode=1777,nosuid,nodev,strictatime none /mnt/dev/shm
+mkdir -p /etc/yum.fake.repos.d
+echo -e '[local]\nname = local\nbaseurl = file:///mnt/tmp/updates\nenabled=1\ngpgcheck=0\nrepo_gpgcheck=0' > /etc/yum.fake.repos.d/local.repo
+dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)" sudo nano passwd btrfs-progs grub2-efi-x64 audit efibootmgr ntfs-3g initscripts hostname iputils
+rm -r /etc/yum.fake.repos.d
+/tmp/install
+rm -r /mnt/tmp/*
+if mountpoint -q /mnt/dev/shm; then umount /mnt/dev/shm; fi
+if mountpoint -q /mnt/dev/pts; then umount /mnt/dev/pts; fi
+if mountpoint -q /mnt/dev; then umount /mnt/dev; fi
+if mountpoint -q /mnt/sys; then umount /mnt/sys; fi
+if mountpoint -q /mnt/proc; then umount /mnt/proc; fi
+exit
+QUBESINIT
+chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/init
+
+cat >"$linuxloopsdir"/chroot/installroot/tmp/install <<QUBESINSTALL
+#chroot /mnt /bin/bash
+cat << 'CHROOT' | chroot /mnt /bin/bash
+#!/bin/bash
+set -e
+echo 'dom0' > /etc/hostname
+rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-*
+systemctl disable systemd-networkd.service systemd-networkd-wait-online.service
+systemctl mask systemd-networkd.service systemd-networkd-wait-online.service
+systemctl set-default graphical.target
+if [ -f /etc/grub.d/01_fallback_counting ]; then chmod 0644 /etc/grub.d/01_fallback_counting; fi
+if [ -f /etc/grub.d/01_menu_auto_hide ]; then chmod 0644 /etc/grub.d/01_menu_auto_hide; fi
+cat >/root/anaconda-ks.cfg <<INITIALSETUP
+#version=DEVEL
+# Use graphical install
+graphical
+# Use CDROM installation media
+cdrom
+
+
+%packages
+@^qubes-xfce
+@qubes-ui
+
+%end
+
+# Keyboard layouts
+keyboard --xlayouts='$CUSTOM_KEYMAP'
+# System language
+lang $(echo "$CUSTOM_LOCALE" | cut -d' ' -f1)
+
+# Network information
+network  --hostname=dom0
+
+# System timezone
+timezone $CUSTOM_TIMEZONE
+
+#Root password
+rootpw --lock
+user --groups=wheel,qubes --name=$username --password=\$(openssl passwd -6 "$userpass") --iscrypted
+INITIALSETUP
+mkdir -p /var/lib/qubes/template-packages
+cp /tmp/updates/Packages/qubes-template-*.rpm /var/lib/qubes/template-packages/
+if [ "$install_type" == "image" ]; then
+cat >/usr/lib/udev/rules.d/01-linuxloops.rules <<'UDEVRULE'
+ACTION!="remove", SUBSYSTEM=="block", KERNEL=="loop0*", ENV{DM_UDEV_DISABLE_DISK_RULES_FLAG}="0", ENV{UDEV_DISABLE_PERSISTENT_STORAGE_RULES_FLAG}="0"
+UDEVRULE
+fi
+/tmp/install_user
+if [ -f /tmp/install_custom_packages ]; then /tmp/install_custom_packages; fi
+if [ -f /tmp/install_custom_script ]; then /tmp/install_custom_script; fi
+/tmp/generate_fstab
+/tmp/install_initramfs
+/tmp/install_efi
+/tmp/cleanup
+CHROOT
+#chroot /mnt /bin/bash
+for ROOT in \$(find /proc/*/root 2>/dev/null)
+do
+        LINK="\$(readlink -f \$ROOT)"
+        if echo "\$LINK" | grep -q "$linuxloopsdir"/chroot/installroot/mnt
+        then
+                PID=\$(basename \$(dirname "\$ROOT"))
+                kill -9 \$PID
+        fi
+done
+sleep 5
+QUBESINSTALL
+chmod 0755 "$linuxloopsdir"/chroot/installroot/tmp/install
+
+mkdir -p "$linuxloopsdir"/chroot/tmp "$linuxloopsdir"/chroot/usr/sbin
+
+cleanup_container /installroot
+
+cat >"$linuxloopsdir"/chroot/tmp/install_user <<QUBESUSER
+#!/bin/bash
+set -e
+useradd -s /bin/bash -m '$username'
+echo -e '$userpass\n$userpass' | passwd '$username'
+usermod -aG wheel,qubes '$username'
+echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
+QUBESUSER
+chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
+
+if [ ! -z "$CUSTOM_PACKAGES" ]; then
+	echo -e "#!/bin/bash\nset -e\ndnf install -y $CUSTOM_PACKAGES" > "$linuxloopsdir"/chroot/tmp/install_custom_packages
+	chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom_packages
+fi
+
+if [ -f ./custom_script ]; then
+	cp ./custom_script "$linuxloopsdir"/chroot/tmp/install_custom_script
+	chmod 0755 "$linuxloopsdir"/chroot/tmp/install_custom_script
+fi
+
+generate_fstab
+
+cmdline_extra="$CUSTOM_CMDLINE_PARAMS"
+xen_cmdline_extra="console=none dom0_mem=min:1024M dom0_mem=max:4096M ucode=scan smt=off gnttab_max_frames=2048 gnttab_max_maptrack_frames=4096 $XEN_CUSTOM_CMDLINE_PARAMS"
+install_dracut
+
+install_efi
+
+cleanup
+
+chroot "$linuxloopsdir"/chroot/installroot /tmp/init || return_value=1
+
+umount "$linuxloopsdir"/chroot/installroot/mnt/boot/efi
+umount "$linuxloopsdir"/chroot/installroot/mnt/boot
+losetup -d "$efi_loop"
+losetup -d "$boot_loop"
+
+[ "$return_value" -eq 0 ] && create_swap
+
+umount_chroot /installroot
+
+umount -R "$linuxloopsdir"/chroot/installroot/mnt
+umount "$linuxloopsdir"/chroot/installroot
+rm -r "$linuxloopsdir"/chroot/installroot
+umount "$linuxloopsdir"/chroot
 
 return $return_value
 }
@@ -6324,7 +7038,7 @@ chmod 0755 /usr/bin/steamos-polkit-helpers/jupiter-biosupdate
 STEAMOSLIKEFIXES
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_steamos_fixes
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pulseaudio system-config-printer xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="archlinux-wallpaper gamescope steam vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei xorg-server-xvfb"
@@ -6523,7 +7237,7 @@ usermod -aG sudo '$username'
 UBUNTUUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
@@ -6794,7 +7508,7 @@ usermod -aG sudo '$username'
 UBUNTUUSER
 chmod 0755 "$linuxloopsdir"/chroot/tmp/install_user
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
@@ -7167,11 +7881,42 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install ca-certificates openssl gnupg
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
+cat >/etc/apt/sources.list.d/zorin.list <<'ZORINLIST'
+deb https://packages.zorinos.com/stable focal main
+# deb-src https://packages.zorinos.com/stable focal main
+
+deb https://packages.zorinos.com/patches focal main
+# deb-src https://packages.zorinos.com/patches focal main
+
+deb https://packages.zorinos.com/apps focal main
+# deb-src https://packages.zorinos.com/apps focal main
+
+deb https://packages.zorinos.com/drivers focal main restricted
+# deb-src https://packages.zorinos.com/drivers focal main restricted
+
+ZORINLIST
 echo -e 'deb http://ppa.launchpad.net/zorinos/apps/ubuntu focal main\n# deb-src http://ppa.launchpad.net/zorinos/apps/ubuntu focal main' > /etc/apt/sources.list.d/zorinos-ubuntu-apps-focal.list
 echo -e 'deb http://ppa.launchpad.net/zorinos/drivers/ubuntu focal main\n# deb-src http://ppa.launchpad.net/zorinos/drivers/ubuntu focal main' > /etc/apt/sources.list.d/zorinos-ubuntu-drivers-focal.list
 echo -e 'deb http://ppa.launchpad.net/zorinos/patches/ubuntu focal main\n# deb-src http://ppa.launchpad.net/zorinos/patches/ubuntu focal main' > /etc/apt/sources.list.d/zorinos-ubuntu-patches-focal.list
 echo -e 'deb http://ppa.launchpad.net/zorinos/stable/ubuntu focal main\n# deb-src http://ppa.launchpad.net/zorinos/stable/ubuntu focal main' > /etc/apt/sources.list.d/zorinos-ubuntu-stable-focal.list
+cat >/etc/apt/preferences.d/zorin-os-patches.pref <<'ZORINPRIORITY'
+Explanation: OS patches for Zorin OS.
+Explanation: We need this pin because our patched build can lag a few hours behind Ubuntu's updates,
+Explanation: and during those few hours packages can be overwritten with unpatched ones.
+Package: *
+Pin: release o=LP-PPA-zorinos-patches
+Pin-Priority: 999
+ZORINPRIORITY
+cat >/etc/apt/preferences.d/zorinos-patches.pref <<'ZORINPRIORITY2'
+Explanation: OS patches for Zorin OS.
+Explanation: We need this pin because our patched build can lag a few hours behind Ubuntu's updates,
+Explanation: and during those few hours packages can be overwritten with unpatched ones.
+Package: *
+Pin: release o=Zorin OS,l=Zorin OS Patches
+Pin-Priority: 999
+ZORINPRIORITY2
 apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 30FCF8F64F71B61C
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40E0F448B35AB199
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install zorin-os-overlay
 yes | DEBIAN_FRONTEND=noninteractive apt update
@@ -7330,7 +8075,7 @@ else
 	echo "Creating image file on $partition_format partition."
 	if [ ! -z "$wsl" ]; then
 		dd if=/dev/urandom of="$fullpath" bs=1M count=$install_sizeMB status=progress || exit_with_error "The image file could not be created."
-	elif [ -d /home/runner/work ] || [ "$partition_format" == "ext4" ] || [ "$partition_format" == "fuseblk" ] || [ "$partition_format" == "ntfs" ]; then
+	elif [ -d /home/runner/work ] || [ "$partition_format" == "ext4" ]; then
 		fallocate -l "$install_sizeMB"M "$fullpath" || exit_with_error "The image file could not be created."
 	elif [ "$partition_format" == "btrfs" ]; then
 		chattr +C "$fullpath"
@@ -7572,52 +8317,54 @@ fi
 
 set_credentials()
 {
-if [ "$live" == "Yes" ]; then
-	username="live"
-	userpass="linuxloops"
-	hostname="linuxloops"
-elif [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" != "tails" ]; then
-	if [ "$encryption" == "Yes" ]; then
-		encrypted_text="You have requested encryption, please input your username and the encryption password.\nYour user account password will be set as the encryption password but you can change it later."
-		password_text="encrypted partitions password"
+if [ "$distro" != "brunch" ] && [ "$distro" != "chromeos-flex" ] && [ "$distro" != "tails" ]; then
+	if [ "$live" == "Yes" ]; then
+		username="live"
+		userpass="linuxloops"
+		hostname="linuxloops"
 	else
-		encrypted_text="Please input your username and user account password."
-		password_text="user account password"
+		if [ "$encryption" == "Yes" ]; then
+			encrypted_text="You have requested encryption, please input your username and the encryption password.\nYour user account password will be set as the encryption password but you can change it later."
+			password_text="encrypted partitions password"
+		else
+			encrypted_text="Please input your username and user account password."
+			password_text="user account password"
+		fi
+		if [ ! -z "$zenity" ]; then
+		until false; do
+			form=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --title="Create user" --text="$encrypted_text" --add-entry="Input your username" --add-password="Input your $password_text" --add-password="Confirm your $password_text")
+			username="$(echo $form | cut -d'|' -f1)"
+			userpass="$(echo $form | cut -d'|' -f2)"
+			verifuserpass="$(echo $form | cut -d'|' -f3)"
+			if [ -z "$form" ]; then exit 0; fi
+			if [ -z "$username" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define your username.\n"; continue; fi
+			if [ -z "$userpass" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define a password.\n"; continue; fi
+			if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Username contains unsupported characters.\n"; continue; fi
+			if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Password contains unsupported characters.\n"; continue; fi
+			if [ "$userpass" != "$verifuserpass" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Passwords do not match, try again.\n"; continue; fi
+			break
+		done
+		else
+		echo -e "$encrypted_text"
+		until false; do
+			read -p "Please enter your username: " username
+			if [ -z "$username" ]; then echo -e "Please define your username.\n\n"; continue; fi
+			if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then echo -e "Username contains unsupported characters.\n\n"; continue; fi
+			break
+		done
+		until false; do
+			read -s -p "Input your $password_text password: " userpass
+			echo ""
+			read -s -p "Verify your $password_text password: " verifuserpass
+			echo ""
+			if [ -z "$userpass" ]; then echo -e "Please define a password.\n\n"; continue; fi
+			if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
+			if [ "$userpass" != "$verifuserpass" ]; then echo -e "Passwords do not match, try again.\n\n"; continue; fi
+			break
+		done
+		fi
+		hostname="$distro-$RANDOM"
 	fi
-	if [ ! -z "$zenity" ]; then
-	until false; do
-		form=$(sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --title="Create user" --text="$encrypted_text" --add-entry="Input your username" --add-password="Input your $password_text" --add-password="Confirm your $password_text")
-		username="$(echo $form | cut -d'|' -f1)"
-		userpass="$(echo $form | cut -d'|' -f2)"
-		verifuserpass="$(echo $form | cut -d'|' -f3)"
-		if [ -z "$form" ]; then exit 0; fi
-		if [ -z "$username" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define your username.\n"; continue; fi
-		if [ -z "$userpass" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define a password.\n"; continue; fi
-		if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Username contains unsupported characters.\n"; continue; fi
-		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Password contains unsupported characters.\n"; continue; fi
-		if [ "$userpass" != "$verifuserpass" ]; then sudo -u $SUDO_USER zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Passwords do not match, try again.\n"; continue; fi
-		break
-	done
-	else
-	echo -e "$encrypted_text"
-	until false; do
-		read -p "Please enter your username: " username
-		if [ -z "$username" ]; then echo -e "Please define your username.\n\n"; continue; fi
-		if echo "$username" | grep -q '^[a-z][-a-z0-9]*\$'; then echo -e "Username contains unsupported characters.\n\n"; continue; fi
-		break
-	done
-	until false; do
-		read -s -p "Input your $password_text password: " userpass
-		echo ""
-		read -s -p "Verify your $password_text password: " verifuserpass
-		echo ""
-		if [ -z "$userpass" ]; then echo -e "Please define a password.\n\n"; continue; fi
-		if echo "$userpass" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
-		if [ "$userpass" != "$verifuserpass" ]; then echo -e "Passwords do not match, try again.\n\n"; continue; fi
-		break
-	done
-	fi
-	hostname="$distro-$RANDOM"
 fi
 }
 
@@ -7766,6 +8513,9 @@ case "$distro" in
 		available_space_needed=7
 	;;
 	'chromeos-flex')
+		available_space_needed=7
+	;;
+	'qubes')
 		available_space_needed=7
 	;;
 	'tails')

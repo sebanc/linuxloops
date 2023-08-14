@@ -22,7 +22,7 @@ Create an ext4 partition on the unallocated space.
 
 Ensure that you use grub2 as bootloader.
 
-Install your disk images with on the ext4 partition.
+Install your disk images on the ext4 partition.
 
 Optionaly, add entries in your fstab to automatically mount the other partitions you might want to access.
 
@@ -35,7 +35,7 @@ Boot a Windows 11 installation USB flash drive on your computer.
 
 Move on until you reach "Where do you want to install Windows ?" screen.
 
-Format the unallocated space as "NTFS" or "ExFAT".
+Format the unallocated space as "NTFS".
 
 press Shift + F10 keys to open a command prompt.
 
@@ -43,7 +43,7 @@ Type `diskpart` into the command prompt.
 
 use "list volume" and identify the drive letter of the newly created partition for the windows image.
 
-Type `create vdisk file="<drive letter>:\<file name>.vhdx" maximum=<size>GB type=fixed`
+Type `create vdisk file="<drive letter>:\<file name>.vhdx" maximum=<size in MB> type=fixed`
 
 Then run `attach vdisk` and then `exit` to exit diskpart.
 
