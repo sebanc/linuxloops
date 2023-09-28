@@ -9,12 +9,12 @@
   
   ***
 
-LinuxLoops images can be run in Virtual Machines by treating them as raw disks.
+LinuxLoops disk images can be run in Virtual Machines by treating them as raw disks.
 **WARNING: Do not launch the currently running LinuxLoops image in a Virtual Machine. I don't see why anyone would want to do that but it will most likely break the image.**
 
-## QEMU and derivatives
+## QEMU
 
-For QEMU and derivatives, the boot mode needs to be set to EFI and disk images can natively be selected as raw disk.
+The boot mode needs to be set to EFI and disk images can natively be used as raw disks.
 
 ## VirtualBox
 

@@ -6,135 +6,75 @@
 [![Discord][discord-shield]][discord-url]
 
 <!-- Installation Guide -->
-# Installation from Windows
+# Installation from Linux
 
-Linuxloops can install distros on drives or inside disk images.
-
-## Installation on a usb flashdrive drive / sdcard
-
-### Requirements
+## Requirements
 - x86_64 based computer with UEFI BIOS.
 - Administrator access.
-- Windows WSL2 installed.
-- 14GB hdd space and a usb flashdrive drive / sdcard with at least 14 GB available space.
+- At least 14 GB available space.
 
-### Install guide
+## Install guide
 
-<details>
-  <summary>Click here to open the LinuxLoops install guide for usb flashdrive drive / sdcard.</summary>
+1. Launch WSL
 
-1. Open Ubuntu WSL2 and install `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz`.
-If you intend to use the GUI installer, also make sure `zenity` package is installed.
+2. Download the linuxloops script:
 
-`sudo apt update && sudo apt -y install btrfs-progs cryptsetup curl dosfstools fdisk tar xz-utils zenity`
-
-2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
-
-`cd /mnt/c/Users/<your_username>/Downloads`
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`
   
-3. Download the linuxloops script:
+3. Launch the Linuxloops script
 
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-  
-4. Launch Linuxloops install
+- To use the GUI installer, install the `zenity` package for your distro and then run:
 
-- If your WSL version supports GUI applications, you can use the GUI installer by running:
-
-`sudo bash ./linuxloops`
-
-Follow the installer menu, choosing the distro, desktop environment, image path... (create the image in your Downloads folder: /mnt/c/Users/<your_username>/Downloads/distro.img)
+`sudo bash ~/linuxloops`
 
 - Otherwise using the command line:
+```
+Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
+-distro, --distribution <distribution name>			(Distribution to install)
+-env, --environment <desktop environment>			(Desktop environment to install)
+-dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
+-s, --size <total install size>					(number in GB, minimum 14GB)
+-z, --swapsize <swap size>					(number in GB)
+-b, --btrfs							(Use btrfs for the root filesystem)
+-e, --encrypt							(Encrypt the root filesystem)
+-L, --locale <locale>						(specify locale to be used, by default "en_US")
+-K, --keymap <keymap>						(specify keymap to be used, by default "us")
+-T, --timezone <timezone>					(specify timezone to be used, by default "UTC")
+-n, --nvidia							(Install nvidia drivers)
+-S, --surface							(Add patches for Surface devices from github.com/linux-surface)
+-c, --custom-packages						(list of additional packages to be installed - space separated)
+-C, --custom-script						(bash script that should be run at the end of the install process)
+-k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
+-l, --list							(List available distros and desktop environments)
+-ll, --list-locales						(List available locales)
+-lk, --list-keymaps						(List available keymaps)
+-lt, --list-timezones						(List available locales)
+-h, --help							(Display this menu)
+```
 
-Linuxloops arguments description:  
-"-distro <distribution>": selects the linux distro (mandatory).  
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is usually selected by default).  
-"-dst <path>": destination is the image path such as "/mnt/c/Users/<your_username>/Downloads/distro.img" (mandatory).  
-"-s" <number>: size of the disk image in GB (optional, 14GB by default).  
-"-z" <number>: size of the swap (optional) (optional, no swap by default).  
-"-b": use btrfs format for the root filesystem (instead of ext4)  
-"-e": enable rootfs and swap encryption (optional but highly recommended).  
-"-n": automatically install the latest nvidia proprietary driver (optional).  
-"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
+The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:
+`sudo bash ~/linuxloops -l`
 
-As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /mnt/c/Users/username/Downloads/distro.img -s 24 -z 4 -e` will install ubuntu with the complete kde environment a disk image located at path "C:\Users\<your_username>\Downloads\distro.img" of 24GB size out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
+As an example:
+`sudo bash ~/linuxloops -distro Arch -env cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.
 
-5. Install Rufus and flash the file C:\Users\<your_username>\Downloads\distro.img to your usb flashdrive drive / sdcard.
+4. Finalisation (For disk installs)
 
-6. Reboot your computer and choose your drive in the UEFI BIOS boot menu.
+Use a software like Rufus or Etcher to write the image located at C:\Users\"username"\Downloads\Arch.img on a drive.
 
-7. (Secure Boot enabled) You should see a blue screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.
+Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.
 
-</details>
+If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.
 
-## Installation in a disk image
+4. Finalisation (For disk image installs)
 
-### Requirements
-- x86_64 based computer with UEFI BIOS.
-- Administrator access.
-- Windows WSL2 installed.
-- Secure boot disabled.
-- 14 GB available space on an unencrypted exfat or ntfs partition.
+Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file C:\Users\"username"\Downloads\Arch.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".
 
-### Before you start (recommended setup)
+Start the LinuxLoops grub entry from your Grub2Win menu.
 
-Windows locks NTFS partitions when fast startup and hibernation are enabled, therefore the suggested approach to install LinuxLoops from Windows is to use the disk manager to reduce the main storage and create an exfat partition to store images.
+## Support
 
-Otherwise, you can install LinuxLoops on NTFS partitions but you have to make sure that bitlocker, fast startup and hibernation are disabled (refer to online resources).
-
-### Install guide
-
-<details>
-  <summary>Click here to open the LinuxLoops install guide in a disk image.</summary>
-
-1. Open Ubuntu WSL2 and install `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz`.
-If you intend to use the GUI installer, also make sure `zenity` package is installed.
-
-`sudo apt update && sudo apt -y install btrfs-progs cryptsetup curl dosfstools fdisk tar xz-utils zenity`
-
-2. Change the directory to your Windows Downloads folder (replace username with your Windows username).
-
-`cd /mnt/c/Users/<your_username>/Downloads`
-  
-3. Download the linuxloops script:
-
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-  
-4. Launch Linuxloops install
-
-- If your WSL version supports GUI applications, you can use the GUI installer by running:
-
-`sudo bash ./linuxloops`
-
-Follow the installer menu, choosing the distro, desktop environment, image path... (the image has to be installed on a NTFS or exfat partition ouside of the WSL VM such as: /mnt/c/Users/<your_username>/linuxloops/distro.img or /mnt/d/linuxloops/distro.img)
-
-- Otherwise using the command line:
-
-Linuxloops arguments description:  
-"-distro <distribution>": selects the linux distro (mandatory).  
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is usually selected by default).  
-"-dst <path>": destination is the image path such as "/mnt/c/Users/<your_username>/Downloads/distro.img" (mandatory).  
-"-s" <number>: size of the disk image in GB (optional, 14GB by default).  
-"-z" <number>: size of the swap (optional) (optional, no swap by default).  
-"-b": use btrfs format for the root filesystem (instead of ext4)  
-"-e": enable rootfs and swap encryption (optional but highly recommended).  
-"-n": automatically install the latest nvidia proprietary driver (optional).  
-"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
-
-As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /mnt/c/Users/<your_username>/linuxloops/distro.img -s 24 -z 4 -e` will install ubuntu with the complete kde environment a disk image located at path "C:\Users\<your_username>\linuxloops\distro.img" of 24GB size out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
-
-5. Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file C:\Users\<your_username>\linuxloops\distro.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".
-
-6. Reboot your computer and start the LinuxLoops grub entry from Grub2Win menu.
-
-</details>
-
-## What to do after installation
-- Set-up your language and timezone (refer to the chosen distro's online resources)
-- Create additional users if needed.
-- Get familiar with the package manager of the distro you have installed (refer to the chosen distro's online resources) and install your favorite software.
-
-In case you run into issues while installing or using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:
+In case you run into issues while using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:
 
 [![Discord][discord-shield]][discord-url]
 
@@ -146,3 +86,4 @@ In case you run into issues while installing or using LinuxLoops, support is pro
 [issues-url]: https://github.com/sebanc/linuxloops/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
+

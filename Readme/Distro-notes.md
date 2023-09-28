@@ -10,7 +10,7 @@
   ***
 
 
-## almalinux
+## AlmaLinux
 
 On the first boot after install, almalinux will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and almalinux should boot normally on the second boot.
 
@@ -24,41 +24,41 @@ sudo mokutil --import /etc/secureboot_keys/MOK.der
 Reboot, enroll the key in shim and re-enable secureboot.
 
 
-## archlinux
+## Arch
 
 archlinux does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.
 
 
-## artixlinux
+## Artix
 
 artixlinux does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.
 
 
-## brunch
+## Brunch
 
 Before installing brunch, please refer to the [brunch readme][brunch-readme] for more information on device compatibility.
 Please raise brunch issues on the brunch github repository.
 
 
-## chromeos-flex
+## ChromeOS-Flex
 
 The full-devmode target allows to enable developer mode by default.
 
 
-## fedora
+## Fedora
 
 On the first boot after install, fedora will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and fedora should boot normally on the second boot.
 
 If you install the nvidia proprietary driver, the first boot after each kernel update will be long as the nvidia kernel modules are being rebuilt.
 
 
-## gentoo
+## Gentoo
 
 If you intend to install gentoo with a desktop environment, you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
 
 ### Specific note for gentoo installation on disk with secure boot enabled
 
-gentoo does not have secure boot support OOTB. Nevertheless, secureboot can be enabled manually by emerging `mokutil` and running the below commands:
+gentoo does not have secure boot support out of the box. Nevertheless, secureboot can be enabled manually by emerging `mokutil` and running the below commands:
 ```
 sudo mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
 sudo cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTx64.EFI
@@ -69,22 +69,22 @@ sudo mokutil --import /etc/secureboot_keys/MOK.der
 Reboot, enroll the key in shim and re-enable secureboot.
 
 
-## kali
+## Kali
 
 Kali does not have secure boot support in full disk install.
 
 
-## manjaro
+## Manjaro
 
 manjaro does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.
 
 
-## nixos
+## NixOS
 
 After install, if you want to install packages via nix, open the teminal and run "sudo nix-channel --update" first.
 
 
-## opensuse
+## openSUSE
 
 ### Specific note for opensuse installation in a disk image with secure boot enabled
 
@@ -96,17 +96,17 @@ sudo mokutil --import /etc/secureboot_keys/MOK.der
 Reboot, enroll the key in shim and re-enable secureboot.
 
 
-## parrot
+## Parrot
 
 parrot does not have secure boot support in full disk install.
 
 
-## qubes
+## Qubes
 
 On the first boot you will be prompted to configure qubes, if you experience a crash after the first boot with the default qubes settings you should disable usb qubes in the configuration menu.
 
 
-## rockylinux
+## RockyLinux
 
 On the first boot after install, rockylinux will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and fedora should boot normally on the second boot.
 
@@ -120,30 +120,16 @@ sudo mokutil --import /etc/secureboot_keys/MOK.der
 Reboot, enroll the key in shim and re-enable secureboot.
 
 
-## steamos-like
+## SteamOS
 
-steamos-like is not a real distro, it is just a 100% standard archlinux with a few specific configuration files (no binaries) allowing to launch a SteamOS Gamescope session. However, as it is intended for PC, it has been set to boot by default in Plasma for standard use and will allow you to launch a Gamescope session through a desktop shortcut.
+SteamOS installed from the "main" branch of the mirror located with minor adjustments to support for standard computers usage:
+https://steamdeck-packages.steamos.cloud/archlinux-mirror/
 
-By design, this implementation of the gamescope session has some limitations similar to the ones on the Steamdeck: you can only have 1 user and auto-login through SDDM is mandatory.
-Nevertheless, as long as the above requirements are satisfied, it is 100% archlinux so you can install any native arch package and update them through pacman, the discover app...
+Compared to the SteamDeck:
+- The distro will boot by default into a plasma session and you can launch the gamescope session by using the "SteamDeck Session" shortcut (in "Game" section). You can also optionnaly add the "SteamDeck Session" to plasma autostart so that it is launched automatically at boot.
+- Updates are managed through pacman.
 
-On the first boot:
-- If you use wifi, connect to your wifi network through plasma network-manager, then go to plasma network settings and make the wifi connection "Available to all users".
-- Login your steam account.
-- Launch the gamescope session.
-
-Currently, aside from AMD GPU which are generally well supported, the SteamOS session is not fully stable on all GPU (due to different gamescope / mesa / steam issues). The following steps should help fixing issues with Intel and Nvidia GPUs.
-- Opt-in the beta of the steam client (the option is in the first page of the application settings).
-- Install this specific branch of the mesa package:
-```
-git clone https://aur.archlinux.org/mesa-git.git
-cd mesa-git/
-sed -i 's@https://gitlab.freedesktop.org/mesa/mesa.git#branch=main@https://gitlab.freedesktop.org/GL/mesa.git#branch=usage_checks_fixes@g' PKGBUILD
-makepkg -si
-```
-
-
-## tails
+## Tails
 
 Tails disk images can only be installed on ext4 partitions (due to the lack of kernel modules for ntfs / exfat support in its initramfs).
 
@@ -159,3 +145,4 @@ Tails disk images can only be installed on ext4 partitions (due to the lack of k
 
 <!-- Internal Links -->
 [brunch-readme]: https://github.com/sebanc/brunch/blob/main/README.md
+

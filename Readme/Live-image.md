@@ -9,9 +9,9 @@
   
   ***
 
-A linuxLoops live image is present in the releases section of github.
+A linuxLoops live image is available in the releases section of github.
 
-This live image contains a full system with linuxloops installed by default so that the installation process is even easier.
+This live image contains a full system with linuxloops installed by default to make the installation process even easier.
 Note: you can use install the grub configuration on a linuxloops live USB to boot images installed on your hdd.
 
 
@@ -37,3 +37,4 @@ Write the resulting image file to your USB flashdrive using Rufus, Etcher or a s
 [issues-url]: https://github.com/sebanc/linuxloops/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
+

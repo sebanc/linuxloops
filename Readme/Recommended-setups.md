@@ -24,12 +24,10 @@ Ensure that you use grub2 as bootloader.
 
 Install your disk images on the ext4 partition.
 
-Optionaly, add entries in your fstab to automatically mount the other partitions you might want to access.
-
 
 ## My main OS is Linux and I occasionaly use Windows (Installing windows in a disk image)
 
-Same principle as above but leave some unallocated space for your windows installation (Windows 11 requires at least 65536 MB if you want to be able to update it).
+Same principle as above but leave some unallocated space for your windows installation (Windows 11 requires at least G4 GB if you want to be able to update it).
 
 Boot a Windows 11 installation USB flash drive on your computer.
 
@@ -58,7 +56,7 @@ If not already the case, enable grub osprober in your linux distro in order to b
 
 ## My main OS is Windows and I occasionality need a linux distro
 
-Requirement: Secure Boot disabled in UEFI BIOS
+Requirement: Secure Boot disabled.
 
 Evaluate the space you will want to give to your linuxloops OS images, Open Windows Disk Management, free up disk space and create an ExFAT partition.
 
@@ -77,3 +75,4 @@ Reboot and launch your linuxloops image from Grub2Win.
 [issues-url]: https://github.com/sebanc/linuxloops/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
+

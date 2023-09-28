@@ -5,32 +5,26 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
-# LinuxLoops (beta)
+# LinuxLoops
 
 ## About This Project
 
-Linuxloops is a custom linux distro installer.
+Linuxloops is a flexible linux distro installer.
 
 Why create a custom linux distro installer ?
-Most linux distros provide installers which are either focused on a specific DE and bloated with software you don't need or installation is completely manual. Moreover, once installed there are very often specific pain points to have a fully working system (generally needed config files, declarative configurations, dkms drivers signing for secure boot...).
+Linux is very modular thanks to package management systems, however distribution installers are either completely manual or focus on a specific DE. Linuxloops allows to have more DE options, to add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.
+In addition, Linuxloops supports installing linux distros in disk image files that can be booted natively from the GRUB bootloader (on btrfs, ext4, exfat or ntfs partitions) or in VMs.
 
-The objective of Linuxloops is to:
-- Allow an easy installation of a choosen linux distro with full hardware support OOTB, the desktop environment of your choice, and either minimal apps (file manager and terminal when possible) or the standard installer packages depending on the choosen target (you can also select additional packages and/or include a custom install script, see "Custom install" section for details).
-- In addition, Linuxloops supports installing linux distros in disk image files which can be booted natively from the GRUB bootloader (only on btrfs, ext4, exfat or ntfs partitions) or in VMs.
+The main limitation of Linuxloops is that the partitionning is not currently customizable (EFI, BOOT and ROOT partitions). As such, it is not aimed at users needing complex partition tables (or they can customize the linuxloops script to their liking).
 
-The main limitation of Linuxloops is that in order to support a wide range of Linux distros, the partition table setup is limited to the basics (EFI partition and BOOT/ROOT partitions). As such, most advanced users needing a custom partition table would probably be better with a distro netinst iso or can customize the linuxloops script to their liking (it is just a bash script).
 
 ## How does it work ?
 
-The LinuxLoops bash script will create a standard partition table (with a 512MB EFI partition, a 1.5GB boot partition and the main rootfs partition), download rootfs images (usually lxc container rootfs or actual distribution isos) and install the necessary packages through a chroot process.
+The LinuxLoops script will chroot into a temporary rootfs images (usually lxc container rootfs or an actual distribution iso) and then perform the install from there using the package manager.
 
 For security purpose, Linuxloops will not install packages/binaries which are not present in the official repositories. The only exceptions are:
-- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat derivatives which are enabled by default as they contain necessary packages for standard use.
-- For archlinux derivatives, the "shim-signed" AUR package in order to support Secure Boot.
-
-The minimum size for a LinuxLoops image has been defined as 14GB (with at least 12GB allocated to the main rootfs) as it should allow most distros to install without issue. However, it might not be sufficient for all distros, notably if you intend to install gentoo with a desktop environment you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).
-
-**Warning: Even though, if something goes wrong with your install you should always be able to recover your data by mounting the root partition from a Linux live usb (see Data recovery section), make sure to keep regular backups of your data and keep in mind that this software is provided as is without any guarantee of any kind.**
+- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distros are enabled by default as they contain necessary packages for standard use.
+- For Arch based distros, the "shim-signed" AUR package is included in order to support Secure Boot.
 
 
 ## Supported Hardware
@@ -38,68 +32,108 @@ The minimum size for a LinuxLoops image has been defined as 14GB (with at least 
 ✔ Base Requirements:
 - x86_64 based computer with UEFI BIOS.
 - Administrative privileges on the device.
+- A drive with at least 14 GB available space.
 
 
 ## Overview of supported distros and features
 
-|**Distro**|**Version**|**Swap support**|**Encryption support**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
-|----------------|:--------------:|:--------------:|:--------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|--------------|
-|almalinux       |9               |✓               |✓                     |✓                      |                                     |                                 |[almalinux notes][almalinux-notes]|
-|archlinux       |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[archlinux notes][archlinux-notes]|
-|artixlinux      |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |                                 |[artixlinux notes][artixlinux-notes]|
-|brunch          |latest stable   |                |✓ (distro specific)   |✓                      |                                     |✓ (partially included)           |[brunch notes][brunch-notes]|
-|chromeos-flex   |latest stable   |                |✓ (distro specific)   |✓                      |                                     |                                 |[chromeos-flex notes][chromeos-flex-notes]|
-|debian          |bookworm        |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|devuan          |chimaera        |✓               |✓                     |✓                      |✓                                    |                                 |              |
-|elementary      |7               |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|fedora          |38              |✓               |✓                     |✓                      |✓                                    |✓                                |[fedora notes][fedora-notes]|
-|gentoo-openrc   |current         |✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-openrc notes][gentoo-notes]|
-|gentoo-systemd  |current         |✓               |✓                     |disk images only       |✓                                    |                                 |[gentoo-systemd notes][gentoo-notes]|
-|kali            |current         |✓               |✓                     |disk images only       |✓                                    |✓                                |[kali notes][kali-notes]|
-|kde_neon        |current         |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|manjaro         |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[manjaro notes][manjaro-notes]|
-|mint            |vera            |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|mint-lmde       |elsie           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|mxlinux-sysvinit|23              |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|mxlinux-systemd |23              |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|nixos           |23.05           |✓               |✓                     |✓                      |✓                                    |                                 |[nixos notes][nixos-notes]|
-|opensuse        |tumbleweed      |✓               |✓                     |✓                      |✓                                    |                                 |[opensuse notes][opensuse-notes]|
-|parrot          |5               |✓               |✓                     |disk images only       |✓                                    |✓                                |[parrot notes][parrot-notes]|
-|pop_os          |22.04           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|proxmox         |VE 8.0          |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|qubes           |4.1.2           |✓               |✓                     |                       |                                     |                                 |[qubes notes][qubes-notes]|
-|rockylinux      |9               |✓               |✓                     |✓                      |                                     |                                 |[rockylinux notes][rockylinux-notes]|
-|steamos-like    |current         |✓               |✓                     |✓ (shim-signed AUR)    |✓                                    |✓                                |[steamos-like notes][steamos-like-notes]|
-|tails           |latest          |                |✓ (distro specific)   |✓                      |                                     |                                 |[tails notes][tails-notes]|
-|ubuntu          |23.04           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|ubuntu-lts      |22.04           |✓               |✓                     |✓                      |✓                                    |✓                                |              |
-|voidlinux       |current         |✓               |✓                     |                       |✓                                    |                                 |              |
-|zorin           |16              |✓               |✓                     |✓                      |✓                                    |✓                                |              |
+|**Distro**|**Version**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
+|----------------|:--------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|--------------|
+|AlmaLinux       |9               |✓                      |                                     |                                 |[notes][AlmaLinux-notes]|
+|Arch            |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]|
+|Artix           |Current         |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]|
+|Brunch          |Latest          |✓                      |                                     |✓ (partially included)           |[notes][Brunch-notes]|
+|ChromeOS-Flex   |Latest          |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
+|Debian          |Bookworm        |✓                      |✓                                    |✓                                |              |
+|Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |
+|Elementary      |7               |✓                      |✓                                    |✓                                |              |
+|Fedora          |38              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
+|Gentoo-openrc   |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
+|Gentoo-systemd  |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
+|Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
+|LMDE            |Elsie           |✓                      |✓                                    |✓                                |              |
+|Manjaro         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]|
+|Mint            |Vera            |✓                      |✓                                    |✓                                |              |
+|MX              |23              |✓                      |✓                                    |✓                                |              |
+|Neon            |Current         |✓                      |✓                                    |✓                                |              |
+|NixOS           |23.05           |✓                      |✓                                    |                                 |[notes][NixOS-notes]|
+|openSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][openSUSE-notes]|
+|Parrot          |5               |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
+|Pop             |22.04           |✓                      |✓                                    |✓                                |              |
+|Proxmox         |VE 8.0          |✓                      |✓                                    |✓                                |              |
+|Qubes           |4.1.2           |                       |                                     |                                 |[notes][Qubes-notes]|
+|RockyLinux      |9               |✓                      |                                     |                                 |[notes][RockyLinux-notes]|
+|SteamOS         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
+|Tails           |Latest          |✓                      |                                     |                                 |[notes][Tails-notes]|
+|Ubuntu          |23.04           |✓                      |✓                                    |✓                                |              |
+|Ubuntu-LTS      |22.04           |✓                      |✓                                    |✓                                |              |
+|VoidLinux       |Current         |                       |✓                                    |                                 |              |
+|Zorin           |16              |✓                      |✓                                    |✓                                |              |
 
 
-## Encryption
+## Quick start
 
-Encryption is highly recommended as it protects physical access to your personal data.
-
-If selected, Linuxloops will setup encryption on the rootfs (including swap) using LUKS2. However, note that tails and brunch/chromeos-flex have their own encryption mechanism (and that in the case of brunch/chromeos-flex you will not have the necessary key to decrypt userdata from outside chromeos as it is generated by the system so ensure your data is synced on the cloud or make regular backups).
-  
-Note: By default, after a Linuxloops install the keyboard will be set to Qwerty US layout.
+Linuxloops can be used from any Linux distribution or from Windows WSL, it has limited dependencies that are generally installed by default (most notably `curl`, `tar`, `xz`).
+Note: Windows WSL does not allow to write directly to a disk but you can create images and flash them to a drive using Rufus/Etcher or boot them from [Grub2Win][Grub2Win link].
 
 
-## Install instructions
+### GUI installer
 
-This guide has been split into seperate sections depending on your current operating system.
+Install the `zenity` package for your distro.
+- Debian-based distro: `sudo apt install zenity`
+- Arch-based distro: `sudo pacman -S zenity`
+- Fedora-based distro: `sudo dnf install zenity`
 
-### [Install from Linux][linux-guide]
-### [Install from Windows][windows-guide]
+Download the linuxloops script:
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`
+
+Start the installer in GUI mode:
+`sudo bash ~/linuxloops`
+
+
+### CLI installer
+
+Download the linuxloops script:
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`
+
+Below is the list of command line flags:
+```
+Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
+-distro, --distribution <distribution name>			(Distribution to install)
+-env, --environment <desktop environment>			(Desktop environment to install)
+-dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
+-s, --size <total install size>					(number in GB, minimum 14GB)
+-z, --swapsize <swap size>					(number in GB)
+-b, --btrfs							(Use btrfs for the root filesystem)
+-e, --encrypt							(Encrypt the root filesystem)
+-L, --locale <locale>						(specify locale to be used, by default "en_US")
+-K, --keymap <keymap>						(specify keymap to be used, by default "us")
+-T, --timezone <timezone>					(specify timezone to be used, by default "UTC")
+-n, --nvidia							(Install nvidia drivers)
+-S, --surface							(Add patches for Surface devices from github.com/linux-surface)
+-c, --custom-packages						(list of additional packages to be installed - space separated)
+-C, --custom-script						(bash script that should be run at the end of the install process)
+-k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
+-l, --list							(List available distros and desktop environments)
+-ll, --list-locales						(List available locales)
+-lk, --list-keymaps						(List available keymaps)
+-lt, --list-timezones						(List available locales)
+-h, --help							(Display this menu)
+```
+
+The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:
+`sudo bash ~/linuxloops -l`
+
+As an example:
+`sudo bash ~/linuxloops -distro Ubuntu -env kde-full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.
+`sudo bash ~/linuxloops -distro Arch -env cinnamon -dst /home/username/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment with the linux-surface patches in a 30 GB image located at /home/username/arch.img.
 
 
 ## Complementary instructions
 
-You will find below additional instructions to go further with Linuxloops.
-
-### [Live image][live-image]
-### [Custom install parameters][custom-guide]
+### [Detailled instructions to install from Linux][linux-guide]
+### [Detailled instructions to install from Windows][windows-guide]
+### [Using the Linuxloops Live image][live-image]
 ### [Use a disk image in a virtual machine][vm-guide]
 ### [Data recovery from an image][recovery-guide]
 ### [Recommended setups][recommended-setups]
@@ -113,23 +147,10 @@ Currently, support for LinuxLoops is provided in the off-topic channel of the br
 [![Discord][discord-shield]][discord-url]
 
 
-## Pull requests
-
-Clearly, in its current state, LinuxLoops is not perfect and I am counting on the community to help by submitting pull requests, notably to:
-- Add new desktop environments / windows managers targets (especially windows managers as I do not have much experience with those).
-- Fiabilise the installed packages base for each target.
-- Extend Linuxloops customization principles.
-- Fix random bugs.
-
-However:
-- New linux distros will only be added if they present an effective interest (as Linuxloops is an installer, a distro which would mainly consist of a custom installer and a theme are not considered relevant).
-- Changes related to the default partitioning scheme can be discussed, however in order to support a wide range of distros only widely supported filesystems can be considered.
-
-You can also feel free to make your own fork of LinuxLoops and customize it to your needs (it is just a bash script).
-
-
 ## Special Thanks
+
 - The [lxc/lxd][lxc link] project for maintaining Linux container rootfs archives.
+- The [Grub2Win][Grub2Win link] project for allowing the GRUB bootloader to be installed on devices running Windows.
 - The [Linux-Surface crew][linux-surface link] for greatly improving Linux support on Surface devices.
 
 
@@ -143,33 +164,33 @@ You can also feel free to make your own fork of LinuxLoops and customize it to y
 [discord-url]: https://discord.gg/x2EgK2M
 
 <!-- Internal Links -->
-[almalinux-notes]: ./Readme/Distro-notes.md#almalinux
-[archlinux-notes]: ./Readme/Distro-notes.md#archlinux
-[artixlinux-notes]: ./Readme/Distro-notes.md#artixlinux
-[brunch-notes]: ./Readme/Distro-notes.md#brunch
-[chromeos-flex-notes]: ./Readme/Distro-notes.md#chromeos-flex
-[fedora-notes]: ./Readme/Distro-notes.md#fedora
-[gentoo-notes]: ./Readme/Distro-notes.md#gentoo
-[kali-notes]: ./Readme/Distro-notes.md#kali
-[manjaro-notes]: ./Readme/Distro-notes.md#manjaro
-[nixos-notes]: ./Readme/Distro-notes.md#nixos
-[opensuse-notes]: ./Readme/Distro-notes.md#opensuse
-[parrot-notes]: ./Readme/Distro-notes.md#parrot
-[qubes-notes]: ./Readme/Distro-notes.md#qubes
-[rockylinux-notes]: ./Readme/Distro-notes.md#rockylinux
-[steamos-like-notes]: ./Readme/Distro-notes.md#steamos-like
-[tails-notes]: ./Readme/Distro-notes.md#tails
+[AlmaLinux-notes]: ./Readme/Distro-notes.md#AlmaLinux
+[Arch-notes]: ./Readme/Distro-notes.md#Arch
+[Artix-notes]: ./Readme/Distro-notes.md#Artix
+[Brunch-notes]: ./Readme/Distro-notes.md#Brunch
+[ChromeOS-Flex-notes]: ./Readme/Distro-notes.md#ChromeOS-Flex
+[Fedora-notes]: ./Readme/Distro-notes.md#Fedora
+[Gentoo-notes]: ./Readme/Distro-notes.md#Gentoo
+[Kali-notes]: ./Readme/Distro-notes.md#Kali
+[Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
+[NixOS-notes]: ./Readme/Distro-notes.md#NixOS
+[openSUSE-notes]: ./Readme/Distro-notes.md#openSUSE
+[Parrot-notes]: ./Readme/Distro-notes.md#Parrot
+[Qubes-notes]: ./Readme/Distro-notes.md#Qubes
+[RockyLinux-notes]: ./Readme/Distro-notes.md#RockyLinux
+[SteamOS-notes]: ./Readme/Distro-notes.md#SteamOS
+[Tails-notes]: ./Readme/Distro-notes.md#Tails
 
 [linux-guide]: ./Readme/Install-with-linux.md
 [windows-guide]: ./Readme/Install-with-windows.md
-
 [live-image]: ./Readme/Live-image.md
-[custom-guide]: ./Readme/Custom-install.md
 [vm-guide]: ./Readme/Virtual-machines.md
 [recovery-guide]: ./Readme/Data-recovery.md
 [recommended-setups]: ./Readme/Recommended-setups.md
 [secure-boot]: ./Readme/Secure-boot.md
 
 <!-- Outbound Links -->
+[Grub2Win link]: https://sourceforge.net/projects/grub2win/
 [lxc link]: https://linuxcontainers.org/
 [linux-surface link]: https://github.com/linux-surface/linux-surface
+

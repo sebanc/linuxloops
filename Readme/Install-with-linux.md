@@ -8,139 +8,82 @@
 <!-- Installation Guide -->
 # Installation from Linux
 
-Linuxloops can install distros on drives or inside disk images.
-
-## Installation on a drive (hdd, sdcard, usb)
-
-### Requirements
+## Requirements
 - x86_64 based computer with UEFI BIOS.
 - Administrator access.
 - A drive with at least 14 GB available space.
 
-### Install guide
+## Install guide
 
-<details>
-  <summary>Click here to open the LinuxLoops install guide  on a drive (hdd, sdcard, usb).</summary>
+1. Download the linuxloops script:
 
-1. Make sure `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz` binaries are installed.
-If you intend to use the GUI installer, also make sure `zenity` package is installed.
-
-2. Change the directory to your Downloads folder.
-
-`cd ~/Downloads`
-
-3. Download the linuxloops script:
-
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`
   
-4. Launch Linuxloops install
+2. Launch the Linuxloops script
 
-- To use the GUI installer, run:
+- To use the GUI installer, install the `zenity` package for your distro and then run:
 
-`sudo bash ./linuxloops`
-
-Follow the installer menu choosing the distro, desktop environment, destination drive...
+`sudo bash ~/linuxloops`
 
 - Otherwise using the command line:
+```
+Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
+-distro, --distribution <distribution name>			(Distribution to install)
+-env, --environment <desktop environment>			(Desktop environment to install)
+-dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
+-s, --size <total install size>					(number in GB, minimum 14GB)
+-z, --swapsize <swap size>					(number in GB)
+-b, --btrfs							(Use btrfs for the root filesystem)
+-e, --encrypt							(Encrypt the root filesystem)
+-L, --locale <locale>						(specify locale to be used, by default "en_US")
+-K, --keymap <keymap>						(specify keymap to be used, by default "us")
+-T, --timezone <timezone>					(specify timezone to be used, by default "UTC")
+-n, --nvidia							(Install nvidia drivers)
+-S, --surface							(Add patches for Surface devices from github.com/linux-surface)
+-c, --custom-packages						(list of additional packages to be installed - space separated)
+-C, --custom-script						(bash script that should be run at the end of the install process)
+-k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
+-l, --list							(List available distros and desktop environments)
+-ll, --list-locales						(List available locales)
+-lk, --list-keymaps						(List available keymaps)
+-lt, --list-timezones						(List available locales)
+-h, --help							(Display this menu)
+```
 
-Linuxloops arguments description:  
-"-distro <distribution>": selects the linux distro (mandatory).  
-"-env <desktop_environment>": selects the default desktop environment (optional, otherwise gnome is usually selected by default).  
-"-dst <path>": destination is the target drive such as "/dev/sdX" (mandatory).  
-"-s" <number>: size of the install on drive in GB (optional, if not specified the full disk size is used).  
-"-z" <number>: size of the swap (optional) (optional, no swap by default).  
-"-b": use btrfs format for the root filesystem (instead of ext4)  
-"-e": enable rootfs and swap encryption (optional but highly recommended).  
-"-n": automatically install the latest nvidia proprietary driver (optional).  
-"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
+The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:
+`sudo bash ~/linuxloops -l`
 
-As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst /dev/sdX -s 24 -z 4 -e` will install ubuntu with the complete kde environment on the drive /dev/sdX taking 24GB of storage (the remaining space is unallocated) out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
+As an example:
+`sudo bash ~/linuxloops -distro Ubuntu -env kde-full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.
+`sudo bash ~/linuxloops -distro Arch -env cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.
 
-5. Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.
+3. Finalisation (For disk installs)
 
-6. (Secure Boot enabled) You should see a blue screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.
+Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.
 
-</details>
+If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.
 
-## Installation in a disk image
+3. Finalisation (For disk image installs)
 
-### Requirements
-- x86_64 based computer with UEFI BIOS.
-- Administrator access.
-- 14 GB available space on an unencrypted btrfs, ext4, exfat or ntfs partition.
-- GRUB as Linux distro bootloader.
+Create a the grub configuration needed to boot the image (according to the previous example):
 
-### Install guide
+`cat /etc/grub.d/40_custom ~/arch.img.grub.txt | sudo tee /etc/grub.d/99_linuxloops`
 
-<details>
-  <summary>Click here to open the LinuxLoops install guide in a disk image.</summary>
-
-1. Make sure `btrfs-progs`, `cryptsetup`, `curl`, `dosfstools`, `fdisk`, `tar` and `xz` binaries are installed.
-If you intend to use the GUI installer, also make sure `zenity` package is installed.
-
-2. Change the directory to your Downloads folder.
-
-`cd ~/Downloads`
-
-3. Download the linuxloops script:
-
-`curl -O -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops`
-
-4. Create a directory for linuxloops images on an unencrypted partition (in btrfs, ext4, exfat or ntfs format).
-
-As an example `mkdir ~/linuxloops` will create a LinuxLoops directory within the user account path.
-  
-5. Launch Linuxloops install
-
-- To use the GUI installer, run:
-
-`sudo bash ./linuxloops`
-
-Follow the installer menu choosing the distro, desktop environment, image path... (in this example the image path would be /home/username/linuxloops).
-
-- Otherwise using the command line:
-
-Linuxloops arguments description:  
-"-distro <distribution>": selects the linux distro (mandatory).  
-"-env <desktop_environment>": selects the default desktop environment (optional, gnome desktop environment is usually selected by default).  
-"-dst <path>": destination is the image path such as "~/linuxloops/distro.img" (mandatory).  
-"-s" <number>: size of the disk image in GB (optional, 14GB by default).  
-"-z" <number>: size of the swap (optional) (optional, no swap by default).  
-"-b": use btrfs format for the root filesystem (instead of ext4)  
-"-e": enable rootfs and swap encryption (optional but highly recommended).  
-"-n": automatically install the latest nvidia proprietary driver (optional).  
-"-S": automatically apply Microsoft Surface patches from www.github.com/linux-surface (optional, Surface patches are not included by default) (optional).  
-
-As an example `sudo bash ./linuxloops -distro ubuntu -env kde-full -dst ~/linuxloops/ubuntu.img -s 24 -z 4 -e` will install ubuntu with the complete kde environment a disk image located at path "~/linuxloops/ubuntu.img" of 24GB size out of which 4GB are dedicated to swap and with an encrypted rootfs/swap.
-
-6. Create a the grub configuration needed to boot the image.
-
-`cat /etc/grub.d/40_custom <image_path>.grub.txt | sudo tee /etc/grub.d/99_linuxloops`
-
-According to the previous example:
-
-`cat /etc/grub.d/40_custom ~/linuxloops/ubuntu.img.grub.txt | sudo tee /etc/grub.d/99_linuxloops`
-
-7. Commit the new entries to Grub.
+Commit the new entries to Grub.
 
 `sudo grub-mkconfig -o /boot/grub/grub.cfg`
 
-8. (Secure Boot enabled) Enroll the Secure Boot DER certificate.
+If Secure Boot is enabled, enroll the Secure Boot DER certificate:
 
-`sudo mokutil --import ~/linuxloops/ubuntu.img.der`
+`sudo mokutil --import ~/arch.img.der`
 
 Choose a password, reboot your computer, you should see a blue screen, select "Enroll MOK" and validate with your chosen password.
 
-9. Reboot your computer and start the LinuxLoops grub entry from your distro's grub menu.
+Start the LinuxLoops grub entry from your distro's grub menu.
 
-</details>
+## Support
 
-## What to do after installation
-- Set-up your language and timezone (refer to the chosen distro's online resources)
-- Create additional users if needed.
-- Get familiar with the package manager of the distro you have installed (refer to the chosen distro's online resources) and install your favorite software.
-
-In case you run into issues while installing or using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:
+In case you run into issues while using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:
 
 [![Discord][discord-shield]][discord-url]
 
