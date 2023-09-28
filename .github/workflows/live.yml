@@ -14,16 +14,12 @@ jobs:
     name: Build Linuxloops Live Disk
     runs-on: ubuntu-22.04
     steps:
-      - name: Install dependencies
-        run: |
-          yes | DEBIAN_FRONTEND=noninteractive sudo apt update
-          yes | DEBIAN_FRONTEND=noninteractive sudo apt install btrfs-progs curl cryptsetup dosfstools fdisk tar xz-utils p7zip-full
       - name: Checkout linuxloops script
         uses: actions/checkout@v3
       - name: Set current date
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk
-        run: sudo CUSTOM_PACKAGES="firefox-esr gedit gparted evince" bash linuxloops -distro debian -env cinnamon -dst linuxloops_live_${{ env.current_date }}.img -L -b
+        run: sudo bash linuxloops -distro Debian -env cinnamon -dst linuxloops_live_${{ env.current_date }}.img -u -b -c "firefox-esr gedit gparted evince"
       - name: Compress Linuxloops Live Disk
         run: 7z a linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
       - name: Generate release details
