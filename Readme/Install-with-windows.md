@@ -9,25 +9,25 @@
 # Installation from Linux
 
 ## Requirements
-- x86_64 based computer with UEFI BIOS.
-- Administrator access.
-- At least 14 GB available space.
+- x86_64 based computer with UEFI BIOS.  
+- Administrator access.  
+- At least 14 GB available space.  
 
 ## Install guide
 
-1. Launch WSL
+1. Launch WSL  
 
-2. Download the linuxloops script:
+2. Download the linuxloops script:  
 
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`  
   
-3. Launch the Linuxloops script
+3. Launch the Linuxloops script  
 
-- To use the GUI installer, install the `zenity` package for your distro and then run:
+- To use the GUI installer, install the `zenity` package for your distro and then run:  
 
 `sudo bash ~/linuxloops`
 
-- Otherwise using the command line:
+- Otherwise using the command line:  
 ```
 Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
 -distro, --distribution <distribution name>			(Distribution to install)
@@ -52,29 +52,29 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -h, --help							(Display this menu)
 ```
 
-The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:
-`sudo bash ~/linuxloops -l`
+The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
+`sudo bash ~/linuxloops -l`  
 
-As an example:
-`sudo bash ~/linuxloops -distro Arch -env cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.
+As an example:  
+`sudo bash ~/linuxloops -distro Arch -env cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.  
 
-4. Finalisation (For disk installs)
+4. Finalisation (For disk installs)  
 
-Use a software like Rufus or Etcher to write the image located at C:\Users\"username"\Downloads\Arch.img on a drive.
+Use a software like Rufus or Etcher to write the image located at C:\Users\"username"\Downloads\Arch.img on a drive.  
 
-Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.
+Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.  
 
-If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.
+If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.  
 
-4. Finalisation (For disk image installs)
+4. Finalisation (For disk image installs)  
 
-Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file C:\Users\"username"\Downloads\Arch.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".
+Install and open Grub2Win, click on "Manage Boot Menu" -> "Add a new entry" -> set "Type" as "Create user section", open the file C:\Users\"username"\Downloads\Arch.img.grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click "Apply" and "OK".  
 
-Start the LinuxLoops grub entry from your Grub2Win menu.
+Start the LinuxLoops grub entry from your Grub2Win menu.  
 
 ## Support
 
-In case you run into issues while using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:
+In case you run into issues while using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:  
 
 [![Discord][discord-shield]][discord-url]
 

@@ -6,27 +6,25 @@
 [![Discord][discord-shield]][discord-url]
   
 # LinuxLoops live image
-  
-  ***
 
-A linuxLoops live image is available in the releases section of github.
+A linuxLoops live image is available in the releases section of github.  
 
-This live image contains a full system with linuxloops installed by default to make the installation process even easier.
-Note: you can use install the grub configuration on a linuxloops live USB to boot images installed on your hdd.
+This live image contains a full system with linuxloops installed by default to make the installation process even easier.  
+Note: you can use install the grub configuration on a linuxloops live USB to boot images installed on your hdd.  
 
 
 ## With Linux
 
-Download the live image and run the following command to write it to the disk (this example assumes your drive is /dev/sdX:
+Download the live image and run the following command to write it to the disk (this example assumes your drive is /dev/sdX:  
 
 `7z x linuxloops_live_XXXXXXXX.7z linuxloops_live_*.img -so | sudo tee /dev/sdX`
 
 
 ## With Windows
 
-Install 7zip and extract the linuxloops_live_XXXXXXXX.7z file.
+Install 7zip and extract the linuxloops_live_XXXXXXXX.7z file.  
 
-Write the resulting image file to your USB flashdrive using Rufus, Etcher or a similar tool.
+Write the resulting image file to your USB flashdrive using Rufus, Etcher or a similar tool.  
 
 
 <!-- Reference Links -->
