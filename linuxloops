@@ -5605,7 +5605,7 @@ POLKIT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
-surface_remove="linux-neptune linux-neptune-headers"
+surface_remove="linux linux-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_packages
