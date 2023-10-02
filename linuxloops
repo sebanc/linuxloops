@@ -185,7 +185,7 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'SteamOS')
-	available_desktops=("none" "full" "full-autologin")
+	available_desktops=("none" "desktop" "desktop-autologin" "gamescope-session")
 	bootstrap="lxc archlinux current default"
 	bootloader_id="steamos"
 	bootloader_name="shimx64.efi"
@@ -4970,7 +4970,7 @@ Architecture = auto
 #IgnoreGroup =
  
 #NoUpgrade   =
-NoExtract   = etc/sddm.conf.d/steamdeck.conf etc/skel/Desktop/Return.desktop etc/xdg/autostart/steam.desktop usr/bin/jupiter-plasma-bootstrap usr/lib/udev/rules.d/99-kwin-ignore-tablet-mode.rules usr/share/xsessions/*
+NoExtract   = etc/sddm.conf.d/steamdeck.conf etc/skel/Desktop/Return.desktop etc/xdg/autostart/jupiter-plasma-bootstrap.desktop etc/xdg/autostart/steam.desktop usr/bin/jupiter-plasma-bootstrap usr/lib/udev/rules.d/99-kwin-ignore-tablet-mode.rules usr/share/xsessions/*
  
 # Misc options
 #UseSyslog
@@ -5016,25 +5016,25 @@ LocalFileSigLevel = Optional
 #[testing]
 #Include = /etc/pacman.d/mirrorlist
  
-[core-main]
+[core-staging]
 Include = /etc/pacman.d/mirrorlist
  
-[extra-main]
+[extra-staging]
 Include = /etc/pacman.d/mirrorlist
  
 #[community-testing]
 #Include = /etc/pacman.d/mirrorlist
  
-[community-main]
+[community-staging]
 Include = /etc/pacman.d/mirrorlist
  
-[multilib-main]
+[multilib-staging]
 Include = /etc/pacman.d/mirrorlist
 
-[jupiter-main]
+[jupiter-staging]
 Include = /etc/pacman.d/mirrorlist
  
-[holo-main]
+[holo-staging]
 Include = /etc/pacman.d/mirrorlist
  
 # An example of a custom package repository.  See the pacman manpage for
@@ -5057,7 +5057,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-neptune-61 linux-neptune-61-headers dkms linux-firmware-neptune sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs
+pacman -Syu --noconfirm --needed linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
@@ -5065,18 +5065,18 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
 basic_packages="gvfs udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
-specific_packages="archlinux-wallpaper flatpak gamescope mangohud steam-jupiter-stable vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
+specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-jupiter-stable vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
 case "${desktop}" in
-	'full')
+	'desktop')
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam steamdeck-kde-presets
+pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets
 "
 	;;
-	'full-autologin')
+	'desktop-autologin')
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam steamdeck-kde-presets
+pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets
 cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
 [Autologin]
 Session=plasmawayland
@@ -5089,12 +5089,54 @@ Enabled=false
 KWALLET
 "
 	;;
+	'gamescope-session')
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets
+ln -s /tmp/zz-steamos.conf /etc/sddm.conf.d/zz-steamos.conf
+cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
+[General]
+DisplayServer=wayland
+
+[Autologin]
+Relogin=true
+Session=deck-session.desktop
+User=$username
+
+[X11]
+# Janky workaround for wayland sessions not stopping in sddm, kills
+# all active sddm-helper sessions on teardown
+DisplayStopCommand=/usr/bin/gamescope-wayland-teardown-workaround
+SDDM
+cat >/usr/share/wayland-sessions/deck-session.desktop <<'GAMESCOPE-SESSION'
+[Desktop Entry]
+Encoding=UTF-8
+Name=SteamOS (gamescope)
+Comment=SteamOS Big Picture session
+Exec=deck-session
+Icon=steamicon.png
+Type=Application
+DesktopNames=gamescope
+GAMESCOPE-SESSION
+mkdir -p /etc/skel/Desktop
+cat >/etc/skel/Desktop/Return.desktop <<'GAMINGSESSION'
+[Desktop Entry]
+Name=Return to Gaming Mode
+Exec=return-deck-session
+Icon=steamdeck-gaming-return
+Terminal=false
+Type=Application
+StartupNotify=false
+GAMINGSESSION
+chmod 0755 /etc/skel/Desktop/Return.desktop
+"
+	;;
 esac
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 ${install_desktop}
-systemctl enable ${desktop_services} sddm.service
+systemctl enable ${desktop_services} dbus-broker.service sddm.service
+systemctl enable --global dbus-broker.service
 mkdir -p /etc/sddm.conf.d
 echo -e '[Theme]\nCurrent=breeze' > /etc/sddm.conf.d/99_linuxloops.conf
 /linuxloops/install_steamos_configs
@@ -5129,6 +5171,7 @@ set -e
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export WINE_CPU_TOPOLOGY=8:0,1,2,3,4,5,6,7
 export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
+export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
 export vk_xwayland_wait_ready=false
 export INTEL_DEBUG=noccs
 export R600_DEBUG=nodcc
@@ -5136,11 +5179,21 @@ export R600_DEBUG=nodcc
 pkill -9 gamescope || true
 pkill -9 steam || true
 
-gamescope -b -e -f -h 720 -- steam -steamos3 -steampal -steamdeck -gamepadui
+gamescope --generate-drm-mode fixed -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
 DECKSESSION
 chmod 0755 /usr/bin/deck-session
+cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
+#!/bin/bash
+
+echo -e '[Autologin]\nSession=deck-session' > /tmp/zz-steamos.conf
+
+qdbus org.kde.Shutdown /Shutdown org.kde.Shutdown.logout
+RUNGAMINGSESSION
+chmod 0755 /usr/bin/return-deck-session
 cat >/usr/bin/steamos-session-select <<'SESSIONSELECT'
 #!/bin/bash
+
+echo -e '[Autologin]\nSession=plasmawayland' > /tmp/zz-steamos.conf
 
 pkill -9 steam
 pkill -9 gamescope
@@ -5155,6 +5208,61 @@ cat >/usr/share/polkit-1/actions/org.valve.steamos.policy <<'POLKIT'
 
   <vendor>Valve SteamOS</vendor>
   <vendor_url>http://www.steampowered.com</vendor_url>
+
+  <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-format-sdcard">
+    <description>Run the steamos sdcard helper</description>
+    <icon_name>package-x-generic</icon_name> 
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-format-sdcard</annotate>
+  </action>
+
+  <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-select-branch">
+    <description>Run the steamos select branch helper</description>
+    <icon_name>package-x-generic</icon_name> 
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-select-branch</annotate>
+  </action>
+
+  <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-set-hostname">
+    <description>Set the hostname</description>
+    <icon_name>package-x-generic</icon_name> 
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-set-hostname</annotate>
+  </action>
+
+  <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-set-timezone">
+    <description>Set the timezone</description>
+    <icon_name>package-x-generic</icon_name> 
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-set-timezone</annotate>
+  </action>
+
+  <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-priv-write">
+    <description>Helper to write to a set of device nodes</description>
+    <icon_name>package-x-generic</icon_name> 
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-priv-write</annotate>
+  </action>
 
   <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-reboot-now">
     <description>Reboot system</description>
@@ -5178,15 +5286,235 @@ cat >/usr/share/polkit-1/actions/org.valve.steamos.policy <<'POLKIT'
     <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-poweroff-now</annotate>
   </action>
 
+  <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-enable-sshd">
+    <description>Enable the SSH server</description>
+    <icon_name>package-x-generic</icon_name>
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-enable-sshd</annotate>
+  </action>
+
 </policyconfig>
 POLKIT
 mkdir -p /usr/bin/steamos-polkit-helpers
+cat >/usr/bin/steamos-polkit-helpers/steamos-format-sdcard <<'FORMATSDCARD'
+#!/bin/bash
+
+set -eu
+
+if [[ \$EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "\$0" "\$@"
+fi
+
+exec /usr/lib/hwsupport/format-sdcard.sh "\$@"
+FORMATSDCARD
+chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-format-sdcard
+mkdir -p /usr/lib/hwsupport
+cat >/usr/lib/hwsupport/format-sdcard.sh <<'FORMATSDCARDSCRIPT'
+#!/bin/bash
+
+set -e
+
+MOUNT_LOCK="/var/run/sdcard-mount.lock"
+if [ -e /dev/mmcblk2 ]; then SDCARD_DEVICE="/dev/mmcblk2"; elif [ -e /dev/mmcblk1 ]; then SDCARD_DEVICE="/dev/mmcblk1"; else SDCARD_DEVICE="/dev/mmcblk0"; fi
+SDCARD_PARTITION="\$SDCARD_DEVICE"p1
+FORCE_FORMAT=0
+
+while [[ \$# -gt 0 ]]; do
+    case "\$1" in
+        --force) FORCE_FORMAT=1; shift ;;
+        *) echo "Unknown option \$1"; exit 22;;
+    esac
+done
+
+if [[ ! -e "\$SDCARD_DEVICE" ]]; then
+    exit 19 #ENODEV
+fi
+
+systemctl stop sdcard-mount@mmcblk0p1.service
+
+# lock file prevents the mount service from re-mounting as it gets triggered by udev rules
+on_exit() { rm -f -- "\$MOUNT_LOCK"; }
+trap on_exit EXIT
+echo \$\$ > "\$MOUNT_LOCK"
+
+# Test the sdcard
+# Some fake cards advertise a larger size than their actual capacity,
+# which can result in data loss or other unexpected behaviour. It is
+# best to try to detect these issues as early as possible.
+if [[ "\$FORCE_FORMAT" == "0" ]]; then
+    echo "stage=testing"
+    if ! f3probe --destructive "\$SDCARD_DEVICE"; then
+        # Fake sdcards tend to only behave correctly when formatted as exfat
+        # The tricks they try to pull fall apart with any other filesystem and
+        # it renders the card unusuable.
+        #
+        # Here we restore the card to exfat so that it can be used with other devices.
+        # It won't be usable with the deck, and usage of the card will most likely
+        # result in data loss. We return a special error code so we can surface
+        # a specific error to the user.
+        echo "stage=rescuing"
+        echo "Bad sdcard - rescuing"
+        for i in {1..3}; do # Give this a couple of tries since it fails sometimes
+            echo "Create partition table: \$i"
+            dd if=/dev/zero of="\$SDCARD_DEVICE" bs=512 count=1024 # see comment in similar statement below
+            if ! parted --script "\$SDCARD_DEVICE" mklabel msdos mkpart primary 0% 100% ; then
+                echo "Failed to create partition table: \$i"
+                continue # try again
+            fi
+
+            echo "Create exfat filesystem: \$i"
+            sync
+            if ! mkfs.exfat "\$SDCARD_PARTITION"; then
+                echo "Failed to exfat filesystem: \$i"
+                continue # try again
+            fi
+
+            echo "Successfully restored device"
+            break
+        done
+
+        # Return a specific error code so the UI can warn the user about this bad device
+        exit 14 # EFAULT
+    fi
+fi
+
+# Clear out the garbage bits generated by f3probe from the partition table sectors
+# Otherwise parted may think we have existing partitions in a bogus state
+dd if=/dev/zero of="\$SDCARD_DEVICE" bs=512 count=1024
+
+# Format as EXT4 with casefolding for proton compatibility
+echo "stage=formatting"
+sync
+parted --script "\$SDCARD_DEVICE" mklabel gpt mkpart primary 0% 100%
+sync
+mkfs.ext4 -m 0 -O casefold -F "\$SDCARD_PARTITION"
+sync
+
+rm "\$MOUNT_LOCK"
+systemctl start sdcard-mount@mmcblk0p1.service
+
+exit 0
+FORMATSDCARDSCRIPT
+chmod 0755 /usr/lib/hwsupport/format-sdcard.sh
+cat >/usr/bin/steamos-polkit-helpers/steamos-select-branch <<'SELECTBRANCH'
+#!/bin/bash
+
+set -eu
+
+if [[ \$EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "\$0" "\$@"
+fi
+
+exec /usr/bin/steamos-select-branch "\$@"
+SELECTBRANCH
+chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-select-branch
+cat >/usr/bin/steamos-select-branch <<'SELECTBRANCHSCRIPT'
+#!/bin/bash
+set -e
+
+BRANCH_PATH="/var/lib/steamos-branch"
+
+if [[ "\$#" = 1 ]]; then
+  case "\$1" in
+    "-c")
+      branch=\$(cat "\$BRANCH_PATH" 2> /dev/null || echo "rel")
+      case "\$branch" in
+        "rel" | "rc" | "beta" | "bc" | "main")
+          echo "\$branch"
+          exit 0
+          ;;
+        *)
+          echo "unknown branch name in \$BRANCH_PATH: \$branch" 1>&2
+          exit 1
+          ;;
+      esac
+      ;;
+    "-l")
+      echo rel
+      echo rc
+      echo beta
+      echo bc
+      echo main
+      exit 0
+      ;;
+    "rel" | "rc" | "beta" | "bc" | "main")
+      echo "\$1" > "\$BRANCH_PATH"
+      exit 0
+      ;;
+  esac
+fi
+
+echo "Usage: steamos-select-branch <-c|-l|rel|rc|beta|bc|main>" 1>&2
+SELECTBRANCHSCRIPT
+chmod 0755 /usr/bin/steamos-select-branch
+cat >/usr/bin/steamos-polkit-helpers/steamos-set-hostname <<'SETHOSTNAME'
+#!/bin/bash
+
+set -eu
+
+if [[ \$EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "\$0" "\$@"
+fi
+
+hostnamectl set-hostname "$1"
+SETHOSTNAME
+chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-set-hostname
 cat >/usr/bin/steamos-polkit-helpers/steamos-set-timezone <<'SETTIMEZONE'
 #!/bin/bash
 
-exit 0
+set -eu
+
+if [[ \$EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "\$0" "\$@"
+fi
+
+timedatectl set-timezone "$1"
 SETTIMEZONE
 chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-set-timezone
+cat >//usr/bin/steamos-polkit-helpers/steamos-priv-write <<'PRIVWRITE'
+#!/bin/bash
+
+set -eu
+
+if [[ \$EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "\$0" "\$@"
+fi
+
+WRITE_PATH="\$1"
+WRITE_VALUE="\$2"
+
+function CommitWrite()
+{
+    echo "commit: \$WRITE_VALUE -> \$WRITE_PATH" | systemd-cat -t p-steamos-priv-write -p warning
+    echo "\$WRITE_VALUE" > "\$WRITE_PATH"
+    chmod a+w "\$WRITE_PATH"
+    exit 0
+}
+
+function DeclineWrite()
+{
+    echo "decline: \$WRITE_VALUE -> \$WRITE_PATH" | systemd-cat -t p-steamos-priv-write -p err
+    echo "\$WRITE_VALUE" > "\$WRITE_PATH"
+    exit 1
+}
+
+echo "checking: \$WRITE_PATH" | systemd-cat -t p-steamos-priv-write -p warning
+if [[ "\$WRITE_PATH" == /sys/class/backlight/*/brightness ]]; then
+   CommitWrite
+fi
+
+DeclineWrite
+PRIVWRITE
+chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-priv-write
 cat >/usr/bin/steamos-polkit-helpers/steamos-reboot-now <<'REBOOT'
 #!/bin/bash
 
@@ -5216,7 +5544,14 @@ chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-poweroff-now
 cat >/usr/bin/steamos-polkit-helpers/steamos-enable-sshd <<'ENABLESSHD'
 #!/bin/bash
 
-exit 0
+set -eu
+
+if [[ \$EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "\$0" "\$@"
+fi
+
+exec systemctl enable --now sshd
 ENABLESSHD
 chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-enable-sshd
 cat >/usr/bin/steamos-polkit-helpers/steamos-update <<'FAKESTEAMOSUPDATE'
@@ -5237,6 +5572,21 @@ cat >/usr/bin/steamos-polkit-helpers/jupiter-dock-updater <<'FAKEDOCKUPDATE'
 exit 7
 FAKEDOCKUPDATE
 chmod 0755 /usr/bin/steamos-polkit-helpers/jupiter-dock-updater
+cat >/usr/bin/gamescope-wayland-teardown-workaround <<'GAMESCOPETEARDOWN'
+#!/bin/bash
+
+set -eu
+
+TARGETS=('/bin/bash /usr/bin/deck-session'
+         '/usr/bin/kwin_x11')
+
+for target in "\${TARGETS[@]}"; do
+  for processtree in \$(pgrep -xf "\$target" || true); do
+    kill -- "-\$processtree"
+  done
+done
+GAMESCOPETEARDOWN
+chmod 0755 /usr/bin/gamescope-wayland-teardown-workaround
 INSTALL_STEAMOS_CONFIGS
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_steamos_configs
 
@@ -5255,7 +5605,7 @@ POLKIT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
-surface_remove="linux-neptune-61 linux-neptune-61-headers"
+surface_remove="linux-neptune linux-neptune-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_packages
@@ -7929,15 +8279,15 @@ if [ "${install_type}" == "disk" ]; then
 			if [ -z "${fstype}" ]; then exit 1; fi
 			encryption=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next")
 			if [ -z "${encryption}" ]; then exit 1; fi
+			swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1)
+			if [ -z "${swap_size}" ]; then exit 1; fi
+			if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
+			if [ -z "${nvidia}" ]; then exit 1; fi
+			if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
+			if [ -z "${surface}" ]; then exit 1; fi
 			customize=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to customize the install ?" --column "Customize install" "No" "Yes" --ok-label="Next")
 			if [ -z "${customize}" ]; then exit 1; fi
 			if [ "${customize}" == "Yes" ]; then
-				if [ -z "${swap_size}" ]; then swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1); fi
-				if [ -z "${swap_size}" ]; then exit 1; fi
-				if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
-				if [ -z "${nvidia}" ]; then exit 1; fi
-				if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
-				if [ -z "${surface}" ]; then exit 1; fi
 				custom_packages=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to install additional packages ? (if so, please provide a space separated package list)" --ok-label="Next")
 				custom_script_enable=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to run a custom script during the install process ? (if so, select a bash script that will be run as root at the end of the install process)" --column "Run a custom script ?" "No" "Yes" --ok-label="Next")
 				if [ -z "${custom_script_enable}" ]; then exit 1; fi
@@ -8014,17 +8364,18 @@ else
 			timezone=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your timezone." --column "Select" --column "Timezone" "${available_timezones[@]}" --ok-label="Next")
 			if [ -z "${timezone}" ]; then exit 1; fi			
 			if [[ " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then fstype=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next"); else fstype="ext4"; fi
-			if [ -z "${encryption}" ] && [ ! -z $(command -v cryptsetup) ]; then encryption=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next"); else encryption="No"; fi
+			if [ -z "${fstype}" ]; then exit 1; fi
+			encryption=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ? This is highly recommended if you intend to keep sensitive data in it, however it will slightly impacts performance." --column "Encryption" "Yes" "No" --ok-label="Next")
 			if [ -z "${encryption}" ]; then exit 1; fi
+			swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1)
+			if [ -z "${swap_size}" ]; then exit 1; fi
+			if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
+			if [ -z "${nvidia}" ]; then exit 1; fi
+			if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
+			if [ -z "${surface}" ]; then exit 1; fi
 			customize=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to customize the install ?" --column "Customize install" "No" "Yes" --ok-label="Next")
 			if [ -z "${customize}" ]; then exit 1; fi
 			if [ "${customize}" == "Yes" ]; then
-				if [ -z "${swap_size}" ]; then swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1); fi
-				if [ -z "${swap_size}" ]; then exit 1; fi
-				if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next"); else nvidia="No"; fi
-				if [ -z "${nvidia}" ]; then exit 1; fi
-				if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ? (enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next"); else surface="No"; fi
-				if [ -z "${surface}" ]; then exit 1; fi
 				custom_packages=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to install additional packages ? (if so, please provide a space separated package list)" --ok-label="Next")
 				custom_script_enable=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to run a custom script during the install process ? (if so, select a bash script that will be run as root at the end of the install process)" --column "Run a custom script ?" "No" "Yes" --ok-label="Next")
 				if [ -z "${custom_script_enable}" ]; then exit 1; fi

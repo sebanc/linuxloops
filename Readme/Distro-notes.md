@@ -119,12 +119,15 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## SteamOS
 
-SteamOS installed from the "main" branch of the mirror located with minor adjustments to support for standard computers usage:  
-https://steamdeck-packages.steamos.cloud/archlinux-mirror/  
+SteamOS installed from the "staging" branch of the SteamOS repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
+Updates are managed through pacman (with `pacman -Syu` command).  
 
-Compared to the SteamDeck:  
-- The distro will boot by default into a plasma session and you can launch the gamescope session by using the "SteamDeck Session" shortcut (in "Game" section). You can also optionnaly add the "SteamDeck Session" to plasma autostart so that it is launched automatically at boot.  
-- Updates are managed through pacman.  
+3 environments are available:
+- desktop: Boots to sddm in order to support multi-users setup. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
+- desktop-autologin: Auto-login into Plasma. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
+- gamescope-session: Same as the SteamDeck. Boots directly into the SteamOS session. Plasma can be launched with the "Switch to Desktop" SteamOS option.  
+
+Note: Due to a bug with xdg-desktop-portal-kde, flatpak apps will trigger an "app running in the background" notification. Either disable those types of notifications entirely in plasma settings or install flatseal and allow "run in the background" permission.  
 
 
 ## Tails
