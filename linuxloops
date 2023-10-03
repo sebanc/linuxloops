@@ -5107,7 +5107,7 @@ User=$username
 # all active sddm-helper sessions on teardown
 DisplayStopCommand=/usr/bin/gamescope-wayland-teardown-workaround
 SDDM
-cat >/usr/share/wayland-sessions/deck-session.desktop <<'GAMESCOPE-SESSION'
+cat >/usr/share/wayland-sessions/deck-session.desktop <<'DECK_SESSION'
 [Desktop Entry]
 Encoding=UTF-8
 Name=SteamOS (gamescope)
@@ -5116,11 +5116,9 @@ Exec=deck-session
 Icon=steamicon.png
 Type=Application
 DesktopNames=gamescope
-GAMESCOPE-SESSION
-mkdir -p /etc/skel/.config
-echo 'en_US' > /etc/skel/.config/user-dirs.locale
+DECK_SESSION
 mkdir -p /etc/skel/Desktop
-cat >/etc/skel/Desktop/Return.desktop <<'GAMINGSESSION'
+cat >/etc/skel/Desktop/Return.desktop <<'RETURN_TO_GAMESCOPE'
 [Desktop Entry]
 Name=Return to Gaming Mode
 Exec=return-deck-session
@@ -5128,7 +5126,7 @@ Icon=steamdeck-gaming-return
 Terminal=false
 Type=Application
 StartupNotify=false
-GAMINGSESSION
+RETURN_TO_GAMESCOPE
 chmod 0755 /etc/skel/Desktop/Return.desktop
 "
 	;;
@@ -5198,7 +5196,7 @@ pkill -9 steam || true
 
 ulimit -n 524288
 
-gamescope --disable-layers --generate-drm-mode fixed --default-touch-mode 4 --hide-cursor-delay 3000 --fade-out-duration 200 -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
+gamescope --disable-layers --force-composition --generate-drm-mode fixed --default-touch-mode 4 --hide-cursor-delay 3000 --fade-out-duration 200 -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
 DECKSESSION
 chmod 0755 /usr/bin/deck-session
 cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
@@ -6553,6 +6551,7 @@ ln -s /run/"\${dns_manager}" /mnt/etc/resolv.conf
 mount --bind /etc/resolv.conf /mnt/etc/resolv.conf
 chroot /mnt /linuxloops/chroot_init
 if [ -f /linuxloops/install_desktop ]; then chroot /mnt /linuxloops/install_desktop; fi
+if [ -f /linuxloops/install_live ]; then chroot /mnt /linuxloops/install_live; fi
 if [ -f /linuxloops/install_user ]; then chroot /mnt /linuxloops/install_user; fi
 if [ -f /linuxloops/install_settings ]; then chroot /mnt /linuxloops/install_settings; fi
 if [ -f /linuxloops/install_secureboot ]; then chroot /mnt /linuxloops/install_secureboot; fi
@@ -6561,7 +6560,6 @@ if [ -f /linuxloops/install_nvidia ]; then chroot /mnt /linuxloops/install_nvidi
 if [ -f /linuxloops/install_fstab ]; then chroot /mnt /linuxloops/install_fstab; fi
 if [ -f /linuxloops/install_initramfs ]; then chroot /mnt /linuxloops/install_initramfs; fi
 if [ -f /linuxloops/install_bootloader ]; then chroot /mnt /linuxloops/install_bootloader; fi
-if [ -f /linuxloops/install_live ]; then chroot /mnt /linuxloops/install_live; fi
 if [ -f /linuxloops/install_custom_packages ]; then chroot /mnt /linuxloops/install_custom_packages; fi
 if [ -f /linuxloops/install_custom_script ]; then chroot /mnt /linuxloops/install_custom_script; fi
 if [ -f /linuxloops/cleanup ]; then chroot /mnt /linuxloops/cleanup; fi
