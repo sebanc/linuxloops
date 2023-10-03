@@ -20,9 +20,9 @@ The main limitation of Linuxloops is that the partitionning is not currently cus
 
 ## How does it work ?
 
-The LinuxLoops script will chroot into a temporary rootfs images (usually lxc container rootfs or an actual distribution iso) and then perform the install from there using the package manager.  
+The LinuxLoops script will chroot into a temporary rootfs images (usually lxc container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
 
-For security purpose, Linuxloops will not install packages/binaries which are not present in the official repositories. The only exceptions are:  
+For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
 - The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distros are enabled by default as they contain necessary packages for standard use.  
 - For Arch based distros, the "shim-signed" AUR package is included in order to support Secure Boot.  
 

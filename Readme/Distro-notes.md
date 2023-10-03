@@ -127,7 +127,7 @@ Updates are managed through pacman (with `pacman -Syu` command).
 - desktop-autologin: Auto-login into Plasma. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
 - gamescope-session: Same as the SteamDeck. Boots directly into the SteamOS session. Plasma can be launched with the "Switch to Desktop" SteamOS option.  
 
-Note: Due to a bug with xdg-desktop-portal-kde, flatpak apps will trigger an "app running in the background" notification. Either disable those types of notifications entirely in plasma settings or install flatseal and allow "run in the background" permission.  
+Note: Due to a bug with xdg-desktop-portal-kde that has not yet been corrected in the SteamOS repositories, flatpak apps will trigger an "app running in the background" plasma notification. Either disable those types of notifications entirely in plasma settings or install flatseal and allow "run in the background" permission for each app.  
 
 
 ## Tails

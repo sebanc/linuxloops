@@ -111,7 +111,7 @@ case "${1}" in
 	;;
 	'LMDE')
 	available_desktops=("none" "cinnamon" "cinnamon-full")
-	bootstrap="lxc debian bullseye default"
+	bootstrap="lxc debian bookworm default"
 	bootloader_id="linuxmint"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
@@ -3343,7 +3343,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-prog
 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales bullseye /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3352,13 +3352,13 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm -f /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/official-package-repositories.list <<'REPOS'
-deb http://packages.linuxmint.com elsie main upstream import backport #id:linuxmint_main
+deb http://packages.linuxmint.com faye main upstream import backport #id:linuxmint_main
 
-deb https://deb.debian.org/debian bullseye main contrib non-free
-deb https://deb.debian.org/debian bullseye-updates main contrib non-free
-deb http://security.debian.org bullseye-security main contrib non-free
+deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
 
-deb https://deb.debian.org/debian bullseye-backports main contrib non-free
+deb http://security.debian.org bookworm-security main contrib non-free non-free-firmware
 REPOS
 cat >/etc/apt/preferences.d/official-package-repositories.pref <<'PRIORITY'
 Package: *
@@ -5065,7 +5065,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
 basic_packages="gvfs udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
-specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-jupiter-stable vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
+specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-jupiter-stable steam_notif_daemon vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
 case "${desktop}" in
@@ -5140,6 +5140,21 @@ systemctl enable --global dbus-broker.service
 mkdir -p /etc/sddm.conf.d
 echo -e '[Theme]\nCurrent=breeze' > /etc/sddm.conf.d/99_linuxloops.conf
 /linuxloops/install_steamos_configs
+# Temporary XDG desktop portal fix
+cat >/etc/xdg/autostart/xdg-desktop-portal-fix.desktop <<'PORTAL_FIX_AUTOSTART'
+[Desktop Entry]
+Type=Application
+Name=XDG desktop portal fix
+Exec=/usr/lib/xdg-desktop-portal-fix
+OnlyShowIn=KDE;
+NoDisplay=true
+X-KDE-autostart-phase=1
+PORTAL_FIX_AUTOSTART
+cat >/usr/lib/xdg-desktop-portal-fix <<'PORTAL_FIX'
+#!/bin/sh
+systemctl --user restart xdg-desktop-portal
+PORTAL_FIX
+chmod 0755 /usr/lib/xdg-desktop-portal-fix
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -5179,7 +5194,9 @@ export R600_DEBUG=nodcc
 pkill -9 gamescope || true
 pkill -9 steam || true
 
-gamescope --generate-drm-mode fixed -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
+ulimit -n 524288
+
+gamescope --disable-layers --generate-drm-mode fixed --default-touch-mode 4 --hide-cursor-delay 3000 --fade-out-duration 200 -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
 DECKSESSION
 chmod 0755 /usr/bin/deck-session
 cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
@@ -7653,6 +7670,12 @@ Type=Application
 StartupNotify=false
 LIVEICON
 chmod 0755 /usr/share/applications/linuxloops.desktop
+mkdir -p /usr/share/glib-2.0/schemas
+cat >/usr/share/glib-2.0/schemas/zz_noscreenlock.gschema.override <<'DCONF'
+[org.cinnamon.desktop.lockdown]
+disable-lock-screen=true
+DCONF
+if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 INSTALLLIVE
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_live
 }
