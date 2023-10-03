@@ -51,7 +51,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Gentoo-openrc   |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
 |Gentoo-systemd  |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
-|LMDE            |Elsie           |✓                      |✓                                    |✓                                |              |
+|LMDE            |Faye            |✓                      |✓                                    |✓                                |              |
 |Manjaro         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]|
 |Mint            |Vera            |✓                      |✓                                    |✓                                |              |
 |MX              |23              |✓                      |✓                                    |✓                                |              |

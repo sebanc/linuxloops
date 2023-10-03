@@ -119,8 +119,8 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## SteamOS
 
-SteamOS installed from the "staging" branch of the SteamOS repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
-Updates are managed through pacman (with `pacman -Syu` command).  
+SteamOS installed as a rolling release distribution from the "staging" branch of the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
+SteamOS packages can be installed and updated with pacman, however native packages available in SteamOS are not the latest versions, therefore for sensitive apps such as web browsers and such it is recommended to use the flatpak version (available by default in the Discover app).  
 
 3 environments are available:
 - desktop: Boots to sddm in order to support multi-users setup. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
