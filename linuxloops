@@ -5161,7 +5161,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_steamos_configs <<INSTALL_STEAMOS_CONFIGS
 #!/bin/bash
 set -e
-echo -e 'net.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv6=1\nvm.compaction_proactiveness=0\nvm.max_map_count=1048576\nvm.swappiness=1' > /etc/sysctl.d/99-steam.conf
+echo -e 'net.ipv4.tcp_fin_timeout=5\nnet.ipv4.tcp_mtu_probing=1\nnet.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv6=1\nvm.compaction_proactiveness=0\nvm.max_map_count=1048576\nvm.swappiness=1' > /etc/sysctl.d/99-steam.conf
 mkdir -p /etc/skel/.cache/thumbnails
 mkdir -p /etc/skel/.local/share/applications
 cat >/etc/skel/.local/share/applications/deck-session.desktop <<'DECKSESSIONICON'
@@ -5193,7 +5193,7 @@ export vk_xwayland_wait_ready=false
 export QT_IM_MODULE=steam
 export GTK_IM_MODULE=Steam
 export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
-export XCURSOR_THEME='xcursor-breeze'
+export XCURSOR_THEME="breeze_cursors"
 export INTEL_DEBUG=noccs
 export R600_DEBUG=nodcc
 
@@ -5202,7 +5202,7 @@ pkill -9 steam || true
 
 ulimit -n 524288
 
-gamescope --generate-drm-mode fixed --default-touch-mode 4 --hide-cursor-delay 3000 --fade-out-duration 200 -b -e -f -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
+gamescope --default-touch-mode 4 --fade-out-duration 200 --generate-drm-mode fixed --hide-cursor-delay 3000 -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
 DECKSESSION
 chmod 0755 /usr/bin/deck-session
 cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
