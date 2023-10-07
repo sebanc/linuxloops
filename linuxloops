@@ -5065,7 +5065,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
 basic_packages="gvfs udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
-specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-jupiter-stable steam_notif_daemon vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
+specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-im-modules steam-jupiter-stable steam_notif_daemon vulkan-intel lib32-vulkan-intel vulkan-radeon lib32-vulkan-radeon lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
 case "${desktop}" in
@@ -5161,7 +5161,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_steamos_configs <<INSTALL_STEAMOS_CONFIGS
 #!/bin/bash
 set -e
-echo -e 'vm.max_map_count=1048576\nvm.compaction_proactiveness=0\nvm.swappiness=1' > /etc/sysctl.d/99-steam.conf
+echo -e 'net.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv6=1\nvm.compaction_proactiveness=0\nvm.max_map_count=1048576\nvm.swappiness=1' > /etc/sysctl.d/99-steam.conf
 mkdir -p /etc/skel/.cache/thumbnails
 mkdir -p /etc/skel/.local/share/applications
 cat >/etc/skel/.local/share/applications/deck-session.desktop <<'DECKSESSIONICON'
@@ -5185,19 +5185,24 @@ set -e
 ##
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export WINE_CPU_TOPOLOGY=8:0,1,2,3,4,5,6,7
-export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
+export STEAM_ENABLE_VOLUME_HANDLER=1
+export SRT_URLOPEN_PREFER_STEAM=1
+export STEAM_DISABLE_AUDIO_DEVICE_SWITCHING=1
 export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
 export vk_xwayland_wait_ready=false
+export QT_IM_MODULE=steam
+export GTK_IM_MODULE=Steam
+export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
+export XCURSOR_THEME='xcursor-breeze'
 export INTEL_DEBUG=noccs
 export R600_DEBUG=nodcc
-export vblank_mode=0
 
 pkill -9 gamescope || true
 pkill -9 steam || true
 
 ulimit -n 524288
 
-gamescope --generate-drm-mode fixed --default-touch-mode 4 --hide-cursor-delay 3000 --fade-out-duration 200 -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
+gamescope --generate-drm-mode fixed --default-touch-mode 4 --hide-cursor-delay 3000 --fade-out-duration 200 -b -e -f -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
 DECKSESSION
 chmod 0755 /usr/bin/deck-session
 cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
