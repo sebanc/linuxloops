@@ -23,7 +23,7 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -l, --list							(List available distros and desktop environments)
 -ll, --list-locales						(List available locales)
 -lk, --list-keymaps						(List available keymaps)
--lt, --list-timezones						(List available locales)
+-lt, --list-timezones						(List available timezones)
 -h, --help							(Display this menu)
 USAGE
 }
@@ -198,7 +198,7 @@ case "${1}" in
 	;;
 	'Ubuntu')
 	available_desktops=("none" "budgie" "budgie-full" "cinnamon" "cinnamon-full" "enlightenment" "gnome" "gnome-full" "kde" "kde-full" "lxde" "lxde-full" "lxqt" "lxqt-full" "mate" "mate-full" "studio-full" "ubuntu" "ubuntu-full" "unity" "unity-full" "xfce" "xfce-full")
-	bootstrap="lxc ubuntu lunar default"
+	bootstrap="lxc ubuntu mantic default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	;;
@@ -5705,7 +5705,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-prog
 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales lunar /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales mantic /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5713,14 +5713,14 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://archive.ubuntu.com/ubuntu lunar main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu lunar main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu lunar-updates main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu lunar-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu mantic-updates main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu mantic-updates main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu lunar-security main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu lunar-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu mantic-security main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu mantic-security main restricted universe multiverse
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -6611,6 +6611,7 @@ else
 	echo -e "127.0.0.1 localhost\n127.0.1.1 ${hostname}\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
 fi
 if [ -d /etc/netplan ]; then echo -e 'network:\n    version: 2\n    renderer: NetworkManager\n    ethernets:\n        zz-all-en:\n            match:\n                name: "en*"\n            dhcp4: true\n        zz-all-eth:\n            match:\n                name: "eth*"\n            dhcp4: true' > /etc/netplan/01-netcfg.yaml; fi
+if [ -d /etc/NetworkManager/conf.d ]; then echo -e '[connection]\nwifi.powersave = 2' > /etc/NetworkManager/conf.d/zz-wifi-powersave-disable.conf; fi
 mkdir -p /etc/modprobe.d
 echo 'blacklist pcspkr' > /etc/modprobe.d/pcspkr.conf
 APPLYSETTINGS

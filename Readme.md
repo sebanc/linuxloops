@@ -20,7 +20,7 @@ The main limitation of Linuxloops is that the partitionning is not currently cus
 
 ## How does it work ?
 
-The LinuxLoops script will chroot into a temporary rootfs images (usually lxc container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
+The LinuxLoops script will chroot into a temporary rootfs image (usually lxc container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
 
 For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
 - The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distros are enabled by default as they contain necessary packages for standard use.  
@@ -113,7 +113,7 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -l, --list							(List available distros and desktop environments)
 -ll, --list-locales						(List available locales)
 -lk, --list-keymaps						(List available keymaps)
--lt, --list-timezones						(List available locales)
+-lt, --list-timezones						(List available timezones)
 -h, --help							(Display this menu)
 ```
 
