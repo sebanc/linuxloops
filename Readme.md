@@ -12,8 +12,8 @@
 Linuxloops is a flexible linux distro installer.  
 
 Why create a custom linux distro installer ?  
-Linux is very modular thanks to package management systems, however distribution installers are either completely manual or focus on a specific DE. Linuxloops allows to have more DE options, to add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
-In addition, Linuxloops supports installing linux distros in disk image files that can be booted natively from the GRUB bootloader (on btrfs, ext4, exfat or ntfs partitions) or in VMs.  
+Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows to have minimal installs with more DE options, the possibility to directly include custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
+In addition, Linuxloops supports installing linux distros in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
 
 The main limitation of Linuxloops is that the partitionning is not currently customizable (EFI, BOOT and ROOT partitions). As such, it is not aimed at users needing complex partition tables (or they can customize the linuxloops script to their liking).  
 
@@ -65,7 +65,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |RockyLinux      |9               |✓                      |                                     |                                 |[notes][RockyLinux-notes]|
 |SteamOS         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
 |Tails           |Latest          |✓                      |                                     |                                 |[notes][Tails-notes]|
-|Ubuntu          |23.04           |✓                      |✓                                    |✓                                |              |
+|Ubuntu          |23.10           |✓                      |✓                                    |✓                                |              |
 |Ubuntu-LTS      |22.04           |✓                      |✓                                    |✓                                |              |
 |VoidLinux       |Current         |                       |✓                                    |                                 |              |
 |Zorin           |16              |✓                      |✓                                    |✓                                |              |

@@ -5058,7 +5058,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm --needed linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -6543,7 +6543,7 @@ mount -t tmpfs -o mode=1777 none /mnt/tmp
 mkdir -p /mnt/linuxloops
 mount --bind /linuxloops /mnt/linuxloops
 rm -f /mnt/etc/resolv.conf
-if [ "${distro}" == "Elementary" ] || [ "${distro}" == "Linuxmint" ] || [ "${distro}" == "Neon" ] || [ "${distro}" == "Pop" ] || [ "${distro}" == "Qubes" ] || [ "${distro}" == "Ubuntu" ] || [ "${distro}" == "Ubuntu-LTS" ] || [ "${distro}" == "Zorin" ]; then
+if [ "${distro}" == "Elementary" ] || [ "${distro}" == "Linuxmint" ] || [ "${distro}" == "Neon" ] || [ "${distro}" == "Pop" ] || [ "${distro}" == "Qubes" ] || [ "${distro}" == "SteamOS" ] || [ "${distro}" == "Ubuntu" ] || [ "${distro}" == "Ubuntu-LTS" ] || [ "${distro}" == "Zorin" ]; then
 	dns_manager="systemd/resolve/stub-resolv.conf"
 elif [ "${desktop}" == "enlightenment" ]; then
 	dns_manager="connman/resolv.conf"
