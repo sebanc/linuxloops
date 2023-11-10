@@ -86,7 +86,7 @@ case "${1}" in
 	;;
 	'Fedora')
 	available_desktops=("none" "cinnamon" "cinnamon-full" "gnome" "gnome-full" "kde" "kde-full" "lxde" "lxqt" "mate" "mate-full" "xfce" "xfce-full")
-	bootstrap="lxc fedora 38 default"
+	bootstrap="lxc fedora 39 default"
 	bootloader_id="fedora"
 	bootloader_name="shimx64.efi"
 	;;
@@ -1012,41 +1012,6 @@ available_timezones=(
 "x" "EST5EDT"
 "x" "Egypt"
 "x" "Eire"
-"x" "Etc/GMT"
-"x" "Etc/GMT+0"
-"x" "Etc/GMT+1"
-"x" "Etc/GMT+10"
-"x" "Etc/GMT+11"
-"x" "Etc/GMT+12"
-"x" "Etc/GMT+2"
-"x" "Etc/GMT+3"
-"x" "Etc/GMT+4"
-"x" "Etc/GMT+5"
-"x" "Etc/GMT+6"
-"x" "Etc/GMT+7"
-"x" "Etc/GMT+8"
-"x" "Etc/GMT+9"
-"x" "Etc/GMT-0"
-"x" "Etc/GMT-1"
-"x" "Etc/GMT-10"
-"x" "Etc/GMT-11"
-"x" "Etc/GMT-12"
-"x" "Etc/GMT-13"
-"x" "Etc/GMT-14"
-"x" "Etc/GMT-2"
-"x" "Etc/GMT-3"
-"x" "Etc/GMT-4"
-"x" "Etc/GMT-5"
-"x" "Etc/GMT-6"
-"x" "Etc/GMT-7"
-"x" "Etc/GMT-8"
-"x" "Etc/GMT-9"
-"x" "Etc/GMT0"
-"x" "Etc/Greenwich"
-"x" "Etc/UCT"
-"x" "Etc/UTC"
-"x" "Etc/Universal"
-"x" "Etc/Zulu"
 "x" "Europe/Amsterdam"
 "x" "Europe/Andorra"
 "x" "Europe/Astrakhan"
@@ -2634,7 +2599,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="dnfdragora dnf-plugin-system-upgrade f37-backgrounds plymouth-system-theme"
+specific_packages="dnfdragora dnf-plugin-system-upgrade f39-backgrounds plymouth-system-theme"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service cups-browsed.service"
 case "${desktop}" in
@@ -5680,7 +5645,7 @@ ENV{ID_FS_LABEL}=="TailsData", KERNEL=="loop0*", ENV{UDISKS_IGNORE}="1"
 TAILSUDEV
 sed -i 's#loop|##g' /root/lib/live/boot/*
 sed -i 's#if (\${device} =~ m{mmcblk \[0-9]+ \\\\z}xms) {#if (\${device} =~ m{mmcblk [0-9]+ \\\\z}xms or \${device} =~ m{loop [0-9]+ \\\\z}xms) {#g' \$(find /root/usr/local/share/perl | grep 'UDisks.pm' | head -1)
-sed -i -e 's#method get_udisks_property (Str \$type, Defined \$object, Str \$property) {#method get_udisks_property (Str \$type, Defined \$object, Str \$property) {\nif (\$type eq "Block" and \$property eq "Drive" and \$object =~ m/loop0/) { return "/dev/loop0"; }\nif (\$type eq "Drive" and \$property eq "ConnectionBus" and \$object =~ m/loop0/) { return "sdio"; }\nif (\$type eq "Drive" and \$property eq "Optical" and \$object =~ m/loop0/) { return 0; }\nif (\$type eq "Drive" and \$property eq "Vendor" and \$object =~ m/loop0/) { return ""; }\nif (\$type eq "Drive" and \$property eq "Model" and \$object =~ m/loop0/) { return "linuxloops"; }#g' \$(find /root/usr/local/share/perl | grep 'UDisks.pm' | head -1)
+sed -i -e 's#method get_udisks_property (Str \$type, Defined \$object, Str \$property) {#method get_udisks_property (Str \$type, Defined \$object, Str \$property) {\nif (\$type eq "Block" and \$property eq "Drive" and \$object =~ m/loop0/) { return "/dev/loop0"; }\nif (\$type eq "Drive" and \$property eq "ConnectionBus" and \$object =~ m/loop0/) { return "sdio"; }\nif (\$type eq "Drive" and \$property eq "Optical" and \$object =~ m/loop0/) { return 0; }\nif (\$type eq "Drive" and \$property eq "Vendor" and \$object =~ m/loop0/) { return "linuxloops"; }\nif (\$type eq "Drive" and \$property eq "Model" and \$object =~ m/loop0/) { return "linuxloops"; }#g' \$(find /root/usr/local/share/perl | grep 'UDisks.pm' | head -1)
 LINUXLOOPSFIX
 	chmod 0755 /tmp/initramfs/scripts/init-bottom/linuxloopsfix
 	(cd /tmp/initramfs && find . | cpio -o -H newc | gzip > /isomount/live/linuxloops.img)
@@ -6763,7 +6728,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVID
 set -e
 zypper --non-interactive addrepo https://download.nvidia.com/opensuse/tumbleweed NVIDIA
 zypper --non-interactive --gpg-auto-import-keys refresh
-zypper --non-interactive install nvidia-glG06 x11-video-nvidiaG06
+zypper --non-interactive install --auto-agree-with-licenses nvidia-glG06 nvidia-utils-G06 x11-video-nvidiaG06
 INSTALLNVIDIA
 elif [ "${distro}" == "Pop" ]; then
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -7910,21 +7875,17 @@ if [ "${1}" == "iso" ]; then
 		echo "Downloading iso image from ${2} failed."
 	fi
 elif [ "${1}" == "lxc" ]; then
-	available_builds=$(curl -L https://us.lxd.images.canonical.com/images/"${2}"/"${3}"/amd64/"${4}"/ | grep 'alt="\[DIR]"' | tr '>' '\n' | grep '<a href' | cut -d'/' -f 2 | sort -r)
-	for build in $available_builds; do
-		echo "Trying to download lxc image from https://us.lxd.images.canonical.com/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz..."
-		if curl -L --output /dev/null --silent --head --fail https://us.lxd.images.canonical.com/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz; then
-			curl -L https://us.lxd.images.canonical.com/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}".tar.xz
-			if ! xz -t "${linuxloopsdir}"/"${2}".tar.xz; then rm -f "${linuxloopsdir}"/"${2}".tar.xz; continue; fi
+		echo "Trying to download lxc image from https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz"
+		if curl -L --output /dev/null --silent --head --fail https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz; then
+			curl -L https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}".tar.xz
+			if ! xz -t "${linuxloopsdir}"/"${2}".tar.xz; then rm -f "${linuxloopsdir}"/"${2}".tar.xz; break; fi
 			mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops
 			tar xf "${linuxloopsdir}"/"${2}".tar.xz -C "${linuxloopsdir}"/chroot/bootstrap
 			rm "${linuxloopsdir}"/"${2}".tar.xz
 			return 0
-		else
-			echo "Downloading lxc image from https://us.lxd.images.canonical.com/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."
 		fi
-	done
 fi
+losetup -d "${destination_device}"
 exit_with_error "The bootstrap image could not be downloaded, the LXC images server might be down."
 }
 

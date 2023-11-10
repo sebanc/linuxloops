@@ -47,7 +47,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Debian          |Bookworm        |✓                      |✓                                    |✓                                |              |
 |Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |
 |Elementary      |7               |✓                      |✓                                    |✓                                |              |
-|Fedora          |38              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
+|Fedora          |39              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
 |Gentoo-openrc   |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
 |Gentoo-systemd  |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
