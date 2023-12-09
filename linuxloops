@@ -3906,7 +3906,7 @@ sudo -u temp bash << 'NIXOSINSTALL'
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-23.05 nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-23.11 nixpkgs
 nix-channel --update
 nix-env -f '<nixpkgs>' -iA nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
@@ -4031,7 +4031,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze breeze-gtk dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme papirus-icon-theme"
-specific_packages="adobe-sourcecodepro-fonts cantarell-fonts plymouth-branding-openSUSE wallpaper-branding-openSUSE"
+specific_packages="adobe-sourcecodepro-fonts cantarell-fonts plymouth-branding-openSUSE plymouth-dracut wallpaper-branding-openSUSE"
 desktop_base="patterns-base-x11 ${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-dnsconfd.service cups-browsed.service"
 case "${desktop}" in
@@ -5641,7 +5641,7 @@ if [ "${install_type}" == "image" ]; then
 cat >/root/etc/udev/rules.d/99-zzzlinuxloops.rules <<'TAILSUDEV'
 SUBSYSTEMS=="block", KERNEL=="loop0", ENV{ID_DRIVE_DETACHABLE}:="0", SYMLINK+="TailsBootDev", SYMLINK+="bilibop"
 SUBSYSTEMS=="block", KERNEL=="loop0*", ENV{UDISKS_SYSTEM}:="1", GROUP:="floppy"
-ENV{ID_FS_LABEL}=="TailsData", KERNEL=="loop0*", ENV{UDISKS_IGNORE}="1"
+ENV{ID_FS_LABEL}=="TailsData", ENV{UDISKS_IGNORE}="1"
 TAILSUDEV
 sed -i 's#loop|##g' /root/lib/live/boot/*
 sed -i 's#if (\${device} =~ m{mmcblk \[0-9]+ \\\\z}xms) {#if (\${device} =~ m{mmcblk [0-9]+ \\\\z}xms or \${device} =~ m{loop [0-9]+ \\\\z}xms) {#g' \$(find /root/usr/local/share/perl | grep 'UDisks.pm' | head -1)
@@ -7118,7 +7118,6 @@ build() {
 	add_binary "ps"
 	add_binary "setfont"
 	add_binary "setsid"
-	add_binary "swapon"
 
 	cp "/usr/lib/linuxloops/linuxloops" "\$BUILDROOT/linuxloops"
 
@@ -7221,7 +7220,6 @@ esac
 	copy_exec "\$(command -v ps)"
 	copy_exec "\$(command -v setfont)"
 	copy_exec "\$(command -v setsid)"
-	copy_exec "\$(command -v swapon)"
 
 	cp "/usr/lib/linuxloops/linuxloops" "\$DESTDIR/linuxloops"
 
@@ -7309,7 +7307,6 @@ install() {
 	inst "\$(command -v ps)" "/usr/bin/ps"
 	inst "\$(command -v setfont)" "/usr/bin/setfont"
 	inst "\$(command -v setsid)" "/usr/sbin/setsid"
-	inst "\$(command -v swapon)" "/usr/sbin/swapon"
 
 	cp "/usr/lib/linuxloops/linuxloops" "\${initdir}/linuxloops"
 	
@@ -7426,7 +7423,7 @@ nixpkgs.config.allowUnfree = true;
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-system.stateVersion = "23.05"; # Did you read the comment?
+system.stateVersion = "23.11"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 echo -e '# Do not modify this file which contains the linuxloops configuration.\n# Please make changes to /etc/nixos/configuration.nix instead.\n{ config, lib, pkgs, modulesPath, ... }:\n\n{' > /mnt/etc/nixos/linuxloops.nix
@@ -7451,7 +7448,6 @@ copy_bin_and_libs "\${pkgs.ntfs3g}/bin/ntfsfix"
 copy_bin_and_libs "\${pkgs.procps}/bin/ps"
 copy_bin_and_libs "\${pkgs.kbd}/bin/setfont"
 copy_bin_and_libs "\${pkgs.util-linux}/bin/setsid"
-copy_bin_and_libs "\${pkgs.util-linux}/bin/swapon"
 '';
 
 boot.loader.grub.extraInstallCommands = ''

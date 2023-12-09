@@ -56,7 +56,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Mint            |Vera            |✓                      |✓                                    |✓                                |              |
 |MX              |23              |✓                      |✓                                    |✓                                |              |
 |Neon            |Current         |✓                      |✓                                    |✓                                |              |
-|NixOS           |23.05           |✓                      |✓                                    |                                 |[notes][NixOS-notes]|
+|NixOS           |23.11           |✓                      |✓                                    |                                 |[notes][NixOS-notes]|
 |openSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][openSUSE-notes]|
 |Parrot          |5               |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
 |Pop             |22.04           |✓                      |✓                                    |✓                                |              |
