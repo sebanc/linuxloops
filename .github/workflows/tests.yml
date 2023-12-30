@@ -35,7 +35,7 @@ jobs:
           echo "matrix=[$matrix]" >> $GITHUB_OUTPUT
   build-distros:
     name: Build distro
-    needs: prepare-kernels
+    needs: prepare-matrix
     runs-on: ubuntu-22.04
     strategy:
         matrix:
