@@ -7,7 +7,7 @@ on:
       - 'linuxloops'
       - '.github/workflows/live.yml'
 concurrency:
-  group: environment-${{ github.ref }}
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 jobs:
   build-live-disk:
