@@ -8343,7 +8343,10 @@ fi
 set_credentials()
 {
 if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then return; fi
-if [ "${live}" == "Yes" ]; then
+if [ "${test_distro}" == "Yes" ]; then
+	username="test"
+	userpass="test"
+elif [ "${live}" == "Yes" ]; then
 	username="live"
 	userpass="linuxloops"
 	hostname="linuxloops"
@@ -8761,6 +8764,9 @@ else
 			-k | --kernel-parameters)
 				shift
 				kernel_parameters="${1}"
+			;;
+			-t | --test)
+				test_distro="Yes"
 			;;
 			-u | --usb-live)
 				live="Yes"
