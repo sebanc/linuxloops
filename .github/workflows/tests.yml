@@ -1,0 +1,51 @@
+name: Test distros build system
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+    branches:
+      - 'main'
+    paths-ignore:
+      - 'README*'
+concurrency:
+  group: environment-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  prepare-matrix:
+    name: Prepare matrix with distro install parameters
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.distros.outputs.matrix }}
+    steps:
+      - name: Checkout linuxloops source code
+        uses: actions/checkout@v3
+      - name: Create build matrix
+        id: distros
+        run: |
+          distros=$(sudo bash linuxloops --list | grep '" distribution:' | sed 's@"\| distribution:@@g' | grep -iv 'gentoo')
+          for i in $distros; do
+            distro="$i"
+            env=$(sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep 'Available desktops:' | sed 's@"\|Available desktops: @@g' | sed 's@None @@g' | sed 's@ @\n@g' | sed -e 's@\t@@g' | sort -R | head -1)
+            if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Install on btrfs filesystem possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg1='-b'; fi
+            if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Nvidia proprietary driver installation possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg2='-n'; fi
+            if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Surface patches installation possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
+            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
+            if [ -z "$matrix" ]; then matrix="\"$distro#$env#$arg1#$arg2#$arg3#$arg4\""; else matrix="$matrix,\"$distro#$env#$arg1#$arg2#$arg3#$arg4\""; fi
+          done
+          echo "matrix=[$matrix]" >> $GITHUB_OUTPUT
+  build-distros:
+    name: Build distro
+    needs: prepare-kernels
+    runs-on: ubuntu-22.04
+    strategy:
+        matrix:
+            distro: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
+    steps:
+      - name: Free some disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt clean
+          echo "Free space:"
+          df -h
+      - name: Launch distro build
+        run: sudo bash linuxloops -dst test.img -s 25 -distro $(echo ${{ matrix.distro }} | cut -d'#' -f1) -env $(echo ${{ matrix.distro }} | cut -d'#' -f2) $(echo ${{ matrix.distro }} | cut -d'#' -f3) $(echo ${{ matrix.distro }} | cut -d'#' -f4) $(echo ${{ matrix.distro }} | cut -d'#' -f5) $(echo ${{ matrix.distro }} | cut -d'#' -f6)

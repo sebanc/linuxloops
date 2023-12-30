@@ -42,6 +42,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |AlmaLinux       |9               |✓                      |                                     |                                 |[notes][AlmaLinux-notes]|
 |Arch            |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]|
 |Artix           |Current         |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]|
+|BlissOS         |14 / 15         |                       |                                     |                                 |              |
 |Brunch          |Latest          |✓                      |                                     |✓ (partially included)           |[notes][Brunch-notes]|
 |ChromeOS-Flex   |Latest          |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
 |Debian          |Bookworm        |✓                      |✓                                    |✓                                |              |
@@ -57,18 +58,18 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |MX              |23              |✓                      |✓                                    |✓                                |              |
 |Neon            |Current         |✓                      |✓                                    |✓                                |              |
 |NixOS           |23.11           |✓                      |✓                                    |                                 |[notes][NixOS-notes]|
-|openSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][openSUSE-notes]|
-|Parrot          |5               |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
+|OpenSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]|
+|Parrot          |Current         |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
 |Pop             |22.04           |✓                      |✓                                    |✓                                |              |
 |Proxmox         |VE 8.0          |✓                      |✓                                    |✓                                |              |
-|Qubes           |4.1.2           |                       |                                     |                                 |[notes][Qubes-notes]|
+|Qubes           |4.2             |                       |                                     |                                 |[notes][Qubes-notes]|
 |RockyLinux      |9               |✓                      |                                     |                                 |[notes][RockyLinux-notes]|
-|SteamOS         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
+|SteamOS         |3.5             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
 |Tails           |Latest          |✓                      |                                     |                                 |[notes][Tails-notes]|
 |Ubuntu          |23.10           |✓                      |✓                                    |✓                                |              |
 |Ubuntu-LTS      |22.04           |✓                      |✓                                    |✓                                |              |
 |VoidLinux       |Current         |                       |✓                                    |                                 |              |
-|Zorin           |16              |✓                      |✓                                    |✓                                |              |
+|Zorin           |17              |✓                      |✓                                    |✓                                |              |
 
 
 ## Quick start
@@ -170,7 +171,7 @@ Currently, support for LinuxLoops is provided in the off-topic channel of the br
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
 [NixOS-notes]: ./Readme/Distro-notes.md#NixOS
-[openSUSE-notes]: ./Readme/Distro-notes.md#openSUSE
+[OpenSUSE-notes]: ./Readme/Distro-notes.md#OpenSUSE
 [Parrot-notes]: ./Readme/Distro-notes.md#Parrot
 [Qubes-notes]: ./Readme/Distro-notes.md#Qubes
 [RockyLinux-notes]: ./Readme/Distro-notes.md#RockyLinux

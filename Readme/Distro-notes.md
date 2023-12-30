@@ -81,11 +81,11 @@ manjaro does not have secure boot support through its official repository. Linux
 After install, if you want to install packages via nix, open the teminal and run "sudo nix-channel --update" first.  
 
 
-## openSUSE
+## OpenSUSE
 
-### Specific note for opensuse installation in a disk image with secure boot enabled
+### Specific note for OpenSUSE installation in a disk image with secure boot enabled
 
-Disk images use the actual opensuse secure boot key. When the opensuse secure boot key changes which should be very rare, you will need to disable secure boot temporarily and enroll the new key with mokutil by running:  
+Disk images use the actual OpenSUSE secure boot key. When the OpenSUSE secure boot key changes which should be very rare, you will need to disable secure boot temporarily and enroll the new key with mokutil by running:  
 ```
 sudo cp /usr/share/efi/x86_64/grub.der /etc/secureboot_key/MOK.der
 sudo mokutil --import /etc/secureboot_keys/MOK.der
@@ -119,11 +119,11 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## SteamOS
 
-SteamOS installed as a rolling release distribution from the "staging" branch of the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
+SteamOS installed from the 3.5 branch of the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
 SteamOS packages can be installed and updated with pacman, however native packages available in SteamOS are not the latest versions, therefore for sensitive apps such as web browsers and such it is recommended to use the flatpak version (available by default in the Discover app).  
 
 3 environments are available:
-- desktop: Boots to sddm in order to support multi-users setup. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
+- desktop: Boots to SDDM in order to support multi-users setup. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
 - desktop-autologin: Auto-login into Plasma. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
 - gamescope-session: Same as the SteamDeck. Boots directly into the SteamOS session. Plasma can be launched with the "Switch to Desktop" SteamOS option.  
 
