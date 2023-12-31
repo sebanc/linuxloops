@@ -8028,41 +8028,37 @@ exit 1
 download_bootstrap()
 {
 if [ "${1}" == "iso" ]; then
-	if [ $(curl -LIs "${2}" | grep -Po 'content-length: \d+' | cut -d' ' -f2) -ne 0 ]; then
-		echo "Trying to download ${distro} iso image from ${2}..."
-		ec=18; while [ $ec -ne 0 ]; do curl -L -C - "${2}" -o "${linuxloopsdir}"/"${distro}".iso; ec=$?; done
-		if [ ! -z "${4}" ]; then
-			mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
-			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
-			mount "${linuxloopsdir}"/iso/level2"${3}" "${linuxloopsdir}"/iso/level1
-			mount "${linuxloopsdir}"/iso/level1"${4}" "${linuxloopsdir}"/iso/rootfs
-			cp -aT "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/chroot/bootstrap
-			if [ "${distro}" == "Qubes" ]; then
-				mkdir -p "${linuxloopsdir}"/chroot/bootstrap/source
-				cp -a "${linuxloopsdir}"/iso/level2/Packages "${linuxloopsdir}"/chroot/bootstrap/source/
-				cp -a "${linuxloopsdir}"/iso/level2/repodata "${linuxloopsdir}"/chroot/bootstrap/source/
-			fi
-			umount "${linuxloopsdir}"/iso/rootfs
-			umount "${linuxloopsdir}"/iso/level1
-			umount "${linuxloopsdir}"/iso/level2
-		elif  [ ! -z "${3}" ]; then
-			mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1
-			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level1
-			mount "${linuxloopsdir}"/iso/level1"${3}" "${linuxloopsdir}"/iso/rootfs
-			cp -aT "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/chroot/bootstrap
-			umount "${linuxloopsdir}"/iso/rootfs
-			umount "${linuxloopsdir}"/iso/level1
-		else
-			mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops "${linuxloopsdir}"/iso/rootfs
-			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/rootfs
-			cp -aT "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/chroot/bootstrap
-			umount "${linuxloopsdir}"/iso/rootfs	
+	echo "Trying to download ${distro} iso image from ${2}..."
+	ec=18; while [ $ec -ne 0 ]; do curl -L -C - "${2}" -o "${linuxloopsdir}"/"${distro}".iso; ec=$?; done || (losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed.")
+	if [ ! -z "${4}" ]; then
+		mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
+		mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
+		mount "${linuxloopsdir}"/iso/level2"${3}" "${linuxloopsdir}"/iso/level1
+		mount "${linuxloopsdir}"/iso/level1"${4}" "${linuxloopsdir}"/iso/rootfs
+		cp -aT "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/chroot/bootstrap
+		if [ "${distro}" == "Qubes" ]; then
+			mkdir -p "${linuxloopsdir}"/chroot/bootstrap/source
+			cp -a "${linuxloopsdir}"/iso/level2/Packages "${linuxloopsdir}"/chroot/bootstrap/source/
+			cp -a "${linuxloopsdir}"/iso/level2/repodata "${linuxloopsdir}"/chroot/bootstrap/source/
 		fi
-		rm "${linuxloopsdir}"/"${distro}".iso
-		return 0
+		umount "${linuxloopsdir}"/iso/rootfs
+		umount "${linuxloopsdir}"/iso/level1
+		umount "${linuxloopsdir}"/iso/level2
+	elif  [ ! -z "${3}" ]; then
+		mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1
+		mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level1
+		mount "${linuxloopsdir}"/iso/level1"${3}" "${linuxloopsdir}"/iso/rootfs
+		cp -aT "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/chroot/bootstrap
+		umount "${linuxloopsdir}"/iso/rootfs
+		umount "${linuxloopsdir}"/iso/level1
 	else
-		exit_with_error "Download of iso image from ${2} failed."
+		mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops "${linuxloopsdir}"/iso/rootfs
+		mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/rootfs
+		cp -aT "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/chroot/bootstrap
+		umount "${linuxloopsdir}"/iso/rootfs	
 	fi
+	rm "${linuxloopsdir}"/"${distro}".iso
+	return 0
 elif [ "${1}" == "lxc" ]; then
 	if [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po 'content-length: \d+' | cut -d' ' -f2) -ne 0 ]; then
 		if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po 'content-length: \d+' | cut -d' ' -f2) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]; then
@@ -8077,10 +8073,9 @@ elif [ "${1}" == "lxc" ]; then
 		fi
 		rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
 	fi
-	exit_with_error "Downloading of lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz failed."
 fi
 losetup -d "${destination_device}"
-exit 1
+exit_with_error "Downloading of bootstrap image failed."
 }
 
 init_bootstrap()
