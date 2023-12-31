@@ -3659,17 +3659,13 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 	'Plasma')
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
-systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma kde-applications manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
-systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+systemctl enable sddm.service
 "
 	;;
 	'Xfce')
