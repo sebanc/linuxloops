@@ -2855,7 +2855,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/"$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | sed '/^#/d' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz
+curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
@@ -2986,7 +2986,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/"$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | sed '/^#/d' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz
+curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
