@@ -1580,22 +1580,6 @@ echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/et
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
-	'Deepin')
-	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit deepin deepin-terminal network-manager-applet
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
-	'Deepin/Full')
-	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit deepin deepin-terminal deepin-extra network-manager-applet
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
 	'Enlightenment')
 	install_desktop="
 rm /etc/runit/runsvdir/default/NetworkManager
@@ -2849,7 +2833,6 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
-surface_remove="kernel kernel-*"
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\ndnf install -y ${custom_packages}" > "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_packages
