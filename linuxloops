@@ -109,7 +109,7 @@ case "${1}" in
 	bootloader_name="bootx64.efi"
 	;;
 	'Kali')
-	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootloader_id="kali"
 	bootloader_name="grubx64.efi"
 	bootstrap="lxc kali current default"
@@ -3199,12 +3199,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 kali-deskt
 #yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
 #"
 #	;;
-	'i3/Full')
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
-"
-	;;
+#	'i3/Full')
+#	install_desktop="
+#rm -f /etc/apt/apt.conf.d/99linuxloops
+#yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
+#"
+#	;;
 	'Lxde')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-lxde network-manager-gnome blueman
