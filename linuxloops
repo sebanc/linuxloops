@@ -6693,10 +6693,10 @@ mount -t tmpfs none /mnt/run
 mount -t tmpfs -o mode=1777 none /mnt/tmp
 mkdir -p /mnt/linuxloops
 mount --bind /linuxloops /mnt/linuxloops
-if [ "${distro}" == "Elementary" ] || [ "${distro}" == "Fedora" ] || [ "${distro}" == "Linuxmint" ] || [ "${distro}" == "Neon" ] || [ "${distro}" == "Pop" ] || [ "${distro}" == "Qubes" ] || [ "${distro}" == "SteamOS" ] || [ "${distro}" == "Ubuntu" ] || [ "${distro}" == "Ubuntu-LTS" ] || [ "${distro}" == "Zorin" ]; then
-	dns_manager="systemd/resolve/stub-resolv.conf"
-elif [ "${desktop}" == "enlightenment" ]; then
+if [ "${desktop}" == "Enlightenment" ]; then
 	dns_manager="connman/resolv.conf"
+elif [ "${distro}" == "Elementary" ] || [ "${distro}" == "Fedora" ] || [ "${distro}" == "Linuxmint" ] || [ "${distro}" == "Neon" ] || [ "${distro}" == "Pop" ] || [ "${distro}" == "Qubes" ] || [ "${distro}" == "SteamOS" ] || [ "${distro}" == "Ubuntu" ] || [ "${distro}" == "Ubuntu-LTS" ] || [ "${distro}" == "Zorin" ]; then
+	dns_manager="systemd/resolve/stub-resolv.conf"
 else
 	dns_manager="NetworkManager/resolv.conf"
 fi
@@ -6705,7 +6705,7 @@ mkdir -p \$(dirname /run/"\${dns_manager}") \$(dirname /mnt/run/"\${dns_manager}
 touch /mnt/run/"\${dns_manager}"
 ln -s  /mnt/run/"\${dns_manager}" /run/"\${dns_manager}"
 ln -s /run/"\${dns_manager}" /mnt/etc/resolv.conf
-mount --bind /etc/resolv.conf /mnt/etc/resolv.conf
+mount -o ro,bind /etc/resolv.conf /mnt/etc/resolv.conf
 chroot /mnt /linuxloops/chroot_init
 if [ -f /linuxloops/install_desktop ]; then chroot /mnt /linuxloops/install_desktop; fi
 if [ -f /linuxloops/install_live ]; then chroot /mnt /linuxloops/install_live; fi
@@ -8103,7 +8103,7 @@ cp /etc/hostname "${linuxloopsdir}"/chroot/bootstrap/etc/hostname
 cp /etc/hosts "${linuxloopsdir}"/chroot/bootstrap/etc/hosts
 rm -f "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
 touch "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
-mount --bind /etc/resolv.conf "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
+mount -o ro,bind /etc/resolv.conf "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
 chroot_$(echo "${distro}" | sed 's@[ !]@@g') || (return_value=1 && return)
 generate_bootstrap_init
 generate_partition_script
