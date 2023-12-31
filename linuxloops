@@ -1202,7 +1202,7 @@ dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup c
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-dnf install --installroot=/mnt --releasever / -y @core openssl
+dnf install --installroot=/mnt --releasever / -y @core openssl tar
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2730,8 +2730,7 @@ dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-dnf install --installroot=/mnt --releasever / -y @core openssl
-echo 'GRUB_ENABLE_BLSCFG=false' > /mnt/etc/default/grub
+dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2818,14 +2817,12 @@ set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
 systemctl enable ${desktop_services}
-if [ -f /usr/lib/systemd/user/gnome-keyring-daemon.service ]; then systemctl enable --global gnome-keyring-daemon.service; fi
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.mate.interface]
 icon-theme='Papirus-Light'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-dnf swap -y wireplumber pipewire-media-session
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
 cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -2852,7 +2849,7 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
-surface_remove="kernel kernel-headers"
+surface_remove="kernel kernel-*"
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\ndnf install -y ${custom_packages}" > "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_packages
@@ -5009,7 +5006,7 @@ dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup c
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-dnf install --installroot=/mnt --releasever / -y @core openssl
+dnf install --installroot=/mnt --releasever / -y @core openssl tar
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -6868,8 +6865,10 @@ elif [ "${distro}" == "Fedora" ]; then
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_surface <<SURFACEDNF
 #!/bin/bash
 set -e
+dnf install -y 'dnf-command(versionlock)'
+dnf versionlock add kernel\*
+rm -rf /boot/.vmlinuz-* /boot/vmlinuz-* /boot/initramfs-* /boot/symvers-* /boot/System.map-* /usr/lib/modules/* /usr/src/kernels/*
 dnf config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
-dnf remove -y ${surface_remove}
 dnf update -y
 dnf install -y --allowerasing kernel-surface kernel-surface-devel iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.12.5.tar.gz | tar xvz -C /usr/src
@@ -8331,7 +8330,7 @@ elif [ ! -z "${chromeos}" ]; then
 	fi
 else
 	if [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ]; then grub="grub2"; else grub="grub"; fi
-	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_${distro}; sudo chmod 0755 /etc/grub.d/99_linuxloops_${distro}; sudo ${grub}-mkconfig -o /boot/${grub}/grub.cfg\n\nOtherwise, add this grub config (lines between stars) manually to another grub bootloader:\n\n ****************************************************************************************** \n${config}\n ****************************************************************************************** \n\nOnce the above actions are completed, you can reboot your computer and start ${distro}."
+	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o /boot/${grub}/grub.cfg\n\nOtherwise, add this grub config (lines between stars) manually to another grub bootloader:\n\n ****************************************************************************************** \n${config}\n ****************************************************************************************** \n\nOnce the above actions are completed, you can reboot your computer and start ${distro}."
 	if [ ! -z "${zenity}" ]; then
 		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
@@ -8346,6 +8345,7 @@ if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" 
 if [ "${test_distro}" == "Yes" ]; then
 	username="test"
 	userpass="test"
+	hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"
 elif [ "${live}" == "Yes" ]; then
 	username="live"
 	userpass="linuxloops"
