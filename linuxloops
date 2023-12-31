@@ -49,7 +49,7 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'Artix')
-	available_desktops=( "None" "Budgie" "Cinnamon" "Deepin" "Deepin/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Cinnamon" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="artix"
 	bootloader_name="shimx64.efi"
@@ -109,7 +109,7 @@ case "${1}" in
 	bootloader_name="bootx64.efi"
 	;;
 	'Kali')
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootloader_id="kali"
 	bootloader_name="grubx64.efi"
 	bootstrap="lxc kali current default"
@@ -3138,17 +3138,17 @@ specific_packages="desktop-base plymouth-themes synaptic kali-defaults-desktop k
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
-	'Budgie')
-	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin
-"
-	;;
-	'Budgie/Full')
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin
-"
-	;;
+#	'Budgie')
+#	install_desktop="
+#yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin
+#"
+#	;;
+#	'Budgie/Full')
+#	install_desktop="
+#rm -f /etc/apt/apt.conf.d/99linuxloops
+#yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin
+#"
+#	;;
 	'Cinnamon')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman

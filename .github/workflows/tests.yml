@@ -22,7 +22,7 @@ jobs:
       - name: Create build matrix
         id: distros
         run: |
-          distros=$(sudo bash linuxloops --list | grep '" distribution:' | sed 's@"\| distribution:@@g' | grep -iv 'gentoo')
+          distros=$(sudo bash linuxloops --list | grep '" distribution:' | sed 's@"\| distribution:@@g')
           for i in $distros; do
             arg1=''
             arg2=''
@@ -58,4 +58,4 @@ jobs:
       - name: Checkout linuxloops source code
         uses: actions/checkout@v3
       - name: Launch distro build
-        run: sudo bash linuxloops -dst test.img -t -s 30 -distro $(echo ${{ matrix.distro }} | cut -d'#' -f1) -env $(echo ${{ matrix.distro }} | cut -d'#' -f2) $(echo ${{ matrix.distro }} | cut -d'#' -f3) $(echo ${{ matrix.distro }} | cut -d'#' -f4) $(echo ${{ matrix.distro }} | cut -d'#' -f5) $(echo ${{ matrix.distro }} | cut -d'#' -f6) $(echo ${{ matrix.distro }} | cut -d'#' -f7)
+        run: sudo bash linuxloops -dst test.img -t -s 50 -distro $(echo ${{ matrix.distro }} | cut -d'#' -f1) -env $(echo ${{ matrix.distro }} | cut -d'#' -f2) $(echo ${{ matrix.distro }} | cut -d'#' -f3) $(echo ${{ matrix.distro }} | cut -d'#' -f4) $(echo ${{ matrix.distro }} | cut -d'#' -f5) $(echo ${{ matrix.distro }} | cut -d'#' -f6) $(echo ${{ matrix.distro }} | cut -d'#' -f7)
