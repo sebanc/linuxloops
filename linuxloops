@@ -2760,7 +2760,7 @@ dnf install -y ${desktop_base} gdm @gnome-desktop
 	;;
 	'Lxde')
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @lxde-desktop-environment lxde-themes blueman dnfdragora-updater
+dnf install -y ${desktop_base} lightdm slick-greeter @lxde-desktop-environment lxde-icon-theme blueman dnfdragora-updater
 "
 	;;
 	'Lxqt')
