@@ -3194,11 +3194,11 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 kali-desktop-gnome gnome-keyring
 "
 	;;
-	'i3')
-	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
-"
-	;;
+#	'i3')
+#	install_desktop="
+#yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
+#"
+#	;;
 	'i3/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -8075,7 +8075,7 @@ elif [ "${1}" == "lxc" ]; then
 	fi
 fi
 losetup -d "${destination_device}"
-exit_with_error "Downloading of bootstrap image failed."
+exit_with_error "Download of bootstrap image failed."
 }
 
 init_bootstrap()
