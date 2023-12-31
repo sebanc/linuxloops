@@ -140,13 +140,15 @@ case "${1}" in
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
+	bootloader_path_override="Yes"
 	grub_theme="/boot/grub/themes/mx_linux/theme.txt"
 	;;
 	'Neon')
 	available_desktops=( "None" "Essentials" "Full" )
 	bootstrap="lxc ubuntu jammy default"
-	bootloader_id="neon"
+	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
+	bootloader_path_override="Yes"
 	grub_theme="/boot/grub/themes/breeze/theme.txt"
 	;;
 	'NixOS')
@@ -170,14 +172,16 @@ case "${1}" in
 	'Pop')
 	available_desktops=( "None" "Full" )
 	bootstrap="lxc ubuntu jammy default"
-	bootloader_id="pop"
+	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
+	bootloader_path_override="Yes"
 	;;
 	'Proxmox')
 	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
-	bootloader_id="proxmox"
+	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
+	bootloader_path_override="Yes"
 	;;
 	'Qubes')
 	available_desktops=( "Full" )
@@ -7720,11 +7724,20 @@ grub-install.real "\\\$@"
 if [ -f /boot/efi/EFI/"${bootloader_id}"/mmx64.efi ] && [ ! -f /boot/efi/EFI/BOOT/mmx64.efi ]; then cp /boot/efi/EFI/"${bootloader_id}"/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi; fi
 GRUBINSTALL
 		chmod 0755 /usr/sbin/grub-install
-		if grub-install --help | grep -q force-extra-removable; then
-			echo "grub-efi-amd64 grub2/force_efi_extra_removable boolean true" | debconf-set-selections
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --force-extra-removable
+		if [ "${bootloader_path_override}" == "Yes" ]; then
+			if grub-install --help | grep -q force-extra-removable; then
+				echo "grub-efi-amd64 grub2/force_efi_extra_removable boolean true" | debconf-set-selections
+				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --force-extra-removable
+			else
+				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}"
+			fi
 		else
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram
+			if grub-install --help | grep -q force-extra-removable; then
+				echo "grub-efi-amd64 grub2/force_efi_extra_removable boolean true" | debconf-set-selections
+				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --force-extra-removable
+			else
+				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram
+			fi
 		fi
 	elif [ -f /usr/share/grub/sbat.csv ]; then
 		if [ "${distro}" == "Arch" ] || [ "${distro}" == "Artix" ] || [ "${distro}" == "Manjaro" ] || [ "${distro}" == "SteamOS" ]; then
