@@ -166,7 +166,7 @@ case "${1}" in
 	;;
 	'Parrot')
 	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="parrot"
 	bootloader_name="grubx64.efi"
@@ -2875,8 +2875,9 @@ mkdir /etc/portage/package.license
 echo '*/* *' >> /etc/portage/package.license/custom
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox vmware\"" >> /etc/portage/make.conf
 echo "USE=\"alsa bluetooth caps cdda cryptsetup dbus device-mapper elogind icu lvm minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala\"" >> /etc/portage/make.conf
-echo "GRUB_PLATFORMS=\"efi-32 efi-64\"" >> /etc/portage/make.conf
-echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
+echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
+#echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
+echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
 emerge --sync
 eselect profile set default/linux/amd64/17.1
 emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs
@@ -2896,7 +2897,7 @@ rc-update add display-manager default
 "
 	;;
 	'Enlightenment')
-	newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml text theora tracker wayland X xa xorg zeroconf gles2-only -opengl\"/g' /etc/portage/make.conf"
+	#newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml text theora tracker wayland X xa xorg zeroconf gles2-only -opengl\"/g' /etc/portage/make.conf"
 	install_desktop="
 emerge -uN ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
@@ -3006,8 +3007,9 @@ mkdir /etc/portage/package.license
 echo '*/* *' >> /etc/portage/package.license/custom
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox vmware\"" >> /etc/portage/make.conf
 echo "USE=\"alsa bluetooth caps cdda cryptsetup dbus device-mapper -elogind icu lvm minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala\"" >> /etc/portage/make.conf
-echo "GRUB_PLATFORMS=\"efi-32 efi-64\"" >> /etc/portage/make.conf
-echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
+echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
+#echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
+echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
 emerge --sync
 eselect profile set default/linux/amd64/17.1
 emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs
@@ -3025,7 +3027,7 @@ systemctl enable lightdm.service
 "
 	;;
 	'Enlightenment')
-	newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus -elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg lock mdnsresponder-compat libnotify ogg opengl qml text theora tracker wayland X xa xorg zeroconf gles2-only -opengl\"/g' /etc/portage/make.conf"
+	#newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus -elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg lock mdnsresponder-compat libnotify ogg opengl qml text theora tracker wayland X xa xorg zeroconf gles2-only -opengl\"/g' /etc/portage/make.conf"
 	install_desktop="
 emerge -uN ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
 systemctl enable lightdm.service
@@ -4458,17 +4460,17 @@ systemctl enable connman.service
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
-	'Gnome')
-	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring
-"
-	;;
-	'Gnome/Full')
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring
-"
-	;;
+#	'Gnome')
+#	install_desktop="
+#yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring
+#"
+#	;;
+#	'Gnome/Full')
+#	install_desktop="
+#rm -f /etc/apt/apt.conf.d/99linuxloops
+#yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring
+#"
+#	;;
 	'i3')
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
@@ -5073,7 +5075,7 @@ cat >/etc/pacman_steamos.conf <<'PACMAN-STEAMOS'
 #GPGDir      = /etc/pacman.d/gnupg/
 #HookDir     = /etc/pacman.d/hooks/
 HoldPkg     = pacman glibc
-#XferCommand = /usr/bin/curl -L -C - -f -o %o %u
+XferCommand = /usr/bin/curl -L -C - -f -o %o %u
 #XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
 #CleanMethod = KeepInstalled
 Architecture = auto
@@ -5092,6 +5094,7 @@ Color
 # We cannot check disk space from within a chroot environment
 CheckSpace
 #VerbosePkgLists
+ParallelDownloads = 4
  
 # By default, pacman accepts packages signed by keys that its local keyring
 # trusts (see pacman-key and its man page), as well as unsigned packages.
@@ -6787,24 +6790,23 @@ else
 	cp \${1}/etc/secureboot_key/MOK.der \${1}/boot/efi/
 	if [ "${distro}" == "NixOS" ]; then
 		exit 0
+	elif [ "${distro}" == "Fedora" ]; then
+		chown root:akmods /etc/secureboot_key/*
+		mkdir -p /etc/pki/akmods/certs /etc/pki/akmods/private
+		rm -rf /etc/pki/akmods/certs/public_key.der /etc/pki/akmods/private/private_key.priv
+		ln -s /etc/secureboot_key/MOK.der /etc/pki/akmods/certs/public_key.der
+		ln -s /etc/secureboot_key/MOK.key /etc/pki/akmods/private/private_key.priv
 	elif [ "${distro}" == "Debian" ] || [ "${distro}" == "Devuan" ] || [ "${distro}" == "Elementary" ] || [ "${distro}" == "Kali" ] || [ "${distro}" == "LMDE" ] || [ "${distro}" == "Linuxmint" ] || [ "${distro}" == "MX" ] || [ "${distro}" == "Neon" ] || [ "${distro}" == "Parrot" ] || [ "${distro}" == "Pop" ] || [ "${distro}" == "Ubuntu" ] || [ "${distro}" == "Ubuntu-LTS" ] || [ "${distro}" == "Zorin" ]; then
 		mkdir -p /var/lib/shim-signed/mok
 		rm -rf /var/lib/shim-signed/mok/MOK.der /var/lib/shim-signed/mok/MOK.priv
 		ln -s /etc/secureboot_key/MOK.der /var/lib/shim-signed/mok/MOK.der
 		ln -s /etc/secureboot_key/MOK.key /var/lib/shim-signed/mok/MOK.priv
-	else
-		mkdir -p /var/lib/dkms
-		rm -rf /var/lib/dkms/mok.pub /var/lib/dkms/mok.key
-		ln -s /etc/secureboot_key/MOK.der /var/lib/dkms/mok.pub
-		ln -s /etc/secureboot_key/MOK.key /var/lib/dkms/mok.key
-		if [ "${distro}" == "Fedora" ]; then
-			chown root:akmods /etc/secureboot_key/*
-			mkdir -p /etc/pki/akmods/certs /etc/pki/akmods/private
-			rm -rf /etc/pki/akmods/certs/public_key.der /etc/pki/akmods/private/private_key.priv
-			ln -s /etc/secureboot_key/MOK.der /etc/pki/akmods/certs/public_key.der
-			ln -s /etc/secureboot_key/MOK.key /etc/pki/akmods/private/private_key.priv
-		fi
 	fi
+	mkdir -p /var/lib/dkms
+	rm -rf /var/lib/dkms/mok.pub /var/lib/dkms/mok.key
+	ln -s /etc/secureboot_key/MOK.der /var/lib/dkms/mok.pub
+	ln -s /etc/secureboot_key/MOK.key /var/lib/dkms/mok.key
+
 fi
 SECUREBOOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_secureboot
@@ -8669,7 +8671,6 @@ if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
-trap end_bootstrap INT
 check_dependencies
 set_base_parameters
 if [ ${#} -eq 0 ]; then
