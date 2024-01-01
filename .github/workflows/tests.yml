@@ -44,8 +44,9 @@ jobs:
     needs: prepare-matrix
     runs-on: ubuntu-22.04
     strategy:
-        matrix:
-            distro: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
+      fail-fast: false
+      matrix:
+        distro: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
     steps:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
