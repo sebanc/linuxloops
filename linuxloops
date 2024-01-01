@@ -1770,7 +1770,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCR
 #!/bin/bash
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
-ec=18; while [ $ec -ne 0 ]; do curl -L -C - "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${desktop}/Generic/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | head -1)" -o /root/bliss.iso; ec=$?; done || { echo -e "BlissOS image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${desktop}/Generic/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | head -1)" -o /root/bliss.iso; ec=\$?; done || { echo -e "BlissOS image download failed."; exit 1; }
 mount /root/bliss.iso /isomount/iso
 install_folder="\$(cat /isomount/iso/efi/boot/android.cfg | grep 'title="' | cut -d' ' -f3)"
 mkdir -p /mnt/android-"\${install_folder}"/data
@@ -1912,14 +1912,14 @@ mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then
-	ec=18; while [ $ec -ne 0 ]; do curl -L -C - \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; ec=$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+	ec=18; while [ \$ec -ne 0 ]; do curl -L -C - \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; ec=\$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 else
-	ec=18; while [ $ec -ne 0 ]; do curl -L -C - \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; ec=$?; done || { echo -e "Brunch image download failed."; exit 1; }
+	ec=18; while [ \$ec -ne 0 ]; do curl -L -C - \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; ec=\$?; done || { echo -e "Brunch image download failed."; exit 1; }
 fi
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch
 rm /isomount/data/brunch.tar.gz
-ec=18; while [ $ec -ne 0 ]; do curl -L -C - \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip; ec=$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip; ec=\$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
@@ -1997,7 +1997,7 @@ set -e
 mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
-ec=18; while [ $ec -ne 0 ]; do curl -L -C - "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip; ec=$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip; ec=\$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root || { echo -e "Failed to extract the recovery image."; return 1; }
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
@@ -2859,7 +2859,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=\$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
@@ -2990,7 +2990,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=\$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
@@ -4383,7 +4383,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://deb.parrot.sh/parrot/iso/5.3/Parrot-rootfs-5.3_amd64.tar.xz -o /root/parrot-rootfs.tar.xz; ec=$?; done || { echo -e "Parrot rootfs image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - https://deb.parrot.sh/parrot/iso/5.3/Parrot-rootfs-5.3_amd64.tar.xz -o /root/parrot-rootfs.tar.xz; ec=\$?; done || { echo -e "Parrot rootfs image download failed."; exit 1; }
 tar xf /root/parrot-rootfs.tar.xz -C /mnt --strip 1
 rm /root/parrot-rootfs.tar.xz
 PREPARE_CHROOT
@@ -5779,7 +5779,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCRIPT
 #!/bin/bash
 set -e
-ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://tails.darklab.sh/pub/tails/stable/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)"/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)".img -o /tails.img; ec=$?; done || { echo -e "Tails image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - https://tails.darklab.sh/pub/tails/stable/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)"/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)".img -o /tails.img; ec=\$?; done || { echo -e "Tails image download failed."; exit 1; }
 dd if=/tails.img of="${destination_device}" bs=1M status=progress
 rm /tails.img
 if [ "${install_type}" == "image" ]; then
