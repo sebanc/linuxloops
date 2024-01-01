@@ -6927,6 +6927,8 @@ elif [ "${distro}" == "VoidLinux" ]; then
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
+xbps-install -y void-repo-nonfree
+xbps-install -Syu
 xbps-install -y nvidia
 INSTALLNVIDIA
 fi
