@@ -30,7 +30,7 @@ USAGE
 
 available_distros=( "AlmaLinux" "Arch" "Artix" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "VoidLinux" "Zorin" )
 btrfs_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "VoidLinux" "Zorin" )
-nvidia_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "VoidLinux" "Zorin" )
+nvidia_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "VoidLinux" "Zorin" )
 surface_supported=( "Arch" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
 
 list_desktops()
@@ -1770,7 +1770,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCR
 #!/bin/bash
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
-curl -L "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${desktop}/Generic/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | head -1)" -o /root/bliss.iso || { echo -e "BlissOS image download failed."; exit 1; }
+ec=18; while [ $ec -ne 0 ]; do curl -L -C - "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${desktop}/Generic/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | head -1)" -o /root/bliss.iso; ec=$?; done || { echo -e "BlissOS image download failed."; exit 1; }
 mount /root/bliss.iso /isomount/iso
 install_folder="\$(cat /isomount/iso/efi/boot/android.cfg | grep 'title="' | cut -d' ' -f3)"
 mkdir -p /mnt/android-"\${install_folder}"/data
@@ -1912,14 +1912,14 @@ mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then
-	curl -L \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+	ec=18; while [ $ec -ne 0 ]; do curl -L -C - \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; ec=$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 else
-	curl -L \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch image download failed."; exit 1; }
+	ec=18; while [ $ec -ne 0 ]; do curl -L -C - \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; ec=$?; done || { echo -e "Brunch image download failed."; exit 1; }
 fi
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch
 rm /isomount/data/brunch.tar.gz
-curl -L \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip
+ec=18; while [ $ec -ne 0 ]; do curl -L -C - \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip; ec=$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
@@ -1997,7 +1997,7 @@ set -e
 mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
-curl -L "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+ec=18; while [ $ec -ne 0 ]; do curl -L -C - "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip; ec=$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root || { echo -e "Failed to extract the recovery image."; return 1; }
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
@@ -2859,7 +2859,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz
+ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
@@ -2990,7 +2990,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz
+ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
@@ -4383,7 +4383,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://deb.parrot.sh/parrot/iso/5.3/Parrot-rootfs-5.3_amd64.tar.xz -o /root/parrot-rootfs.tar.xz
+ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://deb.parrot.sh/parrot/iso/5.3/Parrot-rootfs-5.3_amd64.tar.xz -o /root/parrot-rootfs.tar.xz; ec=$?; done || { echo -e "Parrot rootfs image download failed."; exit 1; }
 tar xf /root/parrot-rootfs.tar.xz -C /mnt --strip 1
 rm /root/parrot-rootfs.tar.xz
 PREPARE_CHROOT
@@ -5779,7 +5779,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCRIPT
 #!/bin/bash
 set -e
-curl -L https://tails.darklab.sh/pub/tails/stable/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)"/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)".img -o /tails.img || { echo -e "Tails image download failed."; exit 1; }
+ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://tails.darklab.sh/pub/tails/stable/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)"/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)".img -o /tails.img; ec=$?; done || { echo -e "Tails image download failed."; exit 1; }
 dd if=/tails.img of="${destination_device}" bs=1M status=progress
 rm /tails.img
 if [ "${install_type}" == "image" ]; then
@@ -6916,12 +6916,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVID
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install system76-driver-nvidia
 INSTALLNVIDIA
-elif [ "${distro}" == "Qubes" ]; then
-cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVIDIA
-#!/bin/bash
-set -e
-dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmod-nvidia
-INSTALLNVIDIA
 elif [ "${distro}" == "SteamOS" ]; then
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
@@ -8029,7 +8023,7 @@ download_bootstrap()
 {
 if [ "${1}" == "iso" ]; then
 	echo "Trying to download ${distro} iso image from ${2}..."
-	ec=18; while [ $ec -ne 0 ]; do curl -L -C - "${2}" -o "${linuxloopsdir}"/"${distro}".iso; ec=$?; done || (losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed.")
+	ec=18; while [ $ec -ne 0 ]; do curl -L -C - "${2}" -o "${linuxloopsdir}"/"${distro}".iso; ec=$?; done || { losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed."; }
 	if [ ! -z "${4}" ]; then
 		mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
 		mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
@@ -8064,7 +8058,7 @@ elif [ "${1}" == "lxc" ]; then
 		if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po 'content-length: \d+' | cut -d' ' -f2) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]; then
 			echo "Trying to download ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz"
 			rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
-			ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz; ec=$?; done
+			ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz; ec=$?; done || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz failed."; }
 		fi
 		if xz -t "${linuxloopsdir}"/"${2}"-rootfs.tar.xz; then
 			mkdir -p "${linuxloopsdir}"/chroot/bootstrap/linuxloops
