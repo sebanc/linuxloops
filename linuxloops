@@ -4210,13 +4210,13 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	;;
 	'Deepin')
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
+zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
 "
 	;;
 	'Deepin/Full')
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
+zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
 zypper --non-interactive remove sddm
 "
 	;;
@@ -8664,6 +8664,7 @@ if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
+trap end_bootstrap INT
 check_dependencies
 set_base_parameters
 if [ ${#} -eq 0 ]; then
