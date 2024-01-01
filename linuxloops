@@ -4223,7 +4223,7 @@ zypper --non-interactive remove sddm
 	'Enlightenment')
 	install_desktop="
 systemctl disable NetworkManager.service
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology python3-dbus-python econnman
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman
 systemctl enable connman.service
 "
 	;;
@@ -4231,7 +4231,7 @@ systemctl enable connman.service
 	install_desktop="
 systemctl disable NetworkManager.service
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology python3-dbus-python econnman
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman
 systemctl enable connman.service
 "
 	;;
