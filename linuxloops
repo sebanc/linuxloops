@@ -7672,6 +7672,7 @@ GRUB_THEME=${grub_theme}
 GRUB_DISABLE_OS_PROBER=true
 GRUB_ENABLE_BLSCFG=false
 GRUBDEFAULTS
+if [ -f /etc/grub.d/10_linux ]; then chmod 0755 /etc/grub.d/10_linux; fi
 if [ -d "/etc/default/grub.d" ]; then for cfgfile in /etc/default/grub.d/*.cfg; do echo '' > \\\${cfgfile}; done; fi
 for i in \\\$(find /etc/grub.d | grep debian_theme); do chmod 0644 \\\$i; done
 for i in \\\$(find /etc/grub.d | grep fallback_counting); do chmod 0644 \\\$i; done
@@ -8032,7 +8033,7 @@ if [ "${1}" == "iso" ]; then
 	rm "${linuxloopsdir}"/"${distro}".iso
 	return 0
 elif [ "${1}" == "lxc" ]; then
-	if [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po 'content-length: \d+' | cut -d' ' -f2) -ne 0 ]; then
+	if [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) -ne 0 ]; then
 		if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po 'content-length: \d+' | cut -d' ' -f2) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]; then
 			echo "Trying to download ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz"
 			rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
