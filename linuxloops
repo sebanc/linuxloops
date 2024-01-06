@@ -28,9 +28,9 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 USAGE
 }
 
-available_distros=( "AlmaLinux" "Arch" "Artix" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "VoidLinux" "Zorin" )
-btrfs_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "VoidLinux" "Zorin" )
-nvidia_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "VoidLinux" "Zorin" )
+available_distros=( "AlmaLinux" "Arch" "Artix" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+btrfs_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+nvidia_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 surface_supported=( "Arch" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
 
 list_desktops()
@@ -99,34 +99,34 @@ case "${1}" in
 	'Gentoo-openrc')
 	available_desktops=( "None" "Cinnamon" "Enlightenment" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
 	bootstrap="lxc archlinux current default"
-	bootloader_id="boot"
+	bootloader_id="gentoo"
 	bootloader_name="bootx64.efi"
 	;;
 	'Gentoo-systemd')
 	available_desktops=( "None" "Cinnamon" "Enlightenment" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
 	bootstrap="lxc archlinux current default"
-	bootloader_id="boot"
+	bootloader_id="gentoo"
 	bootloader_name="bootx64.efi"
 	;;
 	'Kali')
 	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	bootloader_id="kali"
-	bootloader_name="grubx64.efi"
 	bootstrap="lxc kali current default"
+	bootloader_id="debian"
+	bootloader_name="grubx64.efi"
 	grub_theme="/boot/grub/themes/kali/theme.txt"
 	;;
 	'Linuxmint')
 	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Mate" "Mate/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc ubuntu jammy default"
-	bootloader_id="linuxmint"
+	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
 	;;
 	'LMDE')
 	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" )
 	bootstrap="lxc debian bookworm default"
-	bootloader_id="linuxmint"
+	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
 	;;
@@ -141,7 +141,6 @@ case "${1}" in
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
-	bootloader_path_override="Yes"
 	grub_theme="/boot/grub/themes/mx_linux/theme.txt"
 	;;
 	'Neon')
@@ -149,7 +148,6 @@ case "${1}" in
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
-	bootloader_path_override="Yes"
 	grub_theme="/boot/grub/themes/breeze/theme.txt"
 	;;
 	'NixOS')
@@ -168,7 +166,7 @@ case "${1}" in
 	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" )
 	bootstrap="lxc archlinux current default"
-	bootloader_id="parrot"
+	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
 	;;
 	'Pop')
@@ -176,14 +174,12 @@ case "${1}" in
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
-	bootloader_path_override="Yes"
 	;;
 	'Proxmox')
 	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
-	bootloader_path_override="Yes"
 	;;
 	'Qubes')
 	available_desktops=( "Full" )
@@ -222,10 +218,10 @@ case "${1}" in
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	;;
-	'VoidLinux')
+	'Void')
 	available_desktops=( "None" "Gnome" "Gnome/Full" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
 	bootstrap="lxc voidlinux current default"
-	bootloader_id="boot"
+	bootloader_id="void"
 	bootloader_name="bootx64.efi"
 	;;
 	'Zorin')
@@ -2261,9 +2257,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs
-echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
-echo -e '#!/bin/sh\n/lib/modules/"\${1}"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "\${2}"' > /etc/dkms/sign_helper.sh
-chmod 0755 /etc/dkms/sign_helper.sh
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -2467,9 +2460,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs
-echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
-echo -e '#!/bin/sh\n/lib/modules/"\${1}"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "\${2}"' > /etc/dkms/sign_helper.sh
-chmod 0755 /etc/dkms/sign_helper.sh
 dbus-uuidgen > /etc/machine-id
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
@@ -2876,7 +2866,6 @@ echo '*/* *' >> /etc/portage/package.license/custom
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox vmware\"" >> /etc/portage/make.conf
 echo "USE=\"alsa bluetooth caps cdda cryptsetup dbus device-mapper elogind icu lvm minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala\"" >> /etc/portage/make.conf
 echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
-#echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
 emerge --sync
 eselect profile set default/linux/amd64/17.1
@@ -2886,7 +2875,7 @@ rc-update add NetworkManager default
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf"
+newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf"
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "${desktop}" in
 	'Cinnamon')
@@ -2897,7 +2886,6 @@ rc-update add display-manager default
 "
 	;;
 	'Enlightenment')
-	#newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml text theora tracker wayland X xa xorg zeroconf gles2-only -opengl\"/g' /etc/portage/make.conf"
 	install_desktop="
 emerge -uN ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
@@ -2950,6 +2938,8 @@ ${install_desktop}
 rm /etc/portage/package.use/dep_cycle_fix
 emerge -uDN @world
 rc-update add cupsd default
+echo 'SECUREBOOT_SIGN_KEY="/etc/secureboot_key/MOK.key"' >> /etc/portage/make.conf
+echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.der"' >> /etc/portage/make.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -3008,7 +2998,6 @@ echo '*/* *' >> /etc/portage/package.license/custom
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox vmware\"" >> /etc/portage/make.conf
 echo "USE=\"alsa bluetooth caps cdda cryptsetup dbus device-mapper -elogind icu lvm minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala\"" >> /etc/portage/make.conf
 echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
-#echo -e "MAKEOPTS=\"--jobs 4 --load-average 5\"\nEMERGE_DEFAULT_OPTS=\"--jobs 4\"" >> /etc/portage/make.conf
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
 emerge --sync
 eselect profile set default/linux/amd64/17.1
@@ -3017,7 +3006,8 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus -elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf"
+newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus -elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf
+"
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "${desktop}" in
 	'Cinnamon')
@@ -3027,7 +3017,6 @@ systemctl enable lightdm.service
 "
 	;;
 	'Enlightenment')
-	#newuse="sed -i 's/^USE=.*/USE=\"alsa bluetooth caps cdda dbus -elogind icu minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg lock mdnsresponder-compat libnotify ogg opengl qml text theora tracker wayland X xa xorg zeroconf gles2-only -opengl\"/g' /etc/portage/make.conf"
 	install_desktop="
 emerge -uN ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
 systemctl enable lightdm.service
@@ -3075,6 +3064,8 @@ rm /etc/portage/package.use/dep_cycle_fix
 emerge -uDN @world
 systemctl enable cups.service
 systemctl --global enable pulseaudio.service pulseaudio.socket
+echo 'SECUREBOOT_SIGN_KEY="/etc/secureboot_key/MOK.key"' >> /etc/portage/make.conf
+echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.der"' >> /etc/portage/make.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -3133,9 +3124,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release kali-themes sbsigntool mokutil dosfstools btrfs-progs
-echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
-echo -e '#!/bin/sh\n/lib/modules/"\${1}"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "\${2}"' > /etc/dkms/sign_helper.sh
-chmod 0755 /etc/dkms/sign_helper.sh
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -3489,9 +3477,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=fal
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs
-echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
-echo -e '#!/bin/sh\n/lib/modules/"\${1}"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "\${2}"' > /etc/dkms/sign_helper.sh
-chmod 0755 /etc/dkms/sign_helper.sh
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -3779,9 +3764,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=fal
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode sbsigntool mokutil dosfstools btrfs-progs
-echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
-echo -e '#!/bin/sh\n/lib/modules/"\${1}"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "\${2}"' > /etc/dkms/sign_helper.sh
-chmod 0755 /etc/dkms/sign_helper.sh
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -4400,15 +4382,13 @@ echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > 
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install ca-certificates console-setup dirmngr gpg kbd locales parrot-core
-sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirrors.mit.edu/parrot@g' /etc/apt/sources.list.d/parrot.list
+sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@https://ftp.acc.umu.se/mirror/parrotsec.org/parrot@g' /etc/apt/sources.list.d/parrot.list
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirrors.mit.edu/parrot@g' /etc/apt/sources.list.d/parrot.list
+sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@https://ftp.acc.umu.se/mirror/parrotsec.org/parrot@g' /etc/apt/sources.list.d/parrot.list
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs
-echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
-echo -e '#!/bin/sh\n/lib/modules/"\${1}"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "\${2}"' > /etc/dkms/sign_helper.sh
-chmod 0755 /etc/dkms/sign_helper.sh
+bash
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -4715,9 +4695,6 @@ yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install proxmox-ve postfix open-iscsi ifenslave dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs
 sed -i 's/^/#/' /etc/apt/sources.list.d/pve-enterprise.list
-echo -e 'sign_tool="/etc/dkms/sign_helper.sh"' >> /etc/dkms/framework.conf
-echo -e '#!/bin/sh\n/lib/modules/"\${1}"/build/scripts/sign-file sha512 /var/lib/shim-signed/mok/MOK.priv /var/lib/shim-signed/mok/MOK.der "\${2}"' > /etc/dkms/sign_helper.sh
-chmod 0755 /etc/dkms/sign_helper.sh
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -6291,7 +6268,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_VoidLinux()
+chroot_Void()
 {
 prepare_bootstrap="
 xbps-install -Syu
@@ -6787,7 +6764,7 @@ else
 	openssl req -newkey rsa:4096 -nodes -keyout \${1}/etc/secureboot_key/MOK.key -new -x509 -sha256 -days 36500 -subj "/CN=Linuxloops Machine Owner Key/" -out \${1}/etc/secureboot_key/MOK.crt
 	openssl x509 -outform DER -in \${1}/etc/secureboot_key/MOK.crt -out \${1}/etc/secureboot_key/MOK.der
 	chmod 0640 \${1}/etc/secureboot_key/*
-	cp \${1}/etc/secureboot_key/MOK.der \${1}/boot/efi/
+	cp \${1}/etc/secureboot_key/MOK.der \${1}/boot/efi/${distro}.der
 	if [ "${distro}" == "NixOS" ]; then
 		exit 0
 	elif [ "${distro}" == "Fedora" ]; then
@@ -6927,7 +6904,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVID
 set -e
 pacman -S --noconfirm nvidia-dkms lib32-nvidia-utils
 INSTALLNVIDIA
-elif [ "${distro}" == "VoidLinux" ]; then
+elif [ "${distro}" == "Void" ]; then
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -7717,25 +7694,13 @@ else
 		if [ "${distro}" != "Proxmox" ]; then dpkg-divert --divert /usr/sbin/grub-install.real --rename /usr/sbin/grub-install; fi
 		cat >/usr/sbin/grub-install <<'GRUBINSTALL'
 #!/bin/sh
-grub-install.real "\\\$@"
-if [ -f /boot/efi/EFI/"${bootloader_id}"/mmx64.efi ] && [ ! -f /boot/efi/EFI/BOOT/mmx64.efi ]; then cp /boot/efi/EFI/"${bootloader_id}"/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi; fi
+grub-install.real "\\\$@" --bootloader-id="${bootloader_id}"
+grub-install.real "\\\$@" --removable
+find /boot/efi -type f -iname fbx64.efi -exec rm {} \;
+find /boot/efi -type f -iname bootx64.csv -exec rm {} \;
 GRUBINSTALL
 		chmod 0755 /usr/sbin/grub-install
-		if [ "${bootloader_path_override}" == "Yes" ]; then
-			if grub-install --help | grep -q force-extra-removable; then
-				echo "grub-efi-amd64 grub2/force_efi_extra_removable boolean true" | debconf-set-selections
-				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --force-extra-removable
-			else
-				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}"
-			fi
-		else
-			if grub-install --help | grep -q force-extra-removable; then
-				echo "grub-efi-amd64 grub2/force_efi_extra_removable boolean true" | debconf-set-selections
-				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --force-extra-removable
-			else
-				grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram
-			fi
-		fi
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi
 	elif [ -f /usr/share/grub/sbat.csv ]; then
 		if [ "${distro}" == "Arch" ] || [ "${distro}" == "Artix" ] || [ "${distro}" == "Manjaro" ] || [ "${distro}" == "SteamOS" ]; then
 			pacman -Syu --noconfirm git fakeroot
@@ -7763,7 +7728,7 @@ set -e
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 mkdir -p /boot/efi/EFI/BOOT
 cp /boot/efi/EFI/"${bootloader_id}"/grubx64.efi /boot/efi/EFI/BOOT/grubx64.efi
-cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/BOOT/BOOTx64.EFI
 cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
 cp /usr/share/shim-signed/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
 cp /usr/share/shim-signed/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
@@ -7777,9 +7742,18 @@ SECUREBOOTINSTALL
 			chmod 0755 /usr/sbin/secureboot-install
 			secureboot-install
 		else
+			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+			if [ -f /usr/share/shim/BOOTX64.EFI ]; then
+				mv /boot/EFI/BOOT/BOOTX64.EFI /boot/EFI/BOOT/grubx64.efi
+				cp /usr/share/shim/BOOTX64.EFI /boot/EFI/BOOT/BOOTX64.EFI
+				cp /usr/share/shim/BOOTX64.EFI /boot/EFI/gentoo/BOOTX64.EFI
+				cp /usr/share/shim/mmx64.efi /boot/EFI/BOOT/mmx64.efi
+				cp /usr/share/shim/mmx64.efi /boot/EFI/gentoo/mmx64.efi
+			fi
 		fi
 	else
+		grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 		grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 	fi
 	mkdir -p /boot/grub
@@ -7789,8 +7763,6 @@ for grubefi in \\\$(find /boot/efi -iname "grubx64.efi"); do
 	for sig in \\\$(sbverify --list "\\\$grubefi" | grep '^signature' | sed 's@signature @@g' | sort -r); do sbattach --signum "\\\$sig" --remove "\\\$grubefi"; done
 	sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\\\$grubefi" "\\\$grubefi"
 done
-find /boot/efi -type f -iname fbx64.efi -exec rm {} \;
-find /boot/efi -type f -iname bootx64.csv -exec rm {} \;
 REINSTALLBOOTLOADER
 chmod 0755 /usr/sbin/reinstall-bootloader
 reinstall-bootloader
@@ -8145,6 +8117,7 @@ if [ "${install_type}" == "disk" ]; then
 	fi
 	
 else
+	echo "Creating image file ${fullpath}..."
 	rm -f "${fullpath}" "${fullpath}".der "${fullpath}".grub.txt
 	echo -n > "${fullpath}"
 	if [ "x$(df -T "${fullpath}" | tail -1 | cut -d' ' -f2)" == "xbtrfs" ]; then chattr +C "${fullpath}"; chattr -c "${fullpath}"; fi
