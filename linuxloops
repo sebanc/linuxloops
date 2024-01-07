@@ -222,7 +222,7 @@ case "${1}" in
 	available_desktops=( "None" "Gnome" "Gnome/Full" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
 	bootstrap="lxc voidlinux current default"
 	bootloader_id="void"
-	bootloader_name="bootx64.efi"
+	bootloader_name="grubx64.efi"
 	;;
 	'Zorin')
 	available_desktops=( "None" "Core" "Core/Windows_apps_support" "Lite" "Lite/Windows_apps_support" )
@@ -2875,7 +2875,7 @@ rc-update add NetworkManager default
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf"
+newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl python qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf"
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "${desktop}" in
 	'Cinnamon')
@@ -3006,7 +3006,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus -elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf
+newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus -elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl python qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf
 "
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "${desktop}" in
@@ -5933,10 +5933,11 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-de
 "
 	;;
 	'Studio/Full')
+	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable desktop-base-
 "
 	;;
 	'Ubuntu')
@@ -6177,6 +6178,8 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-de
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable
+chmod 0644 /etc/grub.d/09_lowlatency
+chmod 0755 /etc/grub.d/10_linux
 "
 	;;
 	'Ubuntu')
@@ -6283,7 +6286,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 xbps-install -Syu
-xbps-install -y linux linux-headers dkms linux-firmware crda bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober sbsigntool mokutil dosfstools btrfs-progs
+xbps-install -y linux linux-headers dkms linux-firmware wireless-regdb bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober sbsigntool mokutil dosfstools btrfs-progs
 ln -s /etc/sv/bluetoothd /etc/sv/dbus /etc/sv/dhcpcd /etc/sv/named /etc/sv/NetworkManager /etc/sv/polkitd /etc/sv/uuidd /etc/runit/runsvdir/default/
 cat >>/etc/rc.conf <<SETTINGS
 KEYMAP="${keymap}"
@@ -7672,7 +7675,6 @@ GRUB_THEME=${grub_theme}
 GRUB_DISABLE_OS_PROBER=true
 GRUB_ENABLE_BLSCFG=false
 GRUBDEFAULTS
-if [ -f /etc/grub.d/10_linux ]; then chmod 0755 /etc/grub.d/10_linux; fi
 if [ -d "/etc/default/grub.d" ]; then for cfgfile in /etc/default/grub.d/*.cfg; do echo '' > \\\${cfgfile}; done; fi
 for i in \\\$(find /etc/grub.d | grep debian_theme); do chmod 0644 \\\$i; done
 for i in \\\$(find /etc/grub.d | grep fallback_counting); do chmod 0644 \\\$i; done
@@ -8034,7 +8036,7 @@ if [ "${1}" == "iso" ]; then
 	return 0
 elif [ "${1}" == "lxc" ]; then
 	if [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) -ne 0 ]; then
-		if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po 'content-length: \d+' | cut -d' ' -f2) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]; then
+		if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]; then
 			echo "Trying to download ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz"
 			rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
 			ec=18; while [ $ec -ne 0 ]; do curl -L -C - https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz; ec=$?; done || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz failed."; }

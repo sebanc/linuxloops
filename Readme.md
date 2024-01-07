@@ -49,8 +49,8 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |
 |Elementary      |7               |✓                      |✓                                    |✓                                |              |
 |Fedora          |39              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
-|Gentoo-openrc   |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
-|Gentoo-systemd  |Current         |disk images only       |✓                                    |                                 |[notes][Gentoo-notes]|
+|Gentoo-openrc   |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
+|Gentoo-systemd  |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
 |LMDE            |Faye            |✓                      |✓                                    |✓                                |              |
 |Manjaro         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]|
@@ -68,7 +68,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Tails           |Latest          |✓                      |                                     |                                 |[notes][Tails-notes]|
 |Ubuntu          |23.10           |✓                      |✓                                    |✓                                |              |
 |Ubuntu-LTS      |22.04           |✓                      |✓                                    |✓                                |              |
-|VoidLinux       |Current         |                       |✓                                    |                                 |              |
+|Void            |Current         |                       |✓                                    |                                 |              |
 |Zorin           |17              |✓                      |✓                                    |✓                                |              |
 
 
@@ -122,8 +122,8 @@ The only mandatory parameters are: the distribution, the environment and the des
 `sudo bash ~/linuxloops -l`  
 
 As an example:  
-`sudo bash ~/linuxloops -distro Ubuntu -env kde-full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
-`sudo bash ~/linuxloops -distro Arch -env cinnamon -dst /home/username/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment with the linux-surface patches in a 30 GB image located at /home/username/arch.img.  
+`sudo bash ~/linuxloops -distro Ubuntu -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
+`sudo bash ~/linuxloops -distro Arch -env Cinnamon -dst /home/username/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment with the linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
 
 ## Complementary instructions

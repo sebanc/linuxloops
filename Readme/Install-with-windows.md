@@ -56,7 +56,7 @@ The only mandatory parameters are: the distribution, the environment and the des
 `sudo bash ~/linuxloops -l`  
 
 As an example:  
-`sudo bash ~/linuxloops -distro Arch -env cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.  
+`sudo bash ~/linuxloops -distro Arch -env Cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.  
 
 4. Finalisation (For disk installs)  
 
