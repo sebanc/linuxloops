@@ -163,7 +163,8 @@ case "${1}" in
 	bootloader_name="grubx64.efi"
 	;;
 	'OpenSUSE')
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc opensuse tumbleweed default"
 	bootloader_id="opensuse"
 	bootloader_name="shim.efi"
@@ -1838,7 +1839,7 @@ repo: 'https://pkg-repo.blendos.co/'
 impl: 'https://github.com/blend-os/tracks/raw/main'
 SYSTEMYAML
 ${install_desktop}
-echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml;
+echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml
 if [ ! -z "${custom_packages}" ]; then for i in ${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done; fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
 echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml;
@@ -1856,8 +1857,10 @@ commands:
   - 'ln -s /boot/linuxloops/initcpio-hook/linuxloops /etc/initcpio/install/linuxloops'
   - 'echo "HOOKS=(base udev autodetect keyboard keymap modconf block encrypt akshara filesystems fsck linuxloops)" > /etc/mkinitcpio.conf.d/linuxloops.conf'
   - 'if [ -f /proc/1/cwd/system.yaml ] && [ -d /proc/1/cwd/boot/linuxloops ]; then cp -r /proc/1/cwd/boot/linuxloops /boot/; fi'
+  - 'sed -i "s@cp -r @cp -a @g" /usr/lib/initcpio/hooks/akshara'
 SYSTEMYAML
 akshara update
+sed -i "s@cp -r @cp -a @g" /usr/lib/initcpio/hooks/akshara
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -3004,7 +3007,7 @@ rc-update add NetworkManager default
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl python qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf
+newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus elogind icu libei mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw -systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl python qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf
 "
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "${desktop}" in
@@ -3142,7 +3145,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus -elogind icu mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl python qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf
+newuse="sed -i 's/^USE=.*/USE=\"accessibility alsa bluetooth caps cdda dbus -elogind icu libei mbim minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw systemd tracker tty-helpers udev udisks vala appindicator cairo client cups drm eds egl gles2 gnome-online-accounts gtk gtk3 introspection jpeg libnotify lock mdnsresponder-compat ogg opengl python qml secureboot text theora tracker wayland X xa xorg zeroconf\"/g' /etc/portage/make.conf
 "
 desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
 case "${desktop}" in
@@ -4385,17 +4388,17 @@ sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet blueman
 "
 	;;
-	'Lxqt')
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet blueman
-"
-	;;
-	'Lxqt/Full')
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet blueman
-"
-	;;
+#	'Lxqt')
+#	install_desktop="
+#zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet blueman
+#"
+#	;;
+#	'Lxqt/Full')
+#	install_desktop="
+#sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
+#zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet blueman
+#"
+#	;;
 	'Mate')
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-mate-mate mate-panel-branding-openSUSE mate-themes mate-terminal mate-media mate-power-manager mate-menus caja NetworkManager-applet blueman
@@ -6064,11 +6067,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Plasma')
+	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5
 "
 	;;
 	'Plasma/Full')
+	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop
