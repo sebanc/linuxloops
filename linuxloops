@@ -29,7 +29,7 @@ USAGE
 }
 
 available_distros=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-btrfs_supported=( "Arch" "Artix" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+btrfs_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 nvidia_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 surface_supported=( "Arch" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
 
@@ -1768,7 +1768,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 reflector --latest 10 --threads 10 --connection-timeout 1 --download-timeout 1 --protocol https --sort rate --save /etc/pacman.d/mirrorlist --verbose
-pacstrap -G /mnt base base-devel cpio grub mkinitcpio ntfs-3g sbsigntools
+pacstrap -G /mnt base base-devel btrfs-progs cpio grub mkinitcpio ntfs-3g sbsigntools
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
