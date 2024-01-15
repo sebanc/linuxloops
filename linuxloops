@@ -28,10 +28,10 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 USAGE
 }
 
-available_distros=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-btrfs_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-nvidia_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-surface_supported=( "Arch" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
+available_distros=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+btrfs_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+nvidia_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo-openrc" "Gentoo-systemd" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+surface_supported=( "Arch" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
 
 list_desktops()
 {
@@ -161,6 +161,12 @@ case "${1}" in
 	bootstrap="lxc archlinux current default"
 	bootloader_id="nixos"
 	bootloader_name="grubx64.efi"
+	;;
+	'Nobara')
+	available_desktops=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
+	bootstrap="lxc fedora 39 default"
+	bootloader_id="fedora"
+	bootloader_name="shimx64.efi"
 	;;
 	'OpenSUSE')
 	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -3473,7 +3479,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm -f /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/official-package-repositories.list <<'REPOS'
-deb http://packages.linuxmint.com victoria main upstream import backport #id:linuxmint_main
+deb http://packages.linuxmint.com virginia main upstream import backport #id:linuxmint_main
 
 deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
 deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
@@ -4289,6 +4295,156 @@ INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
 initramfs_type="nixos_config"
+}
+
+chroot_Nobara()
+{
+prepare_bootstrap="
+dnf update -y
+dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+"
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
+#!/bin/bash
+set -e
+cat >/etc/yum.repos.d/nobara.repo <<'NOBARAREPO'
+[nobara-baseos-\$releasever]
+name=nobara-baseos-\$releasever
+#baseurl=https://nobara-baseos.nobaraproject.org/\$releasever/
+mirrorlist=https://mirrors.nobaraproject.org/baseos
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$releasever-\$basearch
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+priority=50
+
+[nobara-baseos-multilib-\$releasever]
+name=nobara-baseos-multilib-\$releasever
+#baseurl=https://nobara-baseos-multilib.nobaraproject.org/\$releasever/
+mirrorlist=https://mirrors.nobaraproject.org/baseos-multilib
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$releasever-\$basearch
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+priority=50
+
+[nobara-appstream-\$releasever]
+name=nobara-appstream-\$releasever
+#baseurl=https://nobara-appstream.nobaraproject.org/\$releasever/\$basearch
+mirrorlist=https://mirrors.nobaraproject.org/appstream
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-appstream-pubkey-\$basearch
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+priority=25
+
+[nobara-rocm-official]
+name=nobara-rocm-official
+baseurl=https://repo.radeon.com/rocm/rhel9/5.6.1/main/
+enabled=1
+gpgcheck=1
+gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
+priority=50
+NOBARAREPO
+dnf --nogpgcheck swap -y fedora-release-container nobara-release-workstation
+dnf install --installroot=/mnt --releasever / -y @core nobara-release-workstation nobara-login nobara-login-sysctl grubby openssl tar gstreamer1-plugins-bad-free --exclude=gstreamer1-plugins-bad-free-libs
+PREPARE_CHROOT
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
+#!/bin/bash
+set -e
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+dnf upgrade --refresh -y
+dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio
+CHROOT_INIT
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
+
+hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
+basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
+basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="desktop-backgrounds ffmpeg-free flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
+desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
+desktop_services="avahi-daemon.service cups.service"
+case "${desktop}" in
+	'Gnome')
+	install_desktop="
+dnf install -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-backgrounds gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
+"
+	;;
+	'Gnome/Full')
+	install_desktop="
+dnf install -y ${desktop_base} gdm @gnome-desktop gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
+"
+	;;
+	'Nobara')
+	install_desktop="
+dnf install -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+"
+	;;
+	'Nobara/Full')
+	install_desktop="
+dnf install -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm @kde-desktop-environment kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+"
+	;;
+	'Plasma')
+	install_desktop="
+dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
+"
+	;;
+	'Plasma/Full')
+	install_desktop="
+dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment
+"
+	;;
+	'SteamDeck')
+	install_desktop="
+dnf install -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+"
+	;;
+	'SteamDeck/Full')
+	install_desktop="
+dnf install -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS @kde-desktop-environment gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+"
+	;;
+esac
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DESKTOP
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+${install_desktop}
+systemctl enable ${desktop_services}
+INSTALL_DESKTOP
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
+#!/bin/bash
+set -e
+useradd -s /bin/bash -m '${username}'
+echo -e '${userpass}\n${userpass}' | passwd '${username}'
+usermod -aG wheel '${username}'
+echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
+INSTALL_USER
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+initramfs_type="dracut"
+if [ ! -z "${custom_packages}" ]; then
+	echo -e "#!/bin/bash\nset -e\ndnf install -y ${custom_packages}" > "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_packages
+	chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_packages
+fi
+if [ ! -z "${custom_script}" ]; then
+	cp "${custom_script}" "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_script
+	chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_script
+fi
 }
 
 chroot_OpenSUSE()
@@ -6829,7 +6985,7 @@ mkdir -p /mnt/linuxloops
 mount --bind /linuxloops /mnt/linuxloops
 if [ "${desktop}" == "Enlightenment" ]; then
 	dns_manager="connman/resolv.conf"
-elif [ "${distro}" == "Elementary" ] || [ "${distro}" == "Fedora" ] || [ "${distro}" == "Linuxmint" ] || [ "${distro}" == "Neon" ] || [ "${distro}" == "Pop" ] || [ "${distro}" == "Qubes" ] || [ "${distro}" == "SteamOS" ] || [ "${distro}" == "Ubuntu" ] || [ "${distro}" == "Ubuntu-LTS" ] || [ "${distro}" == "Zorin" ]; then
+elif [ "${distro}" == "Elementary" ] || [ "${distro}" == "Fedora" ] || [ "${distro}" == "Linuxmint" ] || [ "${distro}" == "Neon" ] || [ "${distro}" == "Nobara" ] || [ "${distro}" == "Pop" ] || [ "${distro}" == "Qubes" ] || [ "${distro}" == "SteamOS" ] || [ "${distro}" == "Ubuntu" ] || [ "${distro}" == "Ubuntu-LTS" ] || [ "${distro}" == "Zorin" ]; then
 	dns_manager="systemd/resolve/stub-resolv.conf"
 else
 	dns_manager="NetworkManager/resolv.conf"
@@ -6923,7 +7079,7 @@ else
 	cp \${1}/etc/secureboot_key/MOK.der \${1}/boot/efi/${distro}.der
 	if [ "${distro}" == "NixOS" ]; then
 		exit 0
-	elif [ "${distro}" == "Fedora" ]; then
+	elif [ "${distro}" == "Fedora" ] || [ "${distro}" == "Nobara" ]; then
 		chown root:akmods /etc/secureboot_key/*
 		mkdir -p /etc/pki/akmods/certs /etc/pki/akmods/private
 		rm -rf /etc/pki/akmods/certs/public_key.der /etc/pki/akmods/private/private_key.priv
@@ -6997,6 +7153,15 @@ dkms add -m v4l2loopback -v 0.12.5
 ls /usr/lib/modules/*/vmlinuz | sed 's@/usr/lib/modules/@@g' | sed 's@/vmlinuz@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 usermod -aG video '${username}'
 SURFACEDNF
+elif [ "${distro}" == "Nobara" ]; then
+	cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_surface <<SURFACEDNF
+#!/bin/bash
+set -e
+dnf config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
+dnf update -y
+dnf install -y --allowerasing iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera v4l2loopback
+usermod -aG video '${username}'
+SURFACEDNF
 fi
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_surface
 if [ ! -z "${kernel_parameters}" ]; then kernel_parameters="acpi_enforce_resources=lax ${kernel_parameters}"; else kernel_parameters="acpi_enforce_resources=lax"; fi
@@ -7023,7 +7188,7 @@ elif [ "${distro}" == "Elementary" ] || [ "${distro}" == "Linuxmint" ] || [ "${d
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1)
 INSTALLNVIDIA
-elif [ "${distro}" == "Fedora" ]; then
+elif [ "${distro}" == "Fedora" ] || [ "${distro}" == "Nobara" ]; then
 	cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -7848,11 +8013,15 @@ for i in \\\$(find /etc/grub.d | grep reset_boot_success); do chmod 0644 \\\$i; 
 if [ "${install_type}" == "image" ]; then for i in \\\$(find /etc/grub.d | grep uefi-firmware); do chmod 0644 \\\$i; done; fi
 if [ -d /boot/grub2 ]; then
 	grub2-mkconfig -o /boot/grub2/grub.cfg
-	if [ "${distro}" == "AlmaLinux" ] || [ "${distro}" == "RockyLinux" ]; then exit 0; fi
 	if [ "${distro}" == "OpenSUSE" ]; then
 		shim-install --no-nvram
 		exit 0
+	elif [ "${distro}" == "Qubes" ]; then
+		dnf --setopt=reposdir=/etc/yum.repos.d/ reinstall -y grub2-common
+	else
+		dnf reinstall -y grub2-common
 	fi
+	if [ "${distro}" == "AlmaLinux" ] || [ "${distro}" == "RockyLinux" ]; then exit 0; fi
 else
 	if [ ! -z \\\$(command -v debconf-set-selections) ]; then
 		echo "grub-efi-amd64 grub2/update_nvram boolean false" | debconf-set-selections
@@ -7999,7 +8168,11 @@ if [ ! -z "\$(command -v apt)" ]; then
 	yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 	rm -f /etc/apt/apt.conf.d/99linuxloops
 elif [ ! -z "\$(command -v dnf)" ]; then
-	dnf autoremove -y
+	if [ "${distro}" == "Qubes" ]; then
+		dnf --setopt=reposdir=/etc/yum.repos.d/ autoremove -y
+	else
+		dnf autoremove -y
+	fi
 elif [ ! -z "\$(command -v emerge)" ]; then
 	emerge --depclean
 elif [ ! -z "\$(command -v zypper)" ]; then
@@ -8662,7 +8835,7 @@ if [ "${install_type}" == "disk" ]; then
 		if [ ! -b "${destination}" ]; then echo "Disk ${destination} was not found."; exit 1; fi
 		if [ ! "$(lsblk ${destination} -nd -o TYPE)" == "disk" ]; then echo "Linuxloops can only be installed on a full disk."; exit 1; fi
 		fullpath="${destination}"
-		if [ ! -z "${install_size}" ]; then if [ $(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 /1024 / 1024) )) -lt "${install_size}" ]; then echo "You have requested an install size of ${install_size} GB but this device only has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) ))GB available."; exit 1; fi; fi
+		if [ ! -z "${install_size}" ]; then if [ $(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 /1024 / 1024) )) -lt "${install_size}" ]; then echo "You have requested an install size of ${install_size} GB but this device only has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available."; exit 1; fi; fi
 		if [ -z "${install_size}" ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
 		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -gt 0 ] && [ $(( install_size - swap_size )) -lt 12 ]; then echo "At least 12 GB should be available for the main partition, please increase the image size or reduce the swap size."; exit 1; fi
 		if [ ! $(list_array "available_locales" | grep -w "${locale}") ]; then echo "Locale ${locale} is not available, supported locales are:"; echo $(list_array "available_locales" | sed -e 's@\n@ @g'); exit 1; fi
@@ -8696,7 +8869,7 @@ else
 		if ([ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..." 2>/dev/null; install_parameters; return; fi
 		possible_image_size
 		if [ $(( ${maximum_image_size} - 14 )) -lt 0 ]; then
-			sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14GB available." 2>/dev/null
+			sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14 GB available." 2>/dev/null
 			install_parameters
 			return
 		elif [ $(( ${maximum_image_size} - 14 )) -eq 0 ]; then

@@ -52,12 +52,13 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Gentoo-openrc   |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
 |Gentoo-systemd  |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
+|Linuxmint       |Virginia        |✓                      |✓                                    |✓                                |              |
 |LMDE            |Faye            |✓                      |✓                                    |✓                                |              |
 |Manjaro         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]|
-|Mint            |Vera            |✓                      |✓                                    |✓                                |              |
 |MX              |23              |✓                      |✓                                    |✓                                |              |
 |Neon            |Current         |✓                      |✓                                    |✓                                |              |
 |NixOS           |23.11           |✓                      |✓                                    |                                 |[notes][NixOS-notes]|
+|Nobara          |39              |✓                      |✓                                    |✓                                |              |
 |OpenSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]|
 |Parrot          |Current         |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
 |Pop             |22.04           |✓                      |✓                                    |✓                                |              |
