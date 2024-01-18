@@ -3080,7 +3080,7 @@ set -e
 /linuxloops/install_secureboot
 rm /linuxloops/install_secureboot
 echo 'SECUREBOOT_SIGN_KEY="/etc/secureboot_key/MOK.key"' >> /etc/portage/make.conf
-echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.der"' >> /etc/portage/make.conf
+echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.crt"' >> /etc/portage/make.conf
 if [ "${desktop}" == "None" ]; then
 	sed -i 's/^USE=.*/USE="alsa bluetooth caps cdda cryptsetup dbus device-mapper elogind icu lvm minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw secureboot -systemd tracker tty-helpers udev udisks vala"/g' /etc/portage/make.conf
 	emerge -uDN @world
@@ -3211,7 +3211,7 @@ set -e
 /linuxloops/install_secureboot
 rm /linuxloops/install_secureboot
 echo 'SECUREBOOT_SIGN_KEY="/etc/secureboot_key/MOK.key"' >> /etc/portage/make.conf
-echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.der"' >> /etc/portage/make.conf
+echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.crt"' >> /etc/portage/make.conf
 if [ "${desktop}" == "None" ]; then
 	sed -i 's/^USE=.*/USE="alsa bluetooth caps cdda cryptsetup dbus device-mapper -elogind icu lvm minizip mount modemmanager networkmanager wpasupplicant ogg policykit pulseaudio raw secureboot systemd tracker tty-helpers udev udisks vala"/g' /etc/portage/make.conf
 	emerge -uDN @world
@@ -7063,7 +7063,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_settings
 
 generate_install_secureboot()
 {
-if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then return; fi
+if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Qubes" ] || [ "${distro}" == "Tails" ]; then return; fi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_secureboot <<SECUREBOOT
 #!/bin/bash
 set -e
@@ -7157,6 +7157,7 @@ elif [ "${distro}" == "Nobara" ]; then
 	cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_surface <<SURFACEDNF
 #!/bin/bash
 set -e
+dnf install -y 'dnf-command(config-manager)'
 dnf config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
 dnf update -y
 dnf install -y --allowerasing iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera v4l2loopback
@@ -8011,16 +8012,27 @@ for i in \\\$(find /etc/grub.d | grep menu_auto_hide); do chmod 0644 \\\$i; done
 for i in \\\$(find /etc/grub.d | grep menu_show_once); do chmod 0644 \\\$i; done
 for i in \\\$(find /etc/grub.d | grep reset_boot_success); do chmod 0644 \\\$i; done
 if [ "${install_type}" == "image" ]; then for i in \\\$(find /etc/grub.d | grep uefi-firmware); do chmod 0644 \\\$i; done; fi
+if [ "${distro}" == "Gentoo-openrc" ] || [ "${distro}" == "Gentoo-systemd" ]; then
+	cat >/usr/share/grub/sbat.csv <<GRUBSBAT
+sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
+grub,1,Free Software Foundation,grub,\\\$(grub-mkimage --version | cut -d' ' -f3),https://www.gnu.org/software/grub/
+GRUBSBAT
+fi
+rm -rf /boot/efi/EFI
 if [ -d /boot/grub2 ]; then
 	grub2-mkconfig -o /boot/grub2/grub.cfg
 	if [ "${distro}" == "OpenSUSE" ]; then
 		shim-install --no-nvram
 		exit 0
 	elif [ "${distro}" == "Qubes" ]; then
-		dnf --setopt=reposdir=/etc/yum.repos.d/ reinstall -y grub2-common
+		dnf --setopt=reposdir=/etc/yum.repos.d/ reinstall -y shim-* grub2-efi-* grub2-common
+		mkdir -p /boot/efi/EFI/BOOT
+		cp -r /boot/efi/EFI/qubes/* /boot/efi/EFI/BOOT/
+		mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 	else
-		dnf reinstall -y grub2-common
+		dnf reinstall -y shim-* grub2-efi-* grub2-common
 	fi
+	for i in /boot/efi/EFI/*/*.rpmsave; do rm -r \\\$i; done
 	if [ "${distro}" == "AlmaLinux" ] || [ "${distro}" == "RockyLinux" ]; then exit 0; fi
 else
 	if [ ! -z \\\$(command -v debconf-set-selections) ]; then
@@ -8060,10 +8072,10 @@ PACMANHOOK
 			cat >/usr/sbin/secureboot-install <<'SECUREBOOTINSTALL'
 #!/bin/bash
 set -e
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo" --bootloader-id="${bootloader_id}"
 mkdir -p /boot/efi/EFI/BOOT
 cp /boot/efi/EFI/"${bootloader_id}"/grubx64.efi /boot/efi/EFI/BOOT/grubx64.efi
-cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/BOOT/BOOTx64.EFI
+cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
 cp /usr/share/shim-signed/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
 cp /usr/share/shim-signed/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
@@ -8094,10 +8106,12 @@ SECUREBOOTINSTALL
 	mkdir -p /boot/grub
 	grub-mkconfig -o /boot/grub/grub.cfg
 fi
-for grubefi in \\\$(find /boot/efi -iname "grubx64.efi"); do
-	for sig in \\\$(sbverify --list "\\\$grubefi" | grep '^signature' | sed 's@signature @@g' | sort -r); do sbattach --signum "\\\$sig" --remove "\\\$grubefi"; done
-	sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\\\$grubefi" "\\\$grubefi"
-done
+if [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
+	for grubefi in \\\$(find /boot/efi -iname "grubx64.efi"); do
+			for sig in \\\$(sbverify --list "\\\$grubefi" | grep '^signature' | sed 's@signature @@g' | sort -r); do sbattach --signum "\\\$sig" --remove "\\\$grubefi"; done
+			sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\\\$grubefi" "\\\$grubefi"
+	done
+fi
 REINSTALLBOOTLOADER
 chmod 0755 /boot/linuxloops/reinstall-bootloader
 /boot/linuxloops/reinstall-bootloader
