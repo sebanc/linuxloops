@@ -1,5 +1,6 @@
 name: Test distros build system
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 22 * * *"
 concurrency:
