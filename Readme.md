@@ -49,8 +49,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |
 |Elementary      |7               |✓                      |✓                                    |✓                                |              |
 |Fedora          |39              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
-|Gentoo-openrc   |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
-|Gentoo-systemd  |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
+|Gentoo          |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
 |Linuxmint       |Virginia        |✓                      |✓                                    |✓                                |              |
 |LMDE            |Faye            |✓                      |✓                                    |✓                                |              |
