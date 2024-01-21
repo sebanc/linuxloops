@@ -20,7 +20,7 @@ The main limitation of Linuxloops is that the partitionning is not currently cus
 
 ## How does it work ?
 
-The LinuxLoops script will chroot into a temporary rootfs image (usually lxc container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
+The LinuxLoops script will chroot into a temporary rootfs image (usually linux containers rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
 
 For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
 - The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distros are enabled by default as they contain necessary packages for standard use.  
@@ -49,7 +49,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |
 |Elementary      |7               |✓                      |✓                                    |✓                                |              |
 |Fedora          |39              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
-|Gentoo          |Current         |✓                      |✓                                    |                                 |[notes][Gentoo-notes]|
+|Gentoo          |Current         |✓                      |✓                                    |                                 |              |
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
 |Linuxmint       |Virginia        |✓                      |✓                                    |✓                                |              |
 |LMDE            |Faye            |✓                      |✓                                    |✓                                |              |
@@ -146,7 +146,7 @@ Currently, support for LinuxLoops is provided in the off-topic channel of the br
 
 ## Special Thanks
 
-- The [lxc/lxd][lxc link] project for maintaining Linux container rootfs archives.  
+- The [linuxcontainers][linuxcontainers link] project for maintaining Linux container rootfs archives.  
 - The [Grub2Win][Grub2Win link] project for allowing the GRUB bootloader to be installed on devices running Windows.  
 - The [Linux-Surface crew][linux-surface link] for greatly improving Linux support on Surface devices.  
 
@@ -167,7 +167,6 @@ Currently, support for LinuxLoops is provided in the off-topic channel of the br
 [Brunch-notes]: ./Readme/Distro-notes.md#Brunch
 [ChromeOS-Flex-notes]: ./Readme/Distro-notes.md#ChromeOS-Flex
 [Fedora-notes]: ./Readme/Distro-notes.md#Fedora
-[Gentoo-notes]: ./Readme/Distro-notes.md#Gentoo
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
 [NixOS-notes]: ./Readme/Distro-notes.md#NixOS
@@ -188,6 +187,6 @@ Currently, support for LinuxLoops is provided in the off-topic channel of the br
 
 <!-- Outbound Links -->
 [Grub2Win link]: https://sourceforge.net/projects/grub2win/
-[lxc link]: https://linuxcontainers.org/
+[linuxcontainers link]: https://linuxcontainers.org/
 [linux-surface link]: https://github.com/linux-surface/linux-surface
 

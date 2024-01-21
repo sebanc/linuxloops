@@ -49,23 +49,6 @@ On the first boot after install, fedora will relabel files for Selinux support (
 If you install the nvidia proprietary driver, the first boot after each kernel update will be long as the nvidia kernel modules are being rebuilt.  
 
 
-## Gentoo
-
-If you intend to install gentoo with a desktop environment, you will most likely need 40 GB minimum for the main rootfs (as it needs a lot of disk space to build everything from source).  
-
-### Specific note for gentoo installation on disk with secure boot enabled
-
-gentoo does not have secure boot support out of the box. Nevertheless, secureboot can be enabled manually by emerging `mokutil` and running the below commands:  
-```
-sudo mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
-sudo cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTx64.EFI
-sudo cp /usr/share/shim/mmx64.efi /boot/efi/EFI/BOOT/
-sudo sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/grubx64.efi
-sudo mokutil --import /etc/secureboot_keys/MOK.der
-```
-Reboot, enroll the key in shim and re-enable secureboot.  
-
-
 ## Kali
 
 Kali does not have secure boot support in full disk install.  

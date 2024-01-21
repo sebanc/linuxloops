@@ -103,14 +103,14 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'Gentoo')
-	available_desktops=( "None" "Openrc/Cinnamon" "Openrc/Enlightenment" "Openrc/Gnome" "Openrc/Lxqt" "Openrc/Mate" "Openrc/Plasma" "Openrc/Xfce" "Systemd/Cinnamon" "Systemd/Enlightenment" "Systemd/Gnome" "Systemd/Lxqt" "Systemd/Mate" "Systemd/Plasma" "Systemd/Xfce" )
+	available_desktops=( "None" "Cinnamon/Openrc" "Cinnamon/Systemd" "Enlightenment/Openrc" "Enlightenment/Systemd" "Gnome/Openrc" "Gnome/Systemd" "Lxqt/Openrc" "Lxqt/Systemd" "Mate/Openrc" "Mate/Systemd" "Plasma/Openrc" "Plasma/Systemd" "Xfce/Openrc" "Xfce/Systemd" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="gentoo"
 	bootloader_name="shimx64.efi"
 	;;
 	'Kali')
 	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc kali current default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
@@ -163,15 +163,14 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'OpenSUSE')
-	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc opensuse tumbleweed default"
 	bootloader_id="opensuse"
 	bootloader_name="shim.efi"
 	;;
 	'Parrot')
 	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
@@ -2995,10 +2994,10 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-if [ "$(echo ${desktop} | cut -d '/' -f1)" == "Openrc" ]; then
+if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	ec=18; while [ \$ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=\$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 else
-	ec=18; while [ \$ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=\$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
+	ec=18; while [ \$ec -ne 0 ]; do curl -L -C - https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd-mergedusr.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz; ec=\$?; done || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 fi
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
@@ -3016,22 +3015,19 @@ echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.crt"' >> /etc/portage/make.c
 mkdir /etc/portage/package.license
 echo '*/* *' >> /etc/portage/package.license/custom
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
-if [ "$(echo ${desktop} | cut -d '/' -f1)" == "Openrc" ]; then
+if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	echo "USE=\"a52 aac accessibility alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus drm dts dvd eds egl elogind exif flac gif gles2 gstreamer gtk gtk3 icu introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat modemmanager mount mp3 mpeg networkmanager nss ogg opengl pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vulkan wayland wpasupplicant X x264 xml xorg zeroconf\"" >> /etc/portage/make.conf
 else
 	echo "USE=\"a52 aac accessibility alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus drm dts dvd eds egl -elogind exif flac gif gles2 gstreamer gtk gtk3 icu introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat modemmanager mount mp3 mpeg networkmanager nss ogg opengl pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vulkan wayland wpasupplicant X x264 xml xorg zeroconf\"" >> /etc/portage/make.conf
 fi
 echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2 --getbinpkg\"" >> /etc/portage/make.conf
-# Unreliable: Used only to speed up install for tests purpose
-#echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2 --getbinpkg --binpkg-changed-deps=n\"" >> /etc/portage/make.conf
-emerge --sync
+emerge --sync --quiet
 rm -rf /etc/portage/gnupg
 getuto
-eselect profile set default/linux/amd64/17.1
 echo -e "net-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
-emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit app-crypt/gcr dev-util/wayland-scanner
-if [ "$(echo ${desktop} | cut -d '/' -f1)" == "Openrc" ]; then
+emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit app-crypt/gcr dev-util/wayland-scanner x11-misc/xdg-user-dirs
+if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	rc-update add bluetooth default
 	rc-update add NetworkManager default
 else
@@ -3040,97 +3036,90 @@ fi
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-desktop_base="net-print/cups net-print/cups-filters sys-boot/plymouth"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto net-print/cups net-print/cups-filters sys-boot/plymouth sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/materia-theme x11-themes/papirus-icon-theme"
 case "${desktop}" in
-	'Openrc/Cinnamon')
+	'Cinnamon/Openrc')
 	install_desktop="
-emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm gnome-extra/cinnamon x11-terms/gnome-terminal gnome-extra/nemo
+emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm gnome-extra/cinnamon x11-terms/gnome-terminal gnome-extra/nemo net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Openrc/Enlightenment')
+	'Cinnamon/Systemd')
+	install_desktop="
+emerge ${desktop_base} x11-misc/lightdm gnome-extra/cinnamon x11-terms/gnome-terminal gnome-extra/nemo net-wireless/blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Enlightenment/Openrc')
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Openrc/Gnome')
+	'Enlightenment/Systemd')
+	install_desktop="
+emerge ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
+systemctl enable lightdm.service
+"
+	;;
+	'Gnome/Openrc')
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"gdm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Openrc/Lxqt')
+	'Gnome/Systemd')
 	install_desktop="
-emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement
+emerge ${desktop_base} gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus
+systemctl enable gdm.service
+"
+	;;
+	'Lxqt/Openrc')
+	install_desktop="
+emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Openrc/Mate')
+	'Lxqt/Systemd')
 	install_desktop="
-emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm mate-base/mate x11-terms/mate-terminal gnome-extra/nm-applet mate-extra/mate-power-manager mate-extra/mate-media
+emerge ${desktop_base} x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement net-wireless/blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Mate/Openrc')
+	install_desktop="
+emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm mate-base/mate x11-terms/mate-terminal gnome-extra/nm-applet mate-extra/mate-power-manager mate-extra/mate-media net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Openrc/Plasma')
+	'Mate/Systemd')
+	install_desktop="
+emerge ${desktop_base} x11-misc/lightdm mate-base/mate x11-terms/mate-terminal gnome-extra/nm-applet mate-extra/mate-power-manager mate-extra/mate-media net-wireless/blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Plasma/Openrc')
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/discover
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Openrc/Xfce')
+	'Plasma/Systemd')
 	install_desktop="
-emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm xfce-base/xfce4-meta x11-terms/xfce4-terminal gnome-extra/nm-applet net-wireless/blueman xfce-base/xfce4-power-manager
+emerge ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/discover
+systemctl enable sddm.service
+"
+	;;
+	'Xfce/Openrc')
+	install_desktop="
+emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm xfce-base/xfce4-meta x11-terms/xfce4-terminal gnome-extra/nm-applet net-wireless/blueman xfce-base/xfce4-power-manager net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Systemd/Cinnamon')
+	'Xfce/Systemd')
 	install_desktop="
-emerge ${desktop_base} x11-misc/lightdm gnome-extra/cinnamon x11-terms/gnome-terminal gnome-extra/nemo
-systemctl enable lightdm.service cups.service
-systemctl --global enable pulseaudio.service pulseaudio.socket
-"
-	;;
-	'Systemd/Enlightenment')
-	install_desktop="
-emerge ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
-systemctl enable lightdm.service cups.service
-systemctl --global enable pulseaudio.service pulseaudio.socket
-"
-	;;
-	'Systemd/Gnome')
-	install_desktop="
-emerge ${desktop_base} gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus
-systemctl enable gdm.service cups.service
-systemctl --global enable pulseaudio.service pulseaudio.socket
-"
-	;;
-	'Systemd/Lxqt')
-	install_desktop="
-emerge ${desktop_base} x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement
-systemctl enable lightdm.service cups.service
-systemctl --global enable pulseaudio.service pulseaudio.socket
-"
-	;;
-	'Systemd/Mate')
-	install_desktop="
-emerge ${desktop_base} x11-misc/lightdm mate-base/mate x11-terms/mate-terminal gnome-extra/nm-applet mate-extra/mate-power-manager mate-extra/mate-media
-systemctl enable lightdm.service cups.service
-systemctl --global enable pulseaudio.service pulseaudio.socket
-"
-	;;
-	'Systemd/Plasma')
-	install_desktop="
-emerge ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/discover
-systemctl enable sddm.service cups.service
-systemctl --global enable pulseaudio.service pulseaudio.socket
-"
-	;;
-	'Systemd/Xfce')
-	install_desktop="
-emerge ${desktop_base} x11-misc/lightdm xfce-base/xfce4-meta x11-terms/xfce4-terminal gnome-extra/nm-applet net-wireless/blueman xfce-base/xfce4-power-manager
-systemctl enable lightdm.service cups.service
-systemctl --global enable pulseaudio.service pulseaudio.socket
+emerge ${desktop_base} x11-misc/lightdm xfce-base/xfce4-meta x11-terms/xfce4-terminal gnome-extra/nm-applet net-wireless/blueman xfce-base/xfce4-power-manager net-wireless/blueman
+systemctl enable lightdm.service
 "
 	;;
 esac
@@ -3138,7 +3127,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DE
 #!/bin/bash
 set -e
 ${install_desktop}
-if [ "$(echo ${desktop} | cut -d '/' -f1)" == "Openrc" ]; then
+if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	rc-update add display-manager default
 	rc-update add cupsd default
 elif [ "${desktop}" != "None" ]; then
@@ -3268,11 +3257,15 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 kali-deskt
 "
 	;;
 	'i3')
+	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
+	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
 "
 	;;
 	'i3/Full')
+	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
+	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
@@ -4727,13 +4720,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-des
 	;;
 	'Xfce')
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-xfce blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
 "
 	;;
 	'Xfce/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-xfce blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
 "
 	;;
 esac
@@ -5257,7 +5250,7 @@ chroot_SteamOS()
 prepare_bootstrap="
 curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 "
 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
@@ -5282,8 +5275,8 @@ cat >/etc/pacman_steamos.conf <<'PACMAN-STEAMOS'
 #GPGDir      = /etc/pacman.d/gnupg/
 #HookDir     = /etc/pacman.d/hooks/
 HoldPkg     = pacman glibc
-XferCommand = /usr/bin/curl -L -C - -f -o %o %u
-#XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+#XferCommand = /usr/bin/curl --retry 5 -L -C - -f -o %o %u
+XferCommand = /usr/bin/wget --tries=5 --read-timeout=5 --passive-ftp -c -O %o %u
 #CleanMethod = KeepInstalled
 Architecture = auto
  
@@ -5296,12 +5289,11 @@ NoExtract   = etc/sddm.conf.d/steamdeck.conf etc/skel/Desktop/Return.desktop etc
  
 # Misc options
 #UseSyslog
-Color
-#TotalDownload
-# We cannot check disk space from within a chroot environment
+#Color
+#NoProgressBar
 CheckSpace
 #VerbosePkgLists
-ParallelDownloads = 4
+#ParallelDownloads = 5
  
 # By default, pacman accepts packages signed by keys that its local keyring
 # trusts (see pacman-key and its man page), as well as unsigned packages.
@@ -5378,7 +5370,7 @@ cp /etc/pacman_steamos.conf /etc/pacman_steamos_install.conf
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman_steamos_install.conf
 sed -i 's@#RemoteFileSigLevel = Required@RemoteFileSigLevel = Optional@g' /etc/pacman_steamos_install.conf
 echo 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
-pacstrap -C /etc/pacman_steamos_install.conf -G /mnt base base-devel holo-keyring
+pacstrap -C /etc/pacman_steamos_install.conf -G /mnt base base-devel holo-keyring wget
 cp /etc/pacman_steamos.conf /mnt/etc/pacman.conf
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
@@ -8025,11 +8017,11 @@ SECUREBOOTINSTALL
 			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 			if [ -f /usr/share/shim/BOOTX64.EFI ]; then
-				mv /boot/EFI/BOOT/BOOTX64.EFI /boot/EFI/BOOT/grubx64.efi
-				cp /usr/share/shim/BOOTX64.EFI /boot/EFI/BOOT/BOOTX64.EFI
-				cp /usr/share/shim/BOOTX64.EFI /boot/EFI/gentoo/BOOTX64.EFI
-				cp /usr/share/shim/mmx64.efi /boot/EFI/BOOT/mmx64.efi
-				cp /usr/share/shim/mmx64.efi /boot/EFI/gentoo/mmx64.efi
+				mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
+				cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTX64.EFI
+				cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/gentoo/shimx64.efi
+				cp /usr/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
+				cp /usr/share/shim/mmx64.efi /boot/efi/EFI/gentoo/mmx64.efi
 			fi
 		fi
 	else
