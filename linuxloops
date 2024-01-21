@@ -3036,7 +3036,7 @@ fi
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto net-print/cups net-print/cups-filters sys-boot/plymouth sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/materia-theme x11-themes/papirus-icon-theme"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto net-print/cups net-print/cups-filters sys-boot/plymouth sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/numix-gtk-theme x11-themes/numix-icon-theme x11-themes/numix-icon-theme-circle x11-themes/oxygen-gtk x11-themes/papirus-icon-theme x11-themes/xcursor-themes"
 case "${desktop}" in
 	'Cinnamon/Openrc')
 	install_desktop="
