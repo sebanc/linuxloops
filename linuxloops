@@ -61,7 +61,7 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'BlissOS')
-	available_desktops=( "14/OpenGApps" "14/FOSS" "15/Gapps" "15/FOSS" )
+	available_desktops=( "14/OpenGApps/Generic" "14/OpenGApps/Go" "14/OpenGApps/Surface" "14/FOSS/Generic" "14/FOSS/Go" "14/FOSS/Surface" "15/Gapps/Generic" "15/Gapps/Go" "15/Gapps/Surface" "15/FOSS/Generic" "15/FOSS/Go" "15/FOSS/Surface" "16/Gapps/Generic" "16/Gapps/Go" "16/Gapps/Surface" "16/FOSS/Generic" "16/FOSS/Go" "16/FOSS/Surface" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="boot"
 	bootloader_name="bootx64.efi"
@@ -1245,7 +1245,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
@@ -1488,7 +1487,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
@@ -1547,7 +1545,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG audio,wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
@@ -1874,7 +1871,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
@@ -1906,13 +1902,17 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCR
 #!/bin/bash
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
-ec=18; while [ \$ec -ne 0 ]; do curl -L -C - "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${desktop}/Generic/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | head -1)" -o /root/bliss.iso; ec=\$?; done || { echo -e "BlissOS image download failed."; exit 1; }
+ec=18; while [ \$ec -ne 0 ]; do curl -L -C - "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${desktop}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | head -1)" -o /root/bliss.iso; ec=\$?; done || { echo -e "BlissOS image download failed."; exit 1; }
 mount /root/bliss.iso /isomount/iso
 install_folder="\$(cat /isomount/iso/efi/boot/android.cfg | grep 'title="' | cut -d' ' -f3)"
 mkdir -p /mnt/android-"\${install_folder}"/data
 cp /isomount/iso/initrd.img /mnt/android-"\${install_folder}"/
 cp /isomount/iso/kernel /mnt/android-"\${install_folder}"/
-cp /isomount/iso/system.sfs /mnt/android-"\${install_folder}"/
+if [ -f /isomount/iso/system.efs ]; then
+	cp /isomount/iso/system.efs /mnt/android-"\${install_folder}"/
+else
+	cp /isomount/iso/system.sfs /mnt/android-"\${install_folder}"/
+fi
 cp -r /isomount/iso/boot /mnt/boot/efi/
 cp -r /isomount/iso/efi /mnt/boot/efi/
 cat >/mnt/boot/efi/boot/grub/grub.cfg <<BLISSCONFIG
@@ -1924,7 +1924,7 @@ source \\\$cmdpath/android.cfg
 BLISSCONFIG
 if [ "${install_type}" == "image" ]; then
 	cd /isomount/initramfs
-	mkdir -p ./usr/local/bin ./usr/local/etc ./usr/local/lib
+	mkdir -p ./usr/bin ./usr/local/bin ./usr/local/etc ./usr/local/lib ./usr/sbin
 	for i in \$(ldd /usr/bin/blkid | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
 	cp -a /usr/bin/blkid ./usr/local/bin/
 	echo 'alias blkid="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/blkid"' >> ./usr/local/etc/profile
@@ -2557,7 +2557,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -2749,7 +2748,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -2826,7 +2824,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -2966,7 +2963,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
@@ -3100,13 +3096,13 @@ systemctl enable lightdm.service
 	;;
 	'Plasma/Openrc')
 	install_desktop="
-emerge ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/discover
+emerge ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Plasma/Systemd')
 	install_desktop="
-emerge ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/discover
+emerge ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 systemctl enable sddm.service
 "
 	;;
@@ -3145,7 +3141,6 @@ set -e
 sed -i 's/^password/#password/g' /etc/pam.d/system-auth
 echo 'password       required        pam_unix.so nullok sha512 shadow' >> /etc/pam.d/system-auth
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 if [ ! -d /etc/sudoers.d ]; then mkdir -p /etc/sudoers.d; chmod 0750 /etc/sudoers.d; fi
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
@@ -3358,7 +3353,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -3488,7 +3482,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -3588,7 +3581,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -3630,7 +3622,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm systemd linux61 linux61-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm systemd linux66 linux66-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
@@ -3772,7 +3764,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
@@ -3783,7 +3774,7 @@ POLKIT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
-surface_remove="linux61 linux61-headers"
+surface_remove="linux66 linux66-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_packages
@@ -3983,7 +3974,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG audio,sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -4069,7 +4059,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -4204,7 +4193,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 sudo nixos-enter << 'NIXOSCHROOT'
 set -e
 useradd -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel,networkmanager '${username}'
 NIXOSCHROOT
 INSTALL_USER
@@ -4346,7 +4334,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
@@ -4540,7 +4527,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo -e "Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"\nroot ALL=(ALL) ALL\n@includedir /etc/sudoers.d" > /etc/sudoers
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
@@ -4606,11 +4592,11 @@ echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > 
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install ca-certificates console-setup dirmngr gpg kbd locales parrot-core
-sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@https://ftp.acc.umu.se/mirror/parrotsec.org/parrot@g' /etc/apt/sources.list.d/parrot.list
+sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirrors.mit.edu/parrot/@g' /etc/apt/sources.list.d/parrot.list
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
-sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@https://ftp.acc.umu.se/mirror/parrotsec.org/parrot@g' /etc/apt/sources.list.d/parrot.list
+sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirrors.mit.edu/parrot/@g' /etc/apt/sources.list.d/parrot.list
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
@@ -4630,7 +4616,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Budgie/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Cinnamon')
@@ -4641,7 +4627,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Cinnamon/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Enlightenment')
@@ -4656,7 +4642,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Enlightenment/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology nim anonsurf-gtk metasploit-framework nmap
 yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
 yes | DEBIAN_FRONTEND=noninteractive apt install connman
 systemctl enable connman.service
@@ -4671,7 +4657,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-des
 	'Gnome/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'i3')
@@ -4682,7 +4668,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'i3/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 pavucontrol pasystray network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Lxde')
@@ -4693,7 +4679,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Lxde/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Mate')
@@ -4704,7 +4690,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Mate/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-mate mate-desktop mate-session-manager mate-power-manager mate-media blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-mate mate-desktop mate-session-manager mate-power-manager mate-media blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Plasma')
@@ -4715,7 +4701,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-des
 	'Plasma/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-desktop-kde kwin-x11 plasma-nm plasma-pa powerdevil bluedevil libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-desktop-kde kwin-x11 plasma-nm plasma-pa powerdevil bluedevil libpam-kwallet5 nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Xfce')
@@ -4726,7 +4712,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Xfce/Full')
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 esac
@@ -4774,7 +4760,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -4859,7 +4844,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -5074,9 +5058,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
-echo -e '${userpass}\n${userpass}' | passwd root
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG audio,sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -5164,7 +5146,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel,qubes '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
@@ -5228,7 +5209,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
@@ -5942,7 +5922,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
@@ -6253,7 +6232,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -6483,7 +6461,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -6600,7 +6577,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
@@ -6733,7 +6709,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 #!/bin/bash
 set -e
 useradd -s /bin/bash -m '${username}'
-echo -e '${userpass}\n${userpass}' | passwd '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
@@ -6915,7 +6890,7 @@ mkdir -p \$(dirname /run/"\${dns_manager}") \$(dirname /mnt/run/"\${dns_manager}
 touch /mnt/run/"\${dns_manager}"
 ln -s  /mnt/run/"\${dns_manager}" /run/"\${dns_manager}"
 ln -s /run/"\${dns_manager}" /mnt/etc/resolv.conf
-mount -o ro,bind /etc/resolv.conf /mnt/etc/resolv.conf
+cp /etc/resolv.conf /mnt/etc/resolv.conf
 chroot /mnt /linuxloops/chroot_init
 if [ -f /linuxloops/install_desktop ]; then chroot /mnt /linuxloops/install_desktop; fi
 if [ -f /linuxloops/install_live ]; then chroot /mnt /linuxloops/install_live; fi
@@ -7936,52 +7911,85 @@ for i in \\\$(find /etc/grub.d | grep fallback_counting); do chmod 0644 \\\$i; d
 for i in \\\$(find /etc/grub.d | grep menu_auto_hide); do chmod 0644 \\\$i; done
 for i in \\\$(find /etc/grub.d | grep menu_show_once); do chmod 0644 \\\$i; done
 for i in \\\$(find /etc/grub.d | grep reset_boot_success); do chmod 0644 \\\$i; done
-if [ "${install_type}" == "image" ]; then for i in \\\$(find /etc/grub.d | grep uefi-firmware); do chmod 0644 \\\$i; done; fi
-if [ "${distro}" == "Gentoo" ]; then
-	cat >/usr/share/grub/sbat.csv <<GRUBSBAT
-sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
-grub,1,Free Software Foundation,grub,\\\$(grub-mkimage --version | cut -d' ' -f3),https://www.gnu.org/software/grub/
-GRUBSBAT
+REINSTALLBOOTLOADER
+if [ "${install_type}" == "image" ]; then
+	cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+for i in \\\$(find /etc/grub.d | grep uefi-firmware); do chmod 0644 \\\$i; done
+REINSTALLBOOTLOADER
 fi
+cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 rm -rf /boot/efi/EFI
+REINSTALLBOOTLOADER
+if [ "${distro}" == "Gentoo" ]; then
+cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+	cat >/usr/share/grub/sbat.csv <<'GRUBSBAT'
+sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
+grub,1,Free Software Foundation,grub,2,https://www.gnu.org/software/grub/
+GRUBSBAT
+REINSTALLBOOTLOADER
+fi
 if [ -d /boot/grub2 ]; then
-	grub2-mkconfig -o /boot/grub2/grub.cfg
+	cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+grub2-mkconfig -o /boot/grub2/grub.cfg
+REINSTALLBOOTLOADER
 	if [ "${distro}" == "OpenSUSE" ]; then
-		shim-install --no-nvram
-		exit 0
+		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+shim-install --no-nvram
+REINSTALLBOOTLOADER
 	elif [ "${distro}" == "Qubes" ]; then
-		dnf --setopt=reposdir=/etc/yum.repos.d/ reinstall -y shim-* grub2-efi-* grub2-common
-		mkdir -p /boot/efi/EFI/BOOT
-		cp -r /boot/efi/EFI/qubes/* /boot/efi/EFI/BOOT/
-		mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+dnf --setopt=reposdir=/etc/yum.repos.d/ reinstall -y shim-* grub2-efi-* grub2-common
+mkdir -p /boot/efi/EFI/BOOT
+cp -r /boot/efi/EFI/qubes/* /boot/efi/EFI/BOOT/
+mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+REINSTALLBOOTLOADER
 	else
-		dnf reinstall -y shim-* grub2-efi-* grub2-common
+		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+dnf reinstall -y shim-* grub2-efi-* grub2-common
+REINSTALLBOOTLOADER
 	fi
-	for i in /boot/efi/EFI/*/*.rpmsave; do rm -r \\\$i; done
-	if [ "${distro}" == "AlmaLinux" ] || [ "${distro}" == "RockyLinux" ]; then exit 0; fi
+	cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+find /boot/efi -name "*.rpmsave" -type f -delete
+REINSTALLBOOTLOADER
+	if [ "${distro}" == "AlmaLinux" ] || [ "${distro}" == "OpenSUSE" ] || [ "${distro}" == "RockyLinux" ]; then
+		chmod 0755 /boot/linuxloops/reinstall-bootloader
+		/boot/linuxloops/reinstall-bootloader
+		if [ -z "\$(find /boot/efi/EFI/BOOT/BOOTX64.EFI 2> /dev/null)" ]; then echo "Warning: The bootloader is not installed in the removable path."; fi
+		if [ -z "\$(find /boot/efi/EFI/"${bootloader_id}"/"${bootloader_name}" 2> /dev/null)" ]; then echo "The bootloader is not correctly installed"; exit 1; fi
+		exit 0
+	fi
 else
-	if [ ! -z \\\$(command -v debconf-set-selections) ]; then
-		echo "grub-efi-amd64 grub2/update_nvram boolean false" | debconf-set-selections
-		echo "grub-efi-amd64 grub-efi/install_devices multiselect /dev/disk/by-uuid/\\\$(blkid -s UUID -o value "${efi_partition}")" | debconf-set-selections
-		if [ "${distro}" != "Proxmox" ]; then dpkg-divert --divert /usr/sbin/grub-install.real --rename /usr/sbin/grub-install; fi
-		cat >/usr/sbin/grub-install <<'GRUBINSTALL'
+	if [ ! -z \$(command -v debconf-set-selections) ]; then
+		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+echo "grub-efi-amd64 grub2/update_nvram boolean false" | debconf-set-selections
+echo "grub-efi-amd64 grub-efi/install_devices multiselect /dev/disk/by-uuid/\$(blkid -s UUID -o value "${efi_partition}")" | debconf-set-selections
+REINSTALLBOOTLOADER
+		if [ "${distro}" != "Proxmox" ]; then
+		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+dpkg-divert --divert /usr/sbin/grub-install.real --rename /usr/sbin/grub-install
+REINSTALLBOOTLOADER
+		fi
+		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+cat >/usr/sbin/grub-install <<'GRUBINSTALL'
 #!/bin/sh
 grub-install.real "\\\$@" --bootloader-id="${bootloader_id}"
 grub-install.real "\\\$@" --removable
 find /boot/efi -type f -iname fbx64.efi -exec rm {} \;
 find /boot/efi -type f -iname bootx64.csv -exec rm {} \;
 GRUBINSTALL
-		chmod 0755 /usr/sbin/grub-install
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi
+chmod 0755 /usr/sbin/grub-install
+grub-install --target=x86_64-efi --efi-directory=/boot/efi
+REINSTALLBOOTLOADER
 	elif [ -f /usr/share/grub/sbat.csv ]; then
 		if [ "${distro}" == "Arch" ] || [ "${distro}" == "Artix" ] || [ "${distro}" == "BlendOS" ] || [ "${distro}" == "Manjaro" ] || [ "${distro}" == "SteamOS" ]; then
-			pacman -Syu --noconfirm git fakeroot
-			git clone https://aur.archlinux.org/shim-signed.git /tmp/shim-signed
-			chown -R 'nobody':'nobody' /tmp/shim-signed
-			su -s /bin/bash nobody -c "cd /tmp/shim-signed && makepkg -s"
-			yes | pacman -U /tmp/shim-signed/*.pkg.tar.*
-			mkdir -p /etc/pacman.d/hooks
-			cat >/etc/pacman.d/hooks/99-secureboot-grub.hook <<PACMANHOOK
+			cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+pacman -Syu --noconfirm git fakeroot
+git clone https://aur.archlinux.org/shim-signed.git /tmp/shim-signed
+chown -R 'nobody':'nobody' /tmp/shim-signed
+su -s /bin/bash nobody -c "cd /tmp/shim-signed && makepkg -s"
+yes | pacman -U /tmp/shim-signed/*.pkg.tar.*
+mkdir -p /etc/pacman.d/hooks
+cat >/etc/pacman.d/hooks/99-secureboot-grub.hook <<PACMANHOOK
 [Trigger]
 Operation = Install
 Operation = Upgrade
@@ -7994,7 +8002,7 @@ Depends = grub
 When = PostTransaction
 Exec = /bin/sh -c secureboot-install
 PACMANHOOK
-			cat >/usr/sbin/secureboot-install <<'SECUREBOOTINSTALL'
+cat >/usr/sbin/secureboot-install <<'SECUREBOOTINSTALL'
 #!/bin/bash
 set -e
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo" --bootloader-id="${bootloader_id}"
@@ -8011,26 +8019,34 @@ if [ ! -z "\\\$(command -v sbverify)" ] && [ ! -z "\\\$(command -v sbattach)" ] 
 	done
 fi
 SECUREBOOTINSTALL
-			chmod 0755 /usr/sbin/secureboot-install
-			secureboot-install
+chmod 0755 /usr/sbin/secureboot-install
+secureboot-install
+REINSTALLBOOTLOADER
 		else
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-			grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-			if [ -f /usr/share/shim/BOOTX64.EFI ]; then
-				mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
-				cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTX64.EFI
-				cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/gentoo/shimx64.efi
-				cp /usr/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
-				cp /usr/share/shim/mmx64.efi /boot/efi/EFI/gentoo/mmx64.efi
-			fi
+			cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+if [ -f /usr/share/shim/BOOTX64.EFI ]; then
+	mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
+	cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTX64.EFI
+	cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/gentoo/shimx64.efi
+	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
+	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/gentoo/mmx64.efi
+fi
+REINSTALLBOOTLOADER
 		fi
 	else
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-		grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+REINSTALLBOOTLOADER
 	fi
-	mkdir -p /boot/grub
-	grub-mkconfig -o /boot/grub/grub.cfg
+cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+mkdir -p /boot/grub
+grub-mkconfig -o /boot/grub/grub.cfg
+REINSTALLBOOTLOADER
 fi
+cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 if [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
 	for grubefi in \\\$(find /boot/efi -iname "grubx64.efi"); do
 			for sig in \\\$(sbverify --list "\\\$grubefi" | grep '^signature' | sed 's@signature @@g' | sort -r); do sbattach --signum "\\\$sig" --remove "\\\$grubefi"; done
@@ -8183,10 +8199,42 @@ EFIENTRY
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/efi_entry
 }
 
+generare_install_userpw()
+{
+if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then return; fi
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_userpw <<INSTALLUSERPW
+#!/bin/bash
+set -e
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+cat >/mnt/tmp/set_userpw <<'SETUSERPW'
+#!/bin/bash
+set -e
+echo -e '${userpass}\n${userpass}' | passwd '${username}'
+if [ "${distro}" == "Proxmox" ]; then echo -e '${userpass}\n${userpass}' | passwd root; fi
+SETUSERPW
+chmod 0755 /mnt/tmp/set_userpw
+if [ "${distro}" == "NixOS" ]; then
+	sed -i '1d' /mnt/tmp/set_userpw
+	sudo -u temp bash << 'NIXOSSETPW'
+. /home/temp/.nix-profile/etc/profile.d/nix.sh
+sudo nixos-enter << 'NIXOSCHROOT'
+set -e
+/tmp/set_userpw
+NIXOSCHROOT
+NIXOSSETPW
+else
+	chroot /mnt /tmp/set_userpw
+fi
+rm /mnt/tmp/set_userpw
+INSTALLUSERPW
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_userpw
+}
+
 generate_exit_chroot()
 {
 if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then return; fi
-cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/bootstrap_exit <<EXITCHROOT
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/exit_chroot <<EXITCHROOT
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
@@ -8198,7 +8246,6 @@ for ROOT in \$(find /proc/*/root 2>/dev/null); do
 	fi
 done
 sleep 5
-if mountpoint -q /mnt/etc/resolv.conf; then umount /mnt/etc/resolv.conf; fi
 if mountpoint -q /mnt/linuxloops; then umount /mnt/linuxloops; fi
 rm -rf /mnt/linuxloops
 if mountpoint -q /mnt/tmp; then umount /mnt/tmp; fi
@@ -8217,7 +8264,7 @@ if [ -f /linuxloops/boot_loop ]; then losetup -d \$(cat /linuxloops/boot_loop); 
 if mountpoint -q /mnt; then umount /mnt; fi
 if [ -b /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" ]; then cryptsetup luksClose luks-"\$(blkid -s UUID -o value "${root_partition}")"; fi
 EXITCHROOT
-chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/bootstrap_exit
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/exit_chroot
 }
 
 end_bootstrap()
@@ -8232,11 +8279,11 @@ done
 sleep 5
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/isomount/data; then umount "${linuxloopsdir}"/chroot/bootstrap/isomount/data; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/isomount/efi; then umount "${linuxloopsdir}"/chroot/bootstrap/isomount/efi; fi
+if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/isomount/iso; then umount "${linuxloopsdir}"/chroot/bootstrap/isomount/iso; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/isomount/roota; then umount "${linuxloopsdir}"/chroot/bootstrap/isomount/roota; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/isomount/rootc; then umount "${linuxloopsdir}"/chroot/bootstrap/isomount/rootc; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/isomount/tmp; then umount "${linuxloopsdir}"/chroot/bootstrap/isomount/tmp; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/isomount; then umount "${linuxloopsdir}"/chroot/bootstrap/isomount; fi
-if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/mnt/etc/resolv.conf; then umount "${linuxloopsdir}"/chroot/bootstrap/mnt/etc/resolv.conf; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/mnt/linuxloops; then umount "${linuxloopsdir}"/chroot/bootstrap/mnt/linuxloops; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/mnt/tmp; then umount "${linuxloopsdir}"/chroot/bootstrap/mnt/tmp; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/mnt/run; then umount "${linuxloopsdir}"/chroot/bootstrap/mnt/run; fi
@@ -8252,7 +8299,6 @@ if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/mnt/boot; then umount "${li
 #umount "${linuxloopsdir}"/chroot/bootstrap/mnt twice (bind mount + real mount)
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/mnt; then umount "${linuxloopsdir}"/chroot/bootstrap/mnt; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/mnt; then umount "${linuxloopsdir}"/chroot/bootstrap/mnt; fi
-if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf; then umount "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/tmp; then umount "${linuxloopsdir}"/chroot/bootstrap/tmp; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/run; then umount "${linuxloopsdir}"/chroot/bootstrap/run; fi
 if mountpoint -q "${linuxloopsdir}"/chroot/bootstrap/dev/shm; then umount "${linuxloopsdir}"/chroot/bootstrap/dev/shm; fi
@@ -8349,8 +8395,7 @@ mount -t tmpfs -o mode=1777 none "${linuxloopsdir}"/chroot/bootstrap/tmp
 cp /etc/hostname "${linuxloopsdir}"/chroot/bootstrap/etc/hostname
 cp /etc/hosts "${linuxloopsdir}"/chroot/bootstrap/etc/hosts
 rm -f "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
-touch "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
-mount -o ro,bind /etc/resolv.conf "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
+cp /etc/resolv.conf "${linuxloopsdir}"/chroot/bootstrap/etc/resolv.conf
 chroot_$(echo "${distro}" | sed 's@[ !]@@g') || (return_value=1 && return)
 generate_bootstrap_init
 generate_partition_script
@@ -8371,8 +8416,18 @@ generate_create_swap
 generate_efi_entry
 generate_exit_chroot
 chroot "${linuxloopsdir}"/chroot/bootstrap /linuxloops/bootstrap_init || return_value=1
-if [ "${return_value}" -eq 0 ] && [ "${install_type}" == "image" ] && [ -f "${linuxloopsdir}"/chroot/bootstrap/mnt/etc/secureboot_key/MOK.der ]; then cp "${linuxloopsdir}"/chroot/bootstrap/mnt/etc/secureboot_key/MOK.der "${fullpath}".der; chown ${SUDO_UID}:${SUDO_UID} "${fullpath}".der; fi
-if [ -x "${linuxloopsdir}"/chroot/bootstrap/linuxloops/bootstrap_exit ]; then chroot "${linuxloopsdir}"/chroot/bootstrap /linuxloops/bootstrap_exit || return_value=1; fi
+if [ "${return_value}" -eq 0 ]; then
+	generare_install_userpw
+	if [ -x "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_userpw ]; then
+		chroot "${linuxloopsdir}"/chroot/bootstrap /linuxloops/install_userpw || return_value=1
+		rm -f "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_userpw "${linuxloopsdir}"/chroot/bootstrap/mnt/tmp/set_userpw
+	fi
+	if [ "${install_type}" == "image" ] && [ -f "${linuxloopsdir}"/chroot/bootstrap/mnt/etc/secureboot_key/MOK.der ]; then
+		cp "${linuxloopsdir}"/chroot/bootstrap/mnt/etc/secureboot_key/MOK.der "${fullpath}".der
+		chown ${SUDO_UID}:${SUDO_UID} "${fullpath}".der
+	fi
+fi
+if [ -x "${linuxloopsdir}"/chroot/bootstrap/linuxloops/exit_chroot ]; then chroot "${linuxloopsdir}"/chroot/bootstrap /linuxloops/exit_chroot || return_value=1; fi
 end_bootstrap
 }
 
