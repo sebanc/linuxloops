@@ -14,7 +14,7 @@ jobs:
       matrix: ${{ steps.distros.outputs.matrix }}
     steps:
       - name: Checkout linuxloops source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Create build matrix
         id: distros
         run: |
@@ -53,6 +53,6 @@ jobs:
           echo "Free space:"
           df -h
       - name: Checkout linuxloops source code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Launch distro build
         run: sudo bash linuxloops -dst test.img -t -s 50 -distro $(echo ${{ matrix.distro }} | cut -d'#' -f1) -env $(echo ${{ matrix.distro }} | cut -d'#' -f2) $(echo ${{ matrix.distro }} | cut -d'#' -f3) $(echo ${{ matrix.distro }} | cut -d'#' -f4) $(echo ${{ matrix.distro }} | cut -d'#' -f5) $(echo ${{ matrix.distro }} | cut -d'#' -f6) $(echo ${{ matrix.distro }} | cut -d'#' -f7)

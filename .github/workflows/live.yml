@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout linuxloops script
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Set current date
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk
