@@ -3012,9 +3012,10 @@ mkdir /etc/portage/package.license
 echo '*/* *' >> /etc/portage/package.license/custom
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
-	echo "USE=\"a52 aac accessibility alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 gstreamer gtk gtk3 icu introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat modemmanager mount mp3 mpeg networkmanager nss ogg opengl pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vulkan wayland wpasupplicant X x264 xml xorg zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 else
-	echo "USE=\"a52 aac accessibility alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 gstreamer gtk gtk3 icu introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat modemmanager mount mp3 mpeg networkmanager nss ogg opengl pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vulkan wayland wpasupplicant X x264 xml xorg zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 fi
 echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2 --getbinpkg\"" >> /etc/portage/make.conf
@@ -3022,7 +3023,7 @@ emerge --sync --quiet
 rm -rf /etc/portage/gnupg
 getuto
 echo -e "net-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
-emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit app-crypt/gcr dev-util/wayland-scanner x11-misc/xdg-user-dirs
+emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit app-crypt/gcr dev-util/wayland-scanner dev-util/vulkan-headers x11-misc/xdg-user-dirs
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	rc-update add bluetooth default
 	rc-update add NetworkManager default
@@ -6753,7 +6754,7 @@ set -e
 if [ "${distro}" == "Brunch" ]; then
 	(echo "g"; echo "n"; echo "2"; echo ""; echo "+32M"; echo "n"; echo "3"; echo ""; echo "+4G"; echo "n"; echo "4"; echo ""; echo "+32M"; echo "n"; echo "5"; echo ""; echo "+4G"; echo "n"; echo "6"; echo ""; echo "+1K"; echo "n"; echo "7"; echo ""; echo "+1G"; echo "n"; echo "8"; echo ""; echo "+16M"; echo "n"; echo "9"; echo ""; echo "+1K"; echo "n"; echo "10"; echo ""; echo "+1K"; echo "n"; echo "11"; echo ""; echo "+8M"; echo "n"; echo "12"; echo ""; echo "+32M"; echo "n"; echo "1"; echo ""; echo "+$((install_sizeMB-9338-3))M"; echo "t"; echo "1"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "2"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "3"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "4"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "5"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "6"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "7"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "8"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "9"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "10"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "11"; echo "CAB6E88E-ABF3-4102-A07A-D4BB9BE3C1D3"; echo "t"; echo "12"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "1"; echo "STATE"; echo "n"; echo "2"; echo "KERN-A"; echo "n"; echo "3"; echo "ROOT-A"; echo "n"; echo "4"; echo "KERN-B"; echo "n"; echo "5"; echo "ROOT-B"; echo "n"; echo "6"; echo "KERN-C"; echo "n"; echo "7"; echo "ROOT-C"; echo "n"; echo "8"; echo "OEM"; echo "n"; echo "9"; echo "reserved"; echo "n"; echo "10"; echo "reserved"; echo "n"; echo "11"; echo "RWFW"; echo "n"; echo "12"; echo "EFI-SYSTEM"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 elif [ "${distro}" == "ChromeOS-Flex" ]; then
-	(echo "g"; echo "n"; echo "2"; echo ""; echo "+32M"; echo "n"; echo "3"; echo ""; echo "+4G"; echo "n"; echo "4"; echo ""; echo "+32M"; echo "n"; echo "5"; echo ""; echo "+4G"; echo "n"; echo "6"; echo ""; echo "+1K"; echo "n"; echo "7"; echo ""; echo "+1G"; echo "n"; echo "8"; echo ""; echo "+16M"; echo "n"; echo "9"; echo ""; echo "+1K"; echo "n"; echo "10"; echo ""; echo "+1K"; echo "n"; echo "11"; echo ""; echo "+8M"; echo "n"; echo "12"; echo ""; echo "+64M"; echo "n"; echo "1"; echo ""; echo "+$((install_sizeMB-9370-3))M"; echo "t"; echo "1"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "2"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "3"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "4"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "5"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "6"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "7"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "8"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "9"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "10"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "11"; echo "CAB6E88E-ABF3-4102-A07A-D4BB9BE3C1D3"; echo "t"; echo "12"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "1"; echo "STATE"; echo "n"; echo "2"; echo "KERN-A"; echo "n"; echo "3"; echo "ROOT-A"; echo "n"; echo "4"; echo "KERN-B"; echo "n"; echo "5"; echo "ROOT-B"; echo "n"; echo "6"; echo "KERN-C"; echo "n"; echo "7"; echo "ROOT-C"; echo "n"; echo "8"; echo "OEM"; echo "n"; echo "9"; echo "reserved"; echo "n"; echo "10"; echo "reserved"; echo "n"; echo "11"; echo "RWFW"; echo "n"; echo "12"; echo "EFI-SYSTEM"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
+	(echo "g"; echo "n"; echo "2"; echo ""; echo "+64M"; echo "n"; echo "3"; echo ""; echo "+4G"; echo "n"; echo "4"; echo ""; echo "+64M"; echo "n"; echo "5"; echo ""; echo "+4G"; echo "n"; echo "6"; echo ""; echo "+1K"; echo "n"; echo "7"; echo ""; echo "+1G"; echo "n"; echo "8"; echo ""; echo "+16M"; echo "n"; echo "9"; echo ""; echo "+1K"; echo "n"; echo "10"; echo ""; echo "+1K"; echo "n"; echo "11"; echo ""; echo "+8M"; echo "n"; echo "12"; echo ""; echo "+64M"; echo "n"; echo "1"; echo ""; echo "+$((install_sizeMB-9434-3))M"; echo "t"; echo "1"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "2"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "3"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "4"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "5"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "6"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "7"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "8"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "9"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "10"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "11"; echo "CAB6E88E-ABF3-4102-A07A-D4BB9BE3C1D3"; echo "t"; echo "12"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "1"; echo "STATE"; echo "n"; echo "2"; echo "KERN-A"; echo "n"; echo "3"; echo "ROOT-A"; echo "n"; echo "4"; echo "KERN-B"; echo "n"; echo "5"; echo "ROOT-B"; echo "n"; echo "6"; echo "KERN-C"; echo "n"; echo "7"; echo "ROOT-C"; echo "n"; echo "8"; echo "OEM"; echo "n"; echo "9"; echo "reserved"; echo "n"; echo "10"; echo "reserved"; echo "n"; echo "11"; echo "RWFW"; echo "n"; echo "12"; echo "EFI-SYSTEM"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 elif [ "${distro}" == "BlissOS" ]; then
 	(echo "g"; echo "n"; echo "1"; echo ""; echo "+512M"; echo "n"; echo "2"; echo ""; echo "+$((install_sizeMB-512-3))M"; echo "t"; echo "1"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "t"; echo "2"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "1"; echo "EFI"; echo "n"; echo "2"; echo "ROOT"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 else
@@ -7920,14 +7921,6 @@ fi
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 rm -rf /boot/efi/EFI
 REINSTALLBOOTLOADER
-if [ "${distro}" == "Gentoo" ]; then
-cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-	cat >/usr/share/grub/sbat.csv <<'GRUBSBAT'
-sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
-grub,1,Free Software Foundation,grub,2,https://www.gnu.org/software/grub/
-GRUBSBAT
-REINSTALLBOOTLOADER
-fi
 if [ -d /boot/grub2 ]; then
 	cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 grub2-mkconfig -o /boot/grub2/grub.cfg
@@ -7980,9 +7973,8 @@ GRUBINSTALL
 chmod 0755 /usr/sbin/grub-install
 grub-install --target=x86_64-efi --efi-directory=/boot/efi
 REINSTALLBOOTLOADER
-	elif [ -f /usr/share/grub/sbat.csv ]; then
-		if [ "${distro}" == "Arch" ] || [ "${distro}" == "Artix" ] || [ "${distro}" == "BlendOS" ] || [ "${distro}" == "Manjaro" ] || [ "${distro}" == "SteamOS" ]; then
-			cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+	elif [ "${distro}" == "Arch" ] || [ "${distro}" == "Artix" ] || [ "${distro}" == "BlendOS" ] || [ "${distro}" == "Manjaro" ] || [ "${distro}" == "SteamOS" ]; then
+		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 pacman -Syu --noconfirm git fakeroot
 git clone https://aur.archlinux.org/shim-signed.git /tmp/shim-signed
 chown -R 'nobody':'nobody' /tmp/shim-signed
@@ -8022,19 +8014,22 @@ SECUREBOOTINSTALL
 chmod 0755 /usr/sbin/secureboot-install
 secureboot-install
 REINSTALLBOOTLOADER
-		else
-			cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+	elif [ "${distro}" == "Gentoo" ]; then
+		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+cat >/usr/share/grub/sbat.csv <<'GRUBSBAT'
+sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
+grub,1,Free Software Foundation,grub,2,https://www.gnu.org/software/grub/
+GRUBSBAT
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 if [ -f /usr/share/shim/BOOTX64.EFI ]; then
 	mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
 	cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTX64.EFI
-	cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/gentoo/shimx64.efi
+	cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
 	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
-	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/gentoo/mmx64.efi
+	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
 fi
 REINSTALLBOOTLOADER
-		fi
 	else
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
@@ -8047,7 +8042,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 REINSTALLBOOTLOADER
 fi
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-if [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
+if [ ! -z "\\\$(command -v sbverify)" ] && [ ! -z "\\\$(command -v sbsign)" ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
 	for grubefi in \\\$(find /boot/efi -iname "grubx64.efi"); do
 			for sig in \\\$(sbverify --list "\\\$grubefi" | grep '^signature' | sed 's@signature @@g' | sort -r); do sbattach --signum "\\\$sig" --remove "\\\$grubefi"; done
 			sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\\\$grubefi" "\\\$grubefi"
@@ -8133,7 +8128,7 @@ elif [ ! -z "\$(command -v emerge)" ]; then
 elif [ ! -z "\$(command -v zypper)" ]; then
 	sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 fi
-rm -f /usr/share/xsessions/lightdm-xsession.desktop
+rm -f /usr/share/xsessions/lightdm-xsession.desktop /usr/share/xsessions/Xsession.desktop
 CLEANUP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/cleanup
 }
