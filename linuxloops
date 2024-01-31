@@ -1537,7 +1537,6 @@ pacman -Sy --noconfirm base runit-system runit elogind-runit mkinitcpio rsync na
 echo -e "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[community]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
-dbus-uuidgen > /etc/machine-id
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -2602,7 +2601,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
-dbus-uuidgen > /etc/machine-id
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -3003,33 +3001,36 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-/linuxloops/install_settings
-/linuxloops/install_secureboot
-rm /linuxloops/install_secureboot
+echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
 echo 'SECUREBOOT_SIGN_KEY="/etc/secureboot_key/MOK.key"' >> /etc/portage/make.conf
 echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.crt"' >> /etc/portage/make.conf
-mkdir /etc/portage/package.license
-echo '*/* *' >> /etc/portage/package.license/custom
+echo "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
-	echo "USE=\"a52 aac alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 else
-	echo "USE=\"a52 aac alsa appindicator bluetooth boost branding cairo cdda client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 fi
-echo "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2 --getbinpkg\"" >> /etc/portage/make.conf
+mkdir /etc/portage/package.license
+echo '*/* *' >> /etc/portage/package.license/custom
+localedef -i en_US -f UTF-8 en_US.UTF-8
+echo "LANG=en_US.UTF-8" > /etc/locale.conf
+/linuxloops/install_secureboot
+rm /linuxloops/install_secureboot
 emerge --sync --quiet
 rm -rf /etc/portage/gnupg
 getuto
 echo -e "net-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
-emerge -uDN @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit app-crypt/gcr dev-util/wayland-scanner dev-util/vulkan-headers x11-misc/xdg-user-dirs
+emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit app-crypt/gcr dev-util/wayland-scanner dev-util/vulkan-headers x11-misc/xdg-user-dirs
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	rc-update add bluetooth default
 	rc-update add NetworkManager default
 else
 	systemctl enable bluetooth.service NetworkManager.service
 fi
+echo -e '[main]\nhostname-mode=none' > /etc/NetworkManager/NetworkManager.conf
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -3125,6 +3126,8 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DE
 set -e
 ${install_desktop}
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
+	rc-update add elogind boot
+	rc-update add dbus default
 	rc-update add display-manager default
 	rc-update add cupsd default
 elif [ "${desktop}" != "None" ]; then
@@ -6922,7 +6925,6 @@ localedef -i ${locale} -f UTF-8 ${locale}.UTF-8
 echo "LANG=${locale}.UTF-8" > /etc/locale.conf
 echo "LANG=${locale}.UTF-8" > /etc/default/locale
 echo -e "KEYMAP=${keymap}" > /etc/vconsole.conf
-if [ -d /etc/conf.d ]; then echo -e 'keymap="${keymap}"\nextended_keymaps=""' > /etc/conf.d/keymaps; fi
 cat >/etc/default/keyboard <<'DEBIANKEYBOARD'
 XKBMODEL="pc105"
 XKBLAYOUT="${keymap}"
@@ -6939,6 +6941,12 @@ Section "InputClass"
 EndSection
 XKEYBOARD
 ln -sf /usr/share/zoneinfo/"${timezone}" /etc/localtime
+if [ "${distro}" == "Gentoo" ]; then
+	eselect locale set ${locale}.UTF-8
+	echo -e 'keymap="${keymap}"\nextended_keymaps=""' > /etc/conf.d/keymaps
+	echo -e '${timezone}' > /etc/timezone
+fi
+dbus-uuidgen > /etc/machine-id
 mkdir -p /etc/network
 echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces
 echo "${hostname}" > /etc/hostname
@@ -8778,7 +8786,7 @@ if [ "${install_type}" == "disk" ]; then
 		destination=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Select the drive that you want to use for installation." --column "Select" --column "Device" --column "Size (in GB)" ${test} --ok-label="Next" 2>/dev/null)
 		if [ -z "${destination}" ]; then exit 1; fi
 		fullpath="${destination}"
-		install_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --value=14 --step 1 --ok-label="Next" 2>/dev/null)
+		install_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --step 1 --ok-label="Next" 2>/dev/null)
 		if [ -z "${install_size}" ]; then exit 1; fi
 		if [ "${install_size}" -eq $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
 		if [ "${distro}" != "BlissOS" ] && [ "${distro}" != "Brunch" ] && [ "${distro}" != "ChromeOS-Flex" ] && [ "${distro}" != "Tails" ]; then
@@ -8956,10 +8964,10 @@ fi
 check_dependencies()
 {
 if ( ! test -z {,} ); then echo "Linuxloops must be ran with \"bash\"."; exit 1; fi
-if [ -z $(command -v curl) ]; then echo "\"curl\" program needs to be installed first."; exit 1; fi
-if [ -z $(command -v losetup) ]; then echo "\"losetup\" program needs to be installed first."; exit 1; fi
-if [ -z $(command -v tar) ]; then echo "\"tar\" program needs to be installed first."; exit 1; fi
-if [ -z $(command -v xz) ]; then echo "\"xz\" program needs to be installed first."; exit 1; fi
+if [ -z "$(command -v curl)" ]; then echo "\"curl\" program needs to be installed first."; exit 1; fi
+if [ -z "$(command -v losetup)" ]; then echo "\"losetup\" program needs to be installed first."; exit 1; fi
+if [ -z "$(command -v tar)" ]; then echo "\"tar\" program needs to be installed first."; exit 1; fi
+if [ -z "$(command -v xz)" ]; then echo "\"xz\" program needs to be installed first."; exit 1; fi
 if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; exit 1; fi
 if ! : >/dev/tcp/1.1.1.1/80; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
 }
@@ -8975,7 +8983,7 @@ if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]
 check_dependencies
 set_base_parameters
 if [ ${#} -eq 0 ]; then
-	if [ -z $(command -v zenity) ]; then echo "To use the GUI installer you need to install the \"zenity\" binary package." 2>/dev/null; usage; exit 1; fi
+	if [ -z "$(command -v zenity)" ]; then echo "To use the GUI installer you need to install the \"zenity\" binary package." 2>/dev/null; usage; exit 1; fi
 	zenity=1
 	if ! sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer." --ok-label="Next" 2>/dev/null; then exit 0; fi
 	distro=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which distribution do you want to install ?" --column "Distribution" "${available_distros[@]}" --ok-label="Next" 2>/dev/null)
