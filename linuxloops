@@ -2583,7 +2583,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64 debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales daedalus /mnt http://deb.devuan.org/merged
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales daedalus /mnt http://deb.devuan.org/merged
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -6735,7 +6735,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/bootstrap_init <<INITCHROOT
 #!/bin/bash
 set -e
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
 ${prepare_bootstrap}
 if [ -x /linuxloops/partition_script ]; then /linuxloops/partition_script; fi
 if [ -x /linuxloops/setup_and_mount_rootfs ]; then /linuxloops/setup_and_mount_rootfs; fi
@@ -8209,7 +8209,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_userpw <<INSTALLUSER
 #!/bin/bash
 set -e
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
 cat >/mnt/tmp/set_userpw <<'SETUSERPW'
 #!/bin/bash
 set -e
@@ -8240,7 +8240,7 @@ if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/exit_chroot <<EXITCHROOT
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib:/usr/lib64:/usr/lib:/lib64:/lib
+export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
 for ROOT in \$(find /proc/*/root 2>/dev/null); do
 	LINK="\$(readlink -f \${ROOT})"
 	if echo "\${LINK}" | grep -q /mnt; then
