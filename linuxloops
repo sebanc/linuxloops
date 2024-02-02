@@ -4281,7 +4281,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-backgrounds ffmpeg-free flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
+specific_packages="desktop-backgrounds ffmpeg flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
