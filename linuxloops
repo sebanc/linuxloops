@@ -3617,7 +3617,7 @@ sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pa
 sed -i 's@#RemoteFileSigLevel = Required@RemoteFileSigLevel = Optional@g' /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 echo 'Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-pacstrap -C /etc/pacman_manjaro.conf -G /mnt base base-devel pacman-mirrors
+pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel pacman-mirrors
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3626,7 +3626,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman-mirrors
+pacman-mirrors --fasttrack 20
 pacman -Syu --noconfirm systemd linux66 linux66-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
