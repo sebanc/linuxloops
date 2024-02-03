@@ -3616,7 +3616,7 @@ curl https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?in
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman_manjaro.conf
 sed -i 's@#RemoteFileSigLevel = Required@RemoteFileSigLevel = Optional@g' /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
-echo 'Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel pacman-mirrors
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
@@ -4265,7 +4265,8 @@ gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
 priority=50
 NOBARAREPO
 dnf --nogpgcheck swap -y fedora-release-container nobara-release-workstation
-dnf install --installroot=/mnt --releasever / -y @core nobara-release-workstation nobara-login nobara-login-sysctl grubby openssl tar gstreamer1-plugins-bad-free --exclude=gstreamer1-plugins-bad-free-libs
+#dnf install --installroot=/mnt --releasever / -y @core nobara-release-workstation nobara-login nobara-login-sysctl grubby openssl tar gstreamer1-plugins-bad-free --exclude=gstreamer1-plugins-bad-free-libs
+dnf install --installroot=/mnt --releasever / -y @core nobara-release-workstation nobara-login nobara-login-sysctl grubby openssl tar
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4281,7 +4282,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-backgrounds ffmpeg flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
+specific_packages="desktop-backgrounds flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
@@ -4331,6 +4332,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DE
 set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
+dnf install -y --allowerasing ffmpeg
 systemctl enable ${desktop_services}
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
@@ -5260,8 +5262,8 @@ cat >/etc/pacman_steamos.conf <<'PACMAN-STEAMOS'
 #GPGDir      = /etc/pacman.d/gnupg/
 #HookDir     = /etc/pacman.d/hooks/
 HoldPkg     = pacman glibc
-#XferCommand = /usr/bin/curl --retry 5 -L -C - -f -o %o %u
-XferCommand = /usr/bin/wget --tries=5 --read-timeout=5 --passive-ftp -c -O %o %u
+XferCommand = /usr/bin/curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f -o %o %u
+#XferCommand = /usr/bin/wget --tries=5 --read-timeout=5 --passive-ftp -c -O %o %u
 #CleanMethod = KeepInstalled
 Architecture = auto
  
