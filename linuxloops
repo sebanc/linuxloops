@@ -67,7 +67,7 @@ case "${1}" in
 	bootloader_name="bootx64.efi"
 	;;
 	'Brunch')
-	available_desktops=( "Stable/Bobba" "Stable/Shyvana" "Stable/Jinlon" "Stable/Voxel" "Stable/Gumboz" "Unstable/Bobba" "Unstable/Shyvana" "Unstable/Jinlon" "Unstable/Voxel" "Unstable/Gumboz" )
+	available_desktops=( "Stable/Bobba" "Stable/Gumboz" "Stable/Jinlon" "Stable/Reven" "Stable/Shyvana" "Stable/Voxel" "Unstable/Bobba" "Unstable/Gumboz" "Unstable/Jinlon" "Unstable/Reven" "Unstable/Shyvana" "Unstable/Voxel" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="boot"
 	bootloader_name="bootx64.efi"
@@ -2038,10 +2038,11 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCR
 set -e
 case "$(echo ${desktop} | cut -d'/' -f2)" in
 	'Bobba') board="octopus" ;;
-	'Shyvana') board="rammus" ;;
-	'Jinlon') board="hatch" ;;
-	'Voxel') board="volteer" ;;
 	'Gumboz') board="zork" ;;
+	'Jinlon') board="hatch" ;;
+	'Reven') board="reven" ;;
+	'Shyvana') board="rammus" ;;
+	'Voxel') board="volteer" ;;
 esac
 mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
@@ -2054,7 +2055,11 @@ fi
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch
 rm /isomount/data/brunch.tar.gz
-ec=18; while [ \$ec -ne 0 ]; do curl -L -C - \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip; ec=\$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+if [ "\${board}" == "reven" ]; then
+	ec=18; while [ \$ec -ne 0 ]; do curl -L -C - "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip; ec=\$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+else
+	ec=18; while [ \$ec -ne 0 ]; do curl -L -C - \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip; ec=\$?; done || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+fi
 bsdtar -xvf /isomount/data/recovery.zip -C /root
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
@@ -2848,7 +2853,7 @@ dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar
+dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2856,6 +2861,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+dnf groupupdate -y core
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
 CHROOT_INIT
@@ -4264,9 +4270,8 @@ gpgcheck=1
 gpgkey=https://repo.radeon.com/rocm/rocm.gpg.key
 priority=50
 NOBARAREPO
-dnf --nogpgcheck swap -y fedora-release-container nobara-release-workstation
-#dnf install --installroot=/mnt --releasever / -y @core nobara-release-workstation nobara-login nobara-login-sysctl grubby openssl tar gstreamer1-plugins-bad-free --exclude=gstreamer1-plugins-bad-free-libs
-dnf install --installroot=/mnt --releasever / -y @core nobara-release-workstation nobara-login nobara-login-sysctl grubby openssl tar
+dnf install --nogpgcheck -y nobara-gpg-keys
+dnf install --installroot=/mnt --releasever / -y @core nobara-release-workstation grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4274,6 +4279,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+dnf groupupdate -y core
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio
 CHROOT_INIT
@@ -4282,48 +4288,48 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-backgrounds flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
+specific_packages="desktop-backgrounds ffmpeg flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config nobara-login nobara-login-sysctl openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Gnome')
 	install_desktop="
-dnf install -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-backgrounds gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
+dnf install --allowerasing -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-backgrounds gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
 "
 	;;
 	'Gnome/Full')
 	install_desktop="
-dnf install -y ${desktop_base} gdm @gnome-desktop gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
+dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
 "
 	;;
 	'Nobara')
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
 "
 	;;
 	'Nobara/Full')
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm @kde-desktop-environment kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm @kde-desktop-environment kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
 "
 	;;
 	'Plasma')
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
 "
 	;;
 	'Plasma/Full')
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment
 "
 	;;
 	'SteamDeck')
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
 "
 	;;
 	'SteamDeck/Full')
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS @kde-desktop-environment gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS @kde-desktop-environment gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
 "
 	;;
 esac
@@ -4332,7 +4338,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DE
 set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
-dnf install -y --allowerasing ffmpeg
 systemctl enable ${desktop_services}
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
@@ -6757,16 +6762,14 @@ if [ "${distro}" == "Tails" ]; then return; fi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/partition_script <<PARTITIONDEVICE
 #!/bin/bash
 set -e
-if [ "${distro}" == "Brunch" ]; then
-	(echo "g"; echo "n"; echo "2"; echo ""; echo "+32M"; echo "n"; echo "3"; echo ""; echo "+4G"; echo "n"; echo "4"; echo ""; echo "+32M"; echo "n"; echo "5"; echo ""; echo "+4G"; echo "n"; echo "6"; echo ""; echo "+1K"; echo "n"; echo "7"; echo ""; echo "+1G"; echo "n"; echo "8"; echo ""; echo "+16M"; echo "n"; echo "9"; echo ""; echo "+1K"; echo "n"; echo "10"; echo ""; echo "+1K"; echo "n"; echo "11"; echo ""; echo "+8M"; echo "n"; echo "12"; echo ""; echo "+32M"; echo "n"; echo "1"; echo ""; echo "+$((install_sizeMB-9338-3))M"; echo "t"; echo "1"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "2"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "3"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "4"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "5"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "6"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "7"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "8"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "9"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "10"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "11"; echo "CAB6E88E-ABF3-4102-A07A-D4BB9BE3C1D3"; echo "t"; echo "12"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "1"; echo "STATE"; echo "n"; echo "2"; echo "KERN-A"; echo "n"; echo "3"; echo "ROOT-A"; echo "n"; echo "4"; echo "KERN-B"; echo "n"; echo "5"; echo "ROOT-B"; echo "n"; echo "6"; echo "KERN-C"; echo "n"; echo "7"; echo "ROOT-C"; echo "n"; echo "8"; echo "OEM"; echo "n"; echo "9"; echo "reserved"; echo "n"; echo "10"; echo "reserved"; echo "n"; echo "11"; echo "RWFW"; echo "n"; echo "12"; echo "EFI-SYSTEM"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
-elif [ "${distro}" == "ChromeOS-Flex" ]; then
+if [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ]; then
 	(echo "g"; echo "n"; echo "2"; echo ""; echo "+64M"; echo "n"; echo "3"; echo ""; echo "+4G"; echo "n"; echo "4"; echo ""; echo "+64M"; echo "n"; echo "5"; echo ""; echo "+4G"; echo "n"; echo "6"; echo ""; echo "+1K"; echo "n"; echo "7"; echo ""; echo "+1G"; echo "n"; echo "8"; echo ""; echo "+16M"; echo "n"; echo "9"; echo ""; echo "+1K"; echo "n"; echo "10"; echo ""; echo "+1K"; echo "n"; echo "11"; echo ""; echo "+8M"; echo "n"; echo "12"; echo ""; echo "+64M"; echo "n"; echo "1"; echo ""; echo "+$((install_sizeMB-9434-3))M"; echo "t"; echo "1"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "2"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "3"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "4"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "5"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "6"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "t"; echo "7"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "t"; echo "8"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "t"; echo "9"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "10"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "t"; echo "11"; echo "CAB6E88E-ABF3-4102-A07A-D4BB9BE3C1D3"; echo "t"; echo "12"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "1"; echo "STATE"; echo "n"; echo "2"; echo "KERN-A"; echo "n"; echo "3"; echo "ROOT-A"; echo "n"; echo "4"; echo "KERN-B"; echo "n"; echo "5"; echo "ROOT-B"; echo "n"; echo "6"; echo "KERN-C"; echo "n"; echo "7"; echo "ROOT-C"; echo "n"; echo "8"; echo "OEM"; echo "n"; echo "9"; echo "reserved"; echo "n"; echo "10"; echo "reserved"; echo "n"; echo "11"; echo "RWFW"; echo "n"; echo "12"; echo "EFI-SYSTEM"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 elif [ "${distro}" == "BlissOS" ]; then
 	(echo "g"; echo "n"; echo "1"; echo ""; echo "+512M"; echo "n"; echo "2"; echo ""; echo "+$((install_sizeMB-512-3))M"; echo "t"; echo "1"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "t"; echo "2"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "1"; echo "EFI"; echo "n"; echo "2"; echo "ROOT"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 else
 	(echo "g"; echo "n"; echo "1"; echo ""; echo "+512M"; echo "n"; echo "2"; echo ""; echo "+1536M"; echo "n"; echo "3"; echo ""; echo "+$((install_sizeMB-2048-3))M"; echo "t"; echo "1"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "t"; echo "2"; echo "BC13C2FF-59E6-4262-A352-B275FD6F7172"; echo "t"; echo "3"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "1"; echo "EFI"; echo "n"; echo "2"; echo "BOOT"; echo "n"; echo "3"; echo "ROOT"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 fi
-sync
+#sync
 PARTITIONDEVICE
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/partition_script
 }
