@@ -4,7 +4,7 @@ usage()
 {
 cat << USAGE
 LinuxLoops: Flexible linux distro installer.
-Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
+Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
 -distro, --distribution <distribution name>			(Distribution to install)
 -env, --environment <desktop environment>			(Desktop environment to install)
 -dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
@@ -12,6 +12,7 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -z, --swapsize <swap size>					(number in GB)
 -b, --btrfs							(Use btrfs for the root filesystem)
 -e, --encrypt							(Encrypt the root filesystem)
+-a, --autologin							(Enable user autologin)
 -L, --locale <locale>						(specify locale to be used, by default "en_US")
 -K, --keymap <keymap>						(specify keymap to be used, by default "us")
 -T, --timezone <timezone>					(specify timezone to be used, by default "UTC")
@@ -109,8 +110,8 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'Kali')
-	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc kali current default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
@@ -169,8 +170,8 @@ case "${1}" in
 	bootloader_name="shim.efi"
 	;;
 	'Parrot')
-	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
@@ -201,7 +202,7 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'SteamOS')
-	available_desktops=( "None" "Desktop" "Desktop/Autologin" "Gamescope" )
+	available_desktops=( "None" "Desktop" "Gamescope" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="steamos"
 	bootloader_name="shimx64.efi"
@@ -1227,6 +1228,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 case "${desktop}" in
 	'Full')
+	default_session="gnome-wayland"
 	install_desktop="
 dnf install -y @\"Server with GUI\"
 systemctl set-default graphical
@@ -1249,6 +1251,18 @@ usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+if [ "${autologin}" == "Yes" ]; then
+	if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+	echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -1295,139 +1309,129 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo tilix network-manager-applet arc-gtk-theme gnome-control-center
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon gnome-terminal nemo network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Deepin')
+	default_session="dde-x11"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal network-manager-applet
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal
 systemctl enable lightdm.service
 "
 	;;
 	'Deepin/Full')
+	default_session="dde-x11"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal deepin-extra network-manager-applet
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal deepin-extra
 systemctl enable lightdm.service
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-backgrounds gnome-terminal nautilus
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} gdm gnome
 systemctl enable gdm.service
 "
 	;;
 	'i3')
+	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3status dmenu rxvt-unicode
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman breeze-icons oxygen-icons
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman breeze-icons oxygen-icons
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
+pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma dolphin konsole packagekit-qt5
+pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma plasma-wayland-session dolphin konsole packagekit-qt5
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 systemctl enable lightdm.service
 "
 	;;
@@ -1476,10 +1480,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm /etc/sddm.conf.d
-echo -e '[greeter]\nbackground = /usr/share/backgrounds/archlinux/small.png\nuser-background = true' > /etc/lightdm/lightdm-gtk-greeter.conf
-echo -e '[Greeter]\nbackground = /usr/share/backgrounds/archlinux/small.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
-echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -1496,6 +1496,47 @@ polkit.addAdminRule(function(action, subject) {
 POLKIT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		mkdir -p /etc/sddm.conf.d
+		echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			echo -e '\n[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		if [ "${desktop}" == "Deepin" ] || [ "${desktop}" == "Deepin/Full" ]; then
+			echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-deepin-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf		
+		else
+			echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+			echo -e '[Greeter]\nbackground = /usr/share/backgrounds/archlinux/small.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		fi
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux linux-headers"
 initramfs_type="initcpio"
@@ -1569,123 +1610,115 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="/etc/runit/sv/avahi-daemon /etc/runit/sv/cupsd"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo tilix network-manager-applet arc-gtk-theme gnome-control-center
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon gnome-terminal nemo network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 rm /etc/runit/runsvdir/default/NetworkManager
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit enlightenment terminology connman connman-runit
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runit/runsvdir/default/
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal nautilus
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
 	'i3')
+	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3status dmenu rxvt-unicode
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal mate-extra network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5 falkon
+pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5 falkon
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole falkon
+pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma plasma-wayland-session dolphin konsole falkon
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet blueman
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -1733,12 +1766,45 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm /etc/sddm.conf.d
-echo -e '[greeter]\nbackground = /usr/share/backgrounds/Artix_dna_spiral_dark.jpg\nuser-background = true' > /etc/lightdm/lightdm-gtk-greeter.conf
-echo -e '[Greeter]\nbackground = /usr/share/backgrounds/Artix_dna_spiral_dark.jpg\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
-echo -e '[Theme]\nCurrent = artix' > /etc/sddm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		mkdir -p /etc/sddm.conf.d
+		echo -e '[Theme]\nCurrent = artix' > /etc/sddm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			echo -e '\n[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/Artix_dna_spiral_dark.jpg\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
@@ -1789,36 +1855,42 @@ else
 	custom_packages="iptables accountsservice alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-xhost xorg-server gvfs udisks2 polkit zstd fwupd adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto archlinux-wallpaper flatpak ${custom_packages}"
 	case "${desktop}" in
 		'Cinnamon')
+		default_session="cinnamon"
 		install_desktop="
 echo \"track: 'cinnamon'\" >> /system.yaml
 "
 		custom_packages="gnome-terminal nemo network-manager-applet xdg-desktop-portal-gtk ${custom_packages}"
 		;;
 		'Gnome')
+		default_session="gnome-wayland"
 		install_desktop="
 echo \"track: 'gnome'\" >> /system.yaml
 "
 		custom_packages="gnome-keyring gnome-backgrounds gnome-terminal nautilus xdg-desktop-portal-gnome ${custom_packages}"
 		;;
 		'Lxqt')
+		default_session="lxqt"
 		install_desktop="
 echo \"track: 'lxqt'\" >> /system.yaml
 "
 		custom_packages="network-manager-applet blueman breeze-icons oxygen-icons xdg-desktop-portal-lxqt ${custom_packages}"
 		;;
 		'Mate')
+		default_session="mate"
 		install_desktop="
 echo \"track: 'mate'\" >> /system.yaml
 "
 		custom_packages="mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk ${custom_packages}"
 		;;
 		'Plasma')
+		default_session="plasmawayland"
 		install_desktop="
 echo \"track: 'plasma'\" >> /system.yaml
 "
 		custom_packages="dolphin konsole xdg-desktop-portal-kde ${custom_packages}"
 		;;
 		'Xfce')
+		default_session="xfce"
 		install_desktop="
 echo \"track: 'xfce'\" >> /system.yaml
 "
@@ -1829,6 +1901,7 @@ fi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
+mkdir -p /usr/etc
 cat >/system.yaml <<'SYSTEMYAML'
 repo: 'https://pkg-repo.blendos.co/'
 impl: 'https://github.com/blend-os/tracks/raw/main'
@@ -1838,31 +1911,15 @@ echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - '
 if [ ! -z "${custom_packages}" ]; then for i in ${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done; fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
 echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml;
-cat >>/system.yaml <<'SYSTEMYAML'
+if [ "${encryption}" == "Yes" ]; then add_encryption="encrypt "; fi
+cat >>/system.yaml <<SYSTEMYAML
 commands:
-  - 'echo "${hostname}" > /etc/hostname'
-  - 'if [ ! -f /etc/locale.gen ]; then echo "${locale}.UTF-8 UTF-8" > /etc/locale.gen; else sed -i "s@# ${locale}.UTF-8 UTF-8@${locale}.UTF-8 UTF-8@g" /etc/locale.gen; fi'
-  - 'localedef -i ${locale} -f UTF-8 ${locale}.UTF-8'
-  - 'echo "LANG=${locale}.UTF-8" > /etc/locale.conf'
-  - 'echo -e "KEYMAP=${keymap}" > /etc/vconsole.conf'
-  - 'mkdir -p /etc/X11/xorg.conf.d'
-  - 'echo -e "Section \"InputClass\"\n        Identifier \"system-keyboard\"\n        MatchIsKeyboard \"on\"\n        Option \"XkbLayout\" \"${keymap}\"\nEndSection" > /etc/X11/xorg.conf.d/00-keyboard.conf'
-  - 'ln -sf /usr/share/zoneinfo/${timezone} /etc/localtime'
-  - 'if [ -f /proc/1/cwd/system.yaml ] && [ -d /proc/1/cwd/etc/NetworkManager/system-connections ]; then rm -rf /etc/NetworkManager/system-connections; cp -r /proc/1/cwd/etc/NetworkManager/system-connections /etc/NetworkManager/; fi'
-  - 'echo -e "[Desktop Entry]\nType=Application\nName=Containers startup\nExec=/usr/bin/start-containers\nNoDisplay=true" > /etc/xdg/autostart/start-containers.desktop'
-  - 'echo -e "#!/bin/bash\nxhost +"local:podman"\nif [ -d \\\$HOME/.local/share/containers/storage/overlay-containers ]; then for i in \\\$HOME/.local/share/containers/storage/overlay-containers/*; do if [ -d \\\$i ]; then podman start \\\$(basename \\\$i); fi ; done; fi" > /usr/bin/start-containers'
-  - 'chmod 0755 /usr/bin/start-containers'
-  - 'sed -i "s@cp -r @cp -a @g" /usr/lib/initcpio/hooks/akshara'
   - 'ln -s /boot/linuxloops/initcpio-hook/linuxloops /etc/initcpio/install/linuxloops'
-  - 'echo "HOOKS=(base udev autodetect keyboard keymap modconf block encrypt akshara filesystems fsck linuxloops)" > /etc/mkinitcpio.conf.d/linuxloops.conf'
+  - 'echo "HOOKS=(base udev autodetect keyboard keymap modconf block \${add_encryption}akshara filesystems fsck linuxloops)" > /etc/mkinitcpio.conf.d/linuxloops.conf'
   - 'if [ -f /proc/1/cwd/system.yaml ] && [ -d /proc/1/cwd/boot/linuxloops ]; then cp -r /proc/1/cwd/boot/linuxloops /boot/; fi'
+
+$(cat "${custom_script}" 2>/dev/null)
 SYSTEMYAML
-akshara update
-sed -i "s@cp -r @cp -a @g" /usr/lib/initcpio/hooks/akshara
-cp /.update_rootfs/etc/mkinitcpio.conf.d/* /etc/mkinitcpio.conf.d/
-cp /.update_rootfs/etc/mkinitcpio.d/* /etc/mkinitcpio.d/
-rm -rf /lib/modules
-cp -r /.update_rootfs/lib/modules /lib/
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -1875,11 +1932,44 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+case "${desktop}" in
+	'Gnome')
+		mkdir -p /etc/gdm
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Lxqt')
+		mkdir -p /etc/sddm.conf.d
+		echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			echo -e '\n[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/archlinux/small.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
+
 initramfs_type="initcpio"
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_script
-	chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_script
-fi
 }
 
 chroot_BlissOS()
@@ -2414,22 +2504,26 @@ specific_packages="desktop-base plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo tilix paper-icon-theme
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core network-manager-gnome blueman gnome-terminal nemo
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
 yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
@@ -2438,66 +2532,78 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome blueman lxappearance
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome blueman
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian network-manager-gnome blueman openbox lxqt-powermanagement lxqt-themes
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxqt-desktop network-manager-gnome blueman
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome blueman mate-media mate-power-manager
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-mate-desktop blueman
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop blueman
@@ -2552,8 +2658,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -2564,6 +2668,41 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
@@ -2616,22 +2755,26 @@ specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nautilus tilix paper-icon-theme
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon network-manager-gnome blueman gnome-terminal nemo
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
 yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
@@ -2640,66 +2783,78 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome blueman lxappearance
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome blueman
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian network-manager-gnome blueman openbox lxqt-powermanagement lxqt-themes
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxqt-desktop network-manager-gnome blueman
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome blueman mate-media mate-power-manager
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-mate-desktop blueman
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop blueman
@@ -2739,11 +2894,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm/lightdm.conf.d /etc/sddm.conf.d
-echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
-echo -e '[greeter]\nbackground = /usr/share/images/desktop-base/your-way_deepsea-wide-large.svg\nuser-background = true' > /etc/lightdm/lightdm-gtk-greeter.conf
-echo -e '[Greeter]\nbackground = /usr/share/images/desktop-base/your-way_deepsea-wide-large.svg\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
-echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -2754,6 +2904,43 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		mkdir -p /etc/sddm.conf.d
+		echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			echo -e '\n[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		echo -e '[Greeter]\nbackground = /usr/share/images/desktop-base/your-way_deepsea-wide-large.svg\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
@@ -2809,6 +2996,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 case "${desktop}" in
 	'Full')
+	default_session="pantheon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install pantheon-greeter elementary-desktop
 yes | DEBIAN_FRONTEND=noninteractive apt purge gdm3 ubuntu-session
@@ -2830,6 +3018,20 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+if [ "${autologin}" == "Yes" ]; then
+	groupadd -r autologin
+	usermod -aG autologin '${username}'
+	mkdir -p /etc/lightdm/lightdm.conf.d
+	echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
@@ -2875,61 +3077,73 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter cinnamon clutter-gtk gnome-terminal nemo paper-icon-theme blueman dnfdragora-updater
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environment dnfdragora-updater
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 dnf install -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-backgrounds gnome-software gnome-keyring gnome-keyring-pam
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 dnf install -y ${desktop_base} gdm @gnome-desktop
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter @lxde-desktop-environment lxde-icon-theme blueman dnfdragora-updater
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter @lxqt-desktop-environment lxqt-themes blueman
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter mate-desktop marco network-manager-applet blueman mate-session-manager mate-media mate-power-manager caja mate-terminal mate-themes libgnome-keyring dnfdragora-updater
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter @mate-desktop-environment dnfdragora-updater
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
+dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment
+dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment plasma-workspace-wayland
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter xfdesktop xfce4-session xfce4-settings xfce4-notifyd yaru-theme network-manager-applet blueman thunar xfce4-appfinder xfce4-pulseaudio-plugin xfce4-power-manager xfce4-terminal  xfce4-settings libgnome-keyring dnfdragora-updater
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter @xfce-desktop-environment dnfdragora-updater
 "
@@ -2957,9 +3171,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
   </property>
 </channel>
 XFCETHEME
-mkdir -p /etc/lightdm
-echo -e '[greeter]\nbackground = /usr/share/backgrounds/default.png\nuser-background = true' > /etc/lightdm/lightdm-gtk-greeter.conf
-echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -2971,6 +3182,41 @@ usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			mkdir -p /etc/lightdm/lightdm.conf.d
+			echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -3013,9 +3259,9 @@ echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.crt"' >> /etc/portage/make.c
 echo "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
-	echo "USE=\"a52 aac acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 else
-	echo "USE=\"a52 aac acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 fi
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2 --getbinpkg\"" >> /etc/portage/make.conf
@@ -3043,84 +3289,98 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto net-print/cups net-print/cups-filters sys-boot/plymouth sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/numix-gtk-theme x11-themes/numix-icon-theme x11-themes/numix-icon-theme-circle x11-themes/oxygen-gtk x11-themes/papirus-icon-theme x11-themes/xcursor-themes"
 case "${desktop}" in
 	'Cinnamon/Openrc')
+	default_session="cinnamon"
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm gnome-extra/cinnamon x11-terms/gnome-terminal gnome-extra/nemo net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Cinnamon/Systemd')
+	default_session="cinnamon"
 	install_desktop="
 emerge ${desktop_base} x11-misc/lightdm gnome-extra/cinnamon x11-terms/gnome-terminal gnome-extra/nemo net-wireless/blueman
 systemctl enable lightdm.service
 "
 	;;
 	'Enlightenment/Openrc')
+	default_session="enlightenment"
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Enlightenment/Systemd')
+	default_session="enlightenment"
 	install_desktop="
 emerge ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology
 systemctl enable lightdm.service
 "
 	;;
 	'Gnome/Openrc')
+	default_session="gnome-wayland"
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"gdm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Gnome/Systemd')
+	default_session="gnome-wayland"
 	install_desktop="
 emerge ${desktop_base} gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus
 systemctl enable gdm.service
 "
 	;;
 	'Lxqt/Openrc')
+	default_session="lxqt"
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Lxqt/Systemd')
+	default_session="lxqt"
 	install_desktop="
 emerge ${desktop_base} x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement net-wireless/blueman
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Openrc')
+	default_session="mate"
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm mate-base/mate x11-terms/mate-terminal gnome-extra/nm-applet mate-extra/mate-power-manager mate-extra/mate-media net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Mate/Systemd')
+	default_session="mate"
 	install_desktop="
 emerge ${desktop_base} x11-misc/lightdm mate-base/mate x11-terms/mate-terminal gnome-extra/nm-applet mate-extra/mate-power-manager mate-extra/mate-media net-wireless/blueman
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma/Openrc')
+	default_session="plasmawayland"
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Plasma/Systemd')
+	default_session="plasmawayland"
 	install_desktop="
 emerge ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 systemctl enable sddm.service
 "
 	;;
 	'Xfce/Openrc')
+	default_session="xfce"
 	install_desktop="
 emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm xfce-base/xfce4-meta x11-terms/xfce4-terminal gnome-extra/nm-applet net-wireless/blueman xfce-base/xfce4-power-manager net-wireless/blueman
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Xfce/Systemd')
+	default_session="xfce"
 	install_desktop="
 emerge ${desktop_base} x11-misc/lightdm xfce-base/xfce4-meta x11-terms/xfce4-terminal gnome-extra/nm-applet net-wireless/blueman xfce-base/xfce4-power-manager net-wireless/blueman
 systemctl enable lightdm.service
@@ -3161,6 +3421,40 @@ polkit.addAdminRule(function(action, subject) {
 POLKIT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			mkdir -p /etc/lightdm/lightdm.conf.d
+			echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -3210,28 +3504,33 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin
 "
 	;;
 	'Budgie/Full')
+	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-e17 terminology
 yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
@@ -3241,6 +3540,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Enlightenment/Full')
+	default_session="enlightenment"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-e17 terminology
@@ -3251,17 +3551,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 kali-desktop-gnome gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 kali-desktop-gnome gnome-keyring
 "
 	;;
 	'i3')
+	default_session="i3"
 	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
@@ -3269,6 +3572,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'i3/Full')
+	default_session="i3"
 	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
@@ -3277,44 +3581,52 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-lxde network-manager-gnome blueman
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-lxde network-manager-gnome blueman
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-power-manager mate-media blueman
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-power-manager mate-media blueman
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kali-desktop-kde kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kali-desktop-kde plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kali-desktop-kde kwin-x11 plasma-nm plasma-pa powerdevil bluedevil libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kali-desktop-kde plasma-workspace-wayland kwin-wayland plasma-nm plasma-pa powerdevil bluedevil libpam-kwallet5
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-xfce blueman
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-xfce blueman
@@ -3354,8 +3666,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -3366,6 +3676,41 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
@@ -3439,12 +3784,14 @@ specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-ico
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-terminal nemo gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -3452,12 +3799,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-mate mint-info-mate mate-desktop-environment gnome-terminal nemo
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -3465,12 +3814,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -3483,8 +3834,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DE
 set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
-mkdir -p /etc/lightdm
-echo -e '[Greeter]\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -3495,6 +3844,21 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+echo -e '[Greeter]\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+if [ "${autologin}" == "Yes" ]; then
+	groupadd -r autologin
+	usermod -aG autologin '${username}'
+	mkdir -p /etc/lightdm/lightdm.conf.d
+	echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
@@ -3564,12 +3928,14 @@ specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-ico
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -3582,8 +3948,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DE
 set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -3594,6 +3958,21 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+mkdir -p /etc/lightdm/lightdm.conf.d
+echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+if [ "${autologin}" == "Yes" ]; then
+	groupadd -r autologin
+	usermod -aG autologin '${username}'
+	echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
@@ -3646,108 +4025,102 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop manjaro-budgie-settings network-manager-applet tilix nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Deepin')
+	default_session="dde-x11"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-manjaro network-manager-applet deepin-terminal deepin-wallpapers pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman
 systemctl enable lightdm.service connman.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-backgrounds gnome-terminal nautilus manjaro-gnome-settings
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings
 systemctl enable gdm.service
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde manjaro-lxde-config manjaro-lxde-desktop-settings manjaro-lxde-logout-banner manjaro-lxde-xfce4-notifyd manjaro-lxde-xfce4-volumed-pulse arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt manjaro-lxqt-config manjaro-lxqt-desktop-settings manjaro-openbox-adapta-maia papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate manjaro-mate-settings arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra manjaro-mate-settings arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
+pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma plasma-wayland-session manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma kde-applications manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
+pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma plasma-wayland-session kde-applications manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 "
 	;;
 esac
@@ -3784,6 +4157,45 @@ polkit.addAdminRule(function(action, subject) {
 POLKIT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		if [ "${desktop}" == "Deepin" ] || [ "${desktop}" == "Deepin/Full" ]; then
+			echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-deepin-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf		
+		else
+			echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux66 linux66-headers"
 initramfs_type="initcpio"
@@ -3850,22 +4262,26 @@ specific_packages="desktop-base grub-themes-mx plymouth-themes-mx synaptic mx-gr
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus tilix
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo blueman
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop blueman
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
 yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
@@ -3874,33 +4290,39 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome lxappearance lxinput blueman
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome blueman
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian lxde-icon-theme network-manager-gnome mutter lxqt-powermanagement lxqt-themes oxygen-icon-theme blueman
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxqt-desktop network-manager-gnome blueman
@@ -3908,33 +4330,39 @@ yes | DEBIAN_FRONTEND=noninteractive apt purge sddm
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome blueman mate-media mate-power-manager
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-mate-desktop blueman
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings plasma-look-and-feel-theme-mx plasma-modified-defaults-mx desktop-defaults-mx-kde
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings plasma-look-and-feel-theme-mx plasma-modified-defaults-mx desktop-defaults-mx-kde
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-look-and-feel-theme-mx plasma-modified-defaults-mx desktop-defaults-mx-kde
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland plasma-look-and-feel-theme-mx plasma-modified-defaults-mx desktop-defaults-mx-kde
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd xfce4-whiskermenu-plugin network-manager-gnome blueman desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome blueman desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin
@@ -3974,9 +4402,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
-echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default23.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
 plymouth-set-default-theme MXLiveLogo
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
@@ -3988,6 +4413,42 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG audio,sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default23.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
@@ -4047,13 +4508,15 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 case "${desktop}" in
 	'Essentials')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install neon-essentials-desktop libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install neon-essentials-desktop plasma-workspace-wayland libpam-kwallet5
 "
 	;;
 	'Full')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install neon-desktop libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install neon-desktop plasma-workspace-wayland libpam-kwallet5
 "
 	;;
 esac
@@ -4073,6 +4536,22 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+if [ "${autologin}" == "Yes" ]; then
+	mkdir -p /etc/sddm.conf.d
+	echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+	sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
@@ -4118,84 +4597,94 @@ NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
+if [ "${autologin}" == "Yes" ]; then
+case "${desktop}" in
+	'Gnome/Full')
+	autologin="
+services.xserver.displayManager.gdm.autoLogin.enable = true;
+services.xserver.displayManager.gdm.autoLogin.user = \"${username}\";"
+	;;
+	'Plasma/Full')
+	autologin="
+services.xserver.displayManager.sddm.autoLogin.enable = true;
+services.xserver.displayManager.sddm.autoLogin.user = \"${username}\";"
+	;;
+	*)
+	autologin="
+services.xserver.displayManager.lightdm.autoLogin.enable = true;
+services.xserver.displayManager.lightdm.autoLogin.user = \"${username}\";"
+	;;
+esac
+fi
+
 case "${desktop}" in
 	'Budgie/Full')
 	nixos_desktop="
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
+services.xserver.displayManager.lightdm.enable = true;${autologin}
 services.xserver.desktopManager.budgie.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Cinnamon/Full')
 	nixos_desktop="
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
+services.xserver.displayManager.lightdm.enable = true;${autologin}
 services.xserver.desktopManager.cinnamon.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Deepin/Full')
 	nixos_desktop="
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
+services.xserver.displayManager.lightdm.enable = true;${autologin}
 services.xserver.desktopManager.deepin.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Gnome/Full')
 	nixos_desktop="
 services.xserver.enable = true;
-services.xserver.displayManager.gdm.enable = true;
-services.xserver.displayManager.gdm.wayland = false;
+services.xserver.displayManager.gdm.enable = true;${autologin}
 services.xserver.desktopManager.gnome.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Lxqt/Full')
 	nixos_desktop="
 programs.nm-applet.enable = true;
 services.blueman.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
+services.xserver.displayManager.lightdm.enable = true;${autologin}
 services.xserver.desktopManager.lxqt.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Mate/Full')
 	nixos_desktop="
 programs.nm-applet.enable = true;
 services.blueman.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
+services.xserver.displayManager.lightdm.enable = true;${autologin}
 services.xserver.desktopManager.mate.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Pantheon/Full')
 	nixos_desktop="
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
+services.xserver.displayManager.lightdm.enable = true;${autologin}
 services.xserver.desktopManager.pantheon.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Plasma/Full')
 	nixos_desktop="
 services.xserver.enable = true;
-services.xserver.displayManager.sddm.enable = true;
+services.xserver.displayManager.sddm.enable = true;${autologin}
 services.xserver.desktopManager.plasma5.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 	;;
 	'Xfce/Full')
 	nixos_desktop="
 services.blueman.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
+services.xserver.displayManager.lightdm.enable = true;${autologin}
 services.xserver.desktopManager.xfce.enable = true;
-services.xserver.layout = \"${keymap}\";
-"
+services.xserver.layout = \"${keymap}\";"
 custom_packages="xfce.xfce4-pulseaudio-plugin ${custom_packages}"
 	;;
 esac
@@ -4293,43 +4782,51 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-backgrounds gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
 "
 	;;
 	'Nobara')
+	default_session="plasmawayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
 "
 	;;
 	'Nobara/Full')
+	default_session="plasmawayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm @kde-desktop-environment kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm @kde-desktop-environment plasma-workspace-wayland kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment plasma-workspace-wayland
 "
 	;;
 	'SteamDeck')
+	default_session="gamescope-session"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
 "
 	;;
 	'SteamDeck/Full')
+	default_session="gamescope-session"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS @kde-desktop-environment gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS @kde-desktop-environment plasma-workspace-wayland gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
 "
 	;;
 esac
@@ -4350,6 +4847,32 @@ usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	*)
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -4396,33 +4919,39 @@ specific_packages="adobe-sourcecodepro-fonts cantarell-fonts plymouth-branding-o
 desktop_base="patterns-base-x11 ${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet
 "
 	;;
 	'Budgie/Full')
+	default_session="budgie-desktop"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme python3-requests blueman
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme python3-requests blueman
 "
 	;;
 	'Deepin')
+	default_session="dde-x11"
 	install_desktop="
 zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
 "
 	;;
 	'Deepin/Full')
+	default_session="dde-x11"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
@@ -4430,6 +4959,7 @@ zypper --non-interactive remove sddm
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman
@@ -4437,6 +4967,7 @@ systemctl enable connman.service
 "
 	;;
 	'Enlightenment/Full')
+	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
@@ -4445,66 +4976,78 @@ systemctl enable connman.service
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-keyring-pam polkit-gnome gnome-terminal nautilus NetworkManager-applet
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-keyring-pam polkit-gnome gnome-terminal nautilus NetworkManager-applet
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-keyring-pam polkit-gnome gnome-terminal nautilus NetworkManager-applet
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-keyring-pam polkit-gnome gnome-terminal nautilus NetworkManager-applet
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet blueman
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet blueman
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet blueman
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet blueman
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-mate-mate mate-panel-branding-openSUSE mate-themes mate-terminal mate-media mate-power-manager mate-menus caja NetworkManager-applet blueman
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-mate-mate mate-panel-branding-openSUSE mate-themes mate-terminal mate-media mate-power-manager mate-menus caja NetworkManager-applet blueman
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns-kde-kde konsole NetworkManager-applet webenginepart bluedevil5 plasma-nm5 kwalletmanager5 pam_kwallet dolphin discover discover-backend-packagekit plasma5-workspace-wallpapers plasma5-pa plasma5-addons breeze5-wallpapers
+zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns-kde-kde plasma5-session-wayland konsole NetworkManager-applet webenginepart bluedevil5 plasma-nm5 kwalletmanager5 pam_kwallet dolphin discover discover-backend-packagekit plasma5-workspace-wallpapers plasma5-pa plasma5-addons breeze5-wallpapers
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns-kde-kde konsole NetworkManager-applet webenginepart bluedevil5 plasma-nm5 kwalletmanager5 pam_kwallet dolphin discover discover-backend-packagekit plasma5-workspace-wallpapers plasma5-pa plasma5-addons breeze5-wallpapers
+zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns-kde-kde plasma5-session-wayland konsole NetworkManager-applet webenginepart bluedevil5 plasma-nm5 kwalletmanager5 pam_kwallet dolphin discover discover-backend-packagekit plasma5-workspace-wallpapers plasma5-pa plasma5-addons breeze5-wallpapers
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet blueman
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet blueman
@@ -4530,8 +5073,6 @@ icon-theme="Papirus"
 theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[LightDM]\nlogind-check-graphical=true\n\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -4568,6 +5109,44 @@ polkit.addRule(function(action, subject) {
 BLUEMAN
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			sed -i 's@DISPLAYMANAGER_AUTOLOGIN=\"\"@DISPLAYMANAGER_AUTOLOGIN="${username}"@g' /etc/sysconfig/displaymanager
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			sed -i 's@DISPLAYMANAGER_AUTOLOGIN=\"\"@DISPLAYMANAGER_AUTOLOGIN="${username}"@g' /etc/sysconfig/displaymanager
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[LightDM]\nlogind-check-graphical=true\n\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			sed -i 's@DISPLAYMANAGER_AUTOLOGIN=\"\"@DISPLAYMANAGER_AUTOLOGIN="${username}"@g' /etc/sysconfig/displaymanager
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -4621,28 +5200,33 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin
 "
 	;;
 	'Budgie/Full')
+	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
 yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
@@ -4652,6 +5236,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Enlightenment/Full')
+	default_session="enlightenment"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology nim anonsurf-gtk metasploit-framework nmap
@@ -4662,66 +5247,78 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'i3')
+	default_session="i3"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
 "
 	;;
 	'i3/Full')
+	default_session="i3"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 pavucontrol pasystray network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde network-manager-gnome blueman
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-mate mate-desktop mate-session-manager mate-power-manager mate-media blueman
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-mate mate-desktop mate-session-manager mate-power-manager mate-media blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-desktop-kde kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-desktop-kde plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-desktop-kde kwin-x11 plasma-nm plasma-pa powerdevil bluedevil libpam-kwallet5 nim anonsurf-gtk metasploit-framework nmap
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm parrot-desktop-kde plasma-workspace-wayland kwin-wayland plasma-nm plasma-pa powerdevil bluedevil libpam-kwallet5 nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
@@ -4762,9 +5359,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
-echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default.jpg\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -4775,6 +5369,42 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default.jpg\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
@@ -4839,6 +5469,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 case "${desktop}" in
 	'Full')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install pop-desktop
 "
@@ -4859,6 +5490,18 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+if [ "${autologin}" == "Yes" ]; then
+	if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+	echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
@@ -4924,22 +5567,26 @@ specific_packages="desktop-base plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo tilix paper-icon-theme
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core network-manager-gnome blueman gnome-terminal nemo
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
 yes | DEBIAN_FRONTEND=noninteractive apt purge network-manager
@@ -4948,66 +5595,78 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde-core lxterminal pcmanfm lxde-icon-theme network-manager-gnome blueman lxappearance
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome blueman
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian network-manager-gnome blueman openbox lxqt-powermanagement lxqt-themes
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-lxqt-desktop network-manager-gnome blueman
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome blueman mate-media mate-power-manager
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-mate-desktop blueman
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-x11 dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop blueman
@@ -5062,8 +5721,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm/lightdm.conf.d
-echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -5074,6 +5731,41 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG audio,sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			echo -e 'autologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="pve-kernel-*"
 initramfs_type="initramfstools"
@@ -5163,6 +5855,19 @@ echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ "${autologin}" == "Yes" ]; then
+	groupadd -r autologin
+	usermod -aG autologin '${username}'
+	mkdir -p /etc/lightdm/lightdm.conf.d
+	echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=xfce' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
+
 kernel_parameters="plymouth.ignore-serial-consoles"
 xen_cmdline_extra="console=none dom0_mem=min:1024M dom0_mem=max:4096M ucode=scan smt=off gnttab_max_frames=2048 gnttab_max_maptrack_frames=4096"
 initramfs_type="dracut"
@@ -5203,6 +5908,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 case "${desktop}" in
 	'Full')
+	default_session="gnome-wayland"
 	install_desktop="
 dnf install -y @\"Server with GUI\"
 systemctl set-default graphical
@@ -5225,6 +5931,18 @@ usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+if [ "${autologin}" == "Yes" ]; then
+	if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+	echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -5385,45 +6103,15 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
 	'Desktop')
+	default_session="plasmawayland"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets
-"
-	;;
-	'Desktop/Autologin')
-	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets
-mkdir -p /etc/sddm.conf.d
-cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
-[Autologin]
-Session=plasmawayland
-User=$username
-SDDM
-mkdir -p /etc/skel/.config
-cat >/etc/skel/.config/kwalletrc <<'KWALLET'
-[Wallet]
-Enabled=false
-KWALLET
 "
 	;;
 	'Gamescope')
+	default_session="deck-session"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets
-mkdir -p /etc/sddm.conf.d
-ln -s /tmp/zz-steamos.conf /etc/sddm.conf.d/zz-steamos.conf
-cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
-[General]
-DisplayServer=wayland
-
-[Autologin]
-Relogin=true
-Session=deck-session.desktop
-User=$username
-
-[X11]
-# Janky workaround for wayland sessions not stopping in sddm, kills
-# all active sddm-helper sessions on teardown
-DisplayStopCommand=/usr/bin/gamescope-wayland-teardown-workaround
-SDDM
 cat >/usr/share/wayland-sessions/deck-session.desktop <<'DECK_SESSION'
 [Desktop Entry]
 Encoding=UTF-8
@@ -5454,8 +6142,6 @@ set -e
 ${install_desktop}
 systemctl enable ${desktop_services} dbus-broker.service sddm.service
 systemctl enable --global dbus-broker.service
-mkdir -p /etc/sddm.conf.d
-echo -e '[Theme]\nCurrent=breeze' > /etc/sddm.conf.d/99_linuxloops.conf
 /linuxloops/install_steamos_configs
 # Temporary XDG desktop portal fix
 cat >/etc/xdg/autostart/xdg-desktop-portal-fix.desktop <<'PORTAL_FIX_AUTOSTART'
@@ -5944,6 +6630,47 @@ POLKIT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+mkdir -p /etc/sddm.conf.d
+echo -e '[Theme]\nCurrent=breeze' > /etc/sddm.conf.d/99_linuxloops.conf
+if [ "${autologin}" == "Yes" ] && [ "${desktop}" == "Desktop" ]; then
+	cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
+[Autologin]
+Session=${default_session}
+User=${username}
+SDDM
+	sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+elif [ "${desktop}" == "Gamescope" ]; then
+	ln -s /tmp/zz-steamos.conf /etc/sddm.conf.d/zz-steamos.conf
+	cat >/etc/sddm.conf.d/steamos.conf <<'SDDM'
+[General]
+DisplayServer=wayland
+
+[Autologin]
+Relogin=true
+Session=${default_session}
+User=${username}
+
+[X11]
+# Janky workaround for wayland sessions not stopping in sddm, kills
+# all active sddm-helper sessions on teardown
+DisplayStopCommand=/usr/bin/gamescope-wayland-teardown-workaround
+SDDM
+	sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+fi
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
+
 surface_remove="linux linux-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
@@ -6056,11 +6783,13 @@ specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo tilix plank gjs
 "
 	;;
 	'Budgie/Full')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6068,11 +6797,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo blueman
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6080,6 +6811,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
@@ -6089,22 +6821,26 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde lxterminal pcmanfm lxde-icon-theme network-manager-gnome blueman
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6112,11 +6848,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lubuntu-desktop qterminal pcmanfm-qt network-manager-gnome blueman humanity-icon-theme
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6124,11 +6862,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntu-mate-desktop ubuntu-mate-themes ubuntu-mate-wallpapers mate-control-center mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja ayatana-indicator-application ayatana-indicator-datetime ayatana-indicator-notifications ayatana-indicator-power ayatana-indicator-session ayatana-indicator-sound network-manager-gnome blueman
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6136,32 +6876,37 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop plasma-workspace-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop plasma-workspace-wayland
 "
 	;;
 	'Studio/Full')
+	default_session="plasmawayland"
 	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable patchance
 "
 	;;
 	'Ubuntu')
+	default_session="ubuntu-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 ubuntu-desktop-minimal gnome-terminal nautilus gnome-keyring libpam-gnome-keyring yaru-theme-gtk yaru-theme-icon yaru-theme-sound
 "
 	;;
 	'Ubuntu/Full')
+	default_session="ubuntu-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6169,6 +6914,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 ubuntu-des
 "
 	;;
 	'Unity')
+	default_session="unity"
 	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
@@ -6176,6 +6922,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Unity/Full')
+	default_session="unity"
 	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
@@ -6186,11 +6933,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-goodies xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman greybird-gtk-theme elementary-xfce-icon-theme
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6235,8 +6984,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm
-echo -e '[Greeter]\nbackground = /usr/share/backgrounds/warty-final-ubuntu.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -6247,6 +6994,41 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full'|'Ubuntu'|'Ubuntu/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full'|'Studio/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/warty-final-ubuntu.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			mkdir -p /etc/lightdm/lightdm.conf.d
+			echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
@@ -6303,11 +7085,13 @@ specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo tilix plank gjs
 "
 	;;
 	'Budgie/Full')
+	default_session="budgie-desktop"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6315,11 +7099,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Cinnamon')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo blueman
 "
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6327,6 +7113,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Enlightenment')
+	default_session="enlightenment"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
@@ -6336,22 +7123,26 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lxde lxterminal pcmanfm lxde-icon-theme network-manager-gnome blueman
 "
 	;;
 	'Lxde/Full')
+	default_session="LXDE"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6359,11 +7150,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter lubuntu-desktop qterminal pcmanfm-qt network-manager-gnome blueman humanity-icon-theme
 "
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6371,11 +7164,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntu-mate-desktop ubuntu-mate-themes ubuntu-mate-wallpapers mate-control-center mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja ayatana-indicator-application ayatana-indicator-datetime ayatana-indicator-notifications ayatana-indicator-power ayatana-indicator-session ayatana-indicator-sound network-manager-gnome blueman
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6383,31 +7178,36 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop plasma-workspace-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop plasma-workspace-wayland
 "
 	;;
 	'Studio/Full')
+	default_session="plasmawayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable patchance
 chmod 0644 /etc/grub.d/09_lowlatency
 chmod 0755 /etc/grub.d/10_linux
 "
 	;;
 	'Ubuntu')
+	default_session="ubuntu-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 ubuntu-desktop-minimal gnome-terminal nautilus gnome-keyring libpam-gnome-keyring yaru-theme-gtk yaru-theme-icon yaru-theme-sound
 "
 	;;
 	'Ubuntu/Full')
+	default_session="ubuntu-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6415,11 +7215,13 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 ubuntu-des
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-goodies xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman greybird-gtk-theme elementary-xfce-icon-theme
 "
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome blueman
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -6464,8 +7266,6 @@ AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
 X-GNOME-AutoRestart=true
 NoDisplay=true
 NEMODESKTOP
-mkdir -p /etc/lightdm
-echo -e '[Greeter]\nbackground = /usr/share/backgrounds/warty-final-ubuntu.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
 
@@ -6476,6 +7276,41 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full'|'Ubuntu'|'Ubuntu/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full'|'Studio/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/warty-final-ubuntu.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			mkdir -p /etc/lightdm/lightdm.conf.d
+			echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
@@ -6522,54 +7357,63 @@ desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_p
 desktop_services="/etc/sv/avahi-daemon /etc/sv/cupsd /etc/sv/cups-browsed"
 case "${desktop}" in
 	'Gnome')
+	default_session="gnome-wayland"
 	install_desktop="
 xbps-install -y ${desktop_base} gdm gnome-core gnome-terminal
 ln -s /etc/sv/gdm  /etc/runit/runsvdir/default/
 "
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	install_desktop="
 xbps-install -y ${desktop_base} gdm gnome
 ln -s /etc/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde')
+	default_session="LXDE"
 	install_desktop="
 xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter lxde network-manager-applet blueman
 ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
 	install_desktop="
 xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter lxqt network-manager-applet blueman
 ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate')
+	default_session="mate"
 	install_desktop="
 xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter mate network-manager-applet blueman mate-terminal mate-power-manager mate-applets
 ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate/Full')
+	default_session="mate"
 	install_desktop="
 xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter mate mate-extra network-manager-applet blueman mate-terminal mate-power-manager mate-applets
 ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma')
+	default_session="plasmawayland"
 	install_desktop="
 xbps-install -y ${desktop_base} sddm kde5 dolphin konsole
 ln -s /etc/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma/Full')
+	default_session="plasmawayland"
 	install_desktop="
 xbps-install -y ${desktop_base} sddm kde5 kde5-baseapps
 ln -s /etc/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce')
+	default_session="xfce"
 	install_desktop="
 xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter xfce4 xfce4-notifyd xfce4-pulseaudio-plugin network-manager-applet blueman
 ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
@@ -6593,6 +7437,40 @@ usermod -aG wheel '${username}'
 echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		if [ "${autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${username}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			mkdir -p /etc/lightdm/lightdm.conf.d
+			echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -6683,12 +7561,14 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 case "${desktop}" in
 	'Core')
+	default_session="zorin"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install zorin-os-desktop
 yes | DEBIAN_FRONTEND=noninteractive apt purge ubuntu-session
 "
 	;;
 	'Core/Windows_apps_support')
+	default_session="zorin"
 	install_desktop="
 dpkg --add-architecture i386
 yes | DEBIAN_FRONTEND=noninteractive apt install zorin-os-desktop zorin-windows-app-support winbind
@@ -6696,12 +7576,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt purge ubuntu-session
 "
 	;;
 	'Lite')
+	default_session="zorin-os-lite"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install zorin-os-lite-desktop
 yes | DEBIAN_FRONTEND=noninteractive apt purge gdm3 ibus ubuntu-session xfce4-indicator-plugin
 "
 	;;
 	'Lite/Windows_apps_support')
+	default_session="zorin-os-lite"
 	install_desktop="
 dpkg --add-architecture i386
 yes | DEBIAN_FRONTEND=noninteractive apt install zorin-os-lite-desktop zorin-windows-app-support winbind
@@ -6724,6 +7606,30 @@ useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${desktop}" in
+	'Core'|'Core/Windows_apps_support')
+		if [ "${autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Lite'|'Lite/Windows_apps_support')
+		if [ "${autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${username}'
+			mkdir -p /etc/lightdm/lightdm.conf.d
+			echo -e '[Seat:*]\nautologin-user=${username}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
@@ -6905,6 +7811,7 @@ chroot /mnt /linuxloops/chroot_init
 if [ -f /linuxloops/install_desktop ]; then chroot /mnt /linuxloops/install_desktop; fi
 if [ -f /linuxloops/install_live ]; then chroot /mnt /linuxloops/install_live; fi
 if [ -f /linuxloops/install_user ]; then chroot /mnt /linuxloops/install_user; fi
+if [ -f /linuxloops/install_dmconfig ]; then chroot /mnt /linuxloops/install_dmconfig; fi
 if [ -f /linuxloops/install_settings ]; then chroot /mnt /linuxloops/install_settings; fi
 if [ -f /linuxloops/install_secureboot ]; then chroot /mnt /linuxloops/install_secureboot; fi
 if [ -f /linuxloops/install_surface ]; then chroot /mnt /linuxloops/install_surface; fi
@@ -7466,12 +8373,10 @@ generate_initcpio()
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs <<INITCPIOSTART
 #!/bin/bash
 set -e
-if [ "${distro}" != "BlendOS" ]; then
-	if [ "${encryption}" == "Yes" ]; then
-		sed -i 's@ block filesystems fsck)@ block encrypt filesystems fsck linuxloops)@g' /etc/mkinitcpio.conf
-	else
-		sed -i 's@ block filesystems fsck)@ block filesystems fsck linuxloops)@g' /etc/mkinitcpio.conf
-	fi
+if [ "${encryption}" == "Yes" ]; then
+	sed -i 's@ block filesystems fsck)@ block encrypt filesystems fsck linuxloops)@g' /etc/mkinitcpio.conf
+else
+	sed -i 's@ block filesystems fsck)@ block filesystems fsck linuxloops)@g' /etc/mkinitcpio.conf
 fi
 rm -rf /boot/linuxloops
 mkdir -p /boot/linuxloops/initcpio-hook
@@ -7553,7 +8458,7 @@ add_linuxloops_post
 echo -e "LINUXLOOPSBINARY" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "chmod 0755 /boot/linuxloops/linuxloops" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "(cd /boot/linuxloops && find . | cpio -o -H newc | gzip > /boot/linuxloops/linuxloops-recovery.img)" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
-echo -e "mkinitcpio -P" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
+if [ "${distro}" != "BlendOS" ]; then echo -e "mkinitcpio -P" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs; fi
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 }
 
@@ -7651,6 +8556,7 @@ add_linuxloops_post
 echo -e "LINUXLOOPSBINARY" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "chmod 0755 /boot/linuxloops/linuxloops" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "(cd /boot/linuxloops && find . | cpio -o -H newc | gzip > /boot/linuxloops/linuxloops-recovery.img)" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
+echo -e "DEBIAN_FRONTEND=noninteractive dpkg-reconfigure keyboard-configuration" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "update-initramfs -u -k all" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 }
@@ -8223,6 +9129,16 @@ echo -e '${userpass}\n${userpass}' | passwd '${username}'
 if [ "${distro}" == "Proxmox" ]; then echo -e '${userpass}\n${userpass}' | passwd root; fi
 SETUSERPW
 chmod 0755 /mnt/tmp/set_userpw
+if [ "${distro}" == "BlendOS" ]; then
+	cat >>/mnt/tmp/set_userpw <<BLENDOS_AKSHARA
+akshara update
+cp /.update_rootfs/etc/mkinitcpio.conf.d/* /etc/mkinitcpio.conf.d/
+cp /.update_rootfs/etc/mkinitcpio.d/* /etc/mkinitcpio.d/
+rm -rf /lib/modules
+cp -r /.update_rootfs/lib/modules /lib/
+mkinitcpio -P
+BLENDOS_AKSHARA
+fi
 if [ "${distro}" == "NixOS" ]; then
 	sed -i '1d' /mnt/tmp/set_userpw
 	sudo -u temp bash << 'NIXOSSETPW'
@@ -8667,37 +9583,39 @@ else
 		password_text="user account password"
 	fi
 	if [ ! -z "${zenity}" ]; then
-	until false; do
-		form=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --text="${encrypted_text}" --add-entry="Input your username" --add-password="Input your ${password_text}" --add-password="Confirm your ${password_text}" --ok-label="Next" 2>/dev/null)
-		username="$(echo ${form} | cut -d'|' -f1)"
-		userpass="$(echo ${form} | cut -d'|' -f2)"
-		verifuserpass="$(echo ${form} | cut -d'|' -f3)"
-		if [ -z "${form}" ]; then exit 0; fi
-		if [ -z "${username}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define your username.\n" 2>/dev/null; continue; fi
-		if [ -z "${userpass}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define a password.\n" 2>/dev/null; continue; fi
-		if echo "${username}" | grep -q '^[a-z][-a-z0-9]*\$'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Username contains unsupported characters.\n" 2>/dev/null; continue; fi
-		if echo "${userpass}" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Password contains unsupported characters.\n" 2>/dev/null; continue; fi
-		if [ "${userpass}" != "${verifuserpass}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Passwords do not match, try again.\n" 2>/dev/null; continue; fi
-		break
-	done
+		until false; do
+			form=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --text="${encrypted_text}" --add-entry="Input your username" --add-password="Input your ${password_text}" --add-password="Confirm your ${password_text}" --ok-label="Next" 2>/dev/null)
+			username="$(echo ${form} | cut -d'|' -f1)"
+			userpass="$(echo ${form} | cut -d'|' -f2)"
+			verifuserpass="$(echo ${form} | cut -d'|' -f3)"
+			if [ -z "${form}" ]; then exit 1; fi
+			if [ -z "${username}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define your username.\n" 2>/dev/null; continue; fi
+			if [ -z "${userpass}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define a password.\n" 2>/dev/null; continue; fi
+			if echo "${username}" | grep -q '^[a-z][-a-z0-9]*\$'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Username contains unsupported characters.\n" 2>/dev/null; continue; fi
+			if echo "${userpass}" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Password contains unsupported characters.\n" 2>/dev/null; continue; fi
+			if [ "${userpass}" != "${verifuserpass}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Passwords do not match, try again.\n" 2>/dev/null; continue; fi
+			break
+		done
+		autologin=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to enable autologin ?" --column "Enable autologin" "No" "Yes" --ok-label="Next" 2>/dev/null)
+		if [ -z "${autologin}" ]; then exit 1; fi
 	else
-	echo -e "${encrypted_text}"
-	until false; do
-		read -p "Please enter your username: " username
-		if [ -z "${username}" ]; then echo -e "Please define your username.\n\n"; continue; fi
-		if echo "${username}" | grep -q '^[a-z][-a-z0-9]*\$'; then echo -e "Username contains unsupported characters.\n\n"; continue; fi
-		break
-	done
-	until false; do
-		read -s -p "Input your ${password_text}: " userpass
-		echo ""
-		read -s -p "Verify your ${password_text}: " verifuserpass
-		echo ""
-		if [ -z "${userpass}" ]; then echo -e "Please define a password.\n\n"; continue; fi
-		if echo "${userpass}" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
-		if [ "${userpass}" != "${verifuserpass}" ]; then echo -e "Passwords do not match, try again.\n\n"; continue; fi
-		break
-	done
+		echo -e "${encrypted_text}"
+		until false; do
+			read -p "Please enter your username: " username
+			if [ -z "${username}" ]; then echo -e "Please define your username.\n\n"; continue; fi
+			if echo "${username}" | grep -q '^[a-z][-a-z0-9]*\$'; then echo -e "Username contains unsupported characters.\n\n"; continue; fi
+			break
+		done
+		until false; do
+			read -s -p "Input your ${password_text}: " userpass
+			echo ""
+			read -s -p "Verify your ${password_text}: " verifuserpass
+			echo ""
+			if [ -z "${userpass}" ]; then echo -e "Please define a password.\n\n"; continue; fi
+			if echo "${userpass}" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; continue; fi
+			if [ "${userpass}" != "${verifuserpass}" ]; then echo -e "Passwords do not match, try again.\n\n"; continue; fi
+			break
+		done
 	fi
 	hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"
 fi
@@ -8866,7 +9784,7 @@ else
 		if [ "$(echo -n ${destination} | tail -c 4)" != ".img" ]; then destination="${destination}.img"; fi
 		if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's@[^/]*$@@')" ]); then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path." 2>/dev/null; install_parameters; return; fi
 		if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Linuxloops disk images cannot be booted from an encrypted partition." 2>/dev/null; install_parameters; return; fi
-		if [[ ! ${destination} == *"/"* ]]; then path="${PWD}/"; else path="$(realpath "${destination}")"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
+		if [[ ! ${destination} == *"/"* ]]; then path="${PWD}/"; else path="$(realpath ${destination})"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
 		fullpath="${path}$(basename ${destination})"
 		if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..." 2>/dev/null; install_parameters; return; fi
 		if ([ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..." 2>/dev/null; install_parameters; return; fi
@@ -9035,6 +9953,9 @@ else
 					exit 1
 				fi
 				swap_size="${1}"
+			;;
+			-a | --autologin)
+				autologin="Yes"
 			;;
 			-b | --btrfs)
 				fstype="btrfs"

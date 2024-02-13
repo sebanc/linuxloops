@@ -32,7 +32,8 @@ jobs:
             if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Surface patches installation possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
             if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
             if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg5='-e'; fi
-            if [ -z "$matrix" ]; then matrix="\"$distro#$env#$arg1#$arg2#$arg3#$arg4#$arg5\""; else matrix="$matrix,\"$distro#$env#$arg1#$arg2#$arg3#$arg4#$arg5\""; fi
+            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg6='-a'; fi
+            if [ -z "$matrix" ]; then matrix="\"$distro#$env#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distro#$env#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
           done
           echo "matrix=[$matrix]" >> $GITHUB_OUTPUT
   build-distros:
@@ -55,4 +56,4 @@ jobs:
       - name: Checkout linuxloops source code
         uses: actions/checkout@v4
       - name: Launch distro build
-        run: sudo bash linuxloops -dst test.img -t -s 40 -distro $(echo ${{ matrix.distro }} | cut -d'#' -f1) -env $(echo ${{ matrix.distro }} | cut -d'#' -f2) $(echo ${{ matrix.distro }} | cut -d'#' -f3) $(echo ${{ matrix.distro }} | cut -d'#' -f4) $(echo ${{ matrix.distro }} | cut -d'#' -f5) $(echo ${{ matrix.distro }} | cut -d'#' -f6) $(echo ${{ matrix.distro }} | cut -d'#' -f7)
+        run: sudo bash linuxloops -dst test.img -t -s 40 -distro $(echo ${{ matrix.distro }} | cut -d'#' -f1) -env $(echo ${{ matrix.distro }} | cut -d'#' -f2) $(echo ${{ matrix.distro }} | cut -d'#' -f3) $(echo ${{ matrix.distro }} | cut -d'#' -f4) $(echo ${{ matrix.distro }} | cut -d'#' -f5) $(echo ${{ matrix.distro }} | cut -d'#' -f6) $(echo ${{ matrix.distro }} | cut -d'#' -f7) $(echo ${{ matrix.distro }} | cut -d'#' -f8)
