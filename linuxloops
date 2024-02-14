@@ -2748,7 +2748,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
@@ -3125,13 +3125,13 @@ dnf install -y ${desktop_base} lightdm slick-greeter @mate-desktop-environment d
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment plasma-workspace-wayland
 "
@@ -3921,7 +3921,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-icons plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade grub2-theme-mint"
@@ -4794,25 +4794,25 @@ dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop gnome-shell-ext
 "
 	;;
 	'Nobara')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
 "
 	;;
 	'Nobara/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm @kde-desktop-environment plasma-workspace-wayland kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment plasma-workspace-wayland
 "
@@ -5192,7 +5192,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic parrot-themes parrot-wallpapers"
@@ -5469,7 +5469,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 case "${desktop}" in
 	'Full')
-	default_session="gnome-wayland"
+	default_session="pop-wayland"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install pop-desktop
 "
