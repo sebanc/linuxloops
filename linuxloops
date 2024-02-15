@@ -80,13 +80,13 @@ case "${1}" in
 	bootloader_name="bootx64.efi"
 	;;
 	'Debian')
-	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
 	;;
 	'Devuan')
-	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc devuan daedalus default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
@@ -98,13 +98,13 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'Fedora')
-	available_desktops=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc fedora 39 default"
 	bootloader_id="fedora"
 	bootloader_name="shimx64.efi"
 	;;
 	'Gentoo')
-	available_desktops=( "None" "Cinnamon/Openrc" "Cinnamon/Systemd" "Enlightenment/Openrc" "Enlightenment/Systemd" "Gnome/Openrc" "Gnome/Systemd" "Lxqt/Openrc" "Lxqt/Systemd" "Mate/Openrc" "Mate/Systemd" "Plasma/Openrc" "Plasma/Systemd" "Xfce/Openrc" "Xfce/Systemd" )
+	available_desktops=( "None" "Cinnamon/Openrc" "Cinnamon/Systemd" "Enlightenment/Openrc" "Enlightenment/Systemd" "Gnome/Openrc" "Gnome/Systemd" "i3/Openrc" "i3/Systemd" "Lxqt/Openrc" "Lxqt/Systemd" "Mate/Openrc" "Mate/Systemd" "Plasma/Openrc" "Plasma/Systemd" "Xfce/Openrc" "Xfce/Systemd" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="gentoo"
 	bootloader_name="shimx64.efi"
@@ -132,13 +132,13 @@ case "${1}" in
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
 	;;
 	'Manjaro')
-	available_desktops=( "None" "Budgie" "Cinnamon" "Deepin" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Cinnamon" "Deepin" "Deepin/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="manjaro"
 	bootloader_name="shimx64.efi"
 	;;
 	'MX')
-	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
@@ -152,7 +152,7 @@ case "${1}" in
 	grub_theme="/boot/grub/themes/breeze/theme.txt"
 	;;
 	'NixOS')
-	available_desktops=( "None" "Budgie/Full" "Cinnamon/Full" "Deepin/Full" "Gnome/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
+	available_desktops=( "None" "Budgie/Full" "Cinnamon/Full" "Deepin/Full" "Gnome/Full" "i3/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="nixos"
 	bootloader_name="grubx64.efi"
@@ -164,14 +164,13 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'OpenSUSE')
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc opensuse tumbleweed default"
 	bootloader_id="opensuse"
 	bootloader_name="shim.efi"
 	;;
 	'Parrot')
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
@@ -183,7 +182,7 @@ case "${1}" in
 	bootloader_name="shimx64.efi"
 	;;
 	'Proxmox')
-	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
@@ -214,19 +213,19 @@ case "${1}" in
 	bootloader_name="bootx64.efi"
 	;;
 	'Ubuntu')
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc ubuntu mantic default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	;;
 	'Ubuntu-LTS')
-	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Xfce" "Xfce/Full" )
+	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	;;
 	'Void')
-	available_desktops=( "None" "Gnome" "Gnome/Full" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
+	available_desktops=( "None" "Budgie" "Cinnamon" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
 	bootstrap="lxc voidlinux current default"
 	bootloader_id="voidlinux"
 	bootloader_name="grubx64.efi"
@@ -1311,7 +1310,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo tilix network-manager-applet arc-gtk-theme gnome-control-center
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center
 systemctl enable lightdm.service
 "
 	;;
@@ -1332,7 +1331,7 @@ systemctl enable lightdm.service
 	'Deepin/Full')
 	default_session="dde-x11"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal deepin-extra
+pacman -S --noconfirm --overwrite \"*\" ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal deepin-extra
 systemctl enable lightdm.service
 "
 	;;
@@ -1361,7 +1360,7 @@ systemctl enable gdm.service
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3status dmenu rxvt-unicode
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman
 systemctl enable lightdm.service
 "
 	;;
@@ -1612,7 +1611,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo tilix network-manager-applet arc-gtk-theme gnome-control-center
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -1648,7 +1647,7 @@ ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3status dmenu rxvt-unicode
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -2506,7 +2505,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo tilix paper-icon-theme
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal paper-icon-theme
 "
 	;;
 	'Cinnamon')
@@ -2542,6 +2541,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-sess
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -2757,7 +2762,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nautilus tilix paper-icon-theme
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nautilus gnome-terminal paper-icon-theme
 "
 	;;
 	'Cinnamon')
@@ -2793,6 +2798,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-sess
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -3076,6 +3087,18 @@ specific_packages="dnfdragora dnf-plugin-system-upgrade f39-backgrounds plymouth
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
+	'Budgie')
+	default_session="budgie-desktop"
+	install_desktop="
+dnf install -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-defaults gnome-terminal nemo blueman dnfdragora-updater
+"
+	;;
+	'Budgie/Full')
+	default_session="budgie-desktop"
+	install_desktop="
+dnf install -y ${desktop_base} lightdm slick-greeter @budgie-desktop @budgie-desktop-apps dnfdragora-updater
+"
+	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
@@ -3098,6 +3121,12 @@ dnf install -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-bac
 	default_session="gnome-wayland"
 	install_desktop="
 dnf install -y ${desktop_base} gdm @gnome-desktop
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+dnf install -y ${desktop_base} lightdm slick-greeter @i3 volumeicon network-manager-applet blueman dnfdragora-updater
 "
 	;;
 	'Lxde')
@@ -3330,6 +3359,20 @@ emerge ${desktop_base} gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal 
 systemctl enable gdm.service
 "
 	;;
+	'i3/Openrc')
+	default_session="i3"
+	install_desktop="
+emerge ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm x11-wm/i3 x11-misc/i3lock x11-misc/i3status x11-misc/dmenu x11-terms/rxvt-unicode media-sound/volumeicon gnome-extra/nm-applet net-wireless/blueman
+sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
+"
+	;;
+	'i3/Systemd')
+	default_session="i3"
+	install_desktop="
+emerge ${desktop_base} x11-misc/lightdm x11-wm/i3 x11-misc/i3lock x11-misc/i3status x11-misc/dmenu x11-terms/rxvt-unicode media-sound/volumeicon gnome-extra/nm-applet net-wireless/blueman
+systemctl enable lightdm.service
+"
+	;;
 	'Lxqt/Openrc')
 	default_session="lxqt"
 	install_desktop="
@@ -3513,7 +3556,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin
 "
 	;;
 	'Cinnamon')
@@ -3568,7 +3611,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 kali-deskt
 	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon network-manager-gnome blueman
 "
 	;;
 	'i3/Full')
@@ -3577,7 +3620,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -4027,7 +4070,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop manjaro-budgie-settings network-manager-applet tilix nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop manjaro-budgie-settings network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -4041,7 +4084,14 @@ systemctl enable lightdm.service
 	'Deepin')
 	default_session="dde-x11"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-manjaro network-manager-applet deepin-terminal deepin-wallpapers pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-manjaro deepin-terminal deepin-wallpapers pamac-gtk
+systemctl enable lightdm.service
+"
+	;;
+	'Deepin/Full')
+	default_session="dde-x11"
+	install_desktop="
+pacman -S --noconfirm --overwrite \"*\" ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-manjaro deepin-terminal deepin-wallpapers pamac-gtk deepin-extra
 systemctl enable lightdm.service
 "
 	;;
@@ -4067,7 +4117,21 @@ pacman -S --noconfirm ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settin
 systemctl enable gdm.service
 "
 	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk
+systemctl enable lightdm.service
+"
+	;;
 	'Lxde')
+	default_session="LXDE"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox manjaro-lxde-config manjaro-lxde-desktop-settings manjaro-lxde-logout-banner manjaro-lxde-xfce4-notifyd manjaro-lxde-xfce4-volumed-pulse arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk
+systemctl enable lightdm.service
+"
+	;;
+	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde manjaro-lxde-config manjaro-lxde-desktop-settings manjaro-lxde-logout-banner manjaro-lxde-xfce4-notifyd manjaro-lxde-xfce4-volumed-pulse arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk
@@ -4075,6 +4139,13 @@ systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
+	default_session="lxqt"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox manjaro-lxqt-config manjaro-lxqt-desktop-settings manjaro-openbox-adapta-maia papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk
+systemctl enable lightdm.service
+"
+	;;
+	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt manjaro-lxqt-config manjaro-lxqt-desktop-settings manjaro-openbox-adapta-maia papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk
@@ -4264,7 +4335,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus tilix
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nautilus gnome-terminal
 "
 	;;
 	'Cinnamon')
@@ -4300,6 +4371,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-sess
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -4646,6 +4723,13 @@ services.xserver.displayManager.gdm.enable = true;${autologin}
 services.xserver.desktopManager.gnome.enable = true;
 services.xserver.layout = \"${keymap}\";"
 	;;
+	'i3/Full')
+	nixos_desktop="
+services.xserver.enable = true;
+services.xserver.layout = \"${keymap}\";
+services.xserver.windowManager.i3.enable = true;
+services.xserver.windowManager.i3.extraPackages = with pkgs; [ dmenu i3status i3lock ];"
+	;;
 	'Lxqt/Full')
 	nixos_desktop="
 programs.nm-applet.enable = true;
@@ -4818,13 +4902,13 @@ dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop-envi
 "
 	;;
 	'SteamDeck')
-	default_session="gamescope-session"
+	default_session="gamescope-session-steam"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
 "
 	;;
 	'SteamDeck/Full')
-	default_session="gamescope-session"
+	default_session="gamescope-session-steam"
 	install_desktop="
 dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS @kde-desktop-environment plasma-workspace-wayland gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
 "
@@ -4986,6 +5070,12 @@ zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-keyring-pam polkit-gnome gnome-terminal nautilus NetworkManager-applet
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE i3 dmenu i3lock i3status rxvt-unicode volumeicon NetworkManager-applet blueman
 "
 	;;
 	'Lxde')
@@ -5249,27 +5339,27 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 parrot-desktop-gnome gnome-keyring libpam-gnome-keyring nim anonsurf-gtk metasploit-framework nmap
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-keyring libpam-gnome-keyring nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 pavucontrol pasystray network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon network-manager-gnome blueman
 "
 	;;
 	'i3/Full')
 	default_session="i3"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 pavucontrol pasystray network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Lxde')
@@ -5569,7 +5659,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo tilix paper-icon-theme
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal paper-icon-theme
 "
 	;;
 	'Cinnamon')
@@ -5605,6 +5695,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-sess
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome-desktop
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -6785,7 +6881,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo tilix plank gjs
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs
 "
 	;;
 	'Budgie/Full')
@@ -6831,6 +6927,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-sess
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -7087,7 +7189,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo tilix plank gjs
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs
 "
 	;;
 	'Budgie/Full')
@@ -7133,6 +7235,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-sess
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -7356,10 +7464,24 @@ specific_packages="font-adobe-source-code-pro plymouth"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="/etc/sv/avahi-daemon /etc/sv/cupsd /etc/sv/cups-browsed"
 case "${desktop}" in
+	'Budgie')
+	default_session="budgie-desktop"
+	install_desktop="
+xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter budgie-desktop nautilus gnome-terminal network-manager-applet blueman
+ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
+"
+	;;
+	'Cinnamon')
+	default_session="cinnamon"
+	install_desktop="
+xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter cinnamon nemo gnome-terminal network-manager-applet blueman
+ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
+"
+	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-xbps-install -y ${desktop_base} gdm gnome-core gnome-terminal
+xbps-install -y ${desktop_base} gdm gnome-core nautilus gnome-terminal
 ln -s /etc/sv/gdm  /etc/runit/runsvdir/default/
 "
 	;;
@@ -7368,6 +7490,13 @@ ln -s /etc/sv/gdm  /etc/runit/runsvdir/default/
 	install_desktop="
 xbps-install -y ${desktop_base} gdm gnome
 ln -s /etc/sv/gdm /etc/runit/runsvdir/default/
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter i3 i3status i3lock dmenu rxvt-unicode volumeicon network-manager-applet blueman
+ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde')
@@ -8984,11 +9113,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_live <<INSTALLLIVE
 #!/bin/bash
 set -e
 echo "live ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
-cat >/etc/lightdm/lightdm.conf <<'LIVEAUTOLOGIN'
-[Seat:*]
-autologin-user=live
-autologin-session=cinnamon
-LIVEAUTOLOGIN
 cat >/usr/bin/linuxloops <<'LIVELAUNCHER'
 #!/bin/bash
 set -e

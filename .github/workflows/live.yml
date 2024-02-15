@@ -19,7 +19,7 @@ jobs:
       - name: Set current date
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk
-        run: sudo bash linuxloops -distro Debian -env Cinnamon -dst linuxloops_live_${{ env.current_date }}.img -u -b -c "firefox-esr gedit gparted evince"
+        run: sudo bash linuxloops -distro Debian -env Cinnamon -dst linuxloops_live_${{ env.current_date }}.img -u -a -b -c "firefox-esr gedit gparted evince"
       - name: Compress Linuxloops Live Disk
         run: 7z a linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
       - name: Generate release details
