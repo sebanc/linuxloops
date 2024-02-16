@@ -2546,7 +2546,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -2803,7 +2803,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -3611,7 +3611,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 kali-deskt
 	hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pulseaudio pulseaudio-module-bluetooth system-config-printer xserver-xorg"
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'i3/Full')
@@ -3620,7 +3620,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -4376,7 +4376,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -5352,14 +5352,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnom
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'i3/Full')
 	default_session="i3"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon-alsa network-manager-gnome blueman nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Lxde')
@@ -5700,7 +5700,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 task-gnome
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -6932,7 +6932,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnom
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'Lxde')
@@ -7240,7 +7240,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnom
 	'i3')
 	default_session="i3"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon network-manager-gnome blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome blueman
 "
 	;;
 	'Lxde')
