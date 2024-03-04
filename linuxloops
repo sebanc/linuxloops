@@ -3302,7 +3302,9 @@ emerge --sync --quiet
 rm -rf /etc/portage/gnupg
 getuto
 echo -e "net-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
-emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit app-crypt/gcr dev-util/wayland-scanner dev-util/vulkan-headers x11-misc/xdg-user-dirs
+#Fix missing dependencies
+emerge app-crypt/gcr dev-util/wayland-scanner
+emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit dev-util/vulkan-headers x11-misc/xdg-user-dirs
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	rc-update add bluetooth default
 	rc-update add NetworkManager default
@@ -4578,17 +4580,20 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-gen
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
+basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+desktop_base="${hardware_support} ${basic_packages}"
 case "${desktop}" in
 	'Essentials')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install neon-essentials-desktop plasma-workspace-wayland libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm neon-essentials-desktop plasma-workspace-wayland libpam-kwallet5
 "
 	;;
 	'Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install neon-desktop plasma-workspace-wayland libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm neon-desktop plasma-workspace-wayland libpam-kwallet5
 "
 	;;
 esac
@@ -4606,6 +4611,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 set -e
 useradd -s /bin/bash -m '${username}'
 usermod -aG sudo '${username}'
+sudo -u '${username}' xdg-user-dirs-update
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
 
@@ -7021,7 +7027,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
-bash
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal
 "
 	;;
