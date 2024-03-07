@@ -1407,16 +1407,16 @@ systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma plasma-wayland-session dolphin konsole packagekit-qt5
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6
 systemctl enable sddm.service
 "
 	;;
@@ -1694,16 +1694,16 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt5 falkon
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard sddm-runit sddm-theme-artix plasma plasma-wayland-session dolphin konsole falkon
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
@@ -4165,16 +4165,16 @@ systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma plasma-wayland-session manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt5-virtualkeyboard plasma plasma-wayland-session kde-applications manjaro-kde-settings dolphin discover packagekit-qt5 konsole pamac-tray-icon-plasma
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma
 systemctl enable sddm.service
 "
 	;;
@@ -5030,16 +5030,16 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 "
 	;;
 	'Deepin')
-	default_session="dde-x11"
+	default_session="deepin"
 	install_desktop="
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
+zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman
 "
 	;;
 	'Deepin/Full')
-	default_session="dde-x11"
+	default_session="deepin"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet
+zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman
 zypper --non-interactive remove sddm
 "
 	;;
