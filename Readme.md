@@ -42,6 +42,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |AlmaLinux       |9               |✓                      |                                     |                                 |[notes][AlmaLinux-notes]|
 |Arch            |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]|
 |Artix           |Current         |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]|
+|BlendOS         |v4              |✓ (shim-signed AUR)    |✓                                    |                                 |              |
 |BlissOS         |14 / 15 / 16    |                       |                                     |                                 |              |
 |Brunch          |Latest          |✓                      |                                     |✓ (partially included)           |[notes][Brunch-notes]|
 |ChromeOS-Flex   |Latest          |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
