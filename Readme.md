@@ -42,7 +42,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |AlmaLinux       |9               |✓                      |                                     |                                 |[notes][AlmaLinux-notes]|
 |Arch            |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]|
 |Artix           |Current         |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]|
-|BlendOS         |v4              |✓ (shim-signed AUR)    |✓                                    |                                 |              |
+|BlendOS         |v4              |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][[BlendOS-notes]|
 |BlissOS         |14 / 15 / 16    |                       |                                     |                                 |              |
 |Brunch          |Latest          |✓                      |                                     |✓ (partially included)           |[notes][Brunch-notes]|
 |ChromeOS-Flex   |Latest          |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
@@ -166,6 +166,7 @@ Currently, support for LinuxLoops is provided in the off-topic channel of the br
 [AlmaLinux-notes]: ./Readme/Distro-notes.md#AlmaLinux
 [Arch-notes]: ./Readme/Distro-notes.md#Arch
 [Artix-notes]: ./Readme/Distro-notes.md#Artix
+[BlendOS-notes]: ./Readme/Distro-notes.md#BlendOS
 [Brunch-notes]: ./Readme/Distro-notes.md#Brunch
 [ChromeOS-Flex-notes]: ./Readme/Distro-notes.md#ChromeOS-Flex
 [Fedora-notes]: ./Readme/Distro-notes.md#Fedora
