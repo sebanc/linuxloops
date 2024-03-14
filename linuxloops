@@ -1990,6 +1990,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCR
 #!/bin/bash
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
+echo "Downloading BlissOS iso"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${desktop}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | head -1)" -o /root/bliss.iso || { echo -e "BlissOS image download failed."; exit 1; }
 mount /root/bliss.iso /isomount/iso
 install_folder="\$(cat /isomount/iso/efi/boot/android.cfg | grep 'title="' | cut -d' ' -f3)"
@@ -2137,16 +2138,20 @@ mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then
+	echo "Downloading Brunch unstable"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 else
+	echo "Downloading Brunch stable"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch image download failed."; exit 1; }
 fi
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch
 rm /isomount/data/brunch.tar.gz
 if [ "\${board}" == "reven" ]; then
+	echo "Downloading ChromeOS-Flex recovery image"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 else
+	echo "Downloading ChromeOS recovery image"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf | grep .bin.zip | cut -d'=' -f2 | grep "\$board" | sort -n | tail -1) -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 fi
 bsdtar -xvf /isomount/data/recovery.zip -C /root
@@ -2226,6 +2231,7 @@ set -e
 mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
+echo "Downloading ChromeOS-Flex recovery image"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | grep .bin.zip | tail -1 | cut -d'=' -f2)" -o /isomount/data/recovery.zip || { echo -e "ChromeOS recovery image download failed."; exit 1; }
 bsdtar -xvf /isomount/data/recovery.zip -C /root || { echo -e "Failed to extract the recovery image."; return 1; }
 rm -f /isomount/data/recovery.zip
@@ -3268,8 +3274,10 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
+	echo "Downloading Gentoo stage 3"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 else
+	echo "Downloading Gentoo stage 3"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd-mergedusr.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 fi
 tar xf /gentoo-stage3.tar.xz -C /mnt
@@ -3301,7 +3309,7 @@ rm /linuxloops/install_secureboot
 emerge --sync --quiet
 rm -rf /etc/portage/gnupg
 getuto
-echo -e "net-print/cups -zeroconf" > /etc/portage/package.use/dep_cycle_fix
+echo -e "net-print/cups -zeroconf\nmedia-libs/tiff -webp" > /etc/portage/package.use/dep_cycle_fix
 #Fix missing dependencies
 emerge app-crypt/gcr dev-util/wayland-scanner
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase dev-lang/rust-bin sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio app-portage/gentoolkit dev-util/vulkan-headers x11-misc/xdg-user-dirs
@@ -5261,6 +5269,7 @@ pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certi
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+echo "Downloading Parrot rootfs"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://deb.parrot.sh/parrot/iso/5.3/Parrot-rootfs-5.3_amd64.tar.xz -o /root/parrot-rootfs.tar.xz || { echo -e "Parrot rootfs image download failed."; exit 1; }
 tar xf /root/parrot-rootfs.tar.xz -C /mnt --strip 1
 rm /root/parrot-rootfs.tar.xz
@@ -6795,6 +6804,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script <<INSTALL_SCRIPT
 #!/bin/bash
 set -e
+echo "Downloading Tails iso"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://tails.darklab.sh/pub/tails/stable/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)"/"\$(curl -L https://tails.darklab.sh/pub/tails/stable/ | grep '<a href="tails-amd64-' | head -1 | cut -d'>' -f2 | cut -d '/' -f1)".img -o /tails.img || { echo -e "Tails image download failed."; exit 1; }
 dd if=/tails.img of="${destination_device}" bs=1M status=progress
 rm /tails.img
@@ -9370,7 +9380,7 @@ exit 1
 download_bootstrap()
 {
 if [ "${1}" == "iso" ]; then
-	echo "Trying to download ${distro} iso image from ${2}..."
+	echo "Trying to download ${distro} iso image from ${2}"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso || { losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed."; }
 	if [ ! -z "${4}" ]; then
 		mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
