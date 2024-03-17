@@ -5009,7 +5009,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze breeze-gtk dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme papirus-icon-theme"
 specific_packages="adobe-sourcecodepro-fonts cantarell-fonts plymouth-branding-openSUSE plymouth-dracut wallpaper-branding-openSUSE"
 desktop_base="patterns-base-x11 ${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
@@ -5090,13 +5090,13 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 "
 	;;
 	'Lxde')
-	default_session="LXDE"
+	default_session="lxde"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet blueman
 "
 	;;
 	'Lxde/Full')
-	default_session="LXDE"
+	default_session="lxde"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet blueman
@@ -5131,14 +5131,14 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	'Plasma')
 	default_session="plasmawayland"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns-kde-kde plasma5-session-wayland konsole NetworkManager-applet webenginepart bluedevil5 plasma-nm5 kwalletmanager5 pam_kwallet dolphin discover discover-backend-packagekit plasma5-workspace-wallpapers plasma5-pa plasma5-addons breeze5-wallpapers
+zypper --non-interactive install ${desktop_base} sddm patterns-kde-kde konsole NetworkManager-applet bluedevil6 plasma6-nm plasma6-pa kwalletmanager pam_kwallet dolphin discover discover-backend-packagekit kdeplasma6-addons plasma6-branding-openSUSE breeze6 breeze6-wallpapers plasma6-workspace-wallpapers
 "
 	;;
 	'Plasma/Full')
 	default_session="plasmawayland"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns-kde-kde plasma5-session-wayland konsole NetworkManager-applet webenginepart bluedevil5 plasma-nm5 kwalletmanager5 pam_kwallet dolphin discover discover-backend-packagekit plasma5-workspace-wallpapers plasma5-pa plasma5-addons breeze5-wallpapers
+zypper --non-interactive install ${desktop_base} sddm patterns-kde-kde konsole NetworkManager-applet bluedevil6 plasma6-nm plasma6-pa kwalletmanager pam_kwallet dolphin discover discover-backend-packagekit kdeplasma6-addons plasma6-branding-openSUSE breeze6 breeze6-wallpapers plasma6-workspace-wallpapers
 "
 	;;
 	'Xfce')
@@ -9382,7 +9382,7 @@ exit 1
 download_bootstrap()
 {
 if [ "${1}" == "iso" ]; then
-	echo "Trying to download ${distro} iso image from ${2}"
+	echo "Downloading ${distro} iso image from ${2}"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso || { losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed."; }
 	if [ ! -z "${4}" ]; then
 		mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
@@ -9415,7 +9415,7 @@ if [ "${1}" == "iso" ]; then
 	return 0
 elif [ "${1}" == "lxc" ]; then
 	if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ -z $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) ] || ([ ! -z $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) ] && [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]); then
-		echo "Trying to download ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz"
+		echo "Downloading ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz"
 		rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
 		curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz failed."; }
 	fi
