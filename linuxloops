@@ -1381,14 +1381,14 @@ systemctl enable lightdm.service
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman breeze-icons oxygen-icons
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman breeze-icons oxygen-icons
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman
 systemctl enable lightdm.service
 "
 	;;
@@ -1874,7 +1874,7 @@ echo \"track: 'gnome'\" >> /system.yaml
 		install_desktop="
 echo \"track: 'lxqt'\" >> /system.yaml
 "
-		custom_packages="network-manager-applet blueman breeze-icons oxygen-icons xdg-desktop-portal-lxqt ${custom_packages}"
+		custom_packages="network-manager-applet blueman xdg-desktop-portal-lxqt ${custom_packages}"
 		;;
 		'Mate')
 		default_session="mate"
@@ -7833,7 +7833,7 @@ if [ "${encryption}" == "Yes" ]; then
 		btrfs subvolume create /mnt/@home
 		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then btrfs subvolume create /mnt/@swap; fi
 		umount /mnt
-		mount -o subvol=@,compress=zstd /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
+		mount -o subvol=@,compress=zstd,autodefrag /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
 	else
 		mkfs.ext4 -E nodiscard -F -L "ROOT" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")"
 		if tune2fs -l /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")"; fi
@@ -7849,7 +7849,7 @@ else
 		btrfs subvolume create /mnt/@home
 		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then btrfs subvolume create /mnt/@swap; fi
 		umount /mnt
-		mount -o subvol=@,compress=zstd "${root_partition}" /mnt
+		mount -o subvol=@,compress=zstd,autodefrag "${root_partition}" /mnt
 	else
 		mkfs.ext4 -E nodiscard -F -L "ROOT" "${root_partition}"
 		if tune2fs -l "${root_partition}" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "${root_partition}"; fi
@@ -7861,14 +7861,14 @@ fi
 if [ "${fstype}" == "btrfs" ]; then
 	if [ "${encryption}" == "Yes" ]; then
 		mkdir /mnt/home
-		mount -o subvol=@home,compress=zstd /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt/home
+		mount -o subvol=@home,compress=zstd,autodefrag /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt/home
 		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 			mkdir -p /mnt/var/swap
 			mount -o subvol=@swap /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt/var/swap
 		fi
 	else
 		mkdir /mnt/home
-		mount -o subvol=@home,compress=zstd "${root_partition}" /mnt/home
+		mount -o subvol=@home,compress=zstd,autodefrag "${root_partition}" /mnt/home
 		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 			mkdir -p /mnt/var/swap
 			mount -o subvol=@swap "${root_partition}" /mnt/var/swap
@@ -8066,7 +8066,11 @@ curl https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/ke
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 yes | DEBIAN_FRONTEND=noninteractive apt purge ${surface_remove}
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev v4l2loopback-dkms
+#yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev v4l2loopback-dkms
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.1.tar.gz | tar xz -C /usr/src
+dkms add -m v4l2loopback -v 0.13.1
+ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 git clone https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
 meson build -Dpipelines=uvcvideo,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true
@@ -8102,9 +8106,9 @@ rm -rf /boot/.vmlinuz-* /boot/vmlinuz-* /boot/initramfs-* /boot/symvers-* /boot/
 dnf config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
 dnf update -y
 dnf install -y --allowerasing kernel-surface kernel-surface-devel iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.12.5.tar.gz | tar xvz -C /usr/src
-dkms add -m v4l2loopback -v 0.12.5
-ls /usr/lib/modules/*/vmlinuz | sed 's@/usr/lib/modules/@@g' | sed 's@/vmlinuz@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
+curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.1.tar.gz | tar xz -C /usr/src
+dkms add -m v4l2loopback -v 0.13.1
+ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 usermod -aG video '${username}'
 SURFACEDNF
 elif [ "${distro}" == "Nobara" ]; then
@@ -8963,6 +8967,7 @@ GRUB_THEME=${grub_theme}
 GRUB_DISABLE_OS_PROBER=true
 GRUB_ENABLE_BLSCFG=false
 GRUBDEFAULTS
+if [ "${live}" == "Yes" ]; then echo -e "GRUB_DISABLE_SUBMENU=true\nGRUB_DISABLE_RECOVERY=true" >> /etc/default/grub; fi
 if [ -d "/etc/default/grub.d" ]; then for cfgfile in /etc/default/grub.d/*.cfg; do echo '' > \\\${cfgfile}; done; fi
 for i in \\\$(find /etc/grub.d | grep debian_theme); do chmod 0644 \\\$i; done
 for i in \\\$(find /etc/grub.d | grep fallback_counting); do chmod 0644 \\\$i; done
@@ -9157,6 +9162,67 @@ lock-delay=0
 lock-enabled=false
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
+cat >/etc/systemd/system/live-configuration.service <<'LIVE_CONFIGURATION_SERVICE'
+[Unit]
+Description=Apply linuxloops live configuration
+DefaultDependencies=no
+After=systemd-remount-fs.service
+Before=systemd-modules-load.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c "/usr/bin/live-configuration"
+
+[Install]
+WantedBy=local-fs-pre.target
+LIVE_CONFIGURATION_SERVICE
+systemctl enable live-configuration.service
+mkdir -p /boot/linuxloops
+cat >/usr/bin/live-configuration <<'LIVE_CONFIGURATION_SCRIPT'
+#!/bin/bash
+variant=""
+if grep -qi 'variant_wifi' /proc/cmdline; then variant="wifi"; fi
+if grep -qi 'variant_nvidia' /proc/cmdline; then variant="nvidia"; fi
+
+for i in \$(ls /etc/modprobe.d/{broadcom,nvidia}*.conf) \$(ls /etc/modules-load.d/{broadcom,nvidia}*.conf); do
+	conf=\${i%.*}
+	rm -f \${conf}.disabled
+	mv \${conf}.conf \${conf}.disabled
+done
+
+if [ "\${variant}" == "wifi" ]; then
+	for i in \$(ls /etc/modprobe.d/broadcom*.disabled) \$(ls /etc/modules-load.d/broadcom*.disabled); do
+		conf=\${i%.*}
+		mv \${conf}.disabled \${conf}.conf
+	done
+	echo -e "blacklist nvidia" > /etc/modprobe.d/live-configuration.conf
+elif [ "\${variant}" == "nvidia" ]; then
+	for i in \$(ls /etc/modprobe.d/nvidia*.disabled) \$(ls /etc/modules-load.d/nvidia*.disabled); do
+		conf=\${i%.*}
+		mv \${conf}.disabled \${conf}.conf
+	done
+	echo -e "blacklist wl" > /etc/modprobe.d/live-configuration.conf
+else
+	echo -e "blacklist nvidia\nblacklist wl" > /etc/modprobe.d/live-configuration.conf
+fi
+LIVE_CONFIGURATION_SCRIPT
+chmod 0755 /usr/bin/live-configuration
+sed 's@"\\\${OS}"@"\${OS} (with additional wifi drivers)"@g' /etc/grub.d/10_linux > /etc/grub.d/10_linux_wifi
+sed -i 's@\\\${GRUB_CMDLINE_LINUX}@\${GRUB_CMDLINE_LINUX} variant_wifi@g' /etc/grub.d/10_linux_wifi
+chmod 0755 /etc/grub.d/10_linux_wifi
+sed 's@"\\\${OS}"@"\${OS} (with nvidia proprietary gpu drivers)"@g' /etc/grub.d/10_linux > /etc/grub.d/10_linux_nvidia
+sed -i 's@\\\${GRUB_CMDLINE_LINUX}@\${GRUB_CMDLINE_LINUX} module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off variant_nvidia@g' /etc/grub.d/10_linux_nvidia
+chmod 0755 /etc/grub.d/10_linux_nvidia
+mkdir -p /etc/systemd/system-shutdown
+cat >/etc/systemd/system-shutdown/nvidia.shutdown <<'NVIDIA_SHUTDOWNFIX'
+#!/bin/sh
+for MODULE in nvidia_drm nvidia_modeset nvidia_uvm nvidia; do
+	if lsmod | grep "\$MODULE" &> /dev/null; then rmmod \$MODULE; fi
+done
+NVIDIA_SHUTDOWNFIX
+chmod 0755 /etc/systemd/system-shutdown/nvidia.shutdown
+yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver broadcom-sta-dkms firmware-b43-installer breeze-gtk-theme- breeze-icon-theme- oxygen-icon-theme-
+rm -rf /lib/firmware/bnx2x /lib/firmware/dpaa2 /lib/firmware/liquidio /lib/firmware/mellanox /lib/firmware/mrvl/prestera /lib/firmware/netronome /lib/firmware/qcom /lib/firmware/qed /lib/firmware/ti-connectivity
 INSTALLLIVE
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_live
 }
@@ -9167,18 +9233,24 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/cleanup <<CLEANUP
 #!/bin/bash
 set -e
 if [ ! -z "\$(command -v apt)" ]; then
-	yes | DEBIAN_FRONTEND=noninteractive apt autoremove
 	rm -f /etc/apt/apt.conf.d/99linuxloops
+	yes | DEBIAN_FRONTEND=noninteractive apt autoremove
+	apt clean
 elif [ ! -z "\$(command -v dnf)" ]; then
 	if [ "${distro}" == "Qubes" ]; then
 		dnf --setopt=reposdir=/etc/yum.repos.d/ autoremove -y
+		dnf --setopt=reposdir=/etc/yum.repos.d/ clean all
 	else
 		dnf autoremove -y
+		dnf clean all
 	fi
 elif [ ! -z "\$(command -v emerge)" ]; then
 	emerge --depclean
+	eclean distfiles
+	eclean packages
 elif [ ! -z "\$(command -v zypper)" ]; then
 	sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
+	zypper clean
 fi
 rm -f /usr/share/xsessions/lightdm-xsession.desktop /usr/share/xsessions/Xsession.desktop
 CLEANUP
@@ -9505,7 +9577,11 @@ else
 	rm -f "${fullpath}" "${fullpath}".der "${fullpath}".grub.txt
 	echo -n > "${fullpath}"
 	if [ "x$(df -T "${fullpath}" | tail -1 | cut -d' ' -f2)" == "xbtrfs" ]; then chattr +C "${fullpath}"; chattr -c "${fullpath}"; fi
-	dd if=/dev/zero of="${fullpath}" bs=1M count=0 seek=${install_sizeMB} status=none
+	if [ "${live}" == "Yes" ]; then
+		dd if=/dev/zero of="${fullpath}" bs=1M count=${install_sizeMB} status=progress
+	else
+		dd if=/dev/zero of="${fullpath}" bs=1M count=0 seek=${install_sizeMB} status=none
+	fi
 	chown ${SUDO_UID}:${SUDO_UID} "${fullpath}"
 	destination_device="$(losetup --show -fP "${fullpath}")" || exit_with_error "losetup command failed."
 	partition_path="${destination_device}"p
@@ -10124,6 +10200,7 @@ else
 				test_distro="Yes"
 			;;
 			-u | --usb-live)
+				if [ ! "${distro}" == "Debian" ]; then echo "Linuxloops live can only be created with Debian distro."; exit 1; fi
 				live="Yes"
 			;;
 			-l | --list)
