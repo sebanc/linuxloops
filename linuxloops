@@ -3311,7 +3311,6 @@ rm /linuxloops/install_secureboot
 emerge --sync --quiet
 rm -rf /etc/portage/gnupg
 getuto
-bash
 echo -e "net-print/cups -zeroconf\nmedia-libs/tiff -webp" > /etc/portage/package.use/dep_cycle_fix
 #Fix missing dependencies
 emerge app-crypt/gcr dev-util/wayland-scanner
