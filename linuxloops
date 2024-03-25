@@ -3280,7 +3280,7 @@ if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 else
 	echo "Downloading Gentoo stage 3"
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd-mergedusr.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 fi
 tar xf /gentoo-stage3.tar.xz -C /mnt
 rm /gentoo-stage3.tar.xz
@@ -3311,6 +3311,7 @@ rm /linuxloops/install_secureboot
 emerge --sync --quiet
 rm -rf /etc/portage/gnupg
 getuto
+bash
 echo -e "net-print/cups -zeroconf\nmedia-libs/tiff -webp" > /etc/portage/package.use/dep_cycle_fix
 #Fix missing dependencies
 emerge app-crypt/gcr dev-util/wayland-scanner
@@ -9608,7 +9609,7 @@ fi
 img_path=$(if [ $(findmnt -n -o TARGET -T ${fullpath}) == "/" ]; then echo "$(realpath ${fullpath})"; else echo "$(realpath ${fullpath})" | sed "s#$(findmnt -n -o TARGET -T ${fullpath})##g"; fi)
 if [ "$(df -T "${fullpath}" | tail -1 | cut -d' ' -f2)" == "btrfs" ] && [ ! -z $(command -v btrfs) ]; then img_subvol="$(btrfs subvolume show $(findmnt -n -o TARGET -T ${fullpath}) | grep Name: | sed 's@\t\| @@g' | cut -d':' -f2)"; fi
 if [ ! -z "${img_subvol}" ]; then img_path="/${img_subvol}${img_path}"; fi
-if [ -z "${wsl}" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
+if [ -z "${wsl}" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "debian" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
 if [ "${distro}" == "BlissOS" ]; then
 config="menuentry '${distro}' --class '$(echo ${distro} | tr [:upper:] [:lower:])' {${remove_tpm}
 	img_path=\"${img_path}\"

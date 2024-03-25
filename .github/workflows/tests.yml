@@ -29,7 +29,7 @@ jobs:
             env=$(sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep 'Available desktops:' | sed 's@"\|Available desktops: @@g' | sed 's@None @@g' | sed 's@ @\n@g' | sed -e 's@\t@@g' | sort -R | head -1)
             if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Install on btrfs filesystem possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg1='-b'; fi
             if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Nvidia proprietary driver installation possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg2='-n'; fi
-            if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Surface patches installation possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
+            if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Surface patches installation possible: Yes' && [ "${arg2}" == "" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
             if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
             if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg5='-e'; fi
             if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg6='-a'; fi
