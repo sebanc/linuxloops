@@ -75,7 +75,7 @@ Start the LinuxLoops grub entry from your Grub2Win menu.
 
 ## Support
 
-In case you run into issues while using LinuxLoops, support is provided currently provided in the off-topic channel of the brunch Discord:  
+Support for LinuxLoops is provided in the "LINUXLOOPS" section of the Brunch Discord server:  
 
 [![Discord][discord-shield]][discord-url]
 

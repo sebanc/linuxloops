@@ -141,7 +141,7 @@ As an example:
 
 ## Support
 
-Currently, support for LinuxLoops is provided in the off-topic channel of the brunch Discord:  
+Support for LinuxLoops is provided in the "LINUXLOOPS" section of the Brunch Discord server:  
 
 [![Discord][discord-shield]][discord-url]
 

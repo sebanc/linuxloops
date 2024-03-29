@@ -5086,7 +5086,7 @@ zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-
 	'i3')
 	default_session="i3"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE i3 dmenu i3lock i3status rxvt-unicode volumeicon NetworkManager-applet blueman
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE i3 dmenu i3lock i3status rxvt-unicode NetworkManager-applet blueman
 "
 	;;
 	'Lxde')
