@@ -1847,10 +1847,10 @@ ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
-if [ ! -z "${custom_script}" ]; then
-	cp /linuxloops/install_custom_script /system.yaml
-elif [ "${desktop}" == "None" ]; then
-	echo "track: 'blendos-base'" >> /system.yaml
+if [ "${desktop}" == "None" ]; then
+	install_desktop="
+echo \"track: 'blendos-base'\" >> /system.yaml
+"
 else
 	custom_packages="iptables accountsservice alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-xhost xorg-server gvfs udisks2 polkit zstd fwupd adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto archlinux-wallpaper flatpak plymouth-blend blend-web-store ${custom_packages}"
 	case "${desktop}" in
@@ -1909,7 +1909,6 @@ SYSTEMYAML
 ${install_desktop}
 # Add chaotic aur as a fix for outdated paru package in the BlendOS repo
 echo -e "package-repos:\n    - name: 'chaotic-aur'\n      repo-url: 'https://cdn-mirror.chaotic.cx/\\\$repo/\\\$arch'" >> /system.yaml
-#custom_packages="${custom_packages} paru"
 echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml
 if [ ! -z "${custom_packages}" ]; then for i in ${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done; fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
@@ -1921,7 +1920,7 @@ commands:
   - 'echo "HOOKS=(base udev autodetect keyboard keymap modconf block \${add_encryption}akshara filesystems fsck linuxloops)" > /etc/mkinitcpio.conf.d/linuxloops.conf'
   - 'if [ -f /proc/1/cwd/system.yaml ] && [ -d /proc/1/cwd/boot/linuxloops ]; then cp -r /proc/1/cwd/boot/linuxloops /boot/; fi'
 
-$(cat "${custom_script}" 2>/dev/null)
+$(cat /linuxloops/install_custom_script 2>/dev/null)
 SYSTEMYAML
 INSTALL_DESKTOP
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop
@@ -1972,6 +1971,11 @@ INSTALL_DMCONFIG
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
+
+if [ ! -z "${custom_script}" ]; then
+	cp "${custom_script}" "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_script
+	chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_custom_script
+fi
 }
 
 chroot_BlissOS()
