@@ -1842,9 +1842,8 @@ pacman-key --populate
 mkdir -p /boot/grub
 grub-mkconfig -o /boot/grub/grub.cfg
 echo -e '[breakfast]\nSigLevel = Never\nServer = https://pkg-repo.blendos.co' >> /etc/pacman.conf
-cp /etc/resolv.conf /tmp/resolv.conf
 yes | pacman -Syu filesystem-blend akshara
-cp /tmp/resolv.conf /etc/resolv.conf
+ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
@@ -1908,6 +1907,9 @@ repo: 'https://pkg-repo.blendos.co/'
 impl: 'https://github.com/blend-os/tracks/raw/main'
 SYSTEMYAML
 ${install_desktop}
+# Add chaotic aur as a fix for outdated paru package in the BlendOS repo
+echo -e "package-repos:\n    - name: 'chaotic-aur'\n      repo-url: 'https://cdn-mirror.chaotic.cx/\\\$repo/\\\$arch'" >> /system.yaml
+#custom_packages="${custom_packages} paru"
 echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml
 if [ ! -z "${custom_packages}" ]; then for i in ${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done; fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
@@ -1958,8 +1960,7 @@ DISABLE_KWALLET
 	;;
 	*)
 		mkdir -p /etc/lightdm/lightdm.conf.d
-		echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
-		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/archlinux/small.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
 		if [ "${autologin}" == "Yes" ]; then
 			groupadd -r autologin
 			usermod -aG autologin '${username}'
