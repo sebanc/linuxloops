@@ -29,7 +29,7 @@
 
 - Otherwise using the command line:  
 ```
-Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
+Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
 -distro, --distribution <distribution name>			(Distribution to install)
 -env, --environment <desktop environment>			(Desktop environment to install)
 -dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
@@ -38,6 +38,7 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -b, --btrfs							(Use btrfs for the root filesystem)
 -e, --encrypt							(Encrypt the root filesystem)
 -a, --autologin							(Enable user autologin)
+-H, --hostname							(Provide a specific hostname)
 -L, --locale <locale>						(specify locale to be used, by default "en_US")
 -K, --keymap <keymap>						(specify keymap to be used, by default "us")
 -T, --timezone <timezone>					(specify timezone to be used, by default "UTC")
