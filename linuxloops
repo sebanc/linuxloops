@@ -6250,6 +6250,7 @@ esac
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
+if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
 systemctl enable ${desktop_services} dbus-broker.service sddm.service
 systemctl enable --global dbus-broker.service
@@ -8096,6 +8097,7 @@ cat >>/etc/pacman.conf <<'SURFACEREPO'
 [linux-surface]
 Server = https://pkg.surfacelinux.com/arch/
 SURFACEREPO
+if [ "${distro}" == "SteamOS" ]; then echo 'SigLevel = Never' >> /etc/pacman.conf; fi
 pacman -Syu
 # deepin-anything-arch package depends on linux
 if [ "${desktop}" != "Deepin" ]; then pacman -R --noconfirm ${surface_remove}; fi
