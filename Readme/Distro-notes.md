@@ -44,7 +44,7 @@ Please raise brunch issues on the brunch github repository.
 
 ## ChromeOS-Flex
 
-The full-devmode target allows to enable developer mode by default.  
+ChromeOS-Flex disk images cannot be booted from a btrfs partition due to the absence of btrfs support in the ChromeOS-Flex kernel config.  
 
 
 ## Fedora
