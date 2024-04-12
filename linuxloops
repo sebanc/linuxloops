@@ -4692,23 +4692,25 @@ NIXOS_PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
 if [ "${autologin}" == "Yes" ]; then
-case "${desktop}" in
-	'Gnome/Full')
-	autologin="
-services.xserver.displayManager.gdm.autoLogin.enable = true;
-services.xserver.displayManager.gdm.autoLogin.user = \"${username}\";"
-	;;
-	'Plasma/Full')
-	autologin="
-services.xserver.displayManager.sddm.autoLogin.enable = true;
-services.xserver.displayManager.sddm.autoLogin.user = \"${username}\";"
-	;;
-	*)
-	autologin="
-services.xserver.displayManager.lightdm.autoLogin.enable = true;
-services.xserver.displayManager.lightdm.autoLogin.user = \"${username}\";"
-	;;
-esac
+	case "${desktop}" in
+		'Gnome/Full')
+		autologin="
+	services.xserver.displayManager.gdm.autoLogin.enable = true;
+	services.xserver.displayManager.gdm.autoLogin.user = \"${username}\";"
+		;;
+		'Plasma/Full')
+		autologin="
+	services.xserver.displayManager.sddm.autoLogin.enable = true;
+	services.xserver.displayManager.sddm.autoLogin.user = \"${username}\";"
+		;;
+		*)
+		autologin="
+	services.xserver.displayManager.lightdm.autoLogin.enable = true;
+	services.xserver.displayManager.lightdm.autoLogin.user = \"${username}\";"
+		;;
+	esac
+else
+	autologin=""
 fi
 
 case "${desktop}" in
@@ -7317,7 +7319,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-de
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable patchance
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable
 chmod 0644 /etc/grub.d/09_lowlatency
 chmod 0755 /etc/grub.d/10_linux
 "
@@ -9049,13 +9051,6 @@ REINSTALLBOOTLOADER
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 pacman -Syu --noconfirm git fakeroot
 git clone https://aur.archlinux.org/shim-signed.git /tmp/shim-signed
-# Temporary fix for shim signed aur package
-sed -i 's@15.8+ubuntu+1.57@15.7+ubuntu+1.56@g' /tmp/shim-signed/PKGBUILD
-sed -i 's@532a97f7376ac8e5d7bedb8b2d4283769251266d19a78e3e12ec44f53a1dab6a@b2d84b300e68ac2139afee3f9a609857ef80f12eed9218087ced4b31ecb7fd76@g' /tmp/shim-signed/PKGBUILD
-sed -i 's@5f942542c21c41ffa14d22b890a6f51ccbfa0b3231f8a475265f90cb6e1cb924@375de6dd3a0419ed7ecd6465f2366ff5312e58c9ee7d67959ac57f59c81a0706@g' /tmp/shim-signed/PKGBUILD
-sed -i 's@de1c60b442d7484aa210c308ca422fe0d93439b50aeba192d2bbec7ec4d92779355d6ca838bb3d221fad8c4ea343dae37c13606200daf6f8f1436b120a4e9690@43ee11ec0ed04f224fb7452b2baaca45882a719063879f423c4118b6b99e99fd3fb20fa1a7de02af7b885f4d5c5e86e9868fb41557e74c52fbf04e3988199bd6@g' /tmp/shim-signed/PKGBUILD
-sed -i 's@ed0c856460c5a2aef8d9c4214ee9f2ba0c4926c4efec8add7171c0adada68f6c87f43461d67f8ca8747e9eaa037b2b90810d8daebecbc1c3a67bea34f781ea3e@10bbca68357de43ceb94605b7738873226aad4f91d47d6f3228694f1c2b08f020eb804915c496156554ac44917934266d2121989dafadbc996441e954ae64009@g' /tmp/shim-signed/PKGBUILD
-############################################
 chown -R 'nobody':'nobody' /tmp/shim-signed
 su -s /bin/bash nobody -c "cd /tmp/shim-signed && makepkg -s"
 yes | pacman -U /tmp/shim-signed/*.pkg.tar.*
