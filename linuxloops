@@ -3303,9 +3303,9 @@ echo 'SECUREBOOT_SIGN_CERT="/etc/secureboot_key/MOK.crt"' >> /etc/portage/make.c
 echo "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 echo "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
-	echo "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 else
-	echo "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 fi
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2 --getbinpkg\"" >> /etc/portage/make.conf
@@ -3488,13 +3488,13 @@ set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
 if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
 case "${desktop}" in
-	'Gnome'|'Gnome/Full')
+	'Gnome/Openrc'|'Gnome/Systemd')
 		if [ "${autologin}" == "Yes" ]; then
 			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
 			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${username}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
 		fi
 	;;
-	'Plasma'|'Plasma/Full')
+	'Plasma/Openrc'|'Plasma/Systemd')
 		if [ "${autologin}" == "Yes" ]; then
 			mkdir -p /etc/sddm.conf.d
 			echo -e '[Autologin]\nUser=${username}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
@@ -5038,14 +5038,14 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme python3-requests blueman
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme python3-requests blueman
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman
 "
 	;;
 	'Deepin')
@@ -7980,7 +7980,7 @@ if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_settings <<APPLYSETTINGS
 #!/bin/bash
 set -e
-if [ ! -f /etc/locale.gen ]; then echo "${locale}.UTF-8 UTF-8" > /etc/locale.gen; else sed -i 's@# ${locale}.UTF-8 UTF-8@${locale}.UTF-8 UTF-8@g' /etc/locale.gen; fi
+if [ ! -f /etc/locale.gen ]; then echo "${locale}.UTF-8 UTF-8" > /etc/locale.gen; else sed -i 's@#${locale}.UTF-8 UTF-8@${locale}.UTF-8 UTF-8@g' /etc/locale.gen; fi
 localedef -i ${locale} -f UTF-8 ${locale}.UTF-8
 echo "LANG=${locale}.UTF-8" > /etc/locale.conf
 echo "LANG=${locale}.UTF-8" > /etc/default/locale
