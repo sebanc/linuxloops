@@ -7017,7 +7017,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-de
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable patchance
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop plasma-workspace-wayland ardour obs-studio krita gimp kdenlive digikam darktable patchance
 "
 	;;
 	'Ubuntu')
@@ -7320,7 +7320,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-de
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm ubuntustudio-desktop plasma-workspace-wayland ardour obs-studio krita gimp kdenlive digikam darktable
 chmod 0644 /etc/grub.d/09_lowlatency
 chmod 0755 /etc/grub.d/10_linux
 "
@@ -8103,7 +8103,7 @@ SURFACEREPO
 if [ "${distro}" == "SteamOS" ]; then echo 'SigLevel = Never' >> /etc/pacman.conf; fi
 pacman -Syu
 # deepin-anything-arch package depends on linux
-if [ "${desktop}" != "Deepin" ]; then pacman -R --noconfirm ${surface_remove}; fi
+if [ "${desktop}" != "Deepin" ] && [ "${desktop}" != "Deepin/Full" ]; then pacman -R --noconfirm ${surface_remove}; fi
 pacman -S --noconfirm linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms
 usermod -aG video '${username}'
 SURFACEPACMAN
