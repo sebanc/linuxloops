@@ -49,7 +49,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Debian          |Bookworm        |✓                      |✓                                    |✓                                |              |
 |Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |
 |Elementary      |7               |✓                      |✓                                    |✓                                |              |
-|Fedora          |39              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
+|Fedora          |40              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
 |Gentoo          |Current         |✓                      |✓                                    |                                 |              |
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
 |Linuxmint       |Virginia        |✓                      |✓                                    |✓                                |              |
@@ -62,12 +62,12 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |OpenSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]|
 |Parrot          |Current         |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
 |Pop             |22.04           |✓                      |✓                                    |✓                                |              |
-|Proxmox         |VE 8.0          |✓                      |✓                                    |✓                                |              |
+|Proxmox         |VE 8            |✓                      |✓                                    |✓                                |              |
 |Qubes           |4.2             |                       |                                     |                                 |[notes][Qubes-notes]|
 |RockyLinux      |9               |✓                      |                                     |                                 |[notes][RockyLinux-notes]|
-|SteamOS         |3.5             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
+|SteamOS         |3.6             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
 |Tails           |Latest          |✓                      |                                     |                                 |[notes][Tails-notes]|
-|Ubuntu          |23.10           |✓                      |✓                                    |✓                                |              |
+|Ubuntu          |24.04           |✓                      |✓                                    |✓                                |              |
 |Ubuntu-LTS      |22.04           |✓                      |✓                                    |✓                                |              |
 |Void            |Current         |                       |✓                                    |                                 |              |
 |Zorin           |17              |✓                      |✓                                    |✓                                |              |

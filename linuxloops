@@ -216,7 +216,7 @@ case "${1}" in
 	;;
 	'Ubuntu')
 	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
-	bootstrap="lxc ubuntu mantic default"
+	bootstrap="lxc ubuntu noble default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	;;
@@ -1348,7 +1348,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-backgrounds gnome-terminal nautilus
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal nautilus
 systemctl enable gdm.service
 "
 	;;
@@ -1868,7 +1868,7 @@ echo \"track: 'cinnamon'\" >> /system.yaml
 		install_desktop="
 echo \"track: 'gnome'\" >> /system.yaml
 "
-		custom_packages="gnome-keyring gnome-backgrounds gnome-terminal nautilus xdg-desktop-portal-gnome ${custom_packages}"
+		custom_packages="gnome-keyring gnome-terminal nautilus xdg-desktop-portal-gnome ${custom_packages}"
 		;;
 		'Lxqt')
 		default_session="lxqt"
@@ -2486,7 +2486,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2513,7 +2513,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
@@ -2547,7 +2547,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'Gnome/Full')
@@ -2746,7 +2746,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales daedalus /mnt http://deb.devuan.org/merged
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales daedalus /mnt http://deb.devuan.org/merged
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2769,7 +2769,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
@@ -2803,7 +2803,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'Gnome/Full')
@@ -2988,7 +2988,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales,python3-cffi-backend,software-properties-common jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3007,6 +3007,7 @@ deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe mul
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
+yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 echo -e 'Package: *\nPin: release o=LP-PPA-elementary-os-*\nPin-Priority: 1000' > /etc/apt/preferences.d/elementary.pref
 add-apt-repository ppa:elementary-os/stable -y
 add-apt-repository ppa:elementary-os/os-patches -y
@@ -3079,7 +3080,7 @@ dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+dnf install --installroot=/mnt --releasever 40 -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3127,7 +3128,7 @@ dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environme
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-dnf install -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-backgrounds gnome-software gnome-keyring gnome-keyring-pam
+dnf install -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-software gnome-keyring gnome-keyring-pam
 "
 	;;
 	'Gnome/Full')
@@ -3169,13 +3170,13 @@ dnf install -y ${desktop_base} lightdm slick-greeter @mate-desktop-environment d
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
+dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment plasma-workspace-wayland
+dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment
 "
 	;;
 	'Xfce')
@@ -3538,7 +3539,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales,iptables,kali-linux-core kali-rolling /mnt http://http.kali.org/kali
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales kali-rolling /mnt http://http.kali.org/kali
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3552,14 +3553,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release kali-themes sbsigntool mokutil dosfstools btrfs-progs cpio
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release kali-themes sbsigntool mokutil dosfstools btrfs-progs cpio kali-linux-core
 CHROOT_INIT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base plymouth-themes synaptic kali-defaults-desktop kali-themes-common"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="plymouth-themes synaptic kali-defaults-desktop kali-themes-common"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
@@ -3793,7 +3794,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3837,8 +3838,8 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-vera plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-vera plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Cinnamon')
@@ -3941,7 +3942,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3981,8 +3982,8 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base mint-artwork mint-themes mint-x-icons mint-y-icons plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade grub2-theme-mint"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade grub2-theme-mint"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Cinnamon')
@@ -4121,7 +4122,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-backgrounds gnome-terminal nautilus manjaro-gnome-settings
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal nautilus manjaro-gnome-settings
 systemctl enable gdm.service
 "
 	;;
@@ -4306,7 +4307,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4343,8 +4344,8 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base grub-themes-mx plymouth-themes-mx synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx-system mx23-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="grub-themes-mx plymouth-themes-mx synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx-system mx23-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
@@ -4377,7 +4378,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
@@ -4564,7 +4565,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales,python3-cffi-backend,software-properties-common jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4588,7 +4589,7 @@ deb http://archive.neon.kde.org/user/ jammy main
 RECOMMENDS
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update --allow-insecure-repositories
-yes | DEBIAN_FRONTEND=noninteractive apt install neon-keyring neon-settings --allow-unauthenticated
+yes | DEBIAN_FRONTEND=noninteractive apt install gnupg neon-keyring neon-settings --allow-unauthenticated
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g')
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
@@ -4888,7 +4889,7 @@ case "${desktop}" in
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-backgrounds gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
+dnf install --allowerasing -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
 "
 	;;
 	'Gnome/Full')
@@ -5293,7 +5294,7 @@ set -e
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall ca-certificates console-setup dirmngr gpg kbd locales parrot-core
+yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall ca-certificates console-setup kbd locales parrot-core
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
 parrot-upgrade
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
@@ -5305,8 +5306,8 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base plymouth-themes synaptic parrot-themes parrot-wallpapers"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="plymouth-themes synaptic parrot-themes parrot-wallpapers"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${desktop}" in
@@ -5537,7 +5538,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales,python3-cffi-backend,software-properties-common jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5556,14 +5557,15 @@ deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe mul
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
+yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 63C46DF0140D738961429F4E204DD8AEC33A7AFF
+add-apt-repository "deb http://apt.pop-os.org/release \$(lsb_release -cs) main" -y
+add-apt-repository "deb http://apt.pop-os.org/proprietary \$(lsb_release -cs) main" -y
 cat >/etc/apt/preferences.d/kernelstub <<'KERNELSTUB'
 Package: kernelstub
 Pin: release *
 Pin-Priority: -1
 KERNELSTUB
-apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 63C46DF0140D738961429F4E204DD8AEC33A7AFF
-add-apt-repository "deb http://apt.pop-os.org/release \$(lsb_release -cs) main" -y
-add-apt-repository "deb http://apt.pop-os.org/proprietary \$(lsb_release -cs) main" -y
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update --allow-insecure-repositories
 yes | DEBIAN_FRONTEND=noninteractive apt install pop-default-settings --allow-unauthenticated
@@ -5634,7 +5636,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5671,8 +5673,8 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base plymouth-themes synaptic"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
@@ -5705,7 +5707,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit
 "
 	;;
 	'Gnome/Full')
@@ -5794,13 +5796,9 @@ if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.gnome.desktop.background:Budgie]
-picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.cinnamon.desktop.background]
-picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
@@ -6152,35 +6150,35 @@ LocalFileSigLevel = Optional
 # repo name header and Include lines. You can add preferred servers immediately
 # after the header, and they will be used before the default mirrors.
  
-#[testing-3.5]
+#[testing-3.6]
 #Include = /etc/pacman.d/mirrorlist
 #SigLevel = Never
  
-[core-3.5]
+[core-3.6]
 Include = /etc/pacman.d/mirrorlist
 SigLevel = Never
  
-[extra-3.5]
+[extra-3.6]
 Include = /etc/pacman.d/mirrorlist
 SigLevel = Never
  
-#[community-testing-3.5]
+#[community-testing-3.6]
 #Include = /etc/pacman.d/mirrorlist
 #SigLevel = Never
  
-[community-3.5]
+[community-3.6]
 Include = /etc/pacman.d/mirrorlist
 SigLevel = Never
  
-[multilib-3.5]
+[multilib-3.6]
 Include = /etc/pacman.d/mirrorlist
 SigLevel = Never
 
-[jupiter-3.5]
+[jupiter-3.6]
 Include = /etc/pacman.d/mirrorlist
 SigLevel = Never
  
-[holo-3.5]
+[holo-3.6]
 Include = /etc/pacman.d/mirrorlist
 SigLevel = Never
  
@@ -6256,7 +6254,6 @@ set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
 ${install_desktop}
 systemctl enable ${desktop_services} dbus-broker.service sddm.service
-systemctl enable --global dbus-broker.service
 /linuxloops/install_steamos_configs
 # Temporary XDG desktop portal fix
 cat >/etc/xdg/autostart/xdg-desktop-portal-fix.desktop <<'PORTAL_FIX_AUTOSTART'
@@ -6867,7 +6864,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales mantic /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales noble /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -6875,14 +6872,14 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu mantic main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu mantic-updates main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu mantic-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu mantic-security main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu mantic-security main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+# deb-src http://archive.ubuntu.com/ubuntu noble-security main restricted universe multiverse
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -6894,8 +6891,8 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
@@ -6938,14 +6935,14 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'i3')
@@ -6998,14 +6995,12 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	;;
 	'Plasma')
 	default_session="plasmawayland"
-	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop plasma-workspace-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5
 "
 	;;
 	'Plasma/Full')
 	default_session="plasmawayland"
-	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-desktop plasma-workspace-wayland
@@ -7013,7 +7008,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kubuntu-de
 	;;
 	'Studio/Full')
 	default_session="plasmawayland"
-	desktop_base="$(echo ${desktop_base} | sed 's@ desktop-base@@g')"
 	install_desktop="
 yes | DEBIAN_FRONTEND=noninteractive apt install network-manager-gnome
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -7173,7 +7167,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7200,8 +7194,8 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
-basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-base plymouth-themes ubuntu-wallpapers fonts-ubuntu"
+basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
+specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${desktop}" in
 	'Budgie')
@@ -7244,14 +7238,14 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome-session gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} gdm3 gnome gnome-control-center gnome-screensaver gnome-terminal nautilus gnome-keyring libpam-gnome-keyring
 "
 	;;
 	'i3')
@@ -7641,7 +7635,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,dirmngr,gpg,gpg-agent,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7660,6 +7654,7 @@ deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe mul
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
+yes | DEBIAN_FRONTEND=noninteractive apt install gnupg
 cat >/etc/apt/sources.list.d/zorin.list <<'ZORINLIST'
 deb https://packages.zorinos.com/stable jammy main
 # deb-src https://packages.zorinos.com/stable jammy main
@@ -8011,13 +8006,13 @@ mkdir -p /etc/network
 echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces
 echo "${hostname}" > /etc/hostname
 if [ "${distro}" == "Proxmox" ]; then
-	echo -e "127.0.0.1 localhost\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
+	echo -e "127.0.0.1 localhost localhost.localdomain\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
 elif [ "${distro}" == "Qubes" ]; then
 	echo -e "127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4\n::1         localhost localhost.localdomain localhost6 localhost6.localdomain6" > /etc/hosts
 else
-	echo -e "127.0.0.1 localhost\n127.0.1.1 ${hostname}\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
+	echo -e "127.0.0.1 localhost localhost.localdomain\n127.0.1.1 ${hostname}\n\n::1 ip6-localhost ip6-loopback\nfe00::0 ip6-localnet\nff00::0 ip6-mcastprefix\nff02::1 ip6-allnodes\nff02::2 ip6-allrouters\nff02::3 ip6-allhosts" > /etc/hosts
 fi
-if [ -d /etc/netplan ]; then echo -e 'network:\n    version: 2\n    renderer: NetworkManager\n    ethernets:\n        zz-all-en:\n            match:\n                name: "en*"\n            dhcp4: true\n        zz-all-eth:\n            match:\n                name: "eth*"\n            dhcp4: true' > /etc/netplan/01-netcfg.yaml; fi
+if [ -d /etc/netplan ]; then echo -e 'network:\n    version: 2\n    renderer: NetworkManager\n    ethernets:\n        zz-all-en:\n            match:\n                name: "en*"\n            dhcp4: true\n        zz-all-eth:\n            match:\n                name: "eth*"\n            dhcp4: true' > /etc/netplan/01-netcfg.yaml; chmod 0600 /etc/netplan/01-netcfg.yaml; fi
 if [ -d /etc/NetworkManager/conf.d ]; then echo -e '[connection]\nwifi.powersave = 2' > /etc/NetworkManager/conf.d/zz-wifi-powersave-disable.conf; fi
 mkdir -p /etc/modprobe.d
 echo 'blacklist pcspkr' > /etc/modprobe.d/pcspkr.conf

@@ -28,6 +28,7 @@ Download the live image and run the following command to write it to the disk (t
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
+If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
 
 ## With Windows
 
@@ -36,6 +37,8 @@ Install 7zip and extract the linuxloops_live_XXXXXXXX.7z file.
 Write the resulting image file to your USB flashdrive using Rufus, Etcher or a similar tool.  
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
+
+If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
 
 
 <!-- Reference Links -->

@@ -107,15 +107,14 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## SteamOS
 
-SteamOS installed from the 3.5 branch of the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
-SteamOS packages can be installed and updated with pacman, however native packages available in SteamOS are not the latest versions, therefore for sensitive apps such as web browsers and such it is recommended to use the flatpak version (available by default in the Discover app).  
+SteamOS installed from the 3.6 branch of the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
+Packages can be installed and updated with pacman, however native packages available in the SteamOS packages repository are not the latest versions, therefore for sensitive apps such as web browsers and such it is recommended to use the flatpak version (available by default in the Discover app).  
 
 3 environments are available:
-- desktop: Boots to SDDM in order to support multi-users setup. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
-- desktop-autologin: Auto-login into Plasma. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
-- gamescope-session: Same as the SteamDeck. Boots directly into the SteamOS session. Plasma can be launched with the "Switch to Desktop" SteamOS option.  
+- Desktop: Boots to Plasma session. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
+- Gamescope: Same as the SteamDeck. Boots directly into the SteamOS session. Plasma can be launched with the "Switch to Desktop" SteamOS option.  
 
-Note: Due to a bug with xdg-desktop-portal-kde that has not yet been corrected in the SteamOS repositories, flatpak apps will trigger an "app running in the background" plasma notification. Either disable those types of notifications entirely in plasma settings or install flatseal and allow "run in the background" permission for each app.  
+Note: The gamescope session is not compatible with nvidia gpu but you can use the standard steam app within a desktop environment.  
 
 
 ## Tails

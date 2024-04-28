@@ -66,7 +66,7 @@ Use a software like Rufus or Etcher to write the image located at C:\Users\"user
 
 Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.  
 
-If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.  
+If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Arch.der, confirm and reboot your computer.  
 
 4. Finalisation (For disk image installs)  
 

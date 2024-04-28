@@ -63,7 +63,7 @@ As an example:
 
 Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.  
 
-If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> MOK.DER, confirm and reboot your computer.  
+If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Ubuntu.der, confirm and reboot your computer.  
 
 3. Finalisation (For disk image installs)  
 
