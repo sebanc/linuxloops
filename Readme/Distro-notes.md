@@ -110,7 +110,7 @@ Reboot, enroll the key in shim and re-enable secureboot.
 SteamOS installed from the 3.6 branch of the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
 Packages can be installed and updated with pacman, however native packages available in the SteamOS packages repository are not the latest versions, therefore for sensitive apps such as web browsers and such it is recommended to use the flatpak version (available by default in the Discover app).  
 
-3 environments are available:
+2 environments are available:
 - Desktop: Boots to Plasma session. The gamescope session can be launched within Plasma through the "SteamDeck Session" shortcut (in "Game" section).  
 - Gamescope: Same as the SteamDeck. Boots directly into the SteamOS session. Plasma can be launched with the "Switch to Desktop" SteamOS option.  
 
