@@ -47,6 +47,7 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -c, --custom-packages						(list of additional packages to be installed - space separated)
 -C, --custom-script						(bash script that should be run at the end of the install process)
 -k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
+-d, --declarative <config_file_path>				(Use a declarative configuration file)
 -l, --list							(List available distros and desktop environments)
 -ll, --list-locales						(List available locales)
 -lk, --list-keymaps						(List available keymaps)

@@ -3,7 +3,7 @@
 usage()
 {
 cat << USAGE
-LinuxLoops: Flexible linux distro installer.
+LinuxLoops: Adaptable / declarative linux distro installer.
 Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
 -distro, --distribution <distribution name>			(Distribution to install)
 -env, --environment <desktop environment>			(Desktop environment to install)
@@ -10049,10 +10049,12 @@ CUSTOM_COMMANDS
 		custom_script="${linuxloopsdir}"/custom_commands
 	fi
 fi
-if [ -z "${hostname}" ]; then hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"; fi
-if [ -z "${locale}" ]; then locale="en_US"; fi
-if [ -z "${keymap}" ]; then keymap="us"; fi
-if [ -z "${timezone}" ]; then timezone="UTC"; fi
+if [ -z "${distro}" ] || [[ ! " ${available_distros[*]} " =~ " ${distro} " ]]; then echo -e "Please select a distro from the below list:"; list_array "available_distros"; exit 1; fi
+check_home_space
+list_desktops "${distro}"
+if [ -z "${desktop}" ] || [[ ! " ${available_desktops[*]} " =~ " ${desktop} " ]]; then echo -e "Please select an environment from the below list:"; list_array "available_desktops"; exit 1; fi
+if [ -z "${destination}" ]; then echo "Please provide a destination path for the image with \"-dst\" or \"--destination\" argument.\n"; exit 1; fi
+if [ -z "${destination##/dev/*}" ]; then install_type="disk"; else install_type="image"; fi
 if [ -z "${install_size}" ]; then
 	if [ "${install_type}" == "image" ]; then install_size=14; fi
 else
@@ -10064,12 +10066,10 @@ else
 		exit 1
 	fi
 fi
-if [ -z "${distro}" ] || [[ ! " ${available_distros[*]} " =~ " ${distro} " ]]; then echo -e "Please select a distro from the below list:"; list_array "available_distros"; exit 1; fi
-check_home_space
-list_desktops "${distro}"
-if [ -z "${desktop}" ] || [[ ! " ${available_desktops[*]} " =~ " ${desktop} " ]]; then echo -e "Please select an environment from the below list:"; list_array "available_desktops"; exit 1; fi
-if [ -z "${destination}" ]; then echo "Please provide a destination path for the image with \"-dst\" or \"--destination\" argument.\n"; exit 1; fi
-if [ -z "${destination##/dev/*}" ]; then install_type="disk"; else install_type="image"; fi
+if [ -z "${hostname}" ]; then hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"; fi
+if [ -z "${locale}" ]; then locale="en_US"; fi
+if [ -z "${keymap}" ]; then keymap="us"; fi
+if [ -z "${timezone}" ]; then timezone="UTC"; fi
 if [ "${install_type}" == "disk" ]; then
 	if [ ! -b "${destination}" ]; then echo "Disk ${destination} was not found."; exit 1; fi
 	if [ ! "$(lsblk ${destination} -nd -o TYPE)" == "disk" ]; then echo "Linuxloops can only be installed on a full disk."; exit 1; fi
