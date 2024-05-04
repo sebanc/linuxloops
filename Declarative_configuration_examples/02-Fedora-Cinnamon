@@ -1,0 +1,34 @@
+# This declarative configuration file for Linuxloops will install Fedora with Cinnamon desktop environment in an image file.
+
+# Mandatory parameters
+distro=Fedora 							# Use `sudo bash ~/linuxloops -l` to list available distros
+desktop=Cinnamon 						# Use `sudo bash ~/linuxloops -l` to list available environments
+destination="/home/user/Fedora.img" 				# Drive path (e.g. /dev/sdX) or disk image path (e.g. /home/user/Fedora.img)
+
+# Mandatory parameters (except for BlissOS, Brunch, ChromeOS-Flex and Tails) but interactive if not provided.
+username="myusername"
+userpass="mypassword"
+
+# Optional parameters
+install_size=40 						# Size in GB (default: all available space for disk installs | 14 GB for images)
+swap_size=0 							# Size in GB (default: 0)
+autologin=No 							# Yes / No (default: No)
+fstype=ext4 							# ext4 / btrfs (default: ext4)
+encryption=No 							# Yes / No (default: No)
+hostname="Fedora-Cinnamon" 					# String (default: automatically generated hostname)
+locale=en_US 							# Locale code (default: en_US). Use `sudo bash ~/linuxloops -ll` to list available locales
+keymap=fr 							# Keymap code (default: us). Use `sudo bash ~/linuxloops -lk` to list available keymaps
+timezone=Europe/Paris 						# Timezone (default: UTC).  Use `sudo bash ~/linuxloops -lt` to list available timezones
+nvidia=No 							# Yes / No (default: No)
+surface=No 							# Yes / No (default: No)
+kernel_parameters="" 						# String (default: "")
+
+# List of additional packages to install (default: "")
+custom_packages="
+firefox
+"
+
+# Script that will be executed as root at the end of the install process (default: "").
+# Make sure to escape special characters inside the "custom_commands" variable, notably double quotes and dollar signs (for variables that should be interpreted inside the target install).
+custom_commands=""
+

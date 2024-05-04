@@ -13,8 +13,8 @@ Those recommended setups aim at avoiding unnecessarily complex partition tables 
 ## My main OS is Linux and I don't use windows
 
 Nothing very specific in that case.  
-- Evaluate the space you will want to give to your linuxloops OS images, free up disk space.  
-- If you want to start fresh, you can install a linuxloops distro on your drive, leaving the necessary space for your images unallocated.  
+- Evaluate the space you will want to give to your Linuxloops OS images, free up disk space.  
+- If you want to start fresh, you can install a Linuxloops distro on your drive, leaving the necessary space for your images unallocated.  
 
 Create an ext4 partition on the unallocated space.  
 
@@ -56,13 +56,13 @@ If not already the case, enable grub osprober in your linux distro in order to b
 
 Requirement: Secure Boot disabled.  
 
-Evaluate the space you will want to give to your linuxloops OS images, Open Windows Disk Management, free up disk space and create an ExFAT partition.  
+Evaluate the space you will want to give to your Linuxloops OS images, Open Windows Disk Management, free up disk space and create an ExFAT partition.  
 
 Install Grub2Win.  
 
-Install your disk images on the ExFAT partition and copy the linuxloops grub configurations in Grub2Win.  
+Install your disk images on the ExFAT partition and copy the Linuxloops grub configurations in Grub2Win.  
 
-Reboot and launch your linuxloops image from Grub2Win.  
+Reboot and launch your Linuxloops image from Grub2Win.  
 
 
 <!-- Reference Links -->

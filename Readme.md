@@ -5,25 +5,25 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
-# LinuxLoops
+# Linuxloops
 
 ## About This Project
 
-Linuxloops is a flexible linux distro installer.  
+Linuxloops is an adaptable / declarative linux distro installer.  
 
-Why create a custom linux distro installer ?  
-Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows to have minimal installs with more DE options, the possibility to directly include custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
+Why create a linux distro installer ?  
+Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows minimal Linux installs with more DE options, to directly add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
 In addition, Linuxloops supports installing linux distros in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
 
-The main limitation of Linuxloops is that the partitionning is not currently customizable (EFI, BOOT and ROOT partitions). As such, it is not aimed at users needing complex partition tables (or they can customize the linuxloops script to their liking).  
+The main limitation of Linuxloops is that the partitionning is not currently customizable (EFI, BOOT and ROOT partitions). As such, it is not aimed at users needing complex partition tables (or they can customize the Linuxloops script to their liking).  
 
 
 ## How does it work ?
 
-The LinuxLoops script will chroot into a temporary rootfs image (usually linux containers rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
+The Linuxloops script will chroot into a temporary rootfs image (usually a linux container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
 
 For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
-- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distros are enabled by default as they contain necessary packages for standard use.  
+- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distros that are enabled by default as they contain necessary packages for standard use.  
 - For Arch based distros, the "shim-signed" AUR package is included in order to support Secure Boot.  
 
 
@@ -76,9 +76,9 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 ## Quick start
 
 Linuxloops can be used from any Linux distribution or from Windows WSL, it has limited dependencies that are generally installed by default (most notably `curl`, `tar`, `xz`).  
-Note: Windows WSL does not allow to write directly to a disk but you can create images and flash them to a drive using Rufus/Etcher or boot them from [Grub2Win][Grub2Win link].  
+Note: Windows WSL does not allow to write directly to a disk but you can create disk images and flash them to a drive using Rufus/Etcher or boot them from [Grub2Win][Grub2Win link].  
 
-Download the linuxloops script:  
+Download the Linuxloops script:  
 `curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`  
 
 ### GUI installer
@@ -90,7 +90,6 @@ Install the `zenity` package for your distro:
 
 Start the installer in GUI mode:  
 `sudo bash ~/linuxloops`  
-
 
 ### CLI installer
 
@@ -128,6 +127,16 @@ As an example:
 `sudo bash ~/linuxloops -distro Ubuntu -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
 `sudo bash ~/linuxloops -distro Arch -env Cinnamon -dst /home/username/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment with the linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
+### Declarative installer
+
+Have a look at the declarative configuration examples available here:  
+[Declarative configuration examples][Declarative configuration examples]  
+
+The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
+`sudo bash ~/linuxloops -l`  
+
+Create your own declarative configuration and run the below command to start the install:  
+`sudo bash ~/linuxloops -d <path_to_your_declarative_configuration>`  
 
 ## Complementary instructions
 
@@ -142,7 +151,7 @@ As an example:
 
 ## Support
 
-Support for LinuxLoops is provided in the "LINUXLOOPS" section of the Brunch Discord server:  
+Support for Linuxloops is provided in the dedicated section of the Brunch Discord server:  
 
 [![Discord][discord-shield]][discord-url]
 
@@ -188,6 +197,7 @@ Support for LinuxLoops is provided in the "LINUXLOOPS" section of the Brunch Dis
 [recovery-guide]: ./Readme/Data-recovery.md
 [recommended-setups]: ./Readme/Recommended-setups.md
 [secure-boot]: ./Readme/Secure-boot.md
+[Declarative configuration examples]: ./Declarative_configuration_examples
 
 <!-- Outbound Links -->
 [Grub2Win link]: https://sourceforge.net/projects/grub2win/

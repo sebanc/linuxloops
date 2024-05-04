@@ -1,0 +1,67 @@
+# This declarative configuration file for Linuxloops will install Arch with Dwm from AUR in an image file (without display manager, start dwm with startx command).
+
+# Mandatory parameters
+distro=Arch 							# Use `sudo bash ~/linuxloops -l` to list available distros
+desktop=None 							# Use `sudo bash ~/linuxloops -l` to list available environments
+destination="/home/user/Arch.img" 				# Drive path (e.g. /dev/sdX) or disk image path (e.g. /home/user/Arch.img)
+
+# Mandatory parameters (except for BlissOS, Brunch, ChromeOS-Flex and Tails) but interactive if not provided.
+username="myusername"
+userpass="mypassword"
+
+# Optional parameters
+install_size=80 						# Size in GB (default: all available space for disk installs | 14 GB for images)
+swap_size=8 							# Size in GB (default: 0)
+autologin=No 							# Yes / No (default: No)
+fstype=ext4 							# ext4 / btrfs (default: ext4)
+encryption=No 							# Yes / No (default: No)
+hostname="Arch-Dwm" 						# String (default: automatically generated hostname)
+locale=en_US 							# Locale code (default: en_US). Use `sudo bash ~/linuxloops -ll` to list available locales
+keymap=fr 							# Keymap code (default: us). Use `sudo bash ~/linuxloops -lk` to list available keymaps
+timezone=Europe/Paris 						# Timezone (default: UTC).  Use `sudo bash ~/linuxloops -lt` to list available timezones
+nvidia=No 							# Yes / No (default: No)
+surface=No 							# Yes / No (default: No)
+kernel_parameters="loglevel=4" 					# String (default: "")
+
+# List of additional packages to install (default: "")
+custom_packages="
+dmenu
+firefox
+pcmanfm
+xorg-server
+xorg-xinit
+xorg-xsetroot
+"
+
+# Script that will be executed as root at the end of the install process (default: "").
+# Make sure to escape special characters inside the "custom_commands" variable, notably double quotes and dollar signs (for variables that should be interpreted inside the target install).
+custom_commands="
+git clone https://aur.archlinux.org/dwm.git /tmp/dwm 		# Install dwm from AUR
+chown -R 'nobody':'nobody' /tmp/dwm
+su -s /bin/bash nobody -c 'cd /tmp/dwm && makepkg -s'
+yes | pacman -U /tmp/dwm/*.pkg.tar.*
+rm -r /tmp/dwm
+
+git clone https://aur.archlinux.org/st.git /tmp/st 		# Install st from AUR
+chown -R 'nobody':'nobody' /tmp/st
+su -s /bin/bash nobody -c 'cd /tmp/st && makepkg -s'
+yes | pacman -U /tmp/st/*.pkg.tar.*
+rm -r /tmp/st
+
+# Run commands as user in a bash shell
+sudo -u ${username} bash <<'RUNASUSER'
+cat >~/.xinitrc <<'XINITRC' 					# Create the .xinitrc for our user
+# Statusbar loop
+while true; do
+   xsetroot -name \"\$( date +\"%F %R\" )\"
+   sleep 1m    # Update time every minute
+done &
+
+# Autostart section
+pcmanfm &
+
+exec dwm
+XINITRC
+RUNASUSER
+"
+

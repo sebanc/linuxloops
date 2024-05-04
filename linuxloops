@@ -22,6 +22,7 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -c, --custom-packages						(list of additional packages to be installed - space separated)
 -C, --custom-script						(bash script that should be run at the end of the install process)
 -k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
+-d, --declarative <config_file_path>				(Use a declarative configuration file)
 -l, --list							(List available distros and desktop environments)
 -ll, --list-locales						(List available locales)
 -lk, --list-keymaps						(List available keymaps)
@@ -2486,7 +2487,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2746,7 +2747,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales daedalus /mnt http://deb.devuan.org/merged
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales daedalus /mnt http://deb.devuan.org/merged
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2988,7 +2989,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3547,7 +3548,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales kali-rolling /mnt http://http.kali.org/kali
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales kali-rolling /mnt http://http.kali.org/kali
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3802,7 +3803,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3950,7 +3951,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4315,7 +4316,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4573,7 +4574,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5303,7 +5304,7 @@ echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > 
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall ca-certificates console-setup kbd locales parrot-core
+yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall ca-certificates kbd keyboard-configuration locales parrot-core
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
 parrot-upgrade
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
@@ -5547,7 +5548,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5645,7 +5646,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -6873,7 +6874,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales noble /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales noble /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7176,7 +7177,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7644,7 +7645,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7984,7 +7985,7 @@ if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_settings <<APPLYSETTINGS
 #!/bin/bash
 set -e
-if [ ! -f /etc/locale.gen ]; then echo "${locale}.UTF-8 UTF-8" > /etc/locale.gen; else sed -i 's@#${locale}.UTF-8 UTF-8@${locale}.UTF-8 UTF-8@g' /etc/locale.gen; fi
+if [ ! -f /etc/locale.gen ]; then echo "${locale}.UTF-8 UTF-8" > /etc/locale.gen; else sed -i 's@#${locale}.UTF-8 UTF-8\|# ${locale}.UTF-8 UTF-8@${locale}.UTF-8 UTF-8@g' /etc/locale.gen; fi
 localedef -i ${locale} -f UTF-8 ${locale}.UTF-8
 echo "LANG=${locale}.UTF-8" > /etc/locale.conf
 echo "LANG=${locale}.UTF-8" > /etc/default/locale
@@ -9787,12 +9788,13 @@ fi
 set_credentials()
 {
 if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then return; fi
-if [ "${test_distro}" == "Yes" ]; then
-	hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"
+if [ "${declarative}" == "Yes" ] && [ ! -z "${username}" ] && [ ! -z "${userpass}" ]; then
+	if echo "${username}" | grep -q '^[a-z][-a-z0-9]*\$'; then echo -e "Username contains unsupported characters.\n\n"; exit 1; fi
+	if echo "${userpass}" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then echo -e "Password contains unsupported characters.\n\n"; exit 1; fi
+elif [ "${test_distro}" == "Yes" ]; then
 	username="test"
 	userpass="test"
 elif [ "${live}" == "Yes" ]; then
-	hostname="linuxloops"
 	username="live"
 	userpass="linuxloops"
 else
@@ -9803,16 +9805,7 @@ else
 		encrypted_text="Please input your username and user account password."
 		password_text="user account password"
 	fi
-	if [ -z "${hostname}" ]; then hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"; fi
 	if [ ! -z "${zenity}" ]; then
-		if [ "${distro}" != "Qubes" ]; then
-			until false; do
-				hostname=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Which hostname should be used to identify this machine on the network ?" --entry-text "${hostname}" --ok-label="Next" 2>/dev/null)
-				if [ -z "${hostname}" ]; then exit 1; fi
-				if ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="hostname contains unsupported characters.\n" 2>/dev/null; continue; fi
-				break
-			done
-		fi
 		until false; do
 			form=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --text="${encrypted_text}" --add-entry="Input your username" --add-password="Input your ${password_text}" --add-password="Confirm your ${password_text}" --ok-label="Next" 2>/dev/null)
 			username="$(echo ${form} | cut -d'|' -f1)"
@@ -9919,90 +9912,42 @@ if [ "$(df --output=source -- ${linuxloopsdir} | sed 1d)" == "$(df --output=sour
 maximum_image_size=$(( ($(df -k --output=avail $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | sed 1d) / 1024 / 1024) + ${freed_space} - ${bootstrap_space} ))
 }
 
-install_parameters()
+zenity_installer()
 {
+if ! sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer." --ok-label="Next" 2>/dev/null; then exit 0; fi
+distro=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which distribution do you want to install ?" --column "Distribution" "${available_distros[@]}" --ok-label="Next" 2>/dev/null)
+if [ -z "${distro}" ]; then exit 0; fi
+check_home_space
+list_desktops ${distro}
+desktop=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which desktop environment do you want to install ?" --column "Desktop environment" "${available_desktops[@]}" --ok-label="Next" 2>/dev/null)
+if [ -z "${desktop}" ]; then exit 0; fi
+if [ -z "${wsl}" ]; then install_type=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to install ${distro} on a disk or in an image file ?" --column "Choose install type" "disk" "image" --ok-label="Next" 2>/dev/null); else install_type="image"; fi
+if [ "${install_type}" == "disk" ] && [ ! -d /sys/firmware/efi ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Disk installs are possible when booted in UEFI mode." 2>/dev/null; exit 1; fi
+if [ -z "${install_type}" ]; then exit 1; fi
 if [ "${install_type}" == "disk" ]; then
-	if [ ! -z "${zenity}" ]; then
-		local t
-		local test
-		local device
-		local size
-		t=0
-		for i in $(lsblk -drnbpf -o NAME,SIZE); do
-			if [ $((t % 2)) == 0 ]; then device=${i}; fi
-			if [ $((t % 2)) == 1 ]; then
-				size=$((i / 1024 /1024 / 1024))
-				if [ ! -z "${device}" ] && [ ! -z "${size}" ] && [ $((size - 14)) -ge 0 ] && ! echo "${device}" | grep -q "/dev/loop" && ! echo ${device} | grep -q $(basename $(realpath "/sys/class/block/$(lsblk -oMOUNTPOINT,PKNAME -rn | grep '/ ' | cut -d' ' -f2)/..")); then
-					if [ "${device}" != "/dev/$(lsblk --inverse $(realpath $(df ${0} | grep '^/' | cut -d' ' -f1)) -io NAME | cut -d'-' -f2 | tail -1)" ] && [ -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] || ([ ! -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] && [ "${device}" != "/dev/$(lsblk -ndo pkname $(blkid --match-token PARTUUID=$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2) | cut -d':' -f1))" ]); then test="${test} radio ${device} ${size}"; fi
-				fi
-			fi
-			t=$((t + 1))
-		done
-		destination=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Select the drive that you want to use for installation." --column "Select" --column "Device" --column "Size (in GB)" ${test} --ok-label="Next" 2>/dev/null)
-		if [ -z "${destination}" ]; then exit 1; fi
-		fullpath="${destination}"
-		install_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --step 1 --ok-label="Next" 2>/dev/null)
-		if [ -z "${install_size}" ]; then exit 1; fi
-		if [ "${install_size}" -eq $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
-		if [ "${distro}" != "BlissOS" ] && [ "${distro}" != "Brunch" ] && [ "${distro}" != "ChromeOS-Flex" ] && [ "${distro}" != "Tails" ]; then
-			locale=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your locale (language / formats)." --column "Select" --column "Locale" --column "Description" "${available_locales[@]}" --ok-label="Next" 2>/dev/null)
-			if [ -z "${locale}" ]; then exit 1; fi
-			keymap=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your keyboard layout." --column "Select" --column "Keymap" --column "Description" "${available_keymaps[@]}" --ok-label="Next" 2>/dev/null)
-			if [ -z "${keymap}" ]; then exit 1; fi
-			timezone=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your timezone." --column "Select" --column "Timezone" "${available_timezones[@]}" --ok-label="Next" 2>/dev/null)
-			if [ -z "${timezone}" ]; then exit 1; fi		
-			if [[ " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then fstype=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next" 2>/dev/null); else fstype="ext4"; fi
-			if [ -z "${fstype}" ]; then exit 1; fi
-			encryption=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ?\nThis is highly recommended if you intend to keep sensitive data." --column "Encryption" "Yes" "No" --ok-label="Next" 2>/dev/null)
-			if [ -z "${encryption}" ]; then exit 1; fi
-			swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1 2>/dev/null)
-			if [ -z "${swap_size}" ]; then exit 1; fi
-			if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next" 2>/dev/null); else nvidia="No"; fi
-			if [ -z "${nvidia}" ]; then exit 1; fi
-			if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ?\n(enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next" 2>/dev/null); else surface="No"; fi
-			if [ -z "${surface}" ]; then exit 1; fi
-			customize=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to customize the install ?" --column "Customize install" "No" "Yes" --ok-label="Next" 2>/dev/null)
-			if [ -z "${customize}" ]; then exit 1; fi
-			if [ "${customize}" == "Yes" ]; then
-				custom_packages=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to install additional packages ? (if so, please provide a space separated package list)" --ok-label="Next" 2>/dev/null)
-				custom_script_enable=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to run a custom script during the install process ? (if so, select a bash script that will be run as root at the end of the install process)" --column "Run a custom script ?" "No" "Yes" --ok-label="Next" 2>/dev/null)
-				if [ -z "${custom_script_enable}" ]; then exit 1; fi
-				if [ "${custom_script_enable}" == "Yes" ]; then
-					if [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]; then
-						custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="/home/chronos/user/" 2>/dev/null)
-					else
-						custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="$(eval echo ~${SUDO_USER})/" 2>/dev/null)
-					fi
-					if [ -z "${custom_script}" ]; then exit 1; fi
-				fi
-				kernel_parameters=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to add specific kernel parameters ? (if so, please provide a space separated kernel parameters list)" --ok-label="Next" 2>/dev/null)
+	local t
+	local test
+	local device
+	local size
+	t=0
+	for i in $(lsblk -drnbpf -o NAME,SIZE); do
+		if [ $((t % 2)) == 0 ]; then device=${i}; fi
+		if [ $((t % 2)) == 1 ]; then
+			size=$((i / 1024 /1024 / 1024))
+			if [ ! -z "${device}" ] && [ ! -z "${size}" ] && [ $((size - 14)) -ge 0 ] && ! echo "${device}" | grep -q "/dev/loop" && ! echo ${device} | grep -q $(basename $(realpath "/sys/class/block/$(lsblk -oMOUNTPOINT,PKNAME -rn | grep '/ ' | cut -d' ' -f2)/..")); then
+				if [ "${device}" != "/dev/$(lsblk --inverse $(realpath $(df ${0} | grep '^/' | cut -d' ' -f1)) -io NAME | cut -d'-' -f2 | tail -1)" ] && [ -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] || ([ ! -z "$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2)" ] && [ "${device}" != "/dev/$(lsblk -ndo pkname $(blkid --match-token PARTUUID=$(grep -o 'img_uuid=[^ ,]\+' /proc/cmdline | cut -d'=' -f2) | cut -d':' -f1))" ]); then test="${test} radio ${device} ${size}"; fi
 			fi
 		fi
-	else
-		if [ -z "${distro}" ] || [[ ! " ${available_distros[*]} " =~ " ${distro} " ]]; then echo -e "Please select a distro from the below list:"; list_array "available_distros"; exit 1; fi
-		check_home_space
-		list_desktops "${distro}"
-		if [ -z "${desktop}" ] || [[ ! " ${available_desktops[*]} " =~ " ${desktop} " ]]; then echo -e "Please select an environment from the below list:"; list_array "available_desktops"; exit 1; fi
-		if [ -z "${destination}" ]; then echo "Please provide a destination path for the image with \"-dst\" or \"--destination\" argument.\n"; exit 1; fi
-		if [ ! -b "${destination}" ]; then echo "Disk ${destination} was not found."; exit 1; fi
-		if [ ! "$(lsblk ${destination} -nd -o TYPE)" == "disk" ]; then echo "Linuxloops can only be installed on a full disk."; exit 1; fi
-		fullpath="${destination}"
-		if [ ! -z "${install_size}" ]; then if [ $(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 /1024 / 1024) )) -lt "${install_size}" ]; then echo "You have requested an install size of ${install_size} GB but this device only has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available."; exit 1; fi; fi
-		if [ -z "${install_size}" ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
-		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -gt 0 ] && [ $(( install_size - swap_size )) -lt 12 ]; then echo "At least 12 GB should be available for the main partition, please increase the image size or reduce the swap size."; exit 1; fi
-		if [ ! $(list_array "available_locales" | grep -w "${locale}") ]; then echo "Locale ${locale} is not available, supported locales are:"; echo $(list_array "available_locales" | sed -e 's@\n@ @g'); exit 1; fi
-		if [ ! $(list_array "available_keymaps" | grep -w "${keymap}") ]; then echo "Keymap ${keymap} is not available, supported keympas are:"; echo $(list_array "available_keymaps" | sed -e 's@\n@ @g'); exit 1; fi
-		if [ ! $(list_array "available_timezones" | grep -w "${timezone}") ]; then echo "Timezone ${timezone} is not available, supported timezones are:"; echo $(list_array "available_timezones" | sed -e 's@\n@ @g'); exit 1; fi
-		if [ "${fstype}" == "btrfs" ] && [[ ! " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then echo "btrfs is not available for this distro, supported distros are:"; list_array "btrfs_supported"; exit 1; fi
-		if [ "${nvidia}" == "Yes" ] && [[ ! " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then echo "nvidia driver is not available for this distro, supported distros are:"; list_array "nvidia_supported"; exit 1; fi
-		if [ "${surface}" == "Yes" ] && [[ ! " ${surface_supported[*]} " =~ " ${distro} " ]]; then echo "Surface patches are not available for this distro, supported distros are:"; list_array "surface_supported"; exit 1; fi
-		if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then
-			if [ "${encryption}" == "Yes" ]; then echo -e "rootfs encryption is not supported with ${distro}.\n"; exit 1; fi
-			if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then echo -e "Swap cannot be enabled by design with ${distro}.\n"; exit 1; fi
-		fi
-	fi
+		t=$((t + 1))
+	done
+	destination=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Select the drive that you want to use for installation." --column "Select" --column "Device" --column "Size (in GB)" ${test} --ok-label="Next" 2>/dev/null)
+	if [ -z "${destination}" ]; then exit 1; fi
+	fullpath="${destination}"
+	install_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --step 1 --ok-label="Next" 2>/dev/null)
+	if [ -z "${install_size}" ]; then exit 1; fi
+	if [ "${install_size}" -eq $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
 else
-	if [ ! -z "${zenity}" ]; then
+	until false; do
 		local path
 		if [ ! -z "${wsl}" ]; then
 			path=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the ${distro} disk image" --file-selection --save --file-filter=*.img --filename="/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/${distro}.img" 2>/dev/null)
@@ -10013,105 +9958,159 @@ else
 		fi
 		if [ -z "${path}" ]; then exit 1; else destination="${path}"; fi
 		if [ "$(echo -n ${destination} | tail -c 4)" != ".img" ]; then destination="${destination}.img"; fi
-		if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's@[^/]*$@@')" ]); then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path." 2>/dev/null; install_parameters; return; fi
-		if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Linuxloops disk images cannot be booted from an encrypted partition." 2>/dev/null; install_parameters; return; fi
+		if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's@[^/]*$@@')" ]); then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path." 2>/dev/null; continue; fi
+		if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Linuxloops disk images cannot be booted from an encrypted partition." 2>/dev/null; continue; fi
 		if [[ ! ${destination} == *"/"* ]]; then path="${PWD}/"; else path="$(realpath ${destination})"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
 		fullpath="${path}$(basename ${destination})"
-		if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..." 2>/dev/null; install_parameters; return; fi
-		if ([ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..." 2>/dev/null; install_parameters; return; fi
+		if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..." 2>/dev/null; continue; fi
+		if ([ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..." 2>/dev/null; continue; fi
 		possible_image_size
 		if [ $(( ${maximum_image_size} - 14 )) -lt 0 ]; then
 			sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14 GB available." 2>/dev/null
-			install_parameters
-			return
+			continue
 		elif [ $(( ${maximum_image_size} - 14 )) -eq 0 ]; then
 			sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Exactly 14GB is available on this drive, the installer will proceed with the creation of a 14GB image." --ok-label="Next" 2>/dev/null
 			install_size=14
 		else
 			install_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has ${maximum_image_size} GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=${maximum_image_size} --value=14 --step 1 2>/dev/null)
 		fi
-		if [ -z "${install_size}" ]; then exit 1; fi
-		install_sizeMB=$((install_size*1024))
-		if [ "${distro}" != "BlissOS" ] && [ "${distro}" != "Brunch" ] && [ "${distro}" != "ChromeOS-Flex" ] && [ "${distro}" != "Tails" ]; then
-			locale=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your locale (language / formats)." --column "Select" --column "Locale" --column "Description" "${available_locales[@]}" --ok-label="Next" 2>/dev/null)
-			if [ -z "${locale}" ]; then exit 1; fi
-			keymap=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your keyboard layout." --column "Select" --column "Keymap" --column "Description" "${available_keymaps[@]}" --ok-label="Next" 2>/dev/null)
-			if [ -z "${keymap}" ]; then exit 1; fi
-			timezone=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your timezone." --column "Select" --column "Timezone" "${available_timezones[@]}" --ok-label="Next" 2>/dev/null)
-			if [ -z "${timezone}" ]; then exit 1; fi			
-			if [[ " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then fstype=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next" 2>/dev/null); else fstype="ext4"; fi
-			if [ -z "${fstype}" ]; then exit 1; fi
-			encryption=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ?\nThis is highly recommended if you intend to keep sensitive data." --column "Encryption" "Yes" "No" --ok-label="Next" 2>/dev/null)
-			if [ -z "${encryption}" ]; then exit 1; fi
-			swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1 2>/dev/null)
-			if [ -z "${swap_size}" ]; then exit 1; fi
-			if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next" 2>/dev/null); else nvidia="No"; fi
-			if [ -z "${nvidia}" ]; then exit 1; fi
-			if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ?\n(enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next" 2>/dev/null); else surface="No"; fi
-			if [ -z "${surface}" ]; then exit 1; fi
-			customize=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to customize the install ?" --column "Customize install" "No" "Yes" --ok-label="Next" 2>/dev/null)
-			if [ -z "${customize}" ]; then exit 1; fi
-			if [ "${customize}" == "Yes" ]; then
-				custom_packages=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to install additional packages ? (if so, please provide a space separated package list)" --ok-label="Next" 2>/dev/null)
-				custom_script_enable=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to run a custom script during the install process ? (if so, select a bash script that will be run as root at the end of the install process)" --column "Run a custom script ?" "No" "Yes" --ok-label="Next" 2>/dev/null)
-				if [ -z "${custom_script_enable}" ]; then exit 1; fi
-				if [ "${custom_script_enable}" == "Yes" ]; then
-					if [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]; then
-						custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="/home/chronos/user/" 2>/dev/null)
-					else
-						custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="$(eval echo ~${SUDO_USER})/" 2>/dev/null)
-					fi
-					if [ -z "${custom_script}" ]; then exit 1; fi
-				fi
-				kernel_parameters=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to add specific kernel parameters ? (if so, please provide a space separated kernel parameters list)" --ok-label="Next" 2>/dev/null)
-			fi
-		fi
-	else
-		if [ -z "${distro}" ] || [[ ! " ${available_distros[*]} " =~ " ${distro} " ]]; then echo -e "Please select a distro from the below list:"; list_array "available_distros"; exit 1; fi
-		check_home_space
-		list_desktops "${distro}"
-		if [ -z "${desktop}" ] || [[ ! " ${available_desktops[*]} " =~ " ${desktop} " ]]; then echo -e "Please select an environment from the below list:"; list_array "available_desktops"; exit 1; fi
-		if [ -z "${destination}" ]; then echo "Please provide a destination path for the image with \"-dst\" or \"--destination\" argument.\n"; exit 1; fi
-		if [ ! -z "${swap_size}" ] && [ $(( install_size - swap_size )) -lt 12 ]; then echo "At least 12 GB should be available for the main partition, please increase the image size or reduce the swap size."; exit 1; fi
-		if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's![^/]*$!!')" ]); then echo "Desination path does not exist, please provide an existing path."; exit 1; fi
-		if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then echo "Linuxloops disk images cannot be booted from an encrypted partition."; exit 1; fi
-		if [[ ! "${destination}" == *"/"* ]]; then path="${PWD}/"; else path="$(echo $(realpath ${destination}) | sed 's![^/]*$!!')"; fi
-		fullpath="${path}$(basename ${destination})"
-		if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*}" ]; then echo "The ${distro} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/<drive letter>/..."; exit 1; fi
-		if [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ] && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then echo "The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; exit 1; fi
-		possible_image_size
-		if [ $(( ${maximum_image_size} - ${install_size} )) -lt 0 ]; then echo -e "Maximum available space to create the ${distro} image on this partition is ${maximum_image_size} GB.\nAvailable space: $(( ($(df -k --output=avail $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | sed 1d) / 1024 / 1024) + ${freed_space} )) GB\nSpace needed to bootstrap: ${bootstrap_space} GB\nIf you think that available space value is incorrect, verify that you have correctly mounted the destination partition or if the partition is in ext4 format that there is no reserved space (cf. https://odzangba.wordpress.com/2010/02/20/how-to-free-reserved-space-on-ext4-partitions)"; exit 1; else install_sizeMB=$((install_size*1024)); fi
-		if [ ! $(list_array "available_locales" | grep -w "${locale}") ]; then echo "Locale ${locale} is not available, supported locales are:"; echo $(list_array "available_locales" | sed -e 's@\n@ @g'); exit 1; fi
-		if [ ! $(list_array "available_keymaps" | grep -w "${keymap}") ]; then echo "Keymap ${keymap} is not available, supported keympas are:"; echo $(list_array "available_keymaps" | sed -e 's@\n@ @g'); exit 1; fi
-		if [ ! $(list_array "available_timezones" | grep -w "${timezone}") ]; then echo "Timezone ${timezone} is not available, supported timezones are:"; echo $(list_array "available_timezones" | sed -e 's@\n@ @g'); exit 1; fi
-		if [ "${fstype}" == "btrfs" ] && [[ ! " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then echo "btrfs is not available for this distro, supported distros are:"; list_array "btrfs_supported"; exit 1; fi
-		if [ "${nvidia}" == "Yes" ] && [[ ! " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then echo "nvidia driver is not available for this distro, supported distros are:"; list_array "nvidia_supported"; exit 1; fi
-		if [ "${surface}" == "Yes" ] && [[ ! " ${surface_supported[*]} " =~ " ${distro} " ]]; then echo "Surface patches are not available for this distro, supported distros are:"; list_array "surface_supported"; exit 1; fi
-		if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then
-			if [ "${encryption}" == "Yes" ]; then echo -e "rootfs encryption is not supported with ${distro}.\n"; exit 1; fi
-			if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then echo -e "Swap cannot be enabled by design with ${distro}.\n"; exit 1; fi
-		fi
-	fi
+		break
+	done
+	if [ -z "${install_size}" ]; then exit 1; fi
+	install_sizeMB=$((install_size*1024))
 fi
-set_credentials
-if [ ! -z "${zenity}" ]; then
-	if [ "${install_type}" == "disk" ]; then if ! sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --question --text="WARNING: All data on device ${destination} will be erased, are you sure you want to continue ?" 2>/dev/null; then exit 1; fi; fi
-	start_install  2>&1 >(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing ${distro} with ${desktop} environment.\nYou can follow the install process in the terminal window." 2>/dev/null) || exit_with_error "Failed to install ${distro} in chroot."
-else
-	if [ "${install_type}" == "disk" ]; then
-		read -p "WARNING: All data on device ${destination} will be erased, are you sure you want to continue ? (type yes to continue)"$'\n' confirm
-		if [ -z ${confirm} ] || [ ! ${confirm} == "yes" ]; then echo "Invalid answer ${confirm}, exiting"; exit 1; fi
+if [ "${distro}" != "BlissOS" ] && [ "${distro}" != "Brunch" ] && [ "${distro}" != "ChromeOS-Flex" ] && [ "${distro}" != "Tails" ]; then
+	locale=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your locale (language / formats)." --column "Select" --column "Locale" --column "Description" "${available_locales[@]}" --ok-label="Next" 2>/dev/null)
+	if [ -z "${locale}" ]; then exit 1; fi
+	keymap=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your keyboard layout." --column "Select" --column "Keymap" --column "Description" "${available_keymaps[@]}" --ok-label="Next" 2>/dev/null)
+	if [ -z "${keymap}" ]; then exit 1; fi
+	timezone=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your timezone." --column "Select" --column "Timezone" "${available_timezones[@]}" --ok-label="Next" 2>/dev/null)
+	if [ -z "${timezone}" ]; then exit 1; fi
+	if [[ " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then fstype=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next" 2>/dev/null); else fstype="ext4"; fi
+	if [ -z "${fstype}" ]; then exit 1; fi
+	encryption=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ?\nThis is highly recommended if you intend to keep sensitive data." --column "Encryption" "Yes" "No" --ok-label="Next" 2>/dev/null)
+	if [ -z "${encryption}" ]; then exit 1; fi
+	swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1 2>/dev/null)
+	if [ -z "${swap_size}" ]; then exit 1; fi
+	if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next" 2>/dev/null); else nvidia="No"; fi
+	if [ -z "${nvidia}" ]; then exit 1; fi
+	if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ?\n(enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next" 2>/dev/null); else surface="No"; fi
+	if [ -z "${surface}" ]; then exit 1; fi
+	customize=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to customize the install ?" --column "Customize install" "No" "Yes" --ok-label="Next" 2>/dev/null)
+	if [ -z "${customize}" ]; then exit 1; fi
+	if [ "${customize}" == "Yes" ]; then
+		custom_packages=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to install additional packages ? (if so, please provide a space separated package list)" --ok-label="Next" 2>/dev/null)
+		custom_script_enable=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to run a custom script during the install process ? (if so, select a bash script that will be run as root at the end of the install process)" --column "Run a custom script ?" "No" "Yes" --ok-label="Next" 2>/dev/null)
+		if [ -z "${custom_script_enable}" ]; then exit 1; fi
+		if [ "${custom_script_enable}" == "Yes" ]; then
+			if [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]; then
+				custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="/home/chronos/user/" 2>/dev/null)
+			else
+				custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="$(eval echo ~${SUDO_USER})/" 2>/dev/null)
+			fi
+			if [ -z "${custom_script}" ]; then exit 1; fi
+		fi
+		kernel_parameters=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to add specific kernel parameters ? (if so, please provide a space separated kernel parameters list)" --ok-label="Next" 2>/dev/null)
 	fi
-	start_install || exit_with_error "Failed to install ${distro} in chroot."
+	set_credentials
+	if [ "${distro}" != "Qubes" ]; then
+		hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"
+		until false; do
+			hostname=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Which hostname should be used to identify this machine on the network ?" --entry-text "${hostname}" --ok-label="Next" 2>/dev/null)
+			if [ -z "${hostname}" ]; then exit 1; fi
+			if ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="hostname contains unsupported characters.\n" 2>/dev/null; continue; fi
+			break
+		done
+	fi
 fi
 if [ "${install_type}" == "disk" ]; then
-	install_finished="Linuxloops installation process is finished.\nYou can now reboot your computer and start ${distro} by selecting your device in the UEFI boot menu."
-	if [ ! -z "${zenity}" ]; then
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${install_finished}" --ok-label="Exit" 2>/dev/null
-	else
-		echo -e "${install_finished}"
-	fi
+	if ! sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --question --text="WARNING: All data on device ${destination} will be erased, are you sure you want to continue ?" 2>/dev/null; then exit 1; fi
+	start_install  2>&1 >(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing ${distro} with ${desktop} environment.\nYou can follow the install process in the terminal window." 2>/dev/null) || exit_with_error "Failed to install ${distro} in chroot."
+	sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Linuxloops installation process is finished.\nYou can now reboot your computer and start ${distro} by selecting your device in the UEFI boot menu." --ok-label="Exit" 2>/dev/null
 else
+	start_install  2>&1 >(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing ${distro} with ${desktop} environment.\nYou can follow the install process in the terminal window." 2>/dev/null) || exit_with_error "Failed to install ${distro} in chroot."
+	grub_config
+fi
+}
+
+cli_installer()
+{
+if [ "${declarative}" == "Yes" ]; then
+	if [ ! -f "${declarative_config}" ]; then echo "Declarative file not found at path: ${declarative_config}."; exit 1; fi
+	source "${declarative_config}"
+	if [ ! -z "${custom_packages}" ]; then custom_packages=$(echo ${custom_packages} | sed -e 's@\n@ @g'); fi
+	if [ ! -z "${custom_commands}" ]; then
+		cat >"${linuxloopsdir}"/custom_commands <<CUSTOM_COMMANDS
+#!/bin/bash
+set -e
+${custom_commands}
+CUSTOM_COMMANDS
+		chmod 0755 "${linuxloopsdir}"/custom_commands
+		custom_script="${linuxloopsdir}"/custom_commands
+	fi
+fi
+if [ -z "${hostname}" ]; then hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"; fi
+if [ -z "${locale}" ]; then locale="en_US"; fi
+if [ -z "${keymap}" ]; then keymap="us"; fi
+if [ -z "${timezone}" ]; then timezone="UTC"; fi
+if [ -z "${install_size}" ]; then
+	if [ "${install_type}" == "image" ]; then install_size=14; fi
+else
+	if [ -z "${install_size##*[!0-9]*}" ] || [ "${install_size}" -lt 0 ]; then
+		echo "Install size is not a positive integer: ${install_size}."
+		exit 1
+	elif [ "${install_size}" -lt 14 ] ; then
+		echo "Install size cannot be lower than 14 GB."
+		exit 1
+	fi
+fi
+if [ -z "${distro}" ] || [[ ! " ${available_distros[*]} " =~ " ${distro} " ]]; then echo -e "Please select a distro from the below list:"; list_array "available_distros"; exit 1; fi
+check_home_space
+list_desktops "${distro}"
+if [ -z "${desktop}" ] || [[ ! " ${available_desktops[*]} " =~ " ${desktop} " ]]; then echo -e "Please select an environment from the below list:"; list_array "available_desktops"; exit 1; fi
+if [ -z "${destination}" ]; then echo "Please provide a destination path for the image with \"-dst\" or \"--destination\" argument.\n"; exit 1; fi
+if [ -z "${destination##/dev/*}" ]; then install_type="disk"; else install_type="image"; fi
+if [ "${install_type}" == "disk" ]; then
+	if [ ! -b "${destination}" ]; then echo "Disk ${destination} was not found."; exit 1; fi
+	if [ ! "$(lsblk ${destination} -nd -o TYPE)" == "disk" ]; then echo "Linuxloops can only be installed on a full disk."; exit 1; fi
+	fullpath="${destination}"
+	if [ ! -z "${install_size}" ]; then if [ $(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 / 1024 / 1024) )) -lt "${install_size}" ]; then echo "You have requested an install size of ${install_size} GB but this device only has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 / 1024 / 1024) )) GB available."; exit 1; fi; fi
+	if [ -z "${install_size}" ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 / 1024) )); else install_sizeMB=$(( install_size * 1024 )); fi
+else
+	if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's![^/]*$!!')" ]); then echo "Desination path does not exist, please provide an existing path."; exit 1; fi
+	if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then echo "Linuxloops disk images cannot be booted from an encrypted partition."; exit 1; fi
+	if [[ ! "${destination}" == *"/"* ]]; then path="${PWD}/"; else path="$(echo $(realpath ${destination}) | sed 's![^/]*$!!')"; fi
+	fullpath="${path}$(basename ${destination})"
+	if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*}" ]; then echo "The ${distro} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/<drive letter>/..."; exit 1; fi
+	if [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ] && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then echo "The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..."; exit 1; fi
+	possible_image_size
+	if [ $(( ${maximum_image_size} - ${install_size} )) -lt 0 ]; then echo -e "Maximum available space to create the ${distro} image on this partition is ${maximum_image_size} GB.\nAvailable space: $(( ($(df -k --output=avail $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | sed 1d) / 1024 / 1024) + ${freed_space} )) GB\nSpace needed to bootstrap: ${bootstrap_space} GB\nIf you think that available space value is incorrect, verify that you have correctly mounted the destination partition or if the partition is in ext4 format that there is no reserved space (cf. https://odzangba.wordpress.com/2010/02/20/how-to-free-reserved-space-on-ext4-partitions)"; exit 1; else install_sizeMB=$(( install_size * 1024)); fi
+fi
+if [ ! -z "${swap_size}" ]; then
+	if [ -z "${swap_size##*[!0-9]*}" ] || [ "${swap_size}" -lt 0 ]; then echo "Provided swap size is not a positive integer: ${swap_size}."; exit 1; fi
+	if [ "${swap_size}" -gt 0 ] && [ $(( install_sizeMB - (swap_size * 1024) )) -lt $(( 12 * 1024 )) ]; then echo "At least 12 GB should be available for the main partition, please increase the image size or reduce the swap size."; exit 1; fi
+fi
+if [ "${distro}" == "BlissOS" ] || [ "${distro}" == "Brunch" ] || [ "${distro}" == "ChromeOS-Flex" ] || [ "${distro}" == "Tails" ]; then
+	if [ "${encryption}" == "Yes" ]; then echo -e "rootfs encryption is not supported with ${distro}.\n"; exit 1; fi
+	if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then echo -e "Swap cannot be enabled by design with ${distro}.\n"; exit 1; fi
+fi
+if [ ! $(list_array "available_locales" | grep -w "${locale}") ]; then echo "Locale ${locale} is not available, supported locales are:"; echo $(list_array "available_locales" | sed -e 's@\n@ @g'); exit 1; fi
+if [ ! $(list_array "available_keymaps" | grep -w "${keymap}") ]; then echo "Keymap ${keymap} is not available, supported keympas are:"; echo $(list_array "available_keymaps" | sed -e 's@\n@ @g'); exit 1; fi
+if [ ! $(list_array "available_timezones" | grep -w "${timezone}") ]; then echo "Timezone ${timezone} is not available, supported timezones are:"; echo $(list_array "available_timezones" | sed -e 's@\n@ @g'); exit 1; fi
+if [ ! -z "${hostname}" ] && ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then echo "Provided hostname contains invalid characters."; exit 1; fi
+if [ "${fstype}" == "btrfs" ] && [[ ! " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then echo "btrfs is not available for this distro, supported distros are:"; list_array "btrfs_supported"; exit 1; fi
+if [ "${nvidia}" == "Yes" ] && [[ ! " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then echo "nvidia driver is not available for this distro, supported distros are:"; list_array "nvidia_supported"; exit 1; fi
+if [ "${surface}" == "Yes" ] && [[ ! " ${surface_supported[*]} " =~ " ${distro} " ]]; then echo "Surface patches are not available for this distro, supported distros are:"; list_array "surface_supported"; exit 1; fi
+if [ "${live}" == "Yes" ] && [ ! "${distro}" == "Debian" ]; then echo "Linuxloops live can only be created with Debian distro."; exit 1; fi
+if [ ! -z "${custom_script}" ] && [ ! -f "${custom_script}" ]; then echo "Custom script ${1} could not be found."; exit 1; fi
+set_credentials
+if [ "${install_type}" == "disk" ]; then
+	read -p "WARNING: All data on device ${destination} will be erased, are you sure you want to continue ? (type yes to continue)"$'\n' confirm
+	if [ -z ${confirm} ] || [ ! ${confirm} == "yes" ]; then echo "Invalid answer ${confirm}, exiting"; exit 1; fi
+	start_install || exit_with_error "Failed to install ${distro} in chroot."
+	echo -e "Linuxloops installation process is finished.\nYou can now reboot your computer and start ${distro} by selecting your device in the UEFI boot menu."
+else
+	start_install || exit_with_error "Failed to install ${distro} in chroot."
 	grub_config
 fi
 }
@@ -10141,16 +10140,7 @@ set_base_parameters
 if [ ${#} -eq 0 ]; then
 	if [ -z "$(command -v zenity)" ]; then echo "To use the GUI installer you need to install the \"zenity\" binary package." 2>/dev/null; usage; exit 1; fi
 	zenity=1
-	if ! sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer." --ok-label="Next" 2>/dev/null; then exit 0; fi
-	distro=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which distribution do you want to install ?" --column "Distribution" "${available_distros[@]}" --ok-label="Next" 2>/dev/null)
-	if [ -z "${distro}" ]; then exit 0; fi
-	check_home_space
-	list_desktops ${distro}
-	desktop=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which desktop environment do you want to install ?" --column "Desktop environment" "${available_desktops[@]}" --ok-label="Next" 2>/dev/null)
-	if [ -z "${desktop}" ]; then exit 0; fi
-	if [ -z "${wsl}" ]; then install_type=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to install ${distro} on a disk or in an image file ?" --column "Choose install type" "disk" "image" --ok-label="Next" 2>/dev/null); else install_type="image"; fi
-	if [ "${install_type}" == "disk" ] && [ ! -d /sys/firmware/efi ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Disk installs are possible when booted in UEFI mode." 2>/dev/null; exit 1; fi
-	if [ -z "${install_type}" ]; then exit 1; fi
+	zenity_installer
 else
 	while [ ${#} -gt 0 ]; do
 		case "${1}" in
@@ -10164,26 +10154,14 @@ else
 			;;
 			-dst | --destination)
 				shift
-				if [ -z "${1##/dev/*}" ]; then install_type="disk"; else install_type="image"; fi
 				destination="${1}"
 			;;
 			-s | --size)
 				shift
-				if [ -z "${1##*[!0-9]*}" ] || [ "${1}" -lt 0 ]; then
-					echo "Provided disk image size is not a positive integer: ${1}."
-					exit 1
-				elif [ "${1}" -lt 14 ] ; then
-					echo "Disk image size cannot be lower than 14 GB."
-					exit 1
-				fi
 				install_size="${1}"
 			;;
 			-z | --swapsize)
 				shift
-				if [ -z "${1##*[!0-9]*}" ] || [ "${1}" -lt 0 ]; then
-					echo "Provided swap size is not a positive integer: ${1}."
-					exit 1
-				fi
 				swap_size="${1}"
 			;;
 			-a | --autologin)
@@ -10197,7 +10175,6 @@ else
 			;;
 			-H | --hostname)
 				shift
-				if echo "${1}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then echo "Provided hostname contains invalid characters."; exit 1; fi
 				hostname="${1}"
 			;;
 			-L | --locale)
@@ -10222,20 +10199,23 @@ else
 				shift
 				custom_packages="${1}"
 			;;
-			-C | --custom-scripts)
+			-C | --custom-script)
 				shift
-				custom_scripts="$(sudo -u ${SUDO_USER} echo $(realpath ${1}))"
-				if [ ! -f "${custom_scripts}" ]; then echo "Custom script ${1} could not be found."; exit 1; fi
+				custom_script="$(sudo -u ${SUDO_USER} echo $(realpath ${1}))"
 			;;
 			-k | --kernel-parameters)
 				shift
 				kernel_parameters="${1}"
 			;;
+			-d | --declarative)
+				shift
+				declarative="Yes"
+				declarative_config="${1}"
+			;;
 			-t | --test)
 				test_distro="Yes"
 			;;
 			-u | --usb-live)
-				if [ ! "${distro}" == "Debian" ]; then echo "Linuxloops live can only be created with Debian distro."; exit 1; fi
 				live="Yes"
 			;;
 			-l | --list)
@@ -10265,9 +10245,5 @@ else
 		esac
 		shift
 	done
-	if [ "${install_type}" == "image" ] && [ -z "${install_size}" ]; then install_size=14; fi
-	if [ -z "${locale}" ]; then locale="en_US"; fi
-	if [ -z "${keymap}" ]; then keymap="us"; fi
-	if [ -z "${timezone}" ]; then timezone="UTC"; fi
+	cli_installer
 fi
-install_parameters

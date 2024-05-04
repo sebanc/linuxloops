@@ -15,7 +15,7 @@
 
 ## Install guide
 
-1. Download the linuxloops script:  
+1. Download the Linuxloops script:  
 
 `curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`  
   
@@ -25,7 +25,7 @@
 
 `sudo bash ~/linuxloops`
 
-- Otherwise using the command line:  
+- To use the CLI installer:  
 ```
 Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
 -distro, --distribution <distribution name>			(Distribution to install)
@@ -59,6 +59,17 @@ As an example:
 `sudo bash ~/linuxloops -distro Ubuntu -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
 `sudo bash ~/linuxloops -distro Arch -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
+- To use the Declarative installer:  
+
+Have a look at the declarative configuration examples available here:  
+[Declarative configuration examples][Declarative configuration examples]  
+
+The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
+`sudo bash ~/linuxloops -l`  
+
+Create your own declarative configuration and run the below command to start the install:  
+`sudo bash ~/linuxloops -d <path_to_your_declarative_configuration>`  
+
 3. Finalisation (For disk installs)  
 
 Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.  
@@ -81,11 +92,11 @@ If Secure Boot is enabled, enroll the Secure Boot DER certificate:
 
 Choose a password, reboot your computer, you should see a blue screen, select "Enroll MOK" and validate with your chosen password.  
 
-Start the LinuxLoops grub entry from your distro's grub menu.  
+Start the Linuxloops grub entry from your distro's grub menu.  
 
 ## Support
 
-Support for LinuxLoops is provided in the "LINUXLOOPS" section of the Brunch Discord server:  
+Support for Linuxloops is provided in the dedicated section of the Brunch Discord server:  
 
 [![Discord][discord-shield]][discord-url]
 
@@ -98,3 +109,4 @@ Support for LinuxLoops is provided in the "LINUXLOOPS" section of the Brunch Dis
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
 
+[Declarative configuration examples]: ../Declarative_configuration_examples
