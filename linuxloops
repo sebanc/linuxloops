@@ -8089,6 +8089,7 @@ dkms add -m v4l2loopback -v 0.13.1
 ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 git clone https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
+sed -i "s@-Wdeprecated-enum-enum-conversion@@g" ./meson.build
 meson build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
 ninja -C build
 ninja -C build install

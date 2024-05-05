@@ -24,7 +24,7 @@ The default password for the "live" user account is: "linuxloops".
 
 Download the live image and run the following command to write it to the disk (this example assumes your drive is /dev/sdX:  
 
-`7z x linuxloops_live_XXXXXXXX.7z linuxloops_live_*.img -so | sudo tee /dev/sdX > /dev/null; sync`  
+`7z x linuxloops_live_XXXXXXXX.7z linuxloops_live_*.img -so | sudo dd iflag=fullblock of=/dev/sdX oflag=direct conv=fsync bs=1M status=progress`  
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
