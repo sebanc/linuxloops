@@ -126,7 +126,7 @@ The only mandatory parameters are: the distribution, the environment and the des
 
 As an example:  
 `sudo bash ~/linuxloops -distro Ubuntu -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
-`sudo bash ~/linuxloops -distro Arch -env Cinnamon -dst /home/username/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment with the linux-surface patches in a 30 GB image located at /home/username/arch.img.  
+`sudo bash ~/linuxloops -distro Arch -env Cinnamon -dst /home/username/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
 ### Declarative installer
 

@@ -101,7 +101,7 @@ case "${1}" in
 	;;
 	'Fedora')
 	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	bootstrap="lxc fedora 39 default"
+	bootstrap="lxc fedora 40 default"
 	bootloader_id="fedora"
 	bootloader_name="shimx64.efi"
 	;;
@@ -2487,7 +2487,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2747,7 +2747,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales daedalus /mnt http://deb.devuan.org/merged
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales daedalus /mnt http://deb.devuan.org/merged
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -2989,7 +2989,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3081,7 +3081,7 @@ dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-dnf install --installroot=/mnt --releasever 40 -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3548,7 +3548,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales kali-rolling /mnt http://http.kali.org/kali
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales kali-rolling /mnt http://http.kali.org/kali
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3803,7 +3803,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -3951,7 +3951,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4316,7 +4316,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -4574,7 +4574,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5304,7 +5304,7 @@ echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > 
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall ca-certificates kbd keyboard-configuration locales parrot-core
+yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall ca-certificates console-setup kbd keyboard-configuration locales parrot-core
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
 parrot-upgrade
 sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
@@ -5548,7 +5548,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5646,7 +5646,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales bookworm /mnt http://deb.debian.org/debian
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -6874,7 +6874,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales noble /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales noble /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7177,7 +7177,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7645,7 +7645,7 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHR
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -7989,6 +7989,7 @@ if [ ! -f /etc/locale.gen ]; then echo "${locale}.UTF-8 UTF-8" > /etc/locale.gen
 localedef -i ${locale} -f UTF-8 ${locale}.UTF-8
 echo "LANG=${locale}.UTF-8" > /etc/locale.conf
 echo "LANG=${locale}.UTF-8" > /etc/default/locale
+if [ -f /etc/default/console-setup ]; then sed -i 's@CHARMAP=.*@CHARMAP="UTF-8"@g' /etc/default/console-setup; fi
 echo -e "KEYMAP=${keymap}" > /etc/vconsole.conf
 cat >/etc/default/keyboard <<'DEBIANKEYBOARD'
 XKBMODEL="pc105"
@@ -8088,7 +8089,7 @@ dkms add -m v4l2loopback -v 0.13.1
 ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
 git clone https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
-meson build -Dpipelines=uvcvideo,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true
+meson build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
 ninja -C build
 ninja -C build install
 cd /
@@ -8716,6 +8717,7 @@ echo -e "LINUXLOOPSBINARY" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/ins
 echo -e "chmod 0755 /boot/linuxloops/linuxloops" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "(cd /boot/linuxloops && find . | cpio -o -H newc | gzip > /boot/linuxloops/linuxloops-recovery.img)" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "DEBIAN_FRONTEND=noninteractive dpkg-reconfigure keyboard-configuration" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
+echo -e "DEBIAN_FRONTEND=noninteractive dpkg-reconfigure console-setup" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 echo -e "update-initramfs -u -k all" >> "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_initramfs
 }
