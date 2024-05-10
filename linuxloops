@@ -174,7 +174,7 @@ case "${1}" in
 	'Parrot')
 	available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	#available_desktops=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	bootstrap="lxc archlinux current default"
+	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
 	;;
@@ -3304,31 +3304,34 @@ echo "LANG=en_US.UTF-8" > /etc/locale.conf
 emerge-webrsync
 rm -rf /etc/portage/gnupg /var/cache/binpkgs
 getuto
+/linuxloops/install_secureboot
+rm /linuxloops/install_secureboot
+mkdir /etc/portage/package.license
+echo -e "*/* *" >> /etc/portage/package.license/custom
+echo -e "\nMAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
+echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
 echo -e "\nGRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
 echo -e "SECUREBOOT_SIGN_KEY=\"/etc/secureboot_key/MOK.key\"" >> /etc/portage/make.conf
 echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/make.conf
-if [ "${desktop}" == "None/Openrc" ]; then
-	echo -e "\nUSE=\"bluetooth dbus dracut elogind policykit mount pam -systemd\"" >> /etc/portage/make.conf
-elif [ "${desktop}" == "None/Systemd" ]; then
-	echo -e "\nUSE=\"bluetooth dbus dracut -elogind policykit mount pam systemd\"" >> /etc/portage/make.conf
-	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
-elif [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
-	echo -e "\nUSE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
-	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
-else
-	echo -e "\nUSE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
-	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
-	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
-fi
-echo -e "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
+echo -e "\nVIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
-echo -e "\nMAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
-echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
-mkdir /etc/portage/package.license
-echo -e "*/* *" >> /etc/portage/package.license/custom
-/linuxloops/install_secureboot
-rm /linuxloops/install_secureboot
-emerge app-portage/gentoolkit
+if [ "${desktop}" == "None/Openrc" ]; then
+	echo -e "USE=\"bluetooth dbus dracut elogind policykit mount pam -systemd\"" >> /etc/portage/make.conf
+	emerge app-portage/gentoolkit
+elif [ "${desktop}" == "None/Systemd" ]; then
+	echo -e "USE=\"bluetooth dbus dracut -elogind policykit mount pam systemd\"" >> /etc/portage/make.conf
+	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
+	emerge app-portage/gentoolkit
+elif [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
+	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner
+else
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
+	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
+	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner
+fi
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio
 echo -e '[main]\nhostname-mode=none' > /etc/NetworkManager/NetworkManager.conf
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
@@ -3459,7 +3462,6 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_desktop <<INSTALL_DE
 #!/bin/bash
 set -e
 if [ "${desktop}" == "None/Openrc" ] || [ "${desktop}" == "None/Systemd" ]; then exit 0; fi
-emerge x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner
 ${install_desktop}
 if [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
 	rc-update add elogind boot
@@ -5282,18 +5284,17 @@ fi
 chroot_Parrot()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
+yes | DEBIAN_FRONTEND=noninteractive apt update
+yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 "
 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-echo "Downloading Parrot rootfs"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f http://mirror.parrot.sh/parrot/iso/5.3/Parrot-rootfs-5.3_amd64.tar.xz -o /root/parrot-rootfs.tar.xz || { echo -e "Parrot rootfs image download failed."; exit 1; }
-tar xf /root/parrot-rootfs.tar.xz -C /mnt --strip 1
-rm /root/parrot-rootfs.tar.xz
+echo 'deb https://deb.parrot.sh/parrot lory main contrib non-free non-free-firmware' > /etc/apt/sources.list
+yes | DEBIAN_FRONTEND=noninteractive apt update --allow-insecure-repositories
+yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap parrot-archive-keyring parrot-core --allow-unauthenticated
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,kbd,keyboard-configuration,locales,parrot-core lory /mnt https://deb.parrot.sh/parrot
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
@@ -5301,14 +5302,8 @@ cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
-echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list
-yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install --reinstall ca-certificates console-setup kbd keyboard-configuration locales parrot-core
-sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
-parrot-upgrade
-sed -i 's@https://deb.parrot.sh/parrot\\|https://deb.parrot.sh/direct/parrot@http://mirror.parrot.sh/parrot@g' /etc/apt/sources.list.d/parrot.list
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
+echo 'deb http://mirror.parrot.sh/parrot lory main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/parrot.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
 CHROOT_INIT
@@ -6082,7 +6077,7 @@ chroot_SteamOS()
 prepare_bootstrap="
 curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
+pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 "
 
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
@@ -6107,8 +6102,9 @@ cat >/etc/pacman_steamos.conf <<'PACMAN-STEAMOS'
 #GPGDir      = /etc/pacman.d/gnupg/
 #HookDir     = /etc/pacman.d/hooks/
 HoldPkg     = pacman glibc
-XferCommand = /usr/bin/curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f -o %o %u
+#XferCommand = /usr/bin/curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f -o %o %u
 #XferCommand = /usr/bin/wget --tries=5 --read-timeout=5 --passive-ftp -c -O %o %u
+XferCommand = /usr/bin/aria2c --allow-overwrite=true --continue=true --file-allocation=none --log-level=error --max-tries=10 --max-connection-per-server=2 --max-file-not-found=5 --min-split-size=5M --no-conf -Rtrue --summary-interval=60 --timeout=10 --dir=/ --out %o %u
 #CleanMethod = KeepInstalled
 Architecture = auto
  
@@ -6202,7 +6198,7 @@ cp /etc/pacman_steamos.conf /etc/pacman_steamos_install.conf
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman_steamos_install.conf
 sed -i 's@#RemoteFileSigLevel = Required@RemoteFileSigLevel = Optional@g' /etc/pacman_steamos_install.conf
 echo 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
-pacstrap -C /etc/pacman_steamos_install.conf -G /mnt base base-devel holo-keyring wget
+pacstrap -C /etc/pacman_steamos_install.conf -G /mnt base base-devel holo-keyring aria2
 cp /etc/pacman_steamos.conf /mnt/etc/pacman.conf
 PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
