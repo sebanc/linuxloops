@@ -64,11 +64,6 @@ Kali does not have secure boot support in full disk install.
 Manjaro does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.  
 
 
-## NixOS
-
-After install, if you want to install packages via nix, open the teminal and run "sudo nix-channel --update" first.  
-
-
 ## OpenSUSE
 
 ### Specific note for OpenSUSE installation in a disk image with secure boot enabled

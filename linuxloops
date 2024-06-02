@@ -4147,7 +4147,7 @@ systemctl enable gdm.service
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -4182,14 +4182,14 @@ systemctl enable lightdm.service
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate manjaro-mate-settings arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra manjaro-mate-settings arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -4695,112 +4695,118 @@ sudo -u temp bash << 'NIXOSINSTALL'
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-23.11 nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-24.05 nixpkgs
 nix-channel --update
 nix-env -f '<nixpkgs>' -iA nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
 /linuxloops/install_user
+/linuxloops/install_dmconfig
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/prepare_chroot
 
 if [ "${autologin}" == "Yes" ]; then
-	case "${desktop}" in
-		'Gnome/Full')
-		autologin="
-	services.xserver.displayManager.gdm.autoLogin.enable = true;
-	services.xserver.displayManager.gdm.autoLogin.user = \"${username}\";"
-		;;
-		'Plasma/Full')
-		autologin="
-	services.xserver.displayManager.sddm.autoLogin.enable = true;
-	services.xserver.displayManager.sddm.autoLogin.user = \"${username}\";"
-		;;
-		*)
-		autologin="
-	services.xserver.displayManager.lightdm.autoLogin.enable = true;
-	services.xserver.displayManager.lightdm.autoLogin.user = \"${username}\";"
-		;;
-	esac
-else
-	autologin=""
+	autologin_commands="
+services.displayManager.autoLogin.enable = true;
+services.displayManager.autoLogin.user = \"${username}\";"
 fi
-
 case "${desktop}" in
 	'Budgie/Full')
+	default_session="budgie-desktop"
 	nixos_desktop="
+services.desktopManager.budgie.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;${autologin}
-services.xserver.desktopManager.budgie.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Cinnamon/Full')
+	default_session="cinnamon"
 	nixos_desktop="
+services.desktopManager.cinnamon.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;${autologin}
-services.xserver.desktopManager.cinnamon.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Deepin/Full')
+	default_session="dde-x11"
 	nixos_desktop="
+services.desktopManager.deepin.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;${autologin}
-services.xserver.desktopManager.deepin.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Gnome/Full')
+	default_session="gnome-wayland"
 	nixos_desktop="
+services.desktopManager.gnome.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.gdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.gdm.enable = true;${autologin}
-services.xserver.desktopManager.gnome.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'i3/Full')
+	default_session="none+i3"
 	nixos_desktop="
+${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.layout = \"${keymap}\";
 services.xserver.windowManager.i3.enable = true;
-services.xserver.windowManager.i3.extraPackages = with pkgs; [ dmenu i3status i3lock ];"
+services.xserver.windowManager.i3.extraPackages = with pkgs; [ dmenu i3status i3lock ];
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Lxqt/Full')
+	default_session="lxqt"
 	nixos_desktop="
 programs.nm-applet.enable = true;
 services.blueman.enable = true;
+services.desktopManager.lxqt.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;${autologin}
-services.xserver.desktopManager.lxqt.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Mate/Full')
+	default_session="mate"
 	nixos_desktop="
 programs.nm-applet.enable = true;
 services.blueman.enable = true;
+services.desktopManager.mate.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;${autologin}
-services.xserver.desktopManager.mate.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Pantheon/Full')
+	default_session="pantheon"
 	nixos_desktop="
+services.desktopManager.pantheon.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;${autologin}
-services.xserver.desktopManager.pantheon.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Plasma/Full')
+	default_session="plasma"
 	nixos_desktop="
+services.desktopManager.plasma6.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.displayManager.sddm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.sddm.enable = true;${autologin}
-services.xserver.desktopManager.plasma5.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Xfce/Full')
+	default_session="xfce"
 	nixos_desktop="
 services.blueman.enable = true;
+services.desktopManager.xfce.enable = true;${autologin_commands}
+services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
-services.xserver.displayManager.lightdm.enable = true;${autologin}
-services.xserver.desktopManager.xfce.enable = true;
-services.xserver.layout = \"${keymap}\";"
+services.xserver.xkb.layout = \"${keymap}\";"
 custom_packages="xfce.xfce4-pulseaudio-plugin ${custom_packages}"
 	;;
 esac
@@ -4808,11 +4814,25 @@ esac
 cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user <<INSTALL_USER
 sudo nixos-enter << 'NIXOSCHROOT'
 set -e
+nix-channel --update
 useradd -m '${username}'
 usermod -aG wheel,networkmanager '${username}'
 NIXOSCHROOT
 INSTALL_USER
 chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_user
+
+cat >"${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+sudo nixos-enter << 'NIXOSCHROOT'
+set -e
+if [ "${autologin}" == "Yes" ] && [ "${desktop}" == "Plasma/Full" ]; then
+	su -- '${username}' << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+fi
+NIXOSCHROOT
+INSTALL_DMCONFIG
+chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_dmconfig
 
 initramfs_type="nixos_config"
 }
@@ -7546,14 +7566,14 @@ ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 xbps-install -y ${desktop_base} sddm kde5 dolphin konsole
 ln -s /etc/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 xbps-install -y ${desktop_base} sddm kde5 kde5-baseapps
 ln -s /etc/sv/sddm /etc/runit/runsvdir/default/
@@ -8847,6 +8867,7 @@ boot.loader = {
 		useOSProber = false;
 	};
 };
+boot.plymouth.enable = true;
 
 console.earlySetup = true;
 console.keyMap = "${keymap}";
@@ -8865,7 +8886,7 @@ networking.hostName = "${hostname}";
 networking.networkmanager.enable = true;
 
 services.avahi.enable = true;
-services.avahi.nssmdns = true;
+services.avahi.nssmdns4 = true;
 services.logrotate.checkConfig = false;
 services.pipewire = {
   enable = true;
@@ -8890,7 +8911,7 @@ nixpkgs.config.allowUnfree = true;
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-system.stateVersion = "23.11"; # Did you read the comment?
+system.stateVersion = "24.05"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 echo -e '# Do not modify this file which contains the linuxloops configuration.\n# Please make changes to /etc/nixos/configuration.nix instead.\n{ config, lib, pkgs, modulesPath, ... }:\n\n{' > /mnt/etc/nixos/linuxloops.nix

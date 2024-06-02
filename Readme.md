@@ -57,7 +57,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Manjaro         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]|
 |MX              |23              |✓                      |✓                                    |✓                                |              |
 |Neon            |Current         |✓                      |✓                                    |✓                                |              |
-|NixOS           |23.11           |✓                      |✓                                    |                                 |[notes][NixOS-notes]|
+|NixOS           |24.05           |✓                      |✓                                    |                                 |              |
 |Nobara          |39              |✓                      |✓                                    |✓                                |              |
 |OpenSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]|
 |Parrot          |Current         |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
@@ -183,7 +183,6 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [Fedora-notes]: ./Readme/Distro-notes.md#Fedora
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
-[NixOS-notes]: ./Readme/Distro-notes.md#NixOS
 [OpenSUSE-notes]: ./Readme/Distro-notes.md#OpenSUSE
 [Parrot-notes]: ./Readme/Distro-notes.md#Parrot
 [Qubes-notes]: ./Readme/Distro-notes.md#Qubes
