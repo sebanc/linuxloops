@@ -4714,8 +4714,9 @@ case "${desktop}" in
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	nixos_desktop="
-services.desktopManager.budgie.enable = true;${autologin_commands}
+${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.budgie.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
@@ -4723,8 +4724,9 @@ services.xserver.xkb.layout = \"${keymap}\";"
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	nixos_desktop="
-services.desktopManager.cinnamon.enable = true;${autologin_commands}
+${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.cinnamon.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
@@ -4732,17 +4734,19 @@ services.xserver.xkb.layout = \"${keymap}\";"
 	'Deepin/Full')
 	default_session="dde-x11"
 	nixos_desktop="
-services.desktopManager.deepin.enable = true;${autologin_commands}
+${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.deepin.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	nixos_desktop="
-services.desktopManager.gnome.enable = true;${autologin_commands}
+${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.gnome.enable = true;
 services.xserver.displayManager.gdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
@@ -4762,9 +4766,9 @@ services.xserver.xkb.layout = \"${keymap}\";"
 	default_session="lxqt"
 	nixos_desktop="
 programs.nm-applet.enable = true;
-services.blueman.enable = true;
-services.desktopManager.lxqt.enable = true;${autologin_commands}
+services.blueman.enable = true;${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.lxqt.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
@@ -4773,9 +4777,9 @@ services.xserver.xkb.layout = \"${keymap}\";"
 	default_session="mate"
 	nixos_desktop="
 programs.nm-applet.enable = true;
-services.blueman.enable = true;
-services.desktopManager.mate.enable = true;${autologin_commands}
+services.blueman.enable = true;${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.mate.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
@@ -4783,8 +4787,9 @@ services.xserver.xkb.layout = \"${keymap}\";"
 	'Pantheon/Full')
 	default_session="pantheon"
 	nixos_desktop="
-services.desktopManager.pantheon.enable = true;${autologin_commands}
+${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.pantheon.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
@@ -4802,8 +4807,9 @@ services.xserver.xkb.layout = \"${keymap}\";"
 	default_session="xfce"
 	nixos_desktop="
 services.blueman.enable = true;
-services.desktopManager.xfce.enable = true;${autologin_commands}
+${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
+services.xserver.desktopManager.xfce.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";"
