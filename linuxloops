@@ -1280,7 +1280,7 @@ fi
 chroot_Arch()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
@@ -1555,7 +1555,7 @@ fi
 chroot_Artix()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
@@ -1822,7 +1822,7 @@ fi
 chroot_BlendOS()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
@@ -1984,7 +1984,7 @@ fi
 chroot_BlissOS()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
@@ -2121,7 +2121,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script
 chroot_Brunch()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano openssl sudo strace tar util-linux unzip xz zstd
 "
@@ -2221,7 +2221,7 @@ chmod 0755 "${linuxloopsdir}"/chroot/bootstrap/linuxloops/install_script
 chroot_ChromeOS-Flex()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
@@ -3276,7 +3276,7 @@ fi
 chroot_Gentoo()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
@@ -4061,7 +4061,7 @@ fi
 chroot_Manjaro()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
@@ -4677,7 +4677,7 @@ fi
 chroot_NixOS()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
@@ -6103,7 +6103,7 @@ fi
 chroot_SteamOS()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 "
@@ -6832,7 +6832,7 @@ fi
 chroot_Tails()
 {
 prepare_bootstrap="
-curl -l https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
 "
@@ -9503,7 +9503,7 @@ download_bootstrap()
 {
 if [ "${1}" == "iso" ]; then
 	echo "Downloading ${distro} iso image from ${2}"
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso || { losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed."; }
+	sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso || { losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed."; }
 	if [ ! -z "${4}" ]; then
 		mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
 		mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
@@ -9534,12 +9534,19 @@ if [ "${1}" == "iso" ]; then
 	rm "${linuxloopsdir}"/"${distro}".iso
 	return 0
 elif [ "${1}" == "lxc" ]; then
-	if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ -z $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) ] || ([ ! -z $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) ] && [ $(curl -LIs https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz | grep -Po '^content-length: \d+' | cut -d' ' -f2 | tail -1) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]); then
-		echo "Downloading ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz"
-		rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
-		curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://jenkins.linuxcontainers.org/job/image-"${2}"/lastStableBuild/architecture=amd64,release="${3}",variant="${4}"/artifact/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://jenkins.linuxcontainers.org/job/image-${2}/lastStableBuild/architecture=amd64,release=${3},variant=${4}/artifact/rootfs.tar.xz failed."; }
-	fi
-	if tar xf "${linuxloopsdir}"/"${2}"-rootfs.tar.xz -C "${linuxloopsdir}"/chroot/bootstrap; then return 0; fi
+	available_builds=$(curl -Ls https://sgp1lxdmirror01.do.letsbuildthe.cloud/images/"${2}"/"${3}"/amd64/"${4}"/ | tr '>' '\n' | grep '<a href' | cut -d '=' -f2 | cut -d'"' -f2 | cut -d'/' -f1 | sort -r)
+	for build in ${available_builds}; do
+		if [ "${build}" == "" ] || [ "${build}" == ".." ] || ! curl -L --output /dev/null --silent --head --fail https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz; then continue; fi
+		if [ ! -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] || [ -z $(curl -LIs https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz | grep -Po '^Content-Length: \d+' | cut -d' ' -f2 | tail -1) ] || ([ ! -z $(curl -LIs https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz | grep -Po '^Content-Length: \d+' | cut -d' ' -f2 | tail -1) ] && [ $(curl -LIs https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz | grep -Po '^Content-Length: \d+' | cut -d' ' -f2 | tail -1) -ne $(du -b "${linuxloopsdir}"/"${2}"-rootfs.tar.xz | cut -d'	' -f1) ]); then
+			echo "Downloading rootfs image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz..."
+			rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
+			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; }
+		else
+			echo "Using cached rootfs image ${linuxloopsdir}/${2}-rootfs.tar.xz."
+		fi
+		break
+	done
+	if tar xf "${linuxloopsdir}"/"${2}"-rootfs.tar.xz -C "${linuxloopsdir}"/chroot/bootstrap; then return; fi
 	rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz
 fi
 losetup -d "${destination_device}"
@@ -10141,6 +10148,7 @@ else
 	start_install || exit_with_error "Failed to install ${distro} in chroot."
 	grub_config
 fi
+rm -f "${linuxloopsdir}"/custom_commands
 }
 
 check_dependencies()
@@ -10157,7 +10165,7 @@ if ! : >/dev/tcp/1.1.1.1/80; then echo -e "Internet connection not available, pl
 set_base_parameters()
 {
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.linuxloops
-mkdir -p "${linuxloopsdir}"
+sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
