@@ -3347,7 +3347,7 @@ echo "Verifying Gentoo stage 3 sha256sum"
 sed -i "s@\$(basename \${stage3})@gentoo-stage3.tar.xz@g" /gentoo-stage3.tar.xz.sha256
 sha256sum -c /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 checksum failed."; exit 1; }
 echo "Importing Gentoo master key"
-gpg --homedir /tmp/gnupg --keyserver keys.gnupg.net --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
+gpg --homedir /tmp/gnupg --keyserver hkps://keyserver.ubuntu.com --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
 echo "Downloading Gentoo stage 3 signature"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".asc -o /gentoo-stage3.tar.xz.asc || { echo -e "Gentoo stage 3 signature download failed."; exit 1; }
 echo "Verifying Gentoo stage 3 signature"
@@ -9655,7 +9655,7 @@ if [ "${1}" == "iso" ]; then
 		skip_gpg=1
 	else
 		echo "Importing master key"
-		sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver keys.gnupg.net --recv "${master_key}"
+		sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
 		echo "Downloading iso signature"
 		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_signature} -o "${linuxloopsdir}"/"${distro}".iso.asc
 		echo "Verifying iso signature"
@@ -9722,7 +9722,7 @@ elif [ "${1}" == "lxc" ]; then
 				skip_gpg=1
 			else
 				echo "Importing lxc master key"
-				sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver keys.gnupg.net --recv "${master_key}"
+				sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
 				echo "Downloading lxc rootfs signature"
 				sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc
 				echo "Verifying lxc rootfs signature"
