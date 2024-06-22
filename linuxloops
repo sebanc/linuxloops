@@ -3347,11 +3347,11 @@ echo "Verifying Gentoo stage 3 sha256sum"
 sed -i "s@\$(basename \${stage3})@gentoo-stage3.tar.xz@g" /gentoo-stage3.tar.xz.sha256
 sha256sum -c /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 checksum failed."; exit 1; }
 echo "Importing Gentoo master key"
-gpg --homedir /tmp/gnupg --keyserver hkps://keyserver.ubuntu.com --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
+gpg --keyserver hkps://keyserver.ubuntu.com --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
 echo "Downloading Gentoo stage 3 signature"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".asc -o /gentoo-stage3.tar.xz.asc || { echo -e "Gentoo stage 3 signature download failed."; exit 1; }
 echo "Verifying Gentoo stage 3 signature"
-gpg --homedir /tmp/gnupg --verify /gentoo-stage3.tar.xz.asc /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 signature verification failed."; exit 1; }
+gpg --verify /gentoo-stage3.tar.xz.asc /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 signature verification failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt || { echo -e "Gentoo stage 3 extraction failed."; exit 1; }
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
@@ -8164,7 +8164,7 @@ if [ "${distro}" == "Gentoo" ]; then
 	echo -e 'keymap="${keymap}"\nextended_keymaps=""' > /etc/conf.d/keymaps
 	echo -e '${timezone}' > /etc/timezone
 fi
-if [ ! -z "$(command -v dbus-uuidgen)" ]; then dbus-uuidgen > /etc/machine-id; fi
+if [ ! -z "\$(command -v dbus-uuidgen)" ]; then dbus-uuidgen > /etc/machine-id; fi
 mkdir -p /etc/network
 echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces
 echo "${hostname}" > /etc/hostname
