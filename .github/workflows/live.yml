@@ -30,7 +30,8 @@ jobs:
           echo "Found linuxloops release: ${RELEASE_FILE} with version ${RELEASE_VERSION} and date ${RELEASE_DATE}"
           echo "RELEASE_FILE=${RELEASE_FILE}" >> $GITHUB_ENV
           echo "RELEASE_TAG=linuxloops-${RELEASE_VERSION}-${RELEASE_DATE}" >> $GITHUB_ENV
-          echo "RELEASE_NAME=Linuxloops ${RELEASE_VERSION} ${RELEASE_DATE}" >> $GITHUB_ENV          
+          echo "RELEASE_NAME=Linuxloops ${RELEASE_VERSION} ${RELEASE_DATE}" >> $GITHUB_ENV
+          echo "RELEASE_SHA256=$(sha256sum -b $RELEASE_FILE)" >> $GITHUB_ENV
       - name: Create a release and upload artifacts as assets
         uses: ncipollo/release-action@v1
         with:
@@ -40,4 +41,4 @@ jobs:
           tag: "${{ env.RELEASE_TAG }}"
           name: "${{ env.RELEASE_NAME }}"
           commit: "${{ github.ref_name }}"
-          body: "${{ github.event.head_commit.message }}"
+          body: "${{ github.event.head_commit.message }}\n\nrelease_sha256sum=${{ env.RELEASE_SHA256 }}"
