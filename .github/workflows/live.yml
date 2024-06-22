@@ -31,7 +31,7 @@ jobs:
           echo "RELEASE_FILE=${RELEASE_FILE}" >> $GITHUB_ENV
           echo "RELEASE_TAG=linuxloops-${RELEASE_VERSION}-${RELEASE_DATE}" >> $GITHUB_ENV
           echo "RELEASE_NAME=Linuxloops ${RELEASE_VERSION} ${RELEASE_DATE}" >> $GITHUB_ENV
-          echo "RELEASE_SHA256=$(sha256sum -b $RELEASE_FILE)" >> $GITHUB_ENV
+          echo "RELEASE_SHA256=$(sha256sum $RELEASE_FILE | cut -d' ' -f1)" >> $GITHUB_ENV
       - name: Create a release and upload artifacts as assets
         uses: ncipollo/release-action@v1
         with:

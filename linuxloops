@@ -1216,7 +1216,14 @@ dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup c
 cat >"${chrootdir}"/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+mkdir -p /mnt/dev /mnt/proc /mnt/sys
+mount --bind /dev /mnt/dev
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
 dnf install --installroot=/mnt --releasever / -y @core openssl tar
+umount /mnt/sys
+umount /mnt/proc
+umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
@@ -1235,7 +1242,7 @@ case "${desktop}" in
 	'Full')
 	default_session="gnome-wayland"
 	install_desktop="
-dnf install -y @\"Server with GUI\"
+dnf install -y @\"Workstation\"
 systemctl set-default graphical
 "
 	;;
@@ -3025,13 +3032,15 @@ cat >"${chrootdir}"/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,gnupg,kbd,keyboard-configuration,locales,software-properties-common,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
 cat >"${chrootdir}"/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+yes | DEBIAN_FRONTEND=noninteractive apt update
+yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 cat >/etc/apt/sources.list <<'SOURCESLIST'
 deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
 # deb-src http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
@@ -3115,7 +3124,14 @@ dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils 
 cat >"${chrootdir}"/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+mkdir -p /mnt/dev /mnt/proc /mnt/sys
+mount --bind /dev /mnt/dev
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
 dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+umount /mnt/sys
+umount /mnt/proc
+umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
@@ -3331,11 +3347,11 @@ echo "Verifying Gentoo stage 3 sha256sum"
 sed -i "s@\$(basename \${stage3})@gentoo-stage3.tar.xz@g" /gentoo-stage3.tar.xz.sha256
 sha256sum -c /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 checksum failed."; exit 1; }
 echo "Importing Gentoo master key"
-gpg --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
+gpg --homedir /tmp/gnupg --keyserver keys.gnupg.net --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
 echo "Downloading Gentoo stage 3 signature"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".asc -o /gentoo-stage3.tar.xz.asc || { echo -e "Gentoo stage 3 signature download failed."; exit 1; }
 echo "Verifying Gentoo stage 3 signature"
-gpg --verify /gentoo-stage3.tar.xz.asc /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 signature verification failed."; exit 1; }
+gpg --homedir /tmp/gnupg --verify /gentoo-stage3.tar.xz.asc /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 signature verification failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt || { echo -e "Gentoo stage 3 extraction failed."; exit 1; }
 rm /gentoo-stage3.tar.xz
 PREPARE_CHROOT
@@ -4920,7 +4936,14 @@ enabled=1
 enabled_metadata=1
 priority=50
 NOBARAREPO
+mkdir -p /mnt/dev /mnt/proc /mnt/sys
+mount --bind /dev /mnt/dev
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
 dnf install --installroot=/mnt --releasever / -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+umount /mnt/sys
+umount /mnt/proc
+umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
@@ -6029,11 +6052,11 @@ set -e
 mkdir -p /etc/yum.fake.repos.d
 echo -e '[local]\nname = local\nbaseurl = file:///source\nenabled=1\ngpgcheck=0\nrepo_gpgcheck=0' > /etc/yum.fake.repos.d/local.repo
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d install -y coreutils util-linux
-dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf
+mkdir -p /mnt/dev /mnt/proc /mnt/sys
 mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
 mount --bind /sys /mnt/sys
-dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
+dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
 umount /mnt/sys
 umount /mnt/proc
 umount /mnt/dev
@@ -6131,7 +6154,14 @@ dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup c
 cat >"${chrootdir}"/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+mkdir -p /mnt/dev /mnt/proc /mnt/sys
+mount --bind /dev /mnt/dev
+mount --bind /proc /mnt/proc
+mount --bind /sys /mnt/sys
 dnf install --installroot=/mnt --releasever / -y @core openssl tar
+umount /mnt/sys
+umount /mnt/proc
+umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
@@ -6150,7 +6180,7 @@ case "${desktop}" in
 	'Full')
 	default_session="gnome-wayland"
 	install_desktop="
-dnf install -y @\"Server with GUI\"
+dnf install -y @\"Workstation\"
 systemctl set-default graphical
 "
 	;;
@@ -7770,13 +7800,15 @@ cat >"${chrootdir}"/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,gnupg,kbd,keyboard-configuration,locales,software-properties-common,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
 cat >"${chrootdir}"/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+yes | DEBIAN_FRONTEND=noninteractive apt update
+yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 cat >/etc/apt/sources.list <<'SOURCESLIST'
 deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
 deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
@@ -8132,7 +8164,7 @@ if [ "${distro}" == "Gentoo" ]; then
 	echo -e 'keymap="${keymap}"\nextended_keymaps=""' > /etc/conf.d/keymaps
 	echo -e '${timezone}' > /etc/timezone
 fi
-dbus-uuidgen > /etc/machine-id
+if [ ! -z "$(command -v dbus-uuidgen)" ]; then dbus-uuidgen > /etc/machine-id; fi
 mkdir -p /etc/network
 echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces
 echo "${hostname}" > /etc/hostname
@@ -9602,61 +9634,64 @@ sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"/gnupg
 sudo -u ${SUDO_USER} chmod 0700 "${linuxloopsdir}"/gnupg
 if [ "${1}" == "iso" ]; then
 	echo "Downloading ${distro} iso image from ${2}"
-	sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso || { losetup -d "${destination_device}"; exit_with_error "Download of iso image from ${2} failed."; }
-	echo "Downloading iso sha256sum"
-	sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_sha256sum} -o "${linuxloopsdir}"/"${distro}".iso.sha256sum
-	echo "Verifying iso sha256sum"
-	sed -i "s@$(basename ${2})@${linuxloopsdir}/${distro}.iso@g" "${linuxloopsdir}"/"${distro}".iso.sha256sum
-	if sha256sum -c "${linuxloopsdir}"/"${distro}".iso.sha256sum; then
-		if [ -z "$(command -v gpg)" ]; then
-			echo "Warning: iso cannot be verified as gpg is not available."
-			skip_gpg=1
-		elif [ -z "${iso_signature}" ] || [ -z "${master_key}" ]; then
-			echo "Warning: iso cannot be verified as no signature or master key provided."
-			skip_gpg=1
-		else
-			echo "Importing master key"
-			sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --recv "${master_key}"
-			echo "Downloading iso signature"
-			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_signature} -o "${linuxloopsdir}"/"${distro}".iso.asc
-			echo "Verifying iso signature"
-		fi
-		if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}".iso.asc "${linuxloopsdir}"/"${distro}".iso; then
-			if [ ! -z "${4}" ]; then
-				mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
-				mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
-				mount "${linuxloopsdir}"/iso/level2"${3}" "${linuxloopsdir}"/iso/level1
-				mount "${linuxloopsdir}"/iso/level1"${4}" "${linuxloopsdir}"/iso/rootfs
-				cp -aT "${linuxloopsdir}"/iso/rootfs "${chrootdir}"/bootstrap
-				if [ "${distro}" == "Qubes" ]; then
-					mkdir -p "${chrootdir}"/bootstrap/source
-					cp -a "${linuxloopsdir}"/iso/level2/Packages "${chrootdir}"/bootstrap/source/
-					cp -a "${linuxloopsdir}"/iso/level2/repodata "${chrootdir}"/bootstrap/source/
-				fi
-				umount "${linuxloopsdir}"/iso/rootfs
-				umount "${linuxloopsdir}"/iso/level1
-				umount "${linuxloopsdir}"/iso/level2
-			elif  [ ! -z "${3}" ]; then
-				mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1
-				mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level1
-				mount "${linuxloopsdir}"/iso/level1"${3}" "${linuxloopsdir}"/iso/rootfs
-				cp -aT "${linuxloopsdir}"/iso/rootfs "${chrootdir}"/bootstrap
-				umount "${linuxloopsdir}"/iso/rootfs
-				umount "${linuxloopsdir}"/iso/level1
+	for i in 1 .. 3; do
+		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso; then
+			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_sha256sum} -o "${linuxloopsdir}"/"${distro}".iso.sha256sum
+			sed -i "s@$(basename ${2})@${linuxloopsdir}/${distro}.iso@g" "${linuxloopsdir}"/"${distro}".iso.sha256sum
+			if sha256sum -c "${linuxloopsdir}"/"${distro}".iso.sha256sum; then
+				echo "sha256sum verification succeeded"
+				break
 			else
-				mkdir -p "${linuxloopsdir}"/iso/rootfs
-				mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/rootfs
-				cp -aT "${linuxloopsdir}"/iso/rootfs "${chrootdir}"/bootstrap
-				umount "${linuxloopsdir}"/iso/rootfs	
+				echo "sha256sum verification failed, retrying download..."
 			fi
-			rm "${linuxloopsdir}"/"${distro}".iso*
-			return 0
-		else
-			echo "iso signature verification failed, will not proceed."
-			rm "${linuxloopsdir}"/"${distro}".iso*
 		fi
+		if [ "${i}" -eq 3 ]; then echo "Download of ${distro} iso image from ${2} failed"; exit 1; fi
+	done
+	if [ -z "$(command -v gpg)" ]; then
+		echo "Warning: iso cannot be verified as gpg is not available."
+		skip_gpg=1
+	elif [ -z "${iso_signature}" ] || [ -z "${master_key}" ]; then
+		echo "Warning: iso cannot be verified as no signature or master key provided."
+		skip_gpg=1
 	else
-		echo "iso sha256sum verification failed, will not proceed."
+		echo "Importing master key"
+		sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver keys.gnupg.net --recv "${master_key}"
+		echo "Downloading iso signature"
+		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_signature} -o "${linuxloopsdir}"/"${distro}".iso.asc
+		echo "Verifying iso signature"
+	fi
+	if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}".iso.asc "${linuxloopsdir}"/"${distro}".iso; then
+		if [ ! -z "${4}" ]; then
+			mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
+			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
+			mount "${linuxloopsdir}"/iso/level2"${3}" "${linuxloopsdir}"/iso/level1
+			mount "${linuxloopsdir}"/iso/level1"${4}" "${linuxloopsdir}"/iso/rootfs
+			cp -aT "${linuxloopsdir}"/iso/rootfs "${chrootdir}"/bootstrap
+			if [ "${distro}" == "Qubes" ]; then
+				mkdir -p "${chrootdir}"/bootstrap/source
+				cp -a "${linuxloopsdir}"/iso/level2/Packages "${chrootdir}"/bootstrap/source/
+				cp -a "${linuxloopsdir}"/iso/level2/repodata "${chrootdir}"/bootstrap/source/
+			fi
+			umount "${linuxloopsdir}"/iso/rootfs
+			umount "${linuxloopsdir}"/iso/level1
+			umount "${linuxloopsdir}"/iso/level2
+		elif  [ ! -z "${3}" ]; then
+			mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1
+			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level1
+			mount "${linuxloopsdir}"/iso/level1"${3}" "${linuxloopsdir}"/iso/rootfs
+			cp -aT "${linuxloopsdir}"/iso/rootfs "${chrootdir}"/bootstrap
+			umount "${linuxloopsdir}"/iso/rootfs
+			umount "${linuxloopsdir}"/iso/level1
+		else
+			mkdir -p "${linuxloopsdir}"/iso/rootfs
+			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/rootfs
+			cp -aT "${linuxloopsdir}"/iso/rootfs "${chrootdir}"/bootstrap
+			umount "${linuxloopsdir}"/iso/rootfs	
+		fi
+		rm "${linuxloopsdir}"/"${distro}".iso*
+		return 0
+	else
+		echo "iso signature verification failed, will not proceed."
 		rm "${linuxloopsdir}"/"${distro}".iso*
 	fi
 elif [ "${1}" == "lxc" ]; then
@@ -9687,7 +9722,7 @@ elif [ "${1}" == "lxc" ]; then
 				skip_gpg=1
 			else
 				echo "Importing lxc master key"
-				sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --recv "${master_key}"
+				sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver keys.gnupg.net --recv "${master_key}"
 				echo "Downloading lxc rootfs signature"
 				sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc
 				echo "Verifying lxc rootfs signature"
