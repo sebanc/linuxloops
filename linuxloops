@@ -4985,7 +4985,7 @@ dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm p
 	'Nobara/Full')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm @kde-desktop-environment plasma-workspace-wayland kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets @\"KDE Applications\" @\"KDE Multimedia support\"
 "
 	;;
 	'Plasma')
@@ -4997,7 +4997,7 @@ dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop pl
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment plasma-workspace-wayland
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet @\"KDE Applications\" @\"KDE Multimedia support\"
 "
 	;;
 	'SteamDeck')
@@ -5009,7 +5009,7 @@ dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamO
 	'SteamDeck/Full')
 	default_session="gamescope-session-steam"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS @kde-desktop-environment plasma-workspace-wayland gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets @\"KDE Applications\" @\"KDE Multimedia support\"
 "
 	;;
 esac
