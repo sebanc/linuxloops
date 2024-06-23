@@ -6056,7 +6056,7 @@ mkdir -p /mnt/dev /mnt/proc /mnt/sys
 mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
 mount --bind /sys /mnt/sys
-dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
+dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf qubes-release qubes-dom0-unwanted-packages
 umount /mnt/sys
 umount /mnt/proc
 umount /mnt/dev
@@ -6071,7 +6071,8 @@ cat >"${chrootdir}"/bootstrap/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-*
 dnf --setopt=reposdir=/etc/yum.repos.d/ update -y
-dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion cpio dkms efibootmgr glibc-locale-source grub2-efi-x64 ntfs-3g os-prober sbsigntools
+dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 ntfs-3g openssl os-prober sbsigntools
+dnf --setopt=reposdir=/etc/yum.repos.d/ install -y @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
 systemctl set-default graphical.target
 cat >/root/anaconda-ks.cfg <<INITIALSETUP
 #version=DEVEL
@@ -8164,7 +8165,7 @@ if [ "${distro}" == "Gentoo" ]; then
 	echo -e 'keymap="${keymap}"\nextended_keymaps=""' > /etc/conf.d/keymaps
 	echo -e '${timezone}' > /etc/timezone
 fi
-if [ ! -z "\$(command -v dbus-uuidgen)" ]; then dbus-uuidgen > /etc/machine-id; fi
+if [ ! -f /etc/machine-id ] && [ ! -z "\$(command -v dbus-uuidgen)" ]; then dbus-uuidgen > /etc/machine-id; fi
 mkdir -p /etc/network
 echo -e "auto lo\niface lo inet loopback" > /etc/network/interfaces
 echo "${hostname}" > /etc/hostname
@@ -9662,7 +9663,8 @@ if [ "${1}" == "iso" ]; then
 	fi
 	if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}".iso.asc "${linuxloopsdir}"/"${distro}".iso; then
 		if [ ! -z "${4}" ]; then
-			mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
+			rm -rf "${linuxloopsdir}"/iso
+			sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
 			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
 			mount "${linuxloopsdir}"/iso/level2"${3}" "${linuxloopsdir}"/iso/level1
 			mount "${linuxloopsdir}"/iso/level1"${4}" "${linuxloopsdir}"/iso/rootfs
