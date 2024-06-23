@@ -34,7 +34,7 @@ USAGE
 available_distros=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 btrfs_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 nvidia_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-surface_supported=( "Arch" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
+surface_supported=( "Arch" "BlendOS" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
 
 list_desktops()
 {
@@ -1855,7 +1855,7 @@ pacman-key --init
 pacman-key --populate
 mkdir -p /boot/grub
 grub-mkconfig -o /boot/grub/grub.cfg
-echo -e '[breakfast]\nSigLevel = Never\nServer = https://pkg-repo.blendos.co' >> /etc/pacman.conf
+echo -e '[breakfast]\nServer = https://pkg-repo.blendos.co\nSigLevel = Never' >> /etc/pacman.conf
 yes | pacman -Syu filesystem-blend akshara
 ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
 CHROOT_INIT
@@ -1866,7 +1866,7 @@ if [ "${desktop}" == "None" ]; then
 echo \"track: 'blendos-base'\" >> /system.yaml
 "
 else
-	custom_packages="iptables accountsservice alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-xhost xorg-server gvfs udisks2 polkit zstd fwupd adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto archlinux-wallpaper flatpak blend-web-store ${custom_packages}"
+	custom_packages="iptables accountsservice alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-xhost xorg-server gvfs udisks2 polkit zstd fwupd adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto archlinux-wallpaper flatpak plymouth blend-web-store ${custom_packages}"
 	case "${desktop}" in
 		'Cinnamon')
 		default_session="cinnamon"
@@ -1897,7 +1897,7 @@ echo \"track: 'mate'\" >> /system.yaml
 		custom_packages="mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk ${custom_packages}"
 		;;
 		'Plasma')
-		default_session="plasmawayland"
+		default_session="plasma"
 		install_desktop="
 echo \"track: 'plasma'\" >> /system.yaml
 "
@@ -1921,19 +1921,28 @@ repo: 'https://pkg-repo.blendos.co/'
 impl: 'https://github.com/blend-os/tracks/raw/main'
 SYSTEMYAML
 ${install_desktop}
-# Add chaotic aur as a fix for outdated paru package in the BlendOS repo
-echo -e "package-repos:\n    - name: 'chaotic-aur'\n      repo-url: 'https://cdn-mirror.chaotic.cx/\\\$repo/\\\$arch'" >> /system.yaml
 echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml
 if [ ! -z "${custom_packages}" ]; then for i in ${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done; fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
 echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml;
+echo -e "commands:" >> /system.yaml;
+if [ "${surface}" == "Yes" ]; then
+cat >>/system.yaml <<SYSTEMYAML
+  - 'curl -s https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | pacman-key --add -'
+  - 'pacman-key --finger 56C464BAAC421453'
+  - 'pacman-key --lsign-key 56C464BAAC421453'
+  - 'echo -e "[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/" >> /etc/pacman.conf'
+  - 'pacman -Syu'
+  - 'pacman -Rsc --noconfirm linux-zen linux-zen-headers'
+  - 'pacman -S --noconfirm linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms'
+  - 'usermod -aG video "${username}"'
+SYSTEMYAML
+fi
 if [ "${encryption}" == "Yes" ]; then add_encryption="encrypt "; fi
 cat >>/system.yaml <<SYSTEMYAML
-commands:
   - 'ln -s /boot/linuxloops/initcpio-hook/linuxloops /etc/initcpio/install/linuxloops'
   - 'echo "HOOKS=(base udev autodetect keyboard keymap modconf block \${add_encryption}akshara filesystems fsck linuxloops)" > /etc/mkinitcpio.conf.d/linuxloops.conf'
   - 'if [ -f /proc/1/cwd/system.yaml ] && [ -d /proc/1/cwd/boot/linuxloops ]; then cp -r /proc/1/cwd/boot/linuxloops /boot/; fi'
-
 $(cat /linuxloops/install_custom_script 2>/dev/null)
 SYSTEMYAML
 INSTALL_DESKTOP
@@ -2172,7 +2181,17 @@ mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then
 	echo "Downloading Brunch unstable"
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "ChromeOS recovery image download failed."; exit 1; }
+	for i in 1 .. 3; do
+		if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
+			if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L https://api.github.com/repos/sebanc/brunch-unstable/releases/latest | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"@@g' | cut -d'=' -f2)" ]; then
+				echo "sha256sum verification succeeded"
+				break
+			else
+				echo "sha256sum verification failed, retrying download..."
+			fi
+		fi
+		if [ "\${i}" -eq 3 ]; then echo "Download of Brunch unstable failed"; exit 1; fi
+	done
 else
 	echo "Downloading Brunch stable"
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch image download failed."; exit 1; }
@@ -8256,14 +8275,10 @@ set -e
 curl -s https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | pacman-key --add -
 pacman-key --finger 56C464BAAC421453
 pacman-key --lsign-key 56C464BAAC421453
-cat >>/etc/pacman.conf <<'SURFACEREPO'
-[linux-surface]
-Server = https://pkg.surfacelinux.com/arch/
-SURFACEREPO
-if [ "${distro}" == "SteamOS" ]; then echo 'SigLevel = Never' >> /etc/pacman.conf; fi
+echo -e '[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/' >> /etc/pacman.conf
 pacman -Syu
-# deepin-anything-arch package depends on linux
-if [ "${desktop}" != "Deepin" ] && [ "${desktop}" != "Deepin/Full" ]; then pacman -R --noconfirm ${surface_remove}; fi
+# deepin-anything-arch package depends on linux package
+if [ "${desktop}" != "Deepin" ] && [ "${desktop}" != "Deepin/Full" ]; then pacman -Rsc --noconfirm ${surface_remove}; fi
 pacman -S --noconfirm linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms
 usermod -aG video '${username}'
 SURFACEPACMAN
