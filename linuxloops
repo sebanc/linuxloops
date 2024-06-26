@@ -3518,7 +3518,7 @@ systemctl enable lightdm.service
 	default_session="plasmawayland"
 	install_desktop="
 echo -e 'dev-libs/liblouis ~amd64' > /etc/portage/package.accept_keywords/liblouis
-emerge -uDN --noconfmem --autounmask --autounmask-write @world ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
+emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-manager
 "
 	;;
@@ -3526,7 +3526,7 @@ sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-
 	default_session="plasmawayland"
 	install_desktop="
 echo -e 'dev-libs/liblouis ~amd64' > /etc/portage/package.accept_keywords/liblouis
-emerge -uDN --noconfmem --autounmask --autounmask-write @world ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
+emerge -uDN --noconfmem @world ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 systemctl enable sddm.service
 "
 	;;
@@ -4435,7 +4435,7 @@ deb [signed-by=/tmp/mx-23-archive-keyring.gpg] http://mxrepo.com/mx/repo/ bookwo
 SOURCES
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://mxrepo.com/mx/repo/pool/main/m/mx23-archive-keyring/mx23-archive-keyring_2023.6.6.tar.xz | tar -Jx -C /tmp mx23-archive-keyring-2023.6.6/mx23-archive-keyring/mx-23-archive-keyring.gpg --strip-components 2
+curl -L https://mxrepo.com/mx/repo/pool/main/m/mx23-archive-keyring/\$(curl -L https://mxrepo.com/mx/repo/pool/main/m/mx23-archive-keyring | tr '>' '\n' | grep '<a href=' | grep 'mx23' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp mx23-archive-keyring-2023.6.6/mx23-archive-keyring/mx-23-archive-keyring.gpg --strip-components 2
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install mx23-archive-keyring
 rm /tmp/mx-23-archive-keyring.gpg
@@ -4690,7 +4690,7 @@ deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe mul
 SOURCESLIST
 echo 'deb [signed-by=/tmp/neon-archive-keyring.gpg] http://archive.neon.kde.org/user/ jammy main' > /etc/apt/sources.list.d/neon.list
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://origin.archive.neon.kde.org/user/pool/main/n/neon-keyring/neon-keyring_2016.06.06+p22.04+vrelease+git20240522.1333.tar.xz | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
+curl -L https://origin.archive.neon.kde.org/user/pool/main/n/neon-keyring/\$(curl -L https://origin.archive.neon.kde.org/user/pool/main/n/neon-keyring | tr '>' '\n' | grep '<a href=' | grep '22.04' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install neon-keyring
 rm /tmp/neon-archive-keyring.gpg
@@ -7877,7 +7877,7 @@ Pin: release o=Zorin OS,l=Zorin OS Patches
 Pin-Priority: 999
 ZORINPRIORITY2
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://launchpad.net/~zorinos/+archive/ubuntu/stable/+sourcefiles/zorin-os-keyring/1.1/zorin-os-keyring_1.1.tar.gz | tar -zx -C /tmp zorin-os-keyring/keyrings/zorin-os.gpg --strip-components 2
+curl -L https://ppa.launchpadcontent.net/zorinos/stable/ubuntu/pool/main/z/zorin-os-keyring/\$(curl -L https://ppa.launchpadcontent.net/zorinos/stable/ubuntu/pool/main/z/zorin-os-keyring/ | tr '>' '\n' | grep '<a href=' | grep 'zorin' | grep '\.tar\.gz' | cut -d'"' -f2 | tail -1) | tar -zx -C /tmp zorin-os-keyring/keyrings/zorin-os.gpg --strip-components 2
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install zorin-os-keyring
 rm /tmp/zorin-os.gpg
