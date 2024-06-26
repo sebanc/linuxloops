@@ -34,7 +34,7 @@ USAGE
 available_distros=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 btrfs_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 nvidia_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-surface_supported=( "Arch" "BlendOS" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Zorin" )
+surface_supported=( "Arch" "BlendOS" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "Ubuntu" "Ubuntu-LTS" "Zorin" )
 
 list_desktops()
 {
@@ -1291,7 +1291,7 @@ chroot_Arch()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
 
@@ -1566,7 +1566,7 @@ chroot_Artix()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -1834,7 +1834,7 @@ chroot_BlendOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
 
@@ -1924,7 +1924,8 @@ ${install_desktop}
 echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml
 if [ ! -z "${custom_packages}" ]; then for i in ${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done; fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
-echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml;
+echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml
+if [ "${surface}" == "Yes" ]; then echo -e "  - 'binder_linux-dkms'" >> /system.yaml; fi
 echo -e "commands:" >> /system.yaml;
 if [ "${surface}" == "Yes" ]; then
 cat >>/system.yaml <<SYSTEMYAML
@@ -2005,7 +2006,7 @@ chroot_BlissOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
@@ -2154,7 +2155,7 @@ chroot_Brunch()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano openssl sudo strace tar util-linux unzip xz zstd
 "
 
@@ -2274,7 +2275,7 @@ chroot_ChromeOS-Flex()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
@@ -3346,7 +3347,7 @@ chroot_Gentoo()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
 
@@ -3456,6 +3457,8 @@ systemctl enable lightdm.service
 	'Gnome/Openrc')
 	default_session="gnome-wayland"
 	install_desktop="
+echo -e 'dev-libs/gom ~amd64' > /etc/portage/package.accept_keywords/gom
+echo -e 'dev-libs/liblouis ~amd64' > /etc/portage/package.accept_keywords/liblouis
 emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"gdm\"@g' /etc/conf.d/display-manager
 "
@@ -3463,6 +3466,8 @@ sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"gdm\"@g' /etc/conf.d/display-m
 	'Gnome/Systemd')
 	default_session="gnome-wayland"
 	install_desktop="
+echo -e 'dev-libs/gom ~amd64' > /etc/portage/package.accept_keywords/gom
+echo -e 'dev-libs/liblouis ~amd64' > /etc/portage/package.accept_keywords/liblouis
 emerge -uDN --noconfmem @world ${desktop_base} gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus
 systemctl enable gdm.service
 "
@@ -3512,14 +3517,16 @@ systemctl enable lightdm.service
 	'Plasma/Openrc')
 	default_session="plasmawayland"
 	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
+echo -e 'dev-libs/liblouis ~amd64' > /etc/portage/package.accept_keywords/liblouis
+emerge -uDN --noconfmem --autounmask --autounmask-write @world ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Plasma/Systemd')
 	default_session="plasmawayland"
 	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
+echo -e 'dev-libs/liblouis ~amd64' > /etc/portage/package.accept_keywords/liblouis
+emerge -uDN --noconfmem --autounmask --autounmask-write @world ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin
 systemctl enable sddm.service
 "
 	;;
@@ -4145,7 +4152,7 @@ chroot_Manjaro()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -4763,7 +4770,7 @@ chroot_NixOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -5437,7 +5444,7 @@ Pin-Priority: 50
 PARROT_PINNING
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://mirror.parrot.sh/parrot/keyring.gpg | gpg --dearmor > /tmp/parrot-archive-keyring.gpg
+curl -L https://deb.parrot.sh/parrot/keyring.gpg | gpg --dearmor > /tmp/parrot-archive-keyring.gpg
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install parrot-archive-keyring
 rm /tmp/parrot-archive-keyring.gpg
@@ -6249,7 +6256,7 @@ chroot_SteamOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 "
 
@@ -6277,6 +6284,7 @@ cat >/etc/pacman_steamos.conf <<'PACMAN-STEAMOS'
 HoldPkg     = pacman glibc
 #XferCommand = /usr/bin/curl -L -C - -f -o %o %u
 #XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
+XferCommand = /usr/bin/aria2c --allow-overwrite=true --continue=true --file-allocation=none --log-level=error --max-tries=10 --max-connection-per-server=2 --max-file-not-found=5 --min-split-size=5M --no-conf -Rtrue --summary-interval=60 --timeout=10 --dir=/ --out %o %u
 #CleanMethod = KeepInstalled
 Architecture = auto
  
@@ -6297,7 +6305,7 @@ CheckSpace
  
 # By default, pacman accepts packages signed by keys that its local keyring
 # trusts (see pacman-key and its man page), as well as unsigned packages.
-SigLevel    = Required DatabaseOptional
+SigLevel    = Required DatabaseNever
 LocalFileSigLevel = Optional
 #RemoteFileSigLevel = Required
  
@@ -6358,7 +6366,8 @@ Include = /etc/pacman.d/mirrorlist
 #SigLevel = Optional TrustAll
 #Server = file:///home/custompkgs
 PACMAN-STEAMOS
-echo 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
+# Duplicate the Server line due to a bug in libalpm when using XferCommand
+echo -e 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch\nServer = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
 curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-3.6/os/x86_64/\$(curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-3.6/os/x86_64/ | cut -d'>' -f3 | cut -d'"' -f2 | grep '^holo-keyring.*.tar.zst\$' | tail -1) | tar -x --zstd -C / usr/share/pacman/keyrings/holo.gpg usr/share/pacman/keyrings/holo-trusted usr/share/pacman/keyrings/holo-revoked
 pacman-key --populate holo
 pacstrap -P -C /etc/pacman_steamos.conf -G /mnt base base-devel holo-keyring aria2
@@ -6967,7 +6976,7 @@ chroot_Tails()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
 "
 
@@ -9528,6 +9537,7 @@ chmod 0755 /mnt/tmp/set_userpw
 if [ "${distro}" == "BlendOS" ]; then
 	cat >>/mnt/tmp/set_userpw <<BLENDOS_AKSHARA
 akshara update
+if [ ! -f /.update_rootfs/usr/share/xsessions/${default_session}.desktop ] && [ ! -f /.update_rootfs/usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
 cp /.update_rootfs/etc/mkinitcpio.conf.d/* /etc/mkinitcpio.conf.d/
 cp /.update_rootfs/etc/mkinitcpio.d/* /etc/mkinitcpio.d/
 rm -rf /lib/modules
