@@ -45,6 +45,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |BlendOS         |v4              |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]|
 |BlissOS         |15 / 16         |                       |                                     |                                 |              |
 |Brunch          |Latest          |✓                      |                                     |✓ (partially included)           |[notes][Brunch-notes]|
+|ChimeraOS       |Stable          |✓                      |✓ (default)                          |                                 |              |
 |ChromeOS-Flex   |Latest          |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
 |Debian          |Bookworm        |✓                      |✓                                    |✓                                |              |
 |Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |

@@ -12,7 +12,9 @@ Linuxloops disk images can be run in Virtual Machines by treating them as raw di
 
 ## QEMU
 
-The boot mode needs to be set to EFI and disk images can natively be used as raw disks.  
+The boot mode needs to be set to EFI and disk images can natively be used as raw disks:  
+
+qemu-system-x86_64 -drive file=/test.img -m 8192 -enable-kvm -machine type=pc,accel=kvm -M q35 -cpu host -smp 4,sockets=1,cores=4,threads=1 -bios /usr/share/ovmf/x64/OVMF.fd -vga virtio -display gtk,gl=on -audio driver=sdl,model=virtio  
 
 ## VirtualBox
 
