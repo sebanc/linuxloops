@@ -2043,7 +2043,7 @@ for i in 1 .. 3; do
 			echo "sha256sum verification failed, retrying download..."
 		fi
 	fi
-	if [ "\${i}" -eq 3 ]; then echo "Download of Tails image failed"; exit 1; fi
+	if [ "\${i}" -eq 3 ]; then echo "Download of BlissOS image failed"; exit 1; fi
 done
 mount /root/bliss.iso /isomount/iso
 install_folder="\$(cat /isomount/iso/efi/boot/android.cfg | grep 'title="' | cut -d' ' -f3)"
@@ -2190,23 +2190,19 @@ esac
 mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
-if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then
-	echo "Downloading Brunch unstable"
-	for i in 1 .. 3; do
-		if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "https://api.github.com/repos/sebanc/brunch-unstable/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
-			if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L https://api.github.com/repos/sebanc/brunch-unstable/releases/latest | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"@@g' | cut -d'=' -f2)" ]; then
-				echo "sha256sum verification succeeded"
-				break
-			else
-				echo "sha256sum verification failed, retrying download..."
-			fi
+if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then brunch_url="https://api.github.com/repos/sebanc/brunch-unstable/releases/latest"; else brunch_url="https://api.github.com/repos/sebanc/brunch/releases/latest"; fi
+echo "Downloading Brunch"
+for i in 1 .. 3; do
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
+		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"@@g' | cut -d'=' -f2)" ]; then
+			echo "sha256sum verification succeeded"
+			break
+		else
+			echo "sha256sum verification failed, retrying download..."
 		fi
-		if [ "\${i}" -eq 3 ]; then echo "Download of Brunch unstable failed"; exit 1; fi
-	done
-else
-	echo "Downloading Brunch stable"
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "https://api.github.com/repos/sebanc/brunch/releases/latest" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz || { echo -e "Brunch image download failed."; exit 1; }
-fi
+	fi
+	if [ "\${i}" -eq 3 ]; then echo "Download of Brunch unstable failed"; exit 1; fi
+done
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch
 rm /isomount/data/brunch.tar.gz
@@ -2286,7 +2282,7 @@ chroot_ChimeraOS()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip jq libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip jq libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
 cat >"${chrootdir}"/bootstrap/linuxloops/prepare_chroot <<PREPARE_CHROOT
@@ -2344,9 +2340,25 @@ if [ "${install_type}" == "image" ]; then
 	cp /linuxloops/install_initramfs /initramfs/linuxloops
 	cd /initramfs
 	mkdir -p ./usr/local/bin ./usr/local/etc ./usr/local/lib
+	cp -a /usr/bin/busybox ./usr/local/bin/
+	echo 'alias cat="/usr/local/bin/busybox cat"' >> ./usr/local/etc/profile
+	echo 'alias grep="/usr/local/bin/busybox grep"' >> ./usr/local/etc/profile
+	echo 'alias mkdir="/usr/local/bin/busybox mkdir"' >> ./usr/local/etc/profile
+	echo 'alias mknod="/usr/local/bin/busybox mknod"' >> ./usr/local/etc/profile
+	echo 'alias ps="/usr/local/bin/busybox ps"' >> ./usr/local/etc/profile
+	echo 'alias sh="/usr/local/bin/busybox sh"' >> ./usr/local/etc/profile
+	for i in \$(ldd /usr/bin/blkid | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
+	cp -a /usr/bin/blkid ./usr/local/bin/
+	echo 'alias blkid="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/blkid"' >> ./usr/local/etc/profile
+	for i in \$(ldd /usr/bin/kmod | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
+	cp -a /usr/bin/kmod ./usr/local/bin/
+	echo 'alias kmod="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/kmod"' >> ./usr/local/etc/profile
 	for i in \$(ldd /usr/bin/losetup | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
 	cp -a /usr/bin/losetup ./usr/local/bin/
 	echo 'alias losetup="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/losetup"' >> ./usr/local/etc/profile
+	for i in \$(ldd /usr/bin/modprobe | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
+	cp -a /usr/bin/modprobe ./usr/local/bin/
+	echo 'alias modprobe="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/modprobe"' >> ./usr/local/etc/profile
 	for i in \$(ldd /usr/bin/ntfs-3g | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
 	cp -a /usr/bin/ntfs-3g ./usr/local/bin/
 	echo 'alias ntfs-3g="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/ntfs-3g"' >> ./usr/local/etc/profile
@@ -3490,10 +3502,10 @@ echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/m
 echo -e "\nVIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${desktop}" == "None/Openrc" ]; then
-	echo -e "USE=\"bluetooth dbus dracut elogind policykit mount pam -systemd X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth dbus dracut elogind policykit mount pam -systemd truetype X\"" >> /etc/portage/make.conf
 	emerge app-portage/gentoolkit
 elif [ "${desktop}" == "None/Systemd" ]; then
-	echo -e "USE=\"bluetooth dbus dracut -elogind policykit mount pam systemd X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth dbus dracut -elogind policykit mount pam systemd truetype X\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	emerge app-portage/gentoolkit
 elif [ "$(echo ${desktop} | cut -d '/' -f2)" == "Openrc" ]; then
@@ -9237,8 +9249,21 @@ add_linuxloops_post
 
 generate_iso_init_chimera()
 {
-add_linuxloops_pre
-echo 'source /usr/local/etc/profile' >> "${chrootdir}"/bootstrap/linuxloops/install_initramfs
+cat >>"${chrootdir}"/bootstrap/linuxloops/install_initramfs <<'INITSCRIPT'
+#!/usr/local/bin/busybox sh
+export PATH=/sbin:/bin:/usr/sbin:/usr/bin
+source /usr/local/etc/profile
+
+mkdir -p /dev /proc /sys /run
+mount -n -t devtmpfs devtmpfs /dev  -o nosuid,mode=0755
+mount -n -t proc     proc     /proc -o nosuid,noexec,nodev
+mount -n -t sysfs    sysfs    /sys  -o nosuid,noexec,nodev
+mount -n -t tmpfs    tmpfs    /run  -o nosuid,nodev,mode=0755
+
+echo "linuxloops: boot sequence started." > /dev/kmsg
+echo "linuxloops: img_uuid=$img_uuid" > /dev/kmsg
+echo "linuxloops: img_path=$img_path" > /dev/kmsg
+INITSCRIPT
 add_linuxloops_recovery
 add_linuxloops_udev_start
 add_linuxloops_main
@@ -9257,15 +9282,15 @@ fi
 
 echo "linuxloops: boot sequence finished." > /dev/kmsg
 
-subvol="$(cat /proc/cmdline | cut -d'/' -f2)"
-echo ${subvol} > /test
-
 umount /run
 umount /sys
-umount /proc
+#umount /proc
 umount /dev > /dev/null 2>&1 || umount -l /dev > /dev/null 2>&1 || echo "linuxloops: /dev was not properly unmounted" > /dev/kmsg
 
-rootflags="subvol=deployments/${subvol}" exec "$linuxloops_init"
+echo "$(cat /proc/cmdline) rootflags=\"subvol=deployments/$(cat /proc/cmdline | cut -d'/' -f2)\"" > /cmdline
+mount --bind /cmdline /proc/cmdline
+
+rootflags="subvol=deployments/$(cat /proc/cmdline | cut -d'/' -f2)" exec "$linuxloops_init"
 INITSCRIPT
 }
 

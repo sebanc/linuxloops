@@ -30,9 +30,9 @@ jobs:
             if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Install on btrfs filesystem possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg1='-b'; fi
             if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Nvidia proprietary driver installation possible: Yes' && [ $(($RANDOM % 2)) -eq 1 ]; then arg2='-n'; fi
             if sudo bash linuxloops --list | grep -A4 "\"$i\"" | grep -q 'Surface patches installation possible: Yes' && [ "${arg2}" == "" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
-            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
-            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg5='-e'; fi
-            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg6='-a'; fi
+            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChimeraOS" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
+            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChimeraOS" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg5='-e'; fi
+            if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChimeraOS" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg6='-a'; fi
             if [ -z "$matrix" ]; then matrix="\"$distro#$env#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distro#$env#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
           done
           echo "matrix=[$matrix]" >> $GITHUB_OUTPUT
