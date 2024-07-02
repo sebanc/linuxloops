@@ -2194,7 +2194,6 @@ if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then brunch_url="htt
 echo "Downloading Brunch"
 for i in 1 .. 3; do
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
-		echo "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)"
 		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)" ]; then
 			echo "sha256sum verification succeeded"
 			break
@@ -2637,7 +2636,7 @@ MODEDGRUB
 fi
 if [ "${install_type}" == "image" ]; then
 	mkdir -p /mnt/etc/secureboot_key
-	sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/efi/boot/grubx64.efi
+	sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/efi/boot/bootx64.efi
 	openssl pkcs7 -print_certs -inform der -in /mnt/etc/secureboot_key/MOK.tmp -out /mnt/etc/secureboot_key/MOK.pem
 	openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
 fi
@@ -4273,7 +4272,7 @@ curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/m
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
-pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel pacman-mirrors manjaro-system archlinux-keyring manjaro-keyring
+pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel pacman-mirrors manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
