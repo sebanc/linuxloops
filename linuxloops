@@ -2194,14 +2194,15 @@ if [ "\$(echo ${desktop} | cut -d'/' -f1)" == "Unstable" ]; then brunch_url="htt
 echo "Downloading Brunch"
 for i in 1 .. 3; do
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
-		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"@@g' | cut -d'=' -f2)" ]; then
+		echo "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)"
+		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)" ]; then
 			echo "sha256sum verification succeeded"
 			break
 		else
 			echo "sha256sum verification failed, retrying download..."
 		fi
 	fi
-	if [ "\${i}" -eq 3 ]; then echo "Download of Brunch unstable failed"; exit 1; fi
+	if [ "\${i}" -eq 3 ]; then echo "Download of Brunch failed"; exit 1; fi
 done
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch
@@ -2302,6 +2303,7 @@ chmod 0755 /usr/bin/frzr-tweaks
 curl -L https://github.com/ChimeraOS/frzr/raw/master/frzr-initramfs -o /usr/bin/frzr-initramfs
 chmod 0755 /usr/bin/frzr-initramfs
 curl -L https://github.com/ChimeraOS/frzr/raw/master/__frzr-deploy -o /usr/bin/frzr-deploy
+sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/bin/frzr-deploy
 sed -i 's@MOUNT_PATH=/frzr_root@MOUNT_PATH=/mnt@g' /usr/bin/frzr-deploy
 chmod 0755 /usr/bin/frzr-deploy
 frzr-deploy chimeraos/chimeraos:stable
@@ -4296,7 +4298,7 @@ case "${desktop}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop manjaro-budgie-settings network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9702,7 +9704,7 @@ chmod 0755 /mnt/tmp/set_userpw
 if [ "${distro}" == "BlendOS" ]; then
 	cat >>/mnt/tmp/set_userpw <<BLENDOS_AKSHARA
 akshara update
-if [ ! -f /.update_rootfs/usr/share/xsessions/${default_session}.desktop ] && [ ! -f /.update_rootfs/usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+if [ "${desktop}" != "None" ]; then if [ ! -f /.update_rootfs/usr/share/xsessions/${default_session}.desktop ] && [ ! -f /.update_rootfs/usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi; fi
 cp /.update_rootfs/etc/mkinitcpio.conf.d/* /etc/mkinitcpio.conf.d/
 cp /.update_rootfs/etc/mkinitcpio.d/* /etc/mkinitcpio.d/
 rm -rf /lib/modules
