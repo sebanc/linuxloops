@@ -10259,7 +10259,7 @@ elif [ ! -z "${chromeos}" ]; then
 		echo -e "${grubinstall}"
 	fi
 else
-	if [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ]; then grub="grub2"; else grub="grub"; fi
+	if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
 	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\n********************************************************************************************\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n********************************************************************************************\n\nOtherwise, add the below grub config manually to another grub bootloader:\n********************************************************************************************\n${config}*******************************************************************************************\n\nYou can then reboot your computer and start ${distro}."
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
