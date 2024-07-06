@@ -5215,7 +5215,7 @@ zypper --root /mnt addrepo http://download.opensuse.org/tumbleweed/repo/non-oss/
 zypper --root /mnt addrepo http://download.opensuse.org/update/tumbleweed/ repo-update
 rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-62b07e22.asc
 zypper --root /mnt refresh
-zypper --root /mnt --non-interactive install patterns-openSUSE-base attr coreutils diffutils filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper
+zypper --root /mnt --non-interactive install patterns-openSUSE-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper
 PREPARE_CHROOT
 chmod 0755 "${chrootdir}"/bootstrap/linuxloops/prepare_chroot
 
@@ -5380,12 +5380,7 @@ cat >"${chrootdir}"/bootstrap/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${desktop}" == "None" ]; then exit 0; fi
-zypper --non-interactive install xset
-cp /usr/bin/xset /usr/bin/xset.orig
-echo -e '#!/bin/bash\nexit 0' > /usr/bin/xset
 ${install_desktop}
-rm /usr/bin/xset
-mv /usr/bin/xset.orig /usr/bin/xset
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.cinnamon.desktop.interface]
@@ -9839,7 +9834,7 @@ if [ "${1}" == "iso" ]; then
 		fi
 		if [ "${i}" -eq 3 ]; then echo "Download of ${distro} iso image from ${2} failed"; exit 1; fi
 	done
-	if [ -z "$(command -v gpg)" ]; then
+	if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
 		echo "Warning: iso cannot be verified as gpg is not available."
 		skip_gpg=1
 	elif [ -z "${iso_signature}" ] || [ -z "${master_key}" ]; then
@@ -9896,9 +9891,10 @@ elif [ "${1}" == "lxc" ]; then
 		rm -f "${linuxloopsdir}"/"${2}"-SHA256SUMS
 		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/SHA256SUMS -o "${linuxloopsdir}"/"${2}"-SHA256SUMS
 		if [ -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] && [ -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc ] && [ "$(sha256sum ${linuxloopsdir}/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
-			if [ -z "$(command -v gpg)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
+			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
 			if ([ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${2}"-rootfs.tar.xz) && tar xf "${linuxloopsdir}"/"${2}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
 				echo "Using cached lxc rootfs."
+				rm -f "${linuxloopsdir}"/"${2}"-SHA256SUMS
 				return 0	
 			fi
 		fi
@@ -9907,7 +9903,7 @@ elif [ "${1}" == "lxc" ]; then
 		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; }
 		echo "Verifying lxc rootfs checksum"
 		if [ "$(sha256sum ${linuxloopsdir}/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
-			if [ -z "$(command -v gpg)" ]; then
+			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
 				echo "Warning: lxc rootfs cannot be verified as gpg is not available."
 				skip_gpg=1
 			elif [ -z "${master_key}" ]; then
@@ -9937,6 +9933,19 @@ elif [ "${1}" == "lxc" ]; then
 		rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz* "${linuxloopsdir}"/"${2}"-SHA256SUMS
 	done
 elif [ "${1}" == "rootfs-xz" ]; then
+	echo "Downloading rootfs image checksum"
+	rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum*
+	sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_sha256sum} -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum
+	sudo -u ${SUDO_USER} sed "s@$(basename ${2})@${linuxloopsdir}/${distro}-rootfs.tar.xz@g" "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum > "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod
+	if [ -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz ] && [ -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc ] && sha256sum -c "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod; then
+		if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
+		if ([ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz"${gpg_check_extension}") && tar xf "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
+			echo "Using cached lxc rootfs."
+			rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum*
+			return 0	
+		fi
+	fi
+	rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz*
 	echo "Downloading ${distro} rootfs image from ${2}"
 	for i in 1 .. 3; do
 		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz; then
@@ -9951,11 +9960,11 @@ elif [ "${1}" == "rootfs-xz" ]; then
 		fi
 		if [ "${i}" -eq 3 ]; then echo "Download of ${distro} rootfs from ${2} failed"; exit 1; fi
 	done
-	if [ -z "$(command -v gpg)" ]; then
-		echo "Warning: iso cannot be verified as gpg is not available."
+	if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
+		echo "Warning: rootfs cannot be verified as gpg is not available."
 		skip_gpg=1
 	elif [ -z "${rootfs_signature}" ] || [ -z "${master_key}" ]; then
-		echo "Warning: iso cannot be verified as no signature or master key provided."
+		echo "Warning: rootfs cannot be verified as no signature or master key provided."
 		skip_gpg=1
 	else
 		echo "Importing master key"
@@ -9967,7 +9976,7 @@ elif [ "${1}" == "rootfs-xz" ]; then
 	if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz"${gpg_check_extension}"; then
 		if tar xf "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
 			echo "${distro} rootfs successfylly extracted."
-			rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.*
+			rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum*
 			return 0
 		else
 			echo "Failed to extract ${distro} rootfs, will not proceed."
@@ -10030,7 +10039,7 @@ if [ "${return_value}" -eq 0 ]; then
 	fi
 	if [ "${install_type}" == "image" ] && [ -f "${chrootdir}"/bootstrap/mnt/etc/secureboot_key/MOK.der ]; then
 		cp "${chrootdir}"/bootstrap/mnt/etc/secureboot_key/MOK.der "${fullpath}".der
-		chown ${SUDO_UID}:${SUDO_UID} "${fullpath}".der
+		chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".der
 	fi
 fi
 if [ -x "${chrootdir}"/bootstrap/linuxloops/exit_chroot ]; then chroot "${chrootdir}"/bootstrap /linuxloops/exit_chroot || return_value=1; fi
@@ -10066,7 +10075,7 @@ else
 	else
 		dd if=/dev/zero of="${fullpath}" bs=1M count=0 seek=${install_sizeMB} status=none
 	fi
-	chown ${SUDO_UID}:${SUDO_UID} "${fullpath}"
+	chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}"
 	destination_device="$(losetup --show -fP "${fullpath}")" || exit_with_error "losetup command failed."
 	partition_path="${destination_device}"p
 fi
@@ -10200,7 +10209,7 @@ config="menuentry '${distro}' --class '$(echo ${distro} | tr [:upper:] [:lower:]
 "
 fi
 echo -e "${config}" > "${fullpath}".grub.txt
-chown ${SUDO_UID}:${SUDO_UID} "${fullpath}".grub.txt
+chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".grub.txt
 if [ -f ./usb_bootloader.img ]; then
 	usbboot_loop=$(losetup --show -fP ./usb_bootloader.img)
 	mount "${usbboot_loop}"p1 "${chrootdir}"
@@ -10614,7 +10623,7 @@ set_base_parameters()
 {
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.linuxloops
 sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"
-chown ${SUDO_USER}:${SUDO_USER} "${linuxloopsdir}"
+chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"
 chmod 0755 "${linuxloopsdir}"
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
