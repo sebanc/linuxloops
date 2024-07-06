@@ -9491,7 +9491,7 @@ cat >/usr/bin/linuxloops <<'LIVELAUNCHER'
 set -e
 sudo curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n" 2>/dev/null
 sudo chmod 0755 /usr/bin/linuxloops.real
-sudo bash /usr/bin/linuxloops.real "\${@}"
+sudo -E bash /usr/bin/linuxloops.real "\${@}"
 LIVELAUNCHER
 chmod 0755 /usr/bin/linuxloops
 mkdir -p /etc/skel/Desktop
@@ -10260,7 +10260,7 @@ elif [ ! -z "${chromeos}" ]; then
 	fi
 else
 	if [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ]; then grub="grub2"; else grub="grub"; fi
-	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\n********************************************************************************************\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]) && sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]) && sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n********************************************************************************************\n\nOtherwise, add the below grub config manually to another grub bootloader:\n********************************************************************************************\n${config}*******************************************************************************************\n\nYou can then reboot your computer and start ${distro}."
+	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\n********************************************************************************************\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n********************************************************************************************\n\nOtherwise, add the below grub config manually to another grub bootloader:\n********************************************************************************************\n${config}*******************************************************************************************\n\nYou can then reboot your computer and start ${distro}."
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
@@ -10463,7 +10463,7 @@ else
 			zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Exactly 14GB is available on this drive, the installer will proceed with the creation of a 14GB image." --ok-label="Next" 2>/dev/null
 			install_size=14
 		else
-			install_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has ${maximum_image_size} GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=${maximum_image_size} --value=14 --step 1 2>/dev/null)
+			install_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has ${maximum_image_size} GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=${maximum_image_size} --value=14 --step 1 --ok-label="Next" 2>/dev/null)
 		fi
 		break
 	done
@@ -10481,7 +10481,7 @@ if [ "${distro}" != "BlissOS" ] && [ "${distro}" != "Brunch" ] && [ "${distro}" 
 	if [ -z "${fstype}" ]; then exit 1; fi
 	encryption=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ?\nThis is highly recommended if you intend to keep sensitive data." --column "Encryption" "Yes" "No" --ok-label="Next" 2>/dev/null)
 	if [ -z "${encryption}" ]; then exit 1; fi
-	swap_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1 2>/dev/null)
+	swap_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1 --ok-label="Next" 2>/dev/null)
 	if [ -z "${swap_size}" ]; then exit 1; fi
 	if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next" 2>/dev/null); else nvidia="No"; fi
 	if [ -z "${nvidia}" ]; then exit 1; fi
