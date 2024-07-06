@@ -90,7 +90,7 @@ Install the `zenity` package for your distro:
 - Fedora-based distro: `sudo dnf install zenity`  
 
 Start the installer in GUI mode:  
-`sudo bash ~/linuxloops`  
+`sudo -E bash ~/linuxloops`  
 
 ### CLI installer
 

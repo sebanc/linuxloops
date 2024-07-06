@@ -25,7 +25,7 @@
 
 - To use the GUI installer, install the `zenity` package for your distro and then run:  
 
-`sudo bash ~/linuxloops`
+`sudo -E bash ~/linuxloops`
 
 - To use the CLI installer:  
 ```

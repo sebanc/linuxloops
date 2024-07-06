@@ -9817,14 +9817,14 @@ exit 1
 download_bootstrap()
 {
 local skip_gpg=0
-sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"/gnupg
-sudo -u ${SUDO_USER} chmod 0700 "${linuxloopsdir}"/gnupg
+sudo -sE mkdir -p "${linuxloopsdir}"/gnupg
+sudo -sE chmod 0700 "${linuxloopsdir}"/gnupg
 if [ "${1}" == "iso" ]; then
 	echo "Downloading ${distro} iso image from ${2}"
 	for i in 1 .. 3; do
-		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso; then
-			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_sha256sum} -o "${linuxloopsdir}"/"${distro}".iso.sha256sum
-			sudo -u ${SUDO_USER} sed "s@$(basename ${2})@${linuxloopsdir}/${distro}.iso@g" "${linuxloopsdir}"/"${distro}".iso.sha256sum > "${linuxloopsdir}"/"${distro}".iso.sha256sum.mod
+		if sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}".iso; then
+			sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_sha256sum} -o "${linuxloopsdir}"/"${distro}".iso.sha256sum
+			sudo -sE sed "s@$(basename ${2})@${linuxloopsdir}/${distro}.iso@g" "${linuxloopsdir}"/"${distro}".iso.sha256sum > "${linuxloopsdir}"/"${distro}".iso.sha256sum.mod
 			if sha256sum -c "${linuxloopsdir}"/"${distro}".iso.sha256sum.mod; then
 				echo "sha256sum verification succeeded"
 				break
@@ -9842,15 +9842,15 @@ if [ "${1}" == "iso" ]; then
 		skip_gpg=1
 	else
 		echo "Importing master key"
-		sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
+		sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
 		echo "Downloading iso signature"
-		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_signature} -o "${linuxloopsdir}"/"${distro}".iso.asc
+		sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_signature} -o "${linuxloopsdir}"/"${distro}".iso.asc
 		echo "Verifying iso signature"
 	fi
-	if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}".iso.asc "${linuxloopsdir}"/"${distro}".iso; then
+	if [ ${skip_gpg} -eq 1 ] || sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}".iso.asc "${linuxloopsdir}"/"${distro}".iso; then
 		if [ ! -z "${4}" ]; then
 			rm -rf "${linuxloopsdir}"/iso
-			sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
+			sudo -sE mkdir -p "${linuxloopsdir}"/iso/rootfs "${linuxloopsdir}"/iso/level1 "${linuxloopsdir}"/iso/level2
 			mount "${linuxloopsdir}"/"${distro}".iso "${linuxloopsdir}"/iso/level2
 			mount "${linuxloopsdir}"/iso/level2"${3}" "${linuxloopsdir}"/iso/level1
 			mount "${linuxloopsdir}"/iso/level1"${4}" "${linuxloopsdir}"/iso/rootfs
@@ -9889,10 +9889,10 @@ elif [ "${1}" == "lxc" ]; then
 		if [ "${build}" == "" ] || [ "${build}" == ".." ] || ! curl -L --output /dev/null --silent --head --fail https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz; then continue; fi
 		echo "Downloading lxc rootfs checksum"
 		rm -f "${linuxloopsdir}"/"${2}"-SHA256SUMS
-		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/SHA256SUMS -o "${linuxloopsdir}"/"${2}"-SHA256SUMS
+		sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/SHA256SUMS -o "${linuxloopsdir}"/"${2}"-SHA256SUMS
 		if [ -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz ] && [ -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc ] && [ "$(sha256sum ${linuxloopsdir}/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
 			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
-			if ([ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${2}"-rootfs.tar.xz) && tar xf "${linuxloopsdir}"/"${2}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
+			if ([ ${skip_gpg} -eq 1 ] || sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${2}"-rootfs.tar.xz) && tar xf "${linuxloopsdir}"/"${2}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
 				echo "Using cached lxc rootfs."
 				rm -f "${linuxloopsdir}"/"${2}"-SHA256SUMS
 				return 0	
@@ -9900,7 +9900,7 @@ elif [ "${1}" == "lxc" ]; then
 		fi
 		rm -f "${linuxloopsdir}"/"${2}"-rootfs.tar.xz*
 		echo "Downloading lxc rootfs image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz..."
-		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; }
+		sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz || { losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; }
 		echo "Verifying lxc rootfs checksum"
 		if [ "$(sha256sum ${linuxloopsdir}/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
 			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
@@ -9911,12 +9911,12 @@ elif [ "${1}" == "lxc" ]; then
 				skip_gpg=1
 			else
 				echo "Importing lxc master key"
-				sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
+				sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
 				echo "Downloading lxc rootfs signature"
-				sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc
+				sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc
 				echo "Verifying lxc rootfs signature"
 			fi
-			if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${2}"-rootfs.tar.xz; then
+			if [ ${skip_gpg} -eq 1 ] || sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${2}"-rootfs.tar.xz; then
 				if tar xf "${linuxloopsdir}"/"${2}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
 					echo "lxc rootfs successfylly extracted."
 					rm -f "${linuxloopsdir}"/"${2}"-SHA256SUMS
@@ -9935,11 +9935,11 @@ elif [ "${1}" == "lxc" ]; then
 elif [ "${1}" == "rootfs-xz" ]; then
 	echo "Downloading rootfs image checksum"
 	rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum*
-	sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_sha256sum} -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum
-	sudo -u ${SUDO_USER} sed "s@$(basename ${2})@${linuxloopsdir}/${distro}-rootfs.tar.xz@g" "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum > "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod
+	sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_sha256sum} -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum
+	sudo -sE sed "s@$(basename ${2})@${linuxloopsdir}/${distro}-rootfs.tar.xz@g" "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum > "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod
 	if [ -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz ] && [ -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc ] && sha256sum -c "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod; then
 		if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
-		if ([ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz"${gpg_check_extension}") && tar xf "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
+		if ([ ${skip_gpg} -eq 1 ] || sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz"${gpg_check_extension}") && tar xf "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
 			echo "Using cached lxc rootfs."
 			rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum*
 			return 0	
@@ -9948,9 +9948,9 @@ elif [ "${1}" == "rootfs-xz" ]; then
 	rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz*
 	echo "Downloading ${distro} rootfs image from ${2}"
 	for i in 1 .. 3; do
-		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz; then
-			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_sha256sum} -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum
-			sudo -u ${SUDO_USER} sed "s@$(basename ${2})@${linuxloopsdir}/${distro}-rootfs.tar.xz@g" "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum > "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod
+		if sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz; then
+			sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_sha256sum} -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum
+			sudo -sE sed "s@$(basename ${2})@${linuxloopsdir}/${distro}-rootfs.tar.xz@g" "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum > "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod
 			if sha256sum -c "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum.mod; then
 				echo "sha256sum verification succeeded"
 				break
@@ -9968,12 +9968,12 @@ elif [ "${1}" == "rootfs-xz" ]; then
 		skip_gpg=1
 	else
 		echo "Importing master key"
-		sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
+		sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkps://keyserver.ubuntu.com --recv "${master_key}"
 		echo "Downloading rootfs signature"
-		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_signature} -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc
+		sudo -sE curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_signature} -o "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc
 		echo "Verifying rootfs signature"
 	fi
-	if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz"${gpg_check_extension}"; then
+	if [ ${skip_gpg} -eq 1 ] || sudo -sE gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.asc "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz"${gpg_check_extension}"; then
 		if tar xf "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz -C "${chrootdir}"/bootstrap; then
 			echo "${distro} rootfs successfylly extracted."
 			rm -f "${linuxloopsdir}"/"${distro}"-rootfs.tar.xz.sha256sum*
@@ -10094,7 +10094,7 @@ return "${return_value}"
 grub_config()
 {
 if [ ! -z "${wsl}" ]; then
-	img_uuid=$(sudo -u ${SUDO_USER} /mnt/c/Windows/System32/mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1)
+	img_uuid=$(sudo -sE /mnt/c/Windows/System32/mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1)
 else
 	img_uuid=$(blkid -s PARTUUID -o value "$(df "${fullpath}" --output=source | sed 1d)")
 fi
@@ -10219,7 +10219,7 @@ if [ -f ./usb_bootloader.img ]; then
 	losetup -d ${usbboot_loop}
 	finalise="The grub config to boot ${distro} has been installed in the usb_bootloader.img file. Write this file to a usb flashdrive with Rufus, dd or any other image writing tool and boot from it."
 	if [ ! -z "${zenity}" ]; then
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${finalise}" --ok-label="Exit" 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${finalise}" --ok-label="Exit" 2>/dev/null
 	else
 		echo -e "${finalise}"
 	fi
@@ -10227,8 +10227,8 @@ elif [ ! -z "${wsl}" ]; then
 	grubinstall="The ${distro} dual boot disk image has been created and the config needed to boot ${distro} from Grub2Win has been generated in the file:\n$(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\n\nNow, install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\"."
 	finalise="Please note that ${distro} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distro} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distro} from the Grub2Win menu."
 	if [ ! -z "${zenity}" ]; then
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Next" 2>/dev/null
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${finalise}" --ok-label="Exit" 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Next" 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${finalise}" --ok-label="Exit" 2>/dev/null
 	else
 		echo -e "${grubinstall}"
 		echo -e ""
@@ -10237,7 +10237,7 @@ elif [ ! -z "${wsl}" ]; then
 elif [ ! -z "${brunch}" ]; then
 	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\n ****************************************************************************************** \n${config}\n ****************************************************************************************** \n\nNow copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.\n\nOnce done, press CTRL+X and then ENTER to save, reboot your computer and start ${distro}"
 	if [ ! -z "${zenity}" ]; then
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
 		echo -e "${grubinstall}"
 	fi
@@ -10254,15 +10254,15 @@ elif [ ! -z "${chromeos}" ]; then
 	umount /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	grubinstall="The grub config needed to boot ${distro} has been added to your boot partition 12, if not already done, refer to MrChromebox instructions to allow booting from legacy hdd boot (through RW_LEGACY firmware or ALT firmware), then reboot your computer and press CTRL+L to start ${distro}."
 	if [ ! -z "${zenity}" ]; then
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
 		echo -e "${grubinstall}"
 	fi
 else
 	if [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ]; then grub="grub2"; else grub="grub"; fi
-	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n\nOtherwise, add this grub config (lines between stars) manually to another grub bootloader:\n\n ****************************************************************************************** \n${config}\n ****************************************************************************************** \n\nOnce the above actions are completed, you can reboot your computer and start ${distro}."
+	grubinstall="The grub config needed to boot ${distro} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distro installed which uses grub as bootloader, open another terminal and run the below command to generate the grub config automatically:\n********************************************************************************************\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]) && sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distro} | tr [:upper:] [:lower:]) && sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n********************************************************************************************\n\nOtherwise, add the below grub config manually to another grub bootloader:\n********************************************************************************************\n${config}*******************************************************************************************\n\nYou can then reboot your computer and start ${distro}."
 	if [ ! -z "${zenity}" ]; then
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
 		echo -e "${grubinstall}"
 	fi
@@ -10291,20 +10291,20 @@ else
 	fi
 	if [ ! -z "${zenity}" ]; then
 		until false; do
-			form=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --text="${encrypted_text}" --add-entry="Input your username" --add-password="Input your ${password_text}" --add-password="Confirm your ${password_text}" --ok-label="Next" 2>/dev/null)
+			form=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --forms --text="${encrypted_text}" --add-entry="Input your username" --add-password="Input your ${password_text}" --add-password="Confirm your ${password_text}" --ok-label="Next" 2>/dev/null)
 			username="$(echo ${form} | cut -d'|' -f1)"
 			userpass="$(echo ${form} | cut -d'|' -f2)"
 			verifuserpass="$(echo ${form} | cut -d'|' -f3)"
 			if [ -z "${form}" ]; then exit 1; fi
-			if [ -z "${username}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define your username.\n" 2>/dev/null; continue; fi
-			if [ -z "${userpass}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define a password.\n" 2>/dev/null; continue; fi
-			if echo "${username}" | grep -q '^[a-z][-a-z0-9]*\$'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Username contains unsupported characters.\n" 2>/dev/null; continue; fi
-			if echo "${userpass}" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Password contains unsupported characters.\n" 2>/dev/null; continue; fi
-			if [ "${userpass}" != "${verifuserpass}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Passwords do not match, try again.\n" 2>/dev/null; continue; fi
+			if [ -z "${username}" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define your username.\n" 2>/dev/null; continue; fi
+			if [ -z "${userpass}" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please define a password.\n" 2>/dev/null; continue; fi
+			if echo "${username}" | grep -q '^[a-z][-a-z0-9]*\$'; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Username contains unsupported characters.\n" 2>/dev/null; continue; fi
+			if echo "${userpass}" | grep -q '[^a-zA-Z0-9!@#&$£%µ^+-\*/=~¨]'; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Password contains unsupported characters.\n" 2>/dev/null; continue; fi
+			if [ "${userpass}" != "${verifuserpass}" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Passwords do not match, try again.\n" 2>/dev/null; continue; fi
 			break
 		done
 		if [ "$(echo ${desktop} | cut -d '/' -f1)" != "None" ]; then
-			autologin=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to enable autologin ?" --column "Enable autologin" "No" "Yes" --ok-label="Next" 2>/dev/null)
+			autologin=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to enable autologin ?" --column "Enable autologin" "No" "Yes" --ok-label="Next" 2>/dev/null)
 			if [ -z "${autologin}" ]; then exit 1; fi
 		fi
 	else
@@ -10384,7 +10384,7 @@ case "${distro}" in
 esac
 if [ $(( ($(df -k --output=avail ${HOME} | sed 1d) / 1024 / 1024) - ${available_space_needed} )) -lt 0 ]; then
 	if [ ! -z "${zenity}" ]; then
-		sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "To install ${distro} you need ${available_space_needed} GB of available space in your home directory but you only have $(($(df -k --output=avail ${HOME} | sed 1d) / 1024 / 1024)) GB." 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "To install ${distro} you need ${available_space_needed} GB of available space in your home directory but you only have $(($(df -k --output=avail ${HOME} | sed 1d) / 1024 / 1024)) GB." 2>/dev/null
 	else
 		echo -e "To install ${distro} you need ${available_space_needed} GB of available space in your home directory but you only have $(($(df -k --output=avail ${HOME} | sed 1d) / 1024 / 1024)) GB."
 	fi
@@ -10401,15 +10401,15 @@ maximum_image_size=$(( ($(df -k --output=avail $(echo $(realpath ${destination})
 
 zenity_installer()
 {
-if ! sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer." --ok-label="Next" 2>/dev/null; then exit 0; fi
-distro=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which distribution do you want to install ?" --column "Distribution" "${available_distros[@]}" --ok-label="Next" 2>/dev/null)
+if ! zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Welcome to the LinuxLoops installer." --ok-label="Next" 2>/dev/null; then exit 0; fi
+distro=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which distribution do you want to install ?" --column "Distribution" "${available_distros[@]}" --ok-label="Next" 2>/dev/null)
 if [ -z "${distro}" ]; then exit 0; fi
 check_home_space
 list_desktops ${distro}
-desktop=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which desktop environment do you want to install ?" --column "Desktop environment" "${available_desktops[@]}" --ok-label="Next" 2>/dev/null)
+desktop=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which desktop environment do you want to install ?" --column "Desktop environment" "${available_desktops[@]}" --ok-label="Next" 2>/dev/null)
 if [ -z "${desktop}" ]; then exit 0; fi
-if [ -z "${wsl}" ]; then install_type=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to install ${distro} on a disk or in an image file ?" --column "Choose install type" "disk" "image" --ok-label="Next" 2>/dev/null); else install_type="image"; fi
-if [ "${install_type}" == "disk" ] && [ ! -d /sys/firmware/efi ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Disk installs are possible when booted in UEFI mode." 2>/dev/null; exit 1; fi
+if [ -z "${wsl}" ]; then install_type=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to install ${distro} on a disk or in an image file ?" --column "Choose install type" "disk" "image" --ok-label="Next" 2>/dev/null); else install_type="image"; fi
+if [ "${install_type}" == "disk" ] && [ ! -d /sys/firmware/efi ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "Disk installs are possible when booted in UEFI mode." 2>/dev/null; exit 1; fi
 if [ -z "${install_type}" ]; then exit 1; fi
 if [ "${install_type}" == "disk" ]; then
 	local t
@@ -10427,13 +10427,13 @@ if [ "${install_type}" == "disk" ]; then
 		fi
 		t=$((t + 1))
 	done
-	destination=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Select the drive that you want to use for installation." --column "Select" --column "Device" --column "Size (in GB)" ${test} --ok-label="Next" 2>/dev/null)
+	destination=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Select the drive that you want to use for installation." --column "Select" --column "Device" --column "Size (in GB)" ${test} --ok-label="Next" 2>/dev/null)
 	if [ -z "${destination}" ]; then exit 1; fi
 	fullpath="${destination}"
 	if [ $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) - 14 )) -eq 0 ]; then
 		install_size=14
 	else
-		install_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --step 1 --ok-label="Next" 2>/dev/null)
+		install_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This device has $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --value=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) --step 1 --ok-label="Next" 2>/dev/null)
 	fi
 	if [ -z "${install_size}" ]; then exit 1; fi
 	if [ "${install_size}" -eq $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) )) ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024) )); else install_sizeMB=$((install_size*1024)); fi
@@ -10441,29 +10441,29 @@ else
 	until false; do
 		local path
 		if [ ! -z "${wsl}" ]; then
-			path=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the ${distro} disk image" --file-selection --save --file-filter=*.img --filename="/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/${distro}.img" 2>/dev/null)
+			path=$(zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the ${distro} disk image" --file-selection --save --file-filter=*.img --filename="/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/${distro}.img" 2>/dev/null)
 		elif [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]; then
-			path=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the ${distro} disk image" --file-selection --save --file-filter=*.img --filename="/mnt/stateful_partition/unencrypted/${distro}.img" 2>/dev/null)
+			path=$(zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the ${distro} disk image" --file-selection --save --file-filter=*.img --filename="/mnt/stateful_partition/unencrypted/${distro}.img" 2>/dev/null)
 		else
-			path=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the ${distro} disk image" --file-selection --save --file-filter=*.img --filename="$(eval echo ~${SUDO_USER})/${distro}.img" 2>/dev/null)
+			path=$(zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to store the ${distro} disk image" --file-selection --save --file-filter=*.img --filename="$(eval echo ~${SUDO_USER})/${distro}.img" 2>/dev/null)
 		fi
 		if [ -z "${path}" ]; then exit 1; else destination="${path}"; fi
 		if [ "$(echo -n ${destination} | tail -c 4)" != ".img" ]; then destination="${destination}.img"; fi
-		if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's@[^/]*$@@')" ]); then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path." 2>/dev/null; continue; fi
-		if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Linuxloops disk images cannot be booted from an encrypted partition." 2>/dev/null; continue; fi
+		if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's@[^/]*$@@')" ]); then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Desination path does not exist, please provide an existing path." 2>/dev/null; continue; fi
+		if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Linuxloops disk images cannot be booted from an encrypted partition." 2>/dev/null; continue; fi
 		if [[ ! ${destination} == *"/"* ]]; then path="${PWD}/"; else path="$(realpath ${destination})"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
 		fullpath="${path}$(basename ${destination})"
-		if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..." 2>/dev/null; continue; fi
-		if ([ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..." 2>/dev/null; continue; fi
+		if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*/*}" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..." 2>/dev/null; continue; fi
+		if ([ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]) && [ ! -z "${path##/mnt/stateful_partition/unencrypted/*}" ]; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="The ${distro} disk image has to be installed in the unencrypted data partition, please specify a path such as /mnt/stateful_partition/unencrypted/..." 2>/dev/null; continue; fi
 		possible_image_size
 		if [ $(( ${maximum_image_size} - 14 )) -lt 0 ]; then
-			sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14 GB available." 2>/dev/null
+			zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Not enough space to create image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14 GB available." 2>/dev/null
 			continue
 		elif [ $(( ${maximum_image_size} - 14 )) -eq 0 ]; then
-			sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Exactly 14GB is available on this drive, the installer will proceed with the creation of a 14GB image." --ok-label="Next" 2>/dev/null
+			zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Exactly 14GB is available on this drive, the installer will proceed with the creation of a 14GB image." --ok-label="Next" 2>/dev/null
 			install_size=14
 		else
-			install_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has ${maximum_image_size} GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=${maximum_image_size} --value=14 --step 1 2>/dev/null)
+			install_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "This partition has ${maximum_image_size} GB available.\n How much would you like to allocate for ${distro} ?\n" --min-value=14 --max-value=${maximum_image_size} --value=14 --step 1 2>/dev/null)
 		fi
 		break
 	done
@@ -10471,55 +10471,55 @@ else
 	install_sizeMB=$((install_size*1024))
 fi
 if [ "${distro}" != "BlissOS" ] && [ "${distro}" != "Brunch" ] && [ "${distro}" != "ChimeraOS" ] && [ "${distro}" != "ChromeOS-Flex" ] && [ "${distro}" != "Tails" ]; then
-	locale=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your locale (language / formats)." --column "Select" --column "Locale" --column "Description" "${available_locales[@]}" --ok-label="Next" 2>/dev/null)
+	locale=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your locale (language / formats)." --column "Select" --column "Locale" --column "Description" "${available_locales[@]}" --ok-label="Next" 2>/dev/null)
 	if [ -z "${locale}" ]; then exit 1; fi
-	keymap=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your keyboard layout." --column "Select" --column "Keymap" --column "Description" "${available_keymaps[@]}" --ok-label="Next" 2>/dev/null)
+	keymap=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your keyboard layout." --column "Select" --column "Keymap" --column "Description" "${available_keymaps[@]}" --ok-label="Next" 2>/dev/null)
 	if [ -z "${keymap}" ]; then exit 1; fi
-	timezone=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your timezone." --column "Select" --column "Timezone" "${available_timezones[@]}" --ok-label="Next" 2>/dev/null)
+	timezone=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --radiolist --text "Please select your timezone." --column "Select" --column "Timezone" "${available_timezones[@]}" --ok-label="Next" 2>/dev/null)
 	if [ -z "${timezone}" ]; then exit 1; fi
-	if [[ " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then fstype=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next" 2>/dev/null); else fstype="ext4"; fi
+	if [[ " ${btrfs_supported[*]} " =~ " ${distro} " ]]; then fstype=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Which filesystem format would you like for the rootfs partition ?" --column "Filesystem" "ext4" "btrfs" --ok-label="Next" 2>/dev/null); else fstype="ext4"; fi
 	if [ -z "${fstype}" ]; then exit 1; fi
-	encryption=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ?\nThis is highly recommended if you intend to keep sensitive data." --column "Encryption" "Yes" "No" --ok-label="Next" 2>/dev/null)
+	encryption=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want the image to be encrypted ?\nThis is highly recommended if you intend to keep sensitive data." --column "Encryption" "Yes" "No" --ok-label="Next" 2>/dev/null)
 	if [ -z "${encryption}" ]; then exit 1; fi
-	swap_size=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1 2>/dev/null)
+	swap_size=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --scale --text "Please select here the swap size (swap is not mandatory, if you do not know what swap is you can select 0).\n" --min-value=0 --max-value=$(( ${install_size} - 12 )) --value=0 --step 1 2>/dev/null)
 	if [ -z "${swap_size}" ]; then exit 1; fi
-	if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next" 2>/dev/null); else nvidia="No"; fi
+	if [[ " ${nvidia_supported[*]} " =~ " ${distro} " ]]; then nvidia=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the nvidia proprietary drivers ?" --column "Install nvidia driver" "No" "Yes" --ok-label="Next" 2>/dev/null); else nvidia="No"; fi
 	if [ -z "${nvidia}" ]; then exit 1; fi
-	if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ?\n(enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next" 2>/dev/null); else surface="No"; fi
+	if [[ " ${surface_supported[*]} " =~ " ${distro} " ]]; then surface=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to automatically install the surface device patches from https://github.com/linux-surface ?\n(enable this only if you have a Microsoft Surface device)" --column "Apply Surface patches" "No" "Yes" --ok-label="Next" 2>/dev/null); else surface="No"; fi
 	if [ -z "${surface}" ]; then exit 1; fi
-	customize=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to customize the install ?" --column "Customize install" "No" "Yes" --ok-label="Next" 2>/dev/null)
+	customize=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to customize the install ?" --column "Customize install" "No" "Yes" --ok-label="Next" 2>/dev/null)
 	if [ -z "${customize}" ]; then exit 1; fi
 	if [ "${customize}" == "Yes" ]; then
-		custom_packages=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to install additional packages ? (if so, please provide a space separated package list)" --ok-label="Next" 2>/dev/null)
-		custom_script_enable=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to run a custom script during the install process ? (if so, select a bash script that will be run as root at the end of the install process)" --column "Run a custom script ?" "No" "Yes" --ok-label="Next" 2>/dev/null)
+		custom_packages=$(zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to install additional packages ? (if so, please provide a space separated package list)" --ok-label="Next" 2>/dev/null)
+		custom_script_enable=$(zenity --height=480 --width=640 --title="LinuxLoops installer" --list --text "Do you want to run a custom script during the install process ? (if so, select a bash script that will be run as root at the end of the install process)" --column "Run a custom script ?" "No" "Yes" --ok-label="Next" 2>/dev/null)
 		if [ -z "${custom_script_enable}" ]; then exit 1; fi
 		if [ "${custom_script_enable}" == "Yes" ]; then
 			if [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]; then
-				custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="/home/chronos/user/" 2>/dev/null)
+				custom_script=$(zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="/home/chronos/user/" 2>/dev/null)
 			else
-				custom_script=$(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="$(eval echo ~${SUDO_USER})/" 2>/dev/null)
+				custom_script=$(zenity --height=480 --width=640 --title="LinuxLoops installer - Select the path to your custom script" --file-selection --file-filter=*.sh --filename="$(eval echo ~${SUDO_USER})/" 2>/dev/null)
 			fi
 			if [ -z "${custom_script}" ]; then exit 1; fi
 		fi
-		kernel_parameters=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to add specific kernel parameters ? (if so, please provide a space separated kernel parameters list)" --ok-label="Next" 2>/dev/null)
+		kernel_parameters=$(zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Do you want to add specific kernel parameters ? (if so, please provide a space separated kernel parameters list)" --ok-label="Next" 2>/dev/null)
 	fi
 	set_credentials
 	if [ "${distro}" != "Qubes" ]; then
 		hostname="$(echo "${distro}" | sed 's@[ !]@@g')-${RANDOM}"
 		until false; do
-			hostname=$(sudo -u ${SUDO_USER} zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Which hostname should be used to identify this machine on the network ?" --entry-text "${hostname}" --ok-label="Next" 2>/dev/null)
+			hostname=$(zenity --entry --height=480 --width=640 --title="LinuxLoops installer" --text="Which hostname should be used to identify this machine on the network ?" --entry-text "${hostname}" --ok-label="Next" 2>/dev/null)
 			if [ -z "${hostname}" ]; then exit 1; fi
-			if ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="hostname contains unsupported characters.\n" 2>/dev/null; continue; fi
+			if ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="hostname contains unsupported characters.\n" 2>/dev/null; continue; fi
 			break
 		done
 	fi
 fi
 if [ "${install_type}" == "disk" ]; then
-	if ! sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --question --text="WARNING: All data on device ${destination} will be erased, are you sure you want to continue ?" 2>/dev/null; then exit 1; fi
-	start_install 2>&1 >(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing ${distro} with ${desktop} environment.\nYou can follow the install process in the terminal window." 2>/dev/null) || exit_with_error "Failed to install ${distro} in chroot."
-	sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Linuxloops installation process is finished.\nYou can now reboot your computer and start ${distro} by selecting your device in the UEFI boot menu." --ok-label="Exit" 2>/dev/null
+	if ! zenity --height=480 --width=640 --title="LinuxLoops installer" --question --text="WARNING: All data on device ${destination} will be erased, are you sure you want to continue ?" 2>/dev/null; then exit 1; fi
+	start_install 2>&1 >(zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing ${distro} with ${desktop} environment.\nYou can follow the install process in the terminal window." 2>/dev/null) || exit_with_error "Failed to install ${distro} in chroot."
+	zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="Linuxloops installation process is finished.\nYou can now reboot your computer and start ${distro} by selecting your device in the UEFI boot menu." --ok-label="Exit" 2>/dev/null
 else
-	start_install 2>&1 >(sudo -u ${SUDO_USER} zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing ${distro} with ${desktop} environment.\nYou can follow the install process in the terminal window." 2>/dev/null) || exit_with_error "Failed to install ${distro} in chroot."
+	start_install 2>&1 >(zenity --height=480 --width=640 --title="LinuxLoops installer" --progress --auto-close --pulsate --text="Installing ${distro} with ${desktop} environment.\nYou can follow the install process in the terminal window." 2>/dev/null) || exit_with_error "Failed to install ${distro} in chroot."
 	grub_config
 fi
 }
@@ -10622,7 +10622,7 @@ if ! : >/dev/tcp/1.1.1.1/80; then echo -e "Internet connection not available, pl
 set_base_parameters()
 {
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.linuxloops
-sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"
+sudo -sE mkdir -p "${linuxloopsdir}"
 chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"
 chmod 0755 "${linuxloopsdir}"
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
@@ -10696,7 +10696,7 @@ else
 			;;
 			-C | --custom-script)
 				shift
-				custom_script="$(sudo -u ${SUDO_USER} echo $(realpath ${1}))"
+				custom_script="$(sudo -sE echo $(realpath ${1}))"
 			;;
 			-k | --kernel-parameters)
 				shift
