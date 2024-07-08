@@ -15,7 +15,7 @@ Why create a linux distro installer ?
 Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows minimal Linux installs with more DE options, to directly add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
 In addition, Linuxloops supports installing linux distros in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
 
-The main limitation of Linuxloops is that the partitionning is not currently customizable (EFI, BOOT and ROOT partitions). As such, it is not aimed at users needing complex partition tables (or they can customize the Linuxloops script to their liking).  
+The main limitation of Linuxloops is that the partitioning is not currently customizable (EFI, BOOT and ROOT partitions). As such, it is not aimed at users needing complex partition tables (or they can customize the Linuxloops script to their liking).  
 
 
 ## How does it work ?
@@ -142,8 +142,8 @@ Create your own declarative configuration and run the below command to start the
 
 ## Complementary instructions
 
-### [Detailled instructions to install from Linux][linux-guide]
-### [Detailled instructions to install from Windows][windows-guide]
+### [Detailed instructions to install from Linux][linux-guide]
+### [Detailed instructions to install from Windows][windows-guide]
 ### [Using the Linuxloops Live image][live-image]
 ### [Use a disk image in a virtual machine][vm-guide]
 ### [Data recovery from an image][recovery-guide]
