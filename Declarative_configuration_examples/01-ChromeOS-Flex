@@ -1,8 +1,8 @@
 # This declarative configuration file for Linuxloops will install ChromeOS-Flex in an image file.
 
 # Mandatory parameters
-distro=ChromeOS-Flex 						# Use `sudo bash ~/linuxloops -l` to list available distros
-desktop=Full 							# Use `sudo bash ~/linuxloops -l` to list available environments
+distribution=ChromeOS-Flex 						# Use `sudo bash ~/linuxloops -l` to list available distributions
+environment=Full 							# Use `sudo bash ~/linuxloops -l` to list available environments
 destination="/home/user/ChromeOS-Flex.img" 			# Drive path (e.g. /dev/sdX) or disk image path (e.g. /home/user/ChromeOS-Flex.img)
 
 # Optional parameters

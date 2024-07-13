@@ -14,7 +14,7 @@ Those recommended setups aim at avoiding unnecessarily complex partition tables 
 
 Nothing very specific in that case.  
 - Evaluate the space you will want to give to your Linuxloops OS images, free up disk space.  
-- If you want to start fresh, you can install a Linuxloops distro on your drive, leaving the necessary space for your images unallocated.  
+- If you want to start fresh, you can install a Linux distribution on your drive with Linuxloops, leaving the necessary space for your images unallocated.  
 
 Create an ext4 partition on the unallocated space.  
 
@@ -49,10 +49,10 @@ Select the newly created virtual disk in the list and continue windows setup.
 
 Once Windows is installed, go to your UEFI BIOS settings and set your efi boot priority back to your main linux install.  
 
-If not already the case, enable grub osprober in your linux distro in order to be able to boot windows from grub.  
+If not already the case, enable grub osprober in your linux distribution in order to be able to boot windows from grub.  
 
 
-## My main OS is Windows and I occasionality need a linux distro
+## My main OS is Windows and I occasionality need a linux distribution
 
 Requirement: Secure Boot disabled.  
 

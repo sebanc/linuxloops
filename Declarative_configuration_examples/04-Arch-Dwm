@@ -1,8 +1,8 @@
 # This declarative configuration file for Linuxloops will install Arch with Dwm from AUR in an image file (without display manager, start dwm with startx command).
 
 # Mandatory parameters
-distro=Arch 							# Use `sudo bash ~/linuxloops -l` to list available distros
-desktop=None 							# Use `sudo bash ~/linuxloops -l` to list available environments
+distribution=Arch 							# Use `sudo bash ~/linuxloops -l` to list available distributions
+environment=None 							# Use `sudo bash ~/linuxloops -l` to list available environments
 destination="/home/user/Arch.img" 				# Drive path (e.g. /dev/sdX) or disk image path (e.g. /home/user/Arch.img)
 
 # Mandatory parameters (except for BlissOS, Brunch, ChromeOS-Flex and Tails) but interactive if not provided.

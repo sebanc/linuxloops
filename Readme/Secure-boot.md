@@ -17,11 +17,11 @@ During install, the Linuxloops script will generate a basic secure boot key (whi
 
 On the first boot, a blue screen saying "Verification failed: Access Denied" will appear and you will have to enroll the secure boot key by selecting "OK->Enroll key from disk->EFI->MOK.der->Continue".  
 
-Reboot your device and the linux distro will start normally.  
+Reboot your device and the distribution will start normally.  
 
 ## Secure boot support for disk images installs
 
-Requirement: An installed linux distro with secureboot enabled through Shim.  
+Requirement: An installed linux distribution with secureboot enabled through Shim.  
 
 In the case of disk images, SecureBoot support will rely on your main linux distribution shim bootloader.  
 

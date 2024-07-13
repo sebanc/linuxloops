@@ -9,11 +9,11 @@
 
 ## About This Project
 
-Linuxloops is an adaptable / declarative linux distro installer.  
+Linuxloops is an adaptable / declarative linux distribution installer.  
 
-Why create a linux distro installer ?  
+Why create a linux distribution installer ?  
 Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows minimal Linux installs with more DE options, to directly add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
-In addition, Linuxloops supports installing linux distros in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
+In addition, Linuxloops supports installing linux distributions in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
 
 The main limitation of Linuxloops is that the partitioning is not currently customizable (EFI, BOOT and ROOT partitions). As such, it is not aimed at users needing complex partition tables (or they can customize the Linuxloops script to their liking).  
 
@@ -23,8 +23,8 @@ The main limitation of Linuxloops is that the partitioning is not currently cust
 The Linuxloops script will chroot into a temporary rootfs image (usually a linux container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
 
 For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
-- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distros that are enabled by default as they contain necessary packages for standard use.  
-- For Arch based distros, the "shim-signed" AUR package is included in order to support Secure Boot.  
+- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distributions that are enabled by default as they contain necessary packages for standard use.  
+- For Arch based distributions, the "shim-signed" AUR package is included in order to support Secure Boot.  
 
 
 ## Supported Hardware
@@ -35,9 +35,9 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 - A drive with at least 14 GB available space.  
 
 
-## Overview of supported distros and features
+## Overview of supported distributions and features
 
-|**Distro**|**Version**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
+|**Distribution**|**Version**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
 |----------------|:--------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|--------------|
 |AlmaLinux       |9               |✓                      |                                     |                                 |[notes][AlmaLinux-notes]|
 |Arch            |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]|
@@ -84,21 +84,21 @@ Download the Linuxloops script:
 
 ### GUI installer
 
-Install the `zenity` package for your distro:  
-- Debian-based distro: `sudo apt install zenity`  
-- Arch-based distro: `sudo pacman -S zenity`  
-- Fedora-based distro: `sudo dnf install zenity`  
+Install the `zenity` package for your distribution:  
+- Debian-based distribution: `sudo apt install zenity`  
+- Arch-based distribution: `sudo pacman -S zenity`  
+- Fedora-based distribution: `sudo dnf install zenity`  
 
 Start the installer in GUI mode:  
 `sudo -E bash ~/linuxloops`  
 
 ### CLI installer
 
-Below is the list of command line flags:  
+List of command line flags:  
 ```
-Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
+Usage: sudo bash linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
 -distro, --distribution <distribution name>			(Distribution to install)
--env, --environment <desktop environment>			(Desktop environment to install)
+-env, --environment <environment name>				(Environment to install)
 -dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
 -s, --size <total install size>					(number in GB, minimum 14GB)
 -z, --swapsize <swap size>					(number in GB)
@@ -115,11 +115,11 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -C, --custom-script						(bash script that should be run at the end of the install process)
 -k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
 -d, --declarative <config_file_path>				(Use a declarative configuration file)
--l, --list							(List available distros and desktop environments)
+-l, --list							(List available distributions and environments)
 -ll, --list-locales						(List available locales)
 -lk, --list-keymaps						(List available keymaps)
 -lt, --list-timezones						(List available timezones)
--h, --help							(Display this menu)
+-h, --help								(Display this menu)
 ```
 
 The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  

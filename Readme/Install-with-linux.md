@@ -21,15 +21,15 @@
   
 2. Launch the Linuxloops script  
 
-- To use the GUI installer, install the `zenity` package for your distro and then run:  
+- To use the GUI installer, install the `zenity` package for your distribution and then run:  
 
 `sudo -E bash ~/linuxloops`
 
 - To use the CLI installer:  
 ```
-Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environment> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
+Usage: sudo bash linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
 -distro, --distribution <distribution name>			(Distribution to install)
--env, --environment <desktop environment>			(Desktop environment to install)
+-env, --environment <environment name>				(Environment to install)
 -dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
 -s, --size <total install size>					(number in GB, minimum 14GB)
 -z, --swapsize <swap size>					(number in GB)
@@ -46,7 +46,7 @@ Usage: sudo bash linuxloops -distro <distribution name> -env <desktop environmen
 -C, --custom-script						(bash script that should be run at the end of the install process)
 -k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
 -d, --declarative <config_file_path>				(Use a declarative configuration file)
--l, --list							(List available distros and desktop environments)
+-l, --list							(List available distributions and environments)
 -ll, --list-locales						(List available locales)
 -lk, --list-keymaps						(List available keymaps)
 -lt, --list-timezones						(List available timezones)
@@ -93,7 +93,7 @@ If Secure Boot is enabled, enroll the Secure Boot DER certificate:
 
 Choose a password, reboot your computer, you should see a blue screen, select "Enroll MOK" and validate with your chosen password.  
 
-Start the Linuxloops grub entry from your distro's grub menu.  
+Start the Linuxloops grub entry from your Linux distribution's grub menu.  
 
 ## Support
 

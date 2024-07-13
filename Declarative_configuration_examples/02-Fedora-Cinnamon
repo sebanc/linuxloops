@@ -1,8 +1,8 @@
 # This declarative configuration file for Linuxloops will install Fedora with Cinnamon desktop environment in an image file.
 
 # Mandatory parameters
-distro=Fedora 							# Use `sudo bash ~/linuxloops -l` to list available distros
-desktop=Cinnamon 						# Use `sudo bash ~/linuxloops -l` to list available environments
+distribution=Fedora 							# Use `sudo bash ~/linuxloops -l` to list available distributions
+environment=Cinnamon 						# Use `sudo bash ~/linuxloops -l` to list available environments
 destination="/home/user/Fedora.img" 				# Drive path (e.g. /dev/sdX) or disk image path (e.g. /home/user/Fedora.img)
 
 # Mandatory parameters (except for BlissOS, Brunch, ChromeOS-Flex and Tails) but interactive if not provided.
