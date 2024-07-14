@@ -202,9 +202,9 @@ case "${1}" in
 	;;
 	'Qubes')
 	available_environments=( "Full" )
-	bootstrap="iso https://ftp.qubes-os.org/iso/Qubes-R4.2.1-x86_64.iso /images/install.img /LiveOS/rootfs.img"
-	iso_sha256sum="https://ftp.qubes-os.org/iso/Qubes-R4.2.1-x86_64.iso.DIGESTS"
-	iso_signature="https://ftp.qubes-os.org/iso/Qubes-R4.2.1-x86_64.iso.asc"
+	bootstrap="iso https://ftp.qubes-os.org/iso/Qubes-R4.2.2-x86_64.iso /images/install.img /LiveOS/rootfs.img"
+	iso_sha256sum="https://ftp.qubes-os.org/iso/Qubes-R4.2.2-x86_64.iso.DIGESTS"
+	iso_signature="https://ftp.qubes-os.org/iso/Qubes-R4.2.2-x86_64.iso.asc"
 	master_key="9C884DF3F81064A569A4A9FAE022E58F8E34D89F"
 	bootloader_id="qubes"
 	bootloader_name="grubx64.efi"
@@ -3514,12 +3514,12 @@ elif [ "${environment}" == "None/Systemd" ]; then
 elif [ "$(echo ${environment} | cut -d '/' -f2)" == "Openrc" ]; then
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
-	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner
+	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2
 else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bluetooth boost branding cairo cdda cdr client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit pulseaudio python qml sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
-	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner
+	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2
 fi
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio
 echo -e '[main]\nhostname-mode=none' > /etc/NetworkManager/NetworkManager.conf
@@ -8246,13 +8246,12 @@ mount -t tmpfs -o mode=1777 none /mnt/tmp
 mkdir -p /mnt/linuxloops
 mount --bind /linuxloops /mnt/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
+	ln -s /dev/null /mnt/etc/systemd/system/systemd-journald.service
+	ln -s /dev/null /mnt/etc/systemd/system/systemd-logind.service
+	ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
 	touch /tmp/pid_ns
-	mount --bind /mnt/dev/null /mnt/dev/console
-	sudo -b unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt bash -c "/lib/systemd/systemd --system-unit=basic.target"
+	sudo -b unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt bash -c "/lib/systemd/systemd --system-unit=basic.target --show-status=no --log-target=null --log-level=0 --default-standard-output=null --default-standard-error=null"
 	sleep 5
-	umount /mnt/dev/console
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl stop systemd-resolved"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl mask systemd-resolved"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "/lib/systemd/systemd-udevd --daemon"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
@@ -8293,10 +8292,12 @@ if [ -f /linuxloops/cleanup ]; then \${chroot_cmd} /linuxloops/cleanup; fi
 if [ -f /linuxloops/selinux_fix ]; then \${chroot_cmd} /linuxloops/selinux_fix; fi
 if [ "${systemd_init}" == "Yes" ]; then
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "rm /usr/sbin/policy-rc.d"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl unmask systemd-resolved"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "kill -9 1"
 	umount /tmp/pid_ns
 	rm /tmp/pid_ns
+	rm /mnt/etc/systemd/system/systemd-resolved.service
+	rm /mnt/etc/systemd/system/systemd-logind.service
+	rm /mnt/etc/systemd/system/systemd-journald.service
 fi
 ENTERCHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/enter_chroot
@@ -10258,7 +10259,7 @@ if [ -f ./usb_bootloader.img ]; then
 		echo -e "${finalise}"
 	fi
 elif [ ! -z "${wsl}" ]; then
-	grubinstall="The ${distribution} dual boot disk image has been created and the config needed to boot ${distribution} from Grub2Win has been generated in the file:\n$(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\n\nNow, install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\"."
+	grubinstall="The ${distribution} disk image has been created. You can either write this disk image to a disk (usb flashdrive / sdcard) with a tool like rufus/etcher or boot directly from this image with Grub2Win.\n\nThe config needed to boot ${distribution} from Grub2Win has been generated in the file:\n$(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\n\nNow, install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\"."
 	finalise="Please note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu."
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Next" 2>/dev/null

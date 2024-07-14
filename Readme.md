@@ -64,7 +64,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Parrot          |Current         |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
 |Pop             |22.04           |✓                      |✓                                    |✓                                |              |
 |Proxmox         |VE 8            |✓                      |✓                                    |✓                                |              |
-|Qubes           |4.2             |                       |                                     |                                 |[notes][Qubes-notes]|
+|Qubes           |4.2.2           |                       |                                     |                                 |[notes][Qubes-notes]|
 |RockyLinux      |9               |✓                      |                                     |                                 |[notes][RockyLinux-notes]|
 |SteamOS         |3.6             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
 |Tails           |Latest          |✓                      |                                     |                                 |[notes][Tails-notes]|
