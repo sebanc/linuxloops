@@ -253,7 +253,6 @@ case "${1}" in
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
-	systemd_init="Yes"
 	if [ -z "${github}" ]; then systemd_init="Yes"; fi
 	;;
 esac
