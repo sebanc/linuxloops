@@ -233,14 +233,14 @@ case "${1}" in
 	bootstrap="lxc ubuntu noble default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
-	systemd_init="Yes"
+	if [ -z "${github}" ]; then systemd_init="Yes"; fi
 	;;
 	'Ubuntu-LTS')
 	available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
-	systemd_init="Yes"
+	if [ -z "${github}" ]; then systemd_init="Yes"; fi
 	;;
 	'Void')
 	available_environments=( "None" "Budgie" "Cinnamon" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
@@ -254,6 +254,7 @@ case "${1}" in
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	systemd_init="Yes"
+	if [ -z "${github}" ]; then systemd_init="Yes"; fi
 	;;
 esac
 }
@@ -7184,6 +7185,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio
+if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
 
@@ -7364,7 +7366,7 @@ cat >"${bootstrapdir}"/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-snap install snap-store
+if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
 echo -e 'APT::Install-Recommends \"0\";\nAPT::Get::Install-Recommends \"false\";' > /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install update-manager software-properties-gtk
 mkdir -p /usr/share/glib-2.0/schemas
@@ -7486,6 +7488,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio
+if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
 
@@ -7650,6 +7653,7 @@ cat >"${bootstrapdir}"/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
+if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
 echo -e 'APT::Install-Recommends \"0\";\nAPT::Get::Install-Recommends \"false\";' > /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install update-manager software-properties-gtk
 mkdir -p /usr/share/glib-2.0/schemas
@@ -7988,6 +7992,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=fal
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-generic dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio
+if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
 
@@ -8109,7 +8114,6 @@ elif [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "ChimeraOS" ];
 else
 	(echo "g"; echo "n"; echo "1"; echo ""; echo "+512M"; echo "n"; echo "2"; echo ""; echo "+1536M"; echo "n"; echo "3"; echo ""; echo "+$((install_sizeMB-2048-3))M"; echo "t"; echo "1"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "t"; echo "2"; echo "BC13C2FF-59E6-4262-A352-B275FD6F7172"; echo "t"; echo "3"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "1"; echo "EFI"; echo "n"; echo "2"; echo "BOOT"; echo "n"; echo "3"; echo "ROOT"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 fi
-#sync
 PARTITIONDEVICE
 chmod 0755 "${bootstrapdir}"/linuxloops/partition_script
 }
@@ -8243,23 +8247,18 @@ mount -t tmpfs -o mode=1777 none /mnt/tmp
 mkdir -p /mnt/linuxloops
 mount --bind /linuxloops /mnt/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
-	#mkdir -p /mnt/etc/systemd/system/getty@tty1.service.d
-	#echo -e "[Service]\nExecStart=\nExecStart=-/sbin/agetty -o '-p -f -- \\\\\\\u' --noclear --autologin root %I \$TERM'" > /mnt/etc/systemd/system/getty@tty1.service.d/autologin.conf
-	ln -sf /mnt/dev/null /mnt/dev/console
 	touch /tmp/pid_ns
+	mount --bind /mnt/dev/null /mnt/dev/console
 	sudo -b unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt bash -c "/lib/systemd/systemd --system-unit=basic.target"
 	sleep 5
+	umount /mnt/dev/console
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl stop systemd-resolved"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl disable systemd-resolved"
+	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl mask systemd-resolved"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "/lib/systemd/systemd-udevd --daemon"
+	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
+	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "mkdir -p ${bootstrapdir}"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "ln -s / ${bootstrapdir}/mnt"
-	#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "rm /etc/resolv.conf"
-	#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "echo 'nameserver 1.1.1.1' > /etc/resolv.conf"
-	#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "yes | DEBIAN_FRONTEND=noninteractive apt update"
-	#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade"
-	#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "yes | DEBIAN_FRONTEND=noninteractive apt install snapd"
-	#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "snap install firefox"
 	chroot_cmd="nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt"
 else
 	chroot_cmd="chroot /mnt"
@@ -8294,7 +8293,8 @@ if [ -f /linuxloops/install_custom_script ]; then \${chroot_cmd} /linuxloops/ins
 if [ -f /linuxloops/cleanup ]; then \${chroot_cmd} /linuxloops/cleanup; fi
 if [ -f /linuxloops/selinux_fix ]; then \${chroot_cmd} /linuxloops/selinux_fix; fi
 if [ "${systemd_init}" == "Yes" ]; then
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl enable systemd-resolved"
+	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "rm /usr/sbin/policy-rc.d"
+	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "systemctl unmask systemd-resolved"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "kill -9 1"
 	umount /tmp/pid_ns
 	rm /tmp/pid_ns
@@ -8406,7 +8406,6 @@ curl https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/ke
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 yes | DEBIAN_FRONTEND=noninteractive apt purge ${surface_remove}
-#yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev v4l2loopback-dkms
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.1.tar.gz | tar xz -C /usr/src
 dkms add -m v4l2loopback -v 0.13.1
@@ -9773,6 +9772,7 @@ if mountpoint -q /mnt/tmp; then umount /mnt/tmp; fi
 if mountpoint -q /mnt/run; then umount /mnt/run; fi
 if mountpoint -q /mnt/dev/shm; then umount /mnt/dev/shm; fi
 if mountpoint -q /mnt/dev/pts; then umount /mnt/dev/pts; fi
+if mountpoint -q /mnt/dev/console; then umount /mnt/dev/console; fi
 if mountpoint -q /mnt/dev; then umount /mnt/dev; fi
 if mountpoint -q /mnt/sys; then umount /mnt/sys; fi
 if mountpoint -q /mnt/proc/sys; then umount /mnt/proc/sys; fi
@@ -9811,6 +9811,7 @@ if mountpoint -q "${bootstrapdir}"/mnt/tmp; then umount "${bootstrapdir}"/mnt/tm
 if mountpoint -q "${bootstrapdir}"/mnt/run; then umount "${bootstrapdir}"/mnt/run; fi
 if mountpoint -q "${bootstrapdir}"/mnt/dev/shm; then umount "${bootstrapdir}"/mnt/dev/shm; fi
 if mountpoint -q "${bootstrapdir}"/mnt/dev/pts; then umount "${bootstrapdir}"/mnt/dev/pts; fi
+if mountpoint -q "${bootstrapdir}"/mnt/dev/console; then umount "${bootstrapdir}"/mnt/dev/console; fi
 if mountpoint -q "${bootstrapdir}"/mnt/dev; then umount "${bootstrapdir}"/mnt/dev; fi
 if mountpoint -q "${bootstrapdir}"/mnt/sys; then umount "${bootstrapdir}"/mnt/sys; fi
 if mountpoint -q "${bootstrapdir}"/mnt/proc/sys; then umount "${bootstrapdir}"/mnt/proc/sys; fi
@@ -9830,8 +9831,9 @@ if mountpoint -q "${bootstrapdir}"/sys/firmware/efi/efivars; then umount "${boot
 if mountpoint -q "${bootstrapdir}"/sys; then umount "${bootstrapdir}"/sys; fi
 if mountpoint -q "${bootstrapdir}"/proc; then umount "${bootstrapdir}"/proc; fi
 if mountpoint -q "${bootstrapdir}"; then umount "${bootstrapdir}"; fi
-rm -rf "${bootstrapdir}"
-for removedir in "${linuxloopsdir}"/tmp/*; do if [ -d "${removedir}" ] && ([ ! -d "/tmp/$(basename ${removedir})" ] || [ ! mountpoint -q "/tmp/$(basename ${removedir})" ]); then rm -rf "${removedir}"; fi; done
+if mountpoint -q "${homebinddir}"; then umount "${homebinddir}"; fi
+if ! mountpoint -q "${bootstrapdir}" && ! mountpoint -q "${homebinddir}"; then rm -r "${bootstrapdir}" "${homebinddir}"; fi
+for removedir in "${linuxloopsdir}"/tmp/*; do if [ -d "${removedir}" ] && ! mountpoint -q "${removedir}"; then rm -rf "${removedir}"; fi; done
 }
 
 exit_with_error()
@@ -10027,9 +10029,10 @@ bootstrapdir="$(mktemp -d)"
 mkdir -p "${bootstrapdir}"
 homebinddir="${linuxloopsdir}/tmp/$(echo ${bootstrapdir} | cut -d'/' -f3)"
 sudo -u ${SUDO_USER} mkdir -p "${homebinddir}"
+mount --bind "${homebinddir}" "${homebinddir}"
+mount --make-slave "${homebinddir}"
 if [ ! -d "${bootstrapdir}" ] || [ ! -d "${homebinddir}" ] ; then echo "Linuxloops working directories could not be created."; exit 1; fi
 mount --bind "${homebinddir}" "${bootstrapdir}"
-# The below make-slave is very important for proper partitions unmounting.
 mount --make-slave "${bootstrapdir}"
 if ! mountpoint -q "${bootstrapdir}"; then echo "Linuxloops bootstrap could not be mounted."; exit 1; fi
 download_bootstrap $bootstrap
@@ -10066,16 +10069,11 @@ generate_install_live
 generate_create_swap
 generate_efi_entry
 generate_exit_chroot
-if [ "${distribution}" == "NixOS" ]; then
-	mount_ns="$(mktemp)"
-	chroot_unshare="unshare --mount=${mount_ns}"
-	chroot_nsenter="nsenter --mount=${mount_ns}"
-fi
-${chroot_unshare} chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
+chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
 if [ "${return_value}" -eq 0 ]; then
 	generare_install_userpw
 	if [ -x "${bootstrapdir}"/linuxloops/install_userpw ]; then
-		${chroot_nsenter} chroot "${bootstrapdir}" /linuxloops/install_userpw || return_value=1
+		chroot "${bootstrapdir}" /linuxloops/install_userpw || return_value=1
 		rm -f "${bootstrapdir}"/linuxloops/install_userpw "${bootstrapdir}"/mnt/tmp/set_userpw
 	fi
 	if [ "${install_type}" == "image" ] && [ -f "${bootstrapdir}"/mnt/etc/secureboot_key/MOK.der ]; then
@@ -10083,11 +10081,7 @@ if [ "${return_value}" -eq 0 ]; then
 		chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".der
 	fi
 fi
-if [ -x "${bootstrapdir}"/linuxloops/exit_chroot ]; then ${chroot_nsenter} chroot "${bootstrapdir}" /linuxloops/exit_chroot || return_value=1; fi
-if [ ! -z "${mount_ns}" ]; then
-	umount "${mount_ns}"
-	rm "${mount_ns}"
-fi
+if [ -x "${bootstrapdir}"/linuxloops/exit_chroot ]; then chroot "${bootstrapdir}" /linuxloops/exit_chroot || return_value=1; fi
 end_bootstrap
 }
 
@@ -10400,7 +10394,7 @@ fi
 
 check_home_space()
 {
-for removedir in "${linuxloopsdir}"/tmp/*; do if [ -d "${removedir}" ] && ([ ! -d "/tmp/$(basename ${removedir})" ] || [ ! mountpoint -q "/tmp/$(basename ${removedir})" ]); then rm -rf "${removedir}"; fi; done
+for removedir in "${linuxloopsdir}"/tmp/*; do if [ -d "${removedir}" ] && ! mountpoint -q "${removedir}"; then rm -rf "${removedir}"; fi; done
 case "${distribution}" in
 	'BlissOS')
 		available_space_needed=3
@@ -10668,6 +10662,7 @@ mkdir -p "${linuxloopsdir}"
 chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"
 chmod 0755 "${linuxloopsdir}"
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
+if [ -d /home/runner/work ]; then github=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
