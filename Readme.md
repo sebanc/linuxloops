@@ -59,7 +59,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |MX              |23              |✓                      |✓                                    |✓                                |              |
 |Neon            |Current         |✓                      |✓                                    |✓                                |              |
 |NixOS           |24.05           |✓                      |✓                                    |                                 |              |
-|Nobara          |39              |✓                      |✓                                    |✓                                |              |
+|Nobara          |40              |✓                      |✓                                    |✓                                |              |
 |OpenSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]|
 |Parrot          |Current         |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
 |Pop             |22.04           |✓                      |✓                                    |✓                                |              |

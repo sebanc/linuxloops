@@ -167,7 +167,7 @@ case "${1}" in
 	;;
 	'Nobara')
 	available_environments=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
-	bootstrap="lxc fedora 39 default"
+	bootstrap="lxc fedora 40 default"
 	bootloader_id="fedora"
 	bootloader_name="shimx64.efi"
 	;;
@@ -1230,9 +1230,12 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
+mount --make-slave /mnt/proc
 mount --bind /sys /mnt/sys
+mount --make-slave /mnt/sys
+mount --bind /dev /mnt/dev
+mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core openssl tar
 umount /mnt/sys
 umount /mnt/proc
@@ -3253,9 +3256,12 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
+mount --make-slave /mnt/proc
 mount --bind /sys /mnt/sys
+mount --make-slave /mnt/sys
+mount --bind /dev /mnt/dev
+mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
 umount /mnt/sys
 umount /mnt/proc
@@ -4356,14 +4362,14 @@ systemctl enable lightdm.service
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox manjaro-lxde-config manjaro-lxde-desktop-settings manjaro-lxde-logout-banner manjaro-lxde-xfce4-notifyd manjaro-lxde-xfce4-volumed-pulse arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde manjaro-lxde-config manjaro-lxde-desktop-settings manjaro-lxde-logout-banner manjaro-lxde-xfce4-notifyd manjaro-lxde-xfce4-volumed-pulse arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -4894,6 +4900,7 @@ useradd -s /bin/bash -m 'temp'
 echo -e 'temp\ntemp' | passwd 'temp'
 echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
 sudo -u temp bash << 'NIXOSINSTALL'
+set -e
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
@@ -5056,7 +5063,7 @@ dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/main/baseos/nobara-repos/39/RPM-GPG-KEY-nobara-baseos-pubkey-39 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-39-x86_64
+curl -L https://github.com/Nobara-Project/rpm-sources/raw/main/baseos/nobara-repos/40/RPM-GPG-KEY-nobara-baseos-pubkey-40 -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-40-x86_64
 cat >/etc/yum.repos.d/nobara.repo <<'NOBARAREPO'
 [nobara-baseos-\$releasever]
 name=nobara-baseos-\$releasever
@@ -5072,9 +5079,12 @@ enabled_metadata=1
 priority=50
 NOBARAREPO
 mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
+mount --make-slave /mnt/proc
 mount --bind /sys /mnt/sys
+mount --make-slave /mnt/sys
+mount --bind /dev /mnt/dev
+mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
 umount /mnt/sys
 umount /mnt/proc
@@ -5095,32 +5105,32 @@ chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="desktop-backgrounds ffmpeg flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config nobara-login nobara-login-sysctl openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
+specific_packages="desktop-backgrounds ffmpeg flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
+dnf install --allowerasing -y ${desktop_base} gdm gnome-shell nautilus gnome-terminal gnome-extensions-app gnome-software gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop gnome-shell-extension-appindicator gnome-shell-extension-supergfxctl-gex
+dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop gnome-shell-extension-appindicator
 "
 	;;
 	'Nobara')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers
 "
 	;;
 	'Nobara/Full')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers nobara-kde-presets @\"KDE Applications\" @\"KDE Multimedia support\"
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze kde-nobara-sddm plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers @\"KDE Applications\" @\"KDE Multimedia support\"
 "
 	;;
 	'Plasma')
@@ -5138,13 +5148,13 @@ dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop pl
 	'SteamDeck')
 	default_session="gamescope-session-steam"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck
 "
 	;;
 	'SteamDeck/Full')
 	default_session="gamescope-session-steam"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze sddm-sugar-steamOS plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support steamdeck-kde-presets @\"KDE Applications\" @\"KDE Multimedia support\"
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-workspace-wayland plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck @\"KDE Applications\" @\"KDE Multimedia support\"
 "
 	;;
 esac
@@ -6183,9 +6193,12 @@ mkdir -p /etc/yum.fake.repos.d
 echo -e '[local]\nname = local\nbaseurl = file:///source\nenabled=1\ngpgcheck=0\nrepo_gpgcheck=0' > /etc/yum.fake.repos.d/local.repo
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d install -y coreutils util-linux
 mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
+mount --make-slave /mnt/proc
 mount --bind /sys /mnt/sys
+mount --make-slave /mnt/sys
+mount --bind /dev /mnt/dev
+mount --make-slave /mnt/dev
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf qubes-release qubes-dom0-unwanted-packages
 umount /mnt/sys
 umount /mnt/proc
@@ -6286,9 +6299,12 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /dev /mnt/dev
 mount --bind /proc /mnt/proc
+mount --make-slave /mnt/proc
 mount --bind /sys /mnt/sys
+mount --make-slave /mnt/sys
+mount --bind /dev /mnt/dev
+mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core openssl tar
 umount /mnt/sys
 umount /mnt/proc
@@ -8236,21 +8252,27 @@ cat >"${bootstrapdir}"/linuxloops/enter_chroot <<ENTERCHROOT
 #!/bin/bash
 set -e
 mount -t proc none /mnt/proc
-mount -o ro,bind /mnt/proc/sys /mnt/proc/sys
-mount -o ro -t sysfs none /mnt/sys
-mount -t devtmpfs none /mnt/dev
-mount -t devpts none /mnt/dev/pts
+mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
+mount --make-slave /mnt/proc/sys
+mount --bind -o ro /sys /mnt/sys
+mount --make-slave /mnt/sys
+mount --bind /dev /mnt/dev
+mount --make-slave /mnt/dev
+mount --bind /dev/pts /mnt/dev/pts
+mount --make-slave /mnt/dev/pts
 mount -t tmpfs -o mode=1777 none /mnt/dev/shm
 mount -t tmpfs none /mnt/run
 mount -t tmpfs -o mode=1777 none /mnt/tmp
 mkdir -p /mnt/linuxloops
 mount --bind /linuxloops /mnt/linuxloops
+mount --make-slave /mnt/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-journald.service
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-logind.service
+	mount --make-slave /mnt/dev
+	mount --bind \$(tty) /mnt/dev/console
+	mount --make-slave /mnt/dev/console
 	ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
 	touch /tmp/pid_ns
-	sudo -b unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt bash -c "/lib/systemd/systemd --system-unit=basic.target --show-status=no --log-target=null --log-level=0 --default-standard-output=null --default-standard-error=null"
+	sudo -b container=chroot unshare --pid=/tmp/pid_ns --fork --mount-proc --kill-child --root=/mnt /lib/systemd/systemd --unit=basic.target
 	sleep 5
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "/lib/systemd/systemd-udevd --daemon"
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
@@ -8269,11 +8291,9 @@ else
 	dns_manager="NetworkManager/resolv.conf"
 fi
 rm -f /mnt/etc/resolv.conf
-mkdir -p \$(dirname /run/"\${dns_manager}") \$(dirname /mnt/run/"\${dns_manager}")
-touch /mnt/run/"\${dns_manager}"
-ln -s  /mnt/run/"\${dns_manager}" /run/"\${dns_manager}"
 ln -s /run/"\${dns_manager}" /mnt/etc/resolv.conf
-cp /etc/resolv.conf /mnt/etc/resolv.conf
+mkdir -p \$(dirname /mnt/run/"\${dns_manager}")
+cp /etc/resolv.conf /mnt/run/"\${dns_manager}"
 \${chroot_cmd} /linuxloops/chroot_init
 if [ -f /linuxloops/install_desktop ]; then \${chroot_cmd} /linuxloops/install_desktop; fi
 if [ -f /linuxloops/install_live ]; then \${chroot_cmd} /linuxloops/install_live; fi
@@ -8292,12 +8312,10 @@ if [ -f /linuxloops/cleanup ]; then \${chroot_cmd} /linuxloops/cleanup; fi
 if [ -f /linuxloops/selinux_fix ]; then \${chroot_cmd} /linuxloops/selinux_fix; fi
 if [ "${systemd_init}" == "Yes" ]; then
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "rm /usr/sbin/policy-rc.d"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "kill -9 1"
 	umount /tmp/pid_ns
 	rm /tmp/pid_ns
 	rm /mnt/etc/systemd/system/systemd-resolved.service
-	rm /mnt/etc/systemd/system/systemd-logind.service
-	rm /mnt/etc/systemd/system/systemd-journald.service
+	umount /mnt/dev/console
 fi
 ENTERCHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/enter_chroot
@@ -8452,7 +8470,7 @@ elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/linuxloops/install_surface <<SURFACEDNF
 #!/bin/bash
 set -e
-dnf-3 config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
+dnf config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
 dnf update -y
 dnf install -y --allowerasing iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera v4l2loopback
 usermod -aG video '${username}'
@@ -8504,7 +8522,7 @@ elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf-3 install -y nvidia-driver
+dnf install -y nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "OpenSUSE" ]; then
 	cat >"${bootstrapdir}"/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -9784,7 +9802,6 @@ if [ -f /linuxloops/efi_loop ]; then losetup -d \$(cat /linuxloops/efi_loop); fi
 if mountpoint -q /mnt/boot; then umount /mnt/boot; fi
 if [ -f /linuxloops/boot_loop ]; then losetup -d \$(cat /linuxloops/boot_loop); fi
 if mountpoint -q /mnt; then umount /mnt; fi
-if [ -b /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" ]; then cryptsetup luksClose luks-"\$(blkid -s UUID -o value "${root_partition}")"; fi
 EXITCHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/exit_chroot
 }
@@ -9799,6 +9816,21 @@ for ROOT in $(find /proc/*/root 2>/dev/null); do
 	fi
 done
 sleep 5
+if mountpoint -q "${chrootdir}"/linuxloops; then umount "${chrootdir}"/linuxloops; fi
+if mountpoint -q "${chrootdir}"/tmp; then umount "${chrootdir}"/tmp; fi
+if mountpoint -q "${chrootdir}"/run; then umount "${chrootdir}"/run; fi
+if mountpoint -q "${chrootdir}"/dev/shm; then umount "${chrootdir}"/dev/shm; fi
+if mountpoint -q "${chrootdir}"/dev/pts; then umount "${chrootdir}"/dev/pts; fi
+if mountpoint -q "${chrootdir}"/dev/console; then umount "${chrootdir}"/dev/console; fi
+if mountpoint -q "${chrootdir}"/dev; then umount "${chrootdir}"/dev; fi
+if mountpoint -q "${chrootdir}"/sys; then umount "${chrootdir}"/sys; fi
+if mountpoint -q "${chrootdir}"/proc/sys; then umount "${chrootdir}"/proc/sys; fi
+if mountpoint -q "${chrootdir}"/proc; then umount "${chrootdir}"/proc; fi
+if mountpoint -q "${chrootdir}"/var/swap; then umount "${chrootdir}"/var/swap; fi
+if mountpoint -q "${chrootdir}"/home; then umount "${chrootdir}"/home; fi
+if mountpoint -q "${chrootdir}"/boot/efi; then umount "${chrootdir}"/boot/efi; fi
+if mountpoint -q "${chrootdir}"/boot; then umount "${chrootdir}"/boot; fi
+if mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
 if mountpoint -q "${bootstrapdir}"/isomount/data; then umount "${bootstrapdir}"/isomount/data; fi
 if mountpoint -q "${bootstrapdir}"/isomount/efi; then umount "${bootstrapdir}"/isomount/efi; fi
 if mountpoint -q "${bootstrapdir}"/isomount/iso; then umount "${bootstrapdir}"/isomount/iso; fi
@@ -9806,21 +9838,6 @@ if mountpoint -q "${bootstrapdir}"/isomount/roota; then umount "${bootstrapdir}"
 if mountpoint -q "${bootstrapdir}"/isomount/rootc; then umount "${bootstrapdir}"/isomount/rootc; fi
 if mountpoint -q "${bootstrapdir}"/isomount/tmp; then umount "${bootstrapdir}"/isomount/tmp; fi
 if mountpoint -q "${bootstrapdir}"/isomount; then umount "${bootstrapdir}"/isomount; fi
-if mountpoint -q "${bootstrapdir}"/mnt/linuxloops; then umount "${bootstrapdir}"/mnt/linuxloops; fi
-if mountpoint -q "${bootstrapdir}"/mnt/tmp; then umount "${bootstrapdir}"/mnt/tmp; fi
-if mountpoint -q "${bootstrapdir}"/mnt/run; then umount "${bootstrapdir}"/mnt/run; fi
-if mountpoint -q "${bootstrapdir}"/mnt/dev/shm; then umount "${bootstrapdir}"/mnt/dev/shm; fi
-if mountpoint -q "${bootstrapdir}"/mnt/dev/pts; then umount "${bootstrapdir}"/mnt/dev/pts; fi
-if mountpoint -q "${bootstrapdir}"/mnt/dev/console; then umount "${bootstrapdir}"/mnt/dev/console; fi
-if mountpoint -q "${bootstrapdir}"/mnt/dev; then umount "${bootstrapdir}"/mnt/dev; fi
-if mountpoint -q "${bootstrapdir}"/mnt/sys; then umount "${bootstrapdir}"/mnt/sys; fi
-if mountpoint -q "${bootstrapdir}"/mnt/proc/sys; then umount "${bootstrapdir}"/mnt/proc/sys; fi
-if mountpoint -q "${bootstrapdir}"/mnt/proc; then umount "${bootstrapdir}"/mnt/proc; fi
-if mountpoint -q "${bootstrapdir}"/mnt/var/swap; then umount "${bootstrapdir}"/mnt/var/swap; fi
-if mountpoint -q "${bootstrapdir}"/mnt/home; then umount "${bootstrapdir}"/mnt/home; fi
-if mountpoint -q "${bootstrapdir}"/mnt/boot/efi; then umount "${bootstrapdir}"/mnt/boot/efi; fi
-if mountpoint -q "${bootstrapdir}"/mnt/boot; then umount "${bootstrapdir}"/mnt/boot; fi
-if mountpoint -q "${bootstrapdir}"/mnt; then umount "${bootstrapdir}"/mnt; fi
 if mountpoint -q "${bootstrapdir}"/tmp/pid_ns; then umount "${bootstrapdir}"/tmp/pid_ns; fi
 if mountpoint -q "${bootstrapdir}"/tmp; then umount "${bootstrapdir}"/tmp; fi
 if mountpoint -q "${bootstrapdir}"/run; then umount "${bootstrapdir}"/run; fi
@@ -9833,7 +9850,7 @@ if mountpoint -q "${bootstrapdir}"/proc; then umount "${bootstrapdir}"/proc; fi
 if mountpoint -q "${bootstrapdir}"; then umount "${bootstrapdir}"; fi
 if mountpoint -q "${homebinddir}"; then umount "${homebinddir}"; fi
 if ! mountpoint -q "${bootstrapdir}" && ! mountpoint -q "${homebinddir}"; then rm -r "${bootstrapdir}" "${homebinddir}"; fi
-for removedir in "${linuxloopsdir}"/tmp/*; do if [ -d "${removedir}" ] && ! mountpoint -q "${removedir}"; then rm -rf "${removedir}"; fi; done
+if [ -b /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" ]; then cryptsetup luksClose luks-"\$(blkid -s UUID -o value "${root_partition}")"; fi
 }
 
 exit_with_error()
@@ -10038,10 +10055,16 @@ if ! mountpoint -q "${bootstrapdir}"; then echo "Linuxloops bootstrap could not 
 download_bootstrap $bootstrap
 chrootdir="${bootstrapdir}"/mnt
 mount -t proc none "${bootstrapdir}"/proc
-mount -t sysfs none "${bootstrapdir}"/sys
-if mountpoint -q /sys/firmware/efi/efivars; then mount --bind /sys/firmware/efi/efivars "${bootstrapdir}"/sys/firmware/efi/efivars; fi
-mount -t devtmpfs none "${bootstrapdir}"/dev
-mount -t devpts none "${bootstrapdir}"/dev/pts
+mount --bind /sys "${bootstrapdir}"/sys
+mount --make-slave "${bootstrapdir}"/sys
+if mountpoint -q /sys/firmware/efi/efivars; then
+	mount --bind /sys/firmware/efi/efivars "${bootstrapdir}"/sys/firmware/efi/efivars
+	mount --make-slave "${bootstrapdir}"/sys/firmware/efi/efivars
+fi
+mount --bind /dev "${bootstrapdir}"/dev
+mount --make-slave "${bootstrapdir}"/dev
+mount --bind /dev/pts "${bootstrapdir}"/dev/pts
+mount --make-slave "${bootstrapdir}"/dev/pts
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/dev/shm
 mount -t tmpfs none "${bootstrapdir}"/run
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/tmp
@@ -10069,19 +10092,28 @@ generate_install_live
 generate_create_swap
 generate_efi_entry
 generate_exit_chroot
-chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
+if [ "${distribution}" == "NixOS" ]; then
+	mount_ns="$(mktemp)"
+	chroot_unshare="unshare --mount=${mount_ns}"
+	chroot_nsenter="nsenter --mount=${mount_ns}"
+fi
+${chroot_unshare} chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
 if [ "${return_value}" -eq 0 ]; then
 	generare_install_userpw
 	if [ -x "${bootstrapdir}"/linuxloops/install_userpw ]; then
-		chroot "${bootstrapdir}" /linuxloops/install_userpw || return_value=1
-		rm -f "${bootstrapdir}"/linuxloops/install_userpw "${bootstrapdir}"/mnt/tmp/set_userpw
+		${chroot_nsenter} chroot "${bootstrapdir}" /linuxloops/install_userpw || return_value=1
+		rm -f "${bootstrapdir}"/linuxloops/install_userpw "${chrootdir}"/tmp/set_userpw
 	fi
-	if [ "${install_type}" == "image" ] && [ -f "${bootstrapdir}"/mnt/etc/secureboot_key/MOK.der ]; then
-		cp "${bootstrapdir}"/mnt/etc/secureboot_key/MOK.der "${fullpath}".der
+	if [ "${install_type}" == "image" ] && [ -f "${chrootdir}"/etc/secureboot_key/MOK.der ]; then
+		cp "${chrootdir}"/etc/secureboot_key/MOK.der "${fullpath}".der
 		chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".der
 	fi
 fi
-if [ -x "${bootstrapdir}"/linuxloops/exit_chroot ]; then chroot "${bootstrapdir}" /linuxloops/exit_chroot || return_value=1; fi
+if [ -x "${bootstrapdir}"/linuxloops/exit_chroot ]; then ${chroot_nsenter} chroot "${bootstrapdir}" /linuxloops/exit_chroot || return_value=1; fi
+if [ ! -z "${mount_ns}" ]; then
+	umount "${mount_ns}"
+	rm "${mount_ns}"
+fi
 end_bootstrap
 }
 
@@ -10195,8 +10227,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 	img_uuid=\"${img_uuid}\"
 	search --no-floppy --set=root --file \${img_path}
 	loopback loop \${img_path}
-	if [ -f (loop,7)/bootimage.cfg ]; then source (loop,7)/bootimage.cfg; fi
-	if [ -z \"\${bootimage}\" ]; then bootimage=A; fi
+	if [ -f (loop,7)/bootimage.cfg ]; then source (loop,7)/bootimage.cfg; else bootimage=A; fi
 	linux (loop,12)/syslinux/vmlinuz.\${bootimage} img_uuid=\${img_uuid} img_path=\${img_path} bootimage=\${bootimage} loop.max_part=16 ro quiet splash boot=local noresume noswap loglevel=7 console= cros_efi kvm-intel.vmentry_l1d_flush=always loadpin.enabled=0 loadpin.enforce=0 rootfstype=ramfs ${dev_mode}
 	initrd (loop,7)/initramfs.img (loop,7)/firmwares.img (loop,7)/modules.img
 }
@@ -10259,15 +10290,11 @@ if [ -f ./usb_bootloader.img ]; then
 		echo -e "${finalise}"
 	fi
 elif [ ! -z "${wsl}" ]; then
-	grubinstall="The ${distribution} disk image has been created. You can either write this disk image to a disk (usb flashdrive / sdcard) with a tool like rufus/etcher or boot directly from this image with Grub2Win.\n\nThe config needed to boot ${distribution} from Grub2Win has been generated in the file:\n$(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\n\nNow, install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\"."
-	finalise="Please note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu."
+	grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.\n\nThe config needed to boot ${distribution} from Grub2Win has been generated in the file:\n$(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\n\nNow, install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".\n\nPlease note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu."
 	if [ ! -z "${zenity}" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Next" 2>/dev/null
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${finalise}" --ok-label="Exit" 2>/dev/null
+		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
 		echo -e "${grubinstall}"
-		echo -e ""
-		echo -e "${finalise}"
 	fi
 elif [ ! -z "${brunch}" ]; then
 	grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\n ****************************************************************************************** \n${config}\n ****************************************************************************************** \n\nNow copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.\n\nOnce done, press CTRL+X and then ENTER to save, reboot your computer and start ${distribution}"
@@ -10418,7 +10445,7 @@ case "${distribution}" in
 		available_space_needed=1
 	;;
 esac
-if [ $(( ($(df -k --output=avail ${HOME} | sed 1d) / 1024 / 1024) - ${available_space_needed} )) -lt 0 ]; then
+if [ $(( ($(df -k --output=avail "${linuxloopsdir}" | sed 1d) / 1024 / 1024) - ${available_space_needed} )) -lt 0 ]; then
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text "To install ${distribution} you need ${available_space_needed} GB of available space in your home directory but you only have $(($(df -k --output=avail ${HOME} | sed 1d) / 1024 / 1024)) GB." 2>/dev/null
 	else
@@ -10657,6 +10684,10 @@ if ! : >/dev/tcp/1.1.1.1/80; then echo -e "Internet connection not available, pl
 
 set_base_parameters()
 {
+if [ -z ${SUDO_UID} ]; then
+	SUDO_UID=0
+	SUDO_USER=root
+fi
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.linuxloops
 mkdir -p "${linuxloopsdir}"
 chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"
