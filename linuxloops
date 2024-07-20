@@ -4899,6 +4899,7 @@ useradd -u 30000 -g nixbld -G nixbld nixbld
 useradd -s /bin/bash -m 'temp'
 echo -e 'temp\ntemp' | passwd 'temp'
 echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
+sed -i '/secure_path/d' /etc/sudoers
 sudo -u temp bash << 'NIXOSINSTALL'
 set -e
 sudo mkdir -p /nix && sudo chown -R temp /nix
@@ -4906,7 +4907,7 @@ curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
 nix-channel --add https://nixos.org/channels/nixos-24.05 nixpkgs
 nix-channel --update
-nix-env -f '<nixpkgs>' -iA nixos-install-tools
+nix-env -iA nixpkgs.nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
 /linuxloops/install_user
 /linuxloops/install_dmconfig
@@ -9850,7 +9851,7 @@ if mountpoint -q "${bootstrapdir}"/proc; then umount "${bootstrapdir}"/proc; fi
 if mountpoint -q "${bootstrapdir}"; then umount "${bootstrapdir}"; fi
 if mountpoint -q "${homebinddir}"; then umount "${homebinddir}"; fi
 if ! mountpoint -q "${bootstrapdir}" && ! mountpoint -q "${homebinddir}"; then rm -r "${bootstrapdir}" "${homebinddir}"; fi
-if [ -b /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" ]; then cryptsetup luksClose luks-"\$(blkid -s UUID -o value "${root_partition}")"; fi
+if [ -b /dev/mapper/luks-"$(blkid -s UUID -o value "${root_partition}")" ]; then cryptsetup luksClose luks-"$(blkid -s UUID -o value "${root_partition}")"; fi
 }
 
 exit_with_error()
