@@ -8271,6 +8271,7 @@ if [ "${systemd_init}" == "Yes" ]; then
 	mount --make-slave /mnt/dev
 	mount --bind \$(tty) /mnt/dev/console
 	mount --make-slave /mnt/dev/console
+	ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
 	ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
 	touch /tmp/pid_ns
 	sudo -b container=chroot unshare --pid=/tmp/pid_ns --fork --mount-proc --kill-child --root=/mnt /lib/systemd/systemd --unit=basic.target
@@ -8316,6 +8317,7 @@ if [ "${systemd_init}" == "Yes" ]; then
 	umount /tmp/pid_ns
 	rm /tmp/pid_ns
 	rm /mnt/etc/systemd/system/systemd-resolved.service
+	rm /mnt/etc/systemd/system/systemd-binfmt.service
 	umount /mnt/dev/console
 fi
 ENTERCHROOT
