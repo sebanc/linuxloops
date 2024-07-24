@@ -10327,14 +10327,14 @@ elif [ ! -z "${wsl}" ]; then
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
-		echo -e "${grubinstall}"
+		echo -e "\n${grubinstall}"
 	fi
 elif [ ! -z "${brunch}" ]; then
 	grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\n ****************************************************************************************** \n${config}\n ****************************************************************************************** \n\nNow copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.\n\nOnce done, press CTRL+X and then ENTER to save, reboot your computer and start ${distribution}"
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
-		echo -e "${grubinstall}"
+		echo -e "\n${grubinstall}"
 	fi
 elif [ ! -z "${chromeos}" ]; then
 	source=$(blkid --match-token LABEL=EFI-SYSTEM | head -1 | cut -d':' -f1)
@@ -10351,7 +10351,7 @@ elif [ ! -z "${chromeos}" ]; then
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
-		echo -e "${grubinstall}"
+		echo -e "\n${grubinstall}"
 	fi
 else
 	if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
@@ -10359,7 +10359,7 @@ else
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
-		echo -e "${grubinstall}"
+		echo -e "\n${grubinstall}"
 	fi
 fi
 }
@@ -10746,9 +10746,11 @@ if [ -z ${SUDO_UID} ]; then
 	SUDO_USER=root
 fi
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.linuxloops
-mkdir -p "${linuxloopsdir}"
+mkdir -p "${linuxloopsdir}"/tmp
 chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"
 chmod 0755 "${linuxloopsdir}"
+chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}/tmp"
+chmod 0755 "${linuxloopsdir}/tmp"
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ -d /home/runner/work ]; then github=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
