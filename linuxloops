@@ -1308,6 +1308,8 @@ chroot_Arch()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
 
@@ -1583,6 +1585,8 @@ chroot_Artix()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -1851,6 +1855,8 @@ chroot_BlendOS()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
 
@@ -2022,6 +2028,8 @@ chroot_BlissOS()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
@@ -2171,6 +2179,8 @@ chroot_Brunch()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano openssl sudo strace tar util-linux unzip xz zstd
 "
 
@@ -2287,6 +2297,8 @@ chroot_ChimeraOS()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip jq libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
@@ -2387,6 +2399,8 @@ chroot_ChromeOS-Flex()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
@@ -3462,6 +3476,8 @@ chroot_Gentoo()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
 "
 
@@ -4267,6 +4283,8 @@ chroot_Manjaro()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -4319,14 +4337,14 @@ systemctl enable lightdm.service
 	'Deepin')
 	default_session="dde-x11"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-manjaro deepin-terminal deepin-wallpapers pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal deepin-wallpapers pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Deepin/Full')
 	default_session="dde-x11"
 	install_desktop="
-pacman -S --noconfirm --overwrite \"*\" ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-manjaro deepin-terminal deepin-wallpapers pamac-gtk deepin-extra
+pacman -S --noconfirm --overwrite \"*\" ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal deepin-wallpapers pamac-gtk deepin-extra
 systemctl enable lightdm.service
 "
 	;;
@@ -4376,14 +4394,14 @@ systemctl enable lightdm.service
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox manjaro-lxqt-config manjaro-lxqt-desktop-settings manjaro-openbox-adapta-maia papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox manjaro-lxqt-config manjaro-lxqt-desktop-settings papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt manjaro-lxqt-config manjaro-lxqt-desktop-settings manjaro-openbox-adapta-maia papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt manjaro-lxqt-config manjaro-lxqt-desktop-settings papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -4404,14 +4422,14 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings
 systemctl enable sddm.service
 "
 	;;
@@ -4885,6 +4903,8 @@ chroot_NixOS()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -6378,6 +6398,8 @@ chroot_SteamOS()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 "
 
@@ -7098,6 +7120,8 @@ chroot_Tails()
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
 "
 
@@ -9834,6 +9858,7 @@ if mountpoint -q "${chrootdir}"/home; then umount "${chrootdir}"/home; fi
 if mountpoint -q "${chrootdir}"/boot/efi; then umount "${chrootdir}"/boot/efi; fi
 if mountpoint -q "${chrootdir}"/boot; then umount "${chrootdir}"/boot; fi
 if mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
+if [ "${distribution}" == "NixOS" ] && mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
 if mountpoint -q "${bootstrapdir}"/isomount/data; then umount "${bootstrapdir}"/isomount/data; fi
 if mountpoint -q "${bootstrapdir}"/isomount/efi; then umount "${bootstrapdir}"/isomount/efi; fi
 if mountpoint -q "${bootstrapdir}"/isomount/iso; then umount "${bootstrapdir}"/isomount/iso; fi
@@ -9852,7 +9877,7 @@ if mountpoint -q "${bootstrapdir}"/sys; then umount "${bootstrapdir}"/sys; fi
 if mountpoint -q "${bootstrapdir}"/proc; then umount "${bootstrapdir}"/proc; fi
 if mountpoint -q "${bootstrapdir}"; then umount "${bootstrapdir}"; fi
 if mountpoint -q "${homebinddir}"; then umount "${homebinddir}"; fi
-if ! mountpoint -q "${bootstrapdir}" && ! mountpoint -q "${homebinddir}"; then rm -r "${bootstrapdir}" "${homebinddir}"; fi
+if ! mountpoint -q "${homebinddir}"; then rm -r "${homebinddir}"; fi
 if [ -b /dev/mapper/luks-"$(blkid -s UUID -o value "${root_partition}")" ]; then cryptsetup luksClose luks-"$(blkid -s UUID -o value "${root_partition}")"; fi
 }
 
@@ -10045,18 +10070,32 @@ exit_with_error "Download of bootstrap image failed."
 init_bootstrap()
 {
 return_value=0
-bootstrapdir="$(mktemp -d)"
-mkdir -p "${bootstrapdir}"
-homebinddir="${linuxloopsdir}/tmp/$(echo ${bootstrapdir} | cut -d'/' -f3)"
-sudo -u ${SUDO_USER} mkdir -p "${homebinddir}"
-mount --bind "${homebinddir}" "${homebinddir}"
-mount --make-slave "${homebinddir}"
-if [ ! -d "${bootstrapdir}" ] || [ ! -d "${homebinddir}" ] ; then echo "Linuxloops working directories could not be created."; exit 1; fi
-mount --bind "${homebinddir}" "${bootstrapdir}"
-mount --make-slave "${bootstrapdir}"
-if ! mountpoint -q "${bootstrapdir}"; then echo "Linuxloops bootstrap could not be mounted."; exit 1; fi
-download_bootstrap $bootstrap
+if [ "${systemd_init}" == "Yes" ]; then
+	bootstrapdir="$(mktemp -d /tmp/linuxloops.XXXXXXXX)/bootstrap"
+	mkdir -p "${bootstrapdir}"
+	homebinddir="${linuxloopsdir}/tmp/$(echo ${bootstrapdir} | cut -d'/' -f3)"
+	sudo -u ${SUDO_USER} mkdir -p "${homebinddir}"
+	mount --bind "${homebinddir}" "${homebinddir}"
+	mount --make-slave "${homebinddir}"
+	mount --bind "${homebinddir}" "${bootstrapdir}"
+	mount --make-slave "${bootstrapdir}"
+	if ! mountpoint -q "${bootstrapdir}" || ! mountpoint -q "${homebinddir}" ; then echo "Linuxloops systemd init working directories could not be mounted."; exit 1; fi
+else
+	homebinddir="$(sudo -u ${SUDO_USER} mktemp -d ${linuxloopsdir}/tmp/linuxloops.XXXXXXXX)"
+	bootstrapdir="${homebinddir}/bootstrap"
+	sudo -u ${SUDO_USER} mkdir -p "${bootstrapdir}"
+	mount --bind "${homebinddir}" "${homebinddir}"
+	mount --make-slave "${homebinddir}"
+	mount --bind "${bootstrapdir}" "${bootstrapdir}"
+	mount --make-slave "${bootstrapdir}"
+	if ! mountpoint -q "${bootstrapdir}" || ! mountpoint -q "${homebinddir}" ; then echo "Linuxloops systemd init working directories could not be mounted."; exit 1; fi
+fi
+download_bootstrap ${bootstrap}
 chrootdir="${bootstrapdir}"/mnt
+if [ "${distribution}" == "NixOS" ]; then
+	mount --bind "${homebinddir}" "${chrootdir}"
+	if ! mountpoint -q "${chrootdir}" ; then echo "NixOS specific working directory could not be mounted."; exit 1; fi
+fi
 mount -t proc none "${bootstrapdir}"/proc
 mount --bind /sys "${bootstrapdir}"/sys
 mount --make-slave "${bootstrapdir}"/sys
@@ -10095,16 +10134,11 @@ generate_install_live
 generate_create_swap
 generate_efi_entry
 generate_exit_chroot
-if [ "${distribution}" == "NixOS" ]; then
-	mount_ns="$(mktemp)"
-	chroot_unshare="unshare --mount=${mount_ns}"
-	chroot_nsenter="nsenter --mount=${mount_ns}"
-fi
-${chroot_unshare} chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
+chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
 if [ "${return_value}" -eq 0 ]; then
 	generare_install_userpw
 	if [ -x "${bootstrapdir}"/linuxloops/install_userpw ]; then
-		${chroot_nsenter} chroot "${bootstrapdir}" /linuxloops/install_userpw || return_value=1
+		chroot "${bootstrapdir}" /linuxloops/install_userpw || return_value=1
 		rm -f "${bootstrapdir}"/linuxloops/install_userpw "${chrootdir}"/tmp/set_userpw
 	fi
 	if [ "${install_type}" == "image" ] && [ -f "${chrootdir}"/etc/secureboot_key/MOK.der ]; then
@@ -10112,11 +10146,7 @@ if [ "${return_value}" -eq 0 ]; then
 		chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".der
 	fi
 fi
-if [ -x "${bootstrapdir}"/linuxloops/exit_chroot ]; then ${chroot_nsenter} chroot "${bootstrapdir}" /linuxloops/exit_chroot || return_value=1; fi
-if [ ! -z "${mount_ns}" ]; then
-	umount "${mount_ns}"
-	rm "${mount_ns}"
-fi
+if [ -x "${bootstrapdir}"/linuxloops/exit_chroot ]; then chroot "${bootstrapdir}" /linuxloops/exit_chroot || return_value=1; fi
 end_bootstrap
 }
 
@@ -10293,7 +10323,7 @@ if [ -f ./usb_bootloader.img ]; then
 		echo -e "${finalise}"
 	fi
 elif [ ! -z "${wsl}" ]; then
-	grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.\n\nThe config needed to boot ${distribution} from Grub2Win has been generated in the file:\n$(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\n\nNow, install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".\n\nPlease note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu."
+	grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.\n\n********************************************************************************************\nIf you want to boot the image directly using Grub2Win:\nThe grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\nYou need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".\nPlease note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu.\n********************************************************************************************"
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
 	else
@@ -10676,11 +10706,35 @@ rm -f "${linuxloopsdir}"/custom_commands
 check_dependencies()
 {
 if ( ! test -z {,} ); then echo "Linuxloops must be ran with \"bash\"."; exit 1; fi
-if [ -z "$(command -v curl)" ]; then echo "\"curl\" program needs to be installed first."; exit 1; fi
-if [ -z "$(command -v losetup)" ]; then echo "\"losetup\" program needs to be installed first."; exit 1; fi
-if [ -z "$(command -v sha256sum)" ]; then echo "\"sha256sum\" program needs to be installed first."; exit 1; fi
-if [ -z "$(command -v tar)" ]; then echo "\"tar\" program needs to be installed first."; exit 1; fi
-if [ -z "$(command -v xz)" ]; then echo "\"xz\" program needs to be installed first."; exit 1; fi
+if [ -z "$(command -v basename)" ]; then echo "\"basename\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v blkid)" ]; then echo "\"blkid\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v cat)" ]; then echo "\"cat\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v chmod)" ]; then echo "\"chmod\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v chown)" ]; then echo "\"chown\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v chroot)" ]; then echo "\"chroot\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v cp)" ]; then echo "\"cp\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v curl)" ]; then echo "\"curl\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v cut)" ]; then echo "\"cut\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v dd)" ]; then echo "\"dd\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v df)" ]; then echo "\"df\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v du)" ]; then echo "\"du\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v expr)" ]; then echo "\"expr\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v echo)" ]; then echo "\"echo\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v grep)" ]; then echo "\"grep\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v losetup)" ]; then echo "\"losetup\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v lsblk)" ]; then echo "\"lsblk\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v mktemp)" ]; then echo "\"mktemp\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v mount)" ]; then echo "\"mount\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v mountpoint)" ]; then echo "\"mountpoint\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v realpath)" ]; then echo "\"realpath\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v rm)" ]; then echo "\"rm\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v sed)" ]; then echo "\"sed\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v sha256sum)" ]; then echo "\"sha256sum\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v tar)" ]; then echo "\"tar\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v touch)" ]; then echo "\"touch\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v tr)" ]; then echo "\"tr\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v umount)" ]; then echo "\"umount\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v xz)" ]; then echo "\"xz\" binary needs to be installed first."; exit 1; fi
 if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; exit 1; fi
 if ! : >/dev/tcp/1.1.1.1/80; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
 }

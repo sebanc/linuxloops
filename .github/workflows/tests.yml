@@ -18,7 +18,7 @@ jobs:
       - name: Create build matrix
         id: distributions
         run: |
-          distributions=$(sudo bash linuxloops --list | grep '" distribution:' | sed 's@"\| distribution:@@g' | grep -v 'NixOS')
+          distributions=$(sudo bash linuxloops --list | grep '" distribution:' | sed 's@"\| distribution:@@g')
           for i in $distributions; do
             arg1=''
             arg2=''
