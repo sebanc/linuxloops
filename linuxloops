@@ -2299,7 +2299,7 @@ curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorl
 sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip jq libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip wget xz zstd
 "
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
@@ -2312,21 +2312,22 @@ chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/linuxloops/install_script <<INSTALL_SCRIPT
 #!/bin/bash
 set -e
-echo -e '#!/bin/bash\nexit 1' > /usr/bin/frzr-release
-chmod 0755 /usr/bin/frzr-release
-curl -L https://github.com/ChimeraOS/frzr/raw/master/frzr-tweaks -o /usr/bin/frzr-tweaks
-chmod 0755 /usr/bin/frzr-tweaks
-curl -L https://github.com/ChimeraOS/frzr/raw/master/frzr-initramfs -o /usr/bin/frzr-initramfs
-chmod 0755 /usr/bin/frzr-initramfs
-curl -L https://github.com/ChimeraOS/frzr/raw/master/__frzr-deploy -o /usr/bin/frzr-deploy
-sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/bin/frzr-deploy
-sed -i 's@MOUNT_PATH=/frzr_root@MOUNT_PATH=/mnt@g' /usr/bin/frzr-deploy
-chmod 0755 /usr/bin/frzr-deploy
-frzr-deploy chimeraos/chimeraos:stable
+git clone -b master https://github.com/ChimeraOS/frzr.git /tmp/frzr
+cp /tmp/frzr/__frzr* /tmp/frzr/frzr* /usr/sbin
+rm -r /tmp/frzr
+echo -e '#!/bin/bash\nexit 0' > /usr/sbin/frzr-release
+chmod 0755 /usr/sbin/frzr-version
+ln -s /mnt /frzr_root
+frzr deploy chimeraos/chimeraos:stable
 btrfs subvolume snapshot /mnt/deployments/\$(ls /mnt/deployments/ | grep 'chimeraos-' | tail -1) /mnt/deployments/tmp
 btrfs property set -fts /mnt/deployments/tmp ro false
 mount -o subvol=deployments/tmp "${root_partition}" /mnt
 mount -o subvol=home "${root_partition}" /mnt/home
+truncate -s 0 /mnt/home/swapfile
+chattr +C /mnt/home/swapfile
+fallocate -l 2G /mnt/home/swapfile
+chmod 0600 /mnt/home/swapfile
+mkswap /mnt/home/swapfile
 mount -t proc none /mnt/proc
 mount -t sysfs none /mnt/sys
 mount -t devtmpfs none /mnt/dev
@@ -2384,7 +2385,7 @@ if [ "${install_type}" == "image" ]; then
 	cp -a /usr/bin/ntfsfix ./usr/local/bin/
 	echo 'alias ntfsfix="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/ntfsfix"' >> ./usr/local/etc/profile
 	chmod 0755 ./linuxloops
-	find . | cpio -o -H newc > /mnt/boot/linuxloops.img
+	find . | cpio -o -H newc > /mnt/efi/linuxloops.img
 	cd ..
 	rm -r /initramfs
 fi
@@ -8165,10 +8166,12 @@ cat >"${bootstrapdir}"/linuxloops/setup_and_mount_rootfs <<SETUPFILESYSTEMS
 #!/bin/bash
 set -e
 if [ "${distribution}" == "ChimeraOS" ]; then
-	mkfs.btrfs -L frzr_root -f "${root_partition}"
-	mount -t btrfs -o nodatacow "${root_partition}" /mnt
+	mkfs.btrfs -K -L frzr_root -f "${root_partition}"
+	mkdir -p /mnt
+	mount -t btrfs -o compress-force=zstd:15 "${root_partition}" /mnt
 	btrfs subvolume create /mnt/var
 	btrfs subvolume create /mnt/home
+	chattr +C /mnt/home
 	mkdir -p /mnt/etc
 	mkdir -p /mnt/.etc
 else
@@ -8241,8 +8244,8 @@ if [ "${distribution}" == "BlissOS" ]; then
 	mount "${efi_partition}" /mnt/boot/efi
 elif [ "${distribution}" == "ChimeraOS" ]; then
 	mkfs.fat -F 32 -n 'frzr_efi' "${efi_partition}"
-	mkdir -p /mnt/boot
-	mount -o fmask=0137,dmask=0027 "${efi_partition}" /mnt/boot
+	mkdir -p /mnt/efi
+	mount -o fmask=0137,dmask=0027 "${efi_partition}" /mnt/efi
 elif [ "${distribution}" == "NixOS" ] && [ "${install_type}" == "image" ]; then
 	mkfs.ext4 -E nodiscard -F -L "BOOT" "${boot_partition}"
 	if tune2fs -l "${boot_partition}" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "${boot_partition}"; fi
@@ -9823,7 +9826,9 @@ if mountpoint -q /mnt/sys; then umount /mnt/sys; fi
 if mountpoint -q /mnt/proc/sys; then umount /mnt/proc/sys; fi
 if mountpoint -q /mnt/proc; then umount /mnt/proc; fi
 if mountpoint -q /mnt/var/swap; then umount /mnt/var/swap; fi
+if mountpoint -q /mnt/var; then umount /mnt/var; fi
 if mountpoint -q /mnt/home; then umount /mnt/home; fi
+if mountpoint -q /mnt/efi; then umount /mnt/efi; fi
 if mountpoint -q /mnt/boot/efi; then umount /mnt/boot/efi; fi
 if [ -f /linuxloops/efi_loop ]; then losetup -d \$(cat /linuxloops/efi_loop); fi
 if mountpoint -q /mnt/boot; then umount /mnt/boot; fi
@@ -9854,7 +9859,9 @@ if mountpoint -q "${chrootdir}"/sys; then umount "${chrootdir}"/sys; fi
 if mountpoint -q "${chrootdir}"/proc/sys; then umount "${chrootdir}"/proc/sys; fi
 if mountpoint -q "${chrootdir}"/proc; then umount "${chrootdir}"/proc; fi
 if mountpoint -q "${chrootdir}"/var/swap; then umount "${chrootdir}"/var/swap; fi
+if mountpoint -q "${chrootdir}"/var; then umount "${chrootdir}"/var; fi
 if mountpoint -q "${chrootdir}"/home; then umount "${chrootdir}"/home; fi
+if mountpoint -q "${chrootdir}"/efi; then umount "${chrootdir}"/efi; fi
 if mountpoint -q "${chrootdir}"/boot/efi; then umount "${chrootdir}"/boot/efi; fi
 if mountpoint -q "${chrootdir}"/boot; then umount "${chrootdir}"/boot; fi
 if mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
@@ -10213,17 +10220,6 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 	initrd \$root/initrd.img (loop,2)/linuxloops.img
 }
 "
-elif [ "${distribution}" == "ChimeraOS" ]; then
-config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
-	img_path=\"${img_path}\"
-	img_uuid=\"${img_uuid}\"
-	search --no-floppy --set=root --file \"\${img_path}\"
-	loopback loop \"\${img_path}\"
-	for chimera in (loop,1)/chimeraos-*; do set root=\$chimera; done
-	linux \$root/vmlinuz-linux rdinit=/linuxloops img_uuid=\${img_uuid} img_path=\${img_path} root=/dev/loop0p2 rw quiet splash loglevel=3 rd.systemd.show_status=auto rd.udev.log_priority=3 ibt=off split_lock_detect=off iomem=relaxed nowatchdog
-	initrd \$root/amd-ucode.img \$root/intel-ucode.img \$root/initramfs-linux.img (loop,1)/linuxloops.img
-}
-"
 elif [ "${distribution}" == "Brunch" ]; then
 config="submenu '${distribution}' {
 menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
@@ -10252,6 +10248,17 @@ menuentry '${distribution} settings' --class '$(echo ${distribution} | tr [:uppe
 		cros_secure cros_debug img_uuid=\${img_uuid} img_path=\${img_path}
 	initrd (loop,7)/lib/firmware/amd-ucode.img (loop,7)/lib/firmware/intel-ucode.img (loop,7)/initramfs.img
 }
+}
+"
+elif [ "${distribution}" == "ChimeraOS" ]; then
+config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
+	img_path=\"${img_path}\"
+	img_uuid=\"${img_uuid}\"
+	search --no-floppy --set=root --file \"\${img_path}\"
+	loopback loop \"\${img_path}\"
+	for chimera in (loop,1)/chimeraos-*; do set root=\$chimera; done
+	linux \$root/vmlinuz-linux rdinit=/linuxloops img_uuid=\${img_uuid} img_path=\${img_path} root=/dev/loop0p2 rw quiet splash loglevel=3 rd.systemd.show_status=auto rd.udev.log_priority=3 ibt=off split_lock_detect=off iomem=relaxed nowatchdog
+	initrd \$root/initramfs-linux.img (loop,1)/linuxloops.img
 }
 "
 elif [ "${distribution}" == "ChromeOS-Flex" ]; then
@@ -10747,10 +10754,8 @@ if [ -z ${SUDO_UID} ]; then
 fi
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.linuxloops
 mkdir -p "${linuxloopsdir}"/tmp
-chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"
-chmod 0755 "${linuxloopsdir}"
-chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}/tmp"
-chmod 0755 "${linuxloopsdir}/tmp"
+chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}" "${linuxloopsdir}/tmp"
+chmod 0755 "${linuxloopsdir}" "${linuxloopsdir}/tmp"
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ -d /home/runner/work ]; then github=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
