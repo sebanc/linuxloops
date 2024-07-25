@@ -7787,6 +7787,7 @@ fi
 chroot_Void()
 {
 prepare_bootstrap="
+echo 'repository=https://repo-default.voidlinux.org/current' > /usr/share/xbps.d/00-repository-main.conf
 xbps-install -Syu xbps
 xbps-install -Syu
 xbps-install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
