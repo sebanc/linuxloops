@@ -2316,7 +2316,7 @@ git clone -b master https://github.com/ChimeraOS/frzr.git /tmp/frzr
 cp /tmp/frzr/__frzr* /tmp/frzr/frzr* /usr/sbin
 rm -r /tmp/frzr
 chmod 0755 /usr/sbin/frzr-version
-sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/sbin/__frzr-deploy
+sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/sbin/__frzr
 echo -e '#!/bin/bash\nexit 0' > /usr/sbin/frzr-release
 ln -s /mnt /frzr_root
 frzr deploy chimeraos/chimeraos:stable
