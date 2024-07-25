@@ -2315,8 +2315,9 @@ set -e
 git clone -b master https://github.com/ChimeraOS/frzr.git /tmp/frzr
 cp /tmp/frzr/__frzr* /tmp/frzr/frzr* /usr/sbin
 rm -r /tmp/frzr
-echo -e '#!/bin/bash\nexit 0' > /usr/sbin/frzr-release
 chmod 0755 /usr/sbin/frzr-version
+sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/sbin/__frzr-deploy
+echo -e '#!/bin/bash\nexit 0' > /usr/sbin/frzr-release
 ln -s /mnt /frzr_root
 frzr deploy chimeraos/chimeraos:stable
 btrfs subvolume snapshot /mnt/deployments/\$(ls /mnt/deployments/ | grep 'chimeraos-' | tail -1) /mnt/deployments/tmp
@@ -8458,7 +8459,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-heade
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.1.tar.gz | tar xz -C /usr/src
 dkms add -m v4l2loopback -v 0.13.1
 ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
-git clone https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
+git clone -b v0.3.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
 sed -i "s@-Wdeprecated-enum-enum-conversion@@g" ./meson.build
 meson build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
