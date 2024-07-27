@@ -8134,7 +8134,7 @@ export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/loc
 ${prepare_bootstrap}
 if [ -x /linuxloops/partition_script ]; then /linuxloops/partition_script; fi
 if [ -x /linuxloops/setup_and_mount_rootfs ]; then /linuxloops/setup_and_mount_rootfs; fi
-rm /linuxloops/setup_and_mount_rootfs
+rm -f /linuxloops/setup_and_mount_rootfs
 if [ -x /linuxloops/mount_efi ]; then /linuxloops/mount_efi; fi
 if [ -x /linuxloops/prepare_chroot ]; then /linuxloops/prepare_chroot; fi
 if [ -x /linuxloops/enter_chroot ]; then /linuxloops/enter_chroot; fi
