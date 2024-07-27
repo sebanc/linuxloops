@@ -53,7 +53,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Fedora          |40              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
 |Gentoo          |Current         |✓                      |✓                                    |                                 |              |
 |Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
-|Linuxmint       |Virginia        |✓                      |✓                                    |✓                                |              |
+|Linuxmint       |Wilma           |✓                      |✓                                    |✓                                |              |
 |LMDE            |Faye            |✓                      |✓                                    |✓                                |              |
 |Manjaro         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]|
 |MX              |23              |✓                      |✓                                    |✓                                |              |

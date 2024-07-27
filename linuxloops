@@ -127,7 +127,7 @@ case "${1}" in
 	;;
 	'Linuxmint')
 	available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Mate" "Mate/Full" "Xfce" "Xfce/Full" )
-	bootstrap="lxc ubuntu jammy default"
+	bootstrap="lxc ubuntu noble default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
@@ -4023,7 +4023,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils noble /mnt http://archive.ubuntu.com/ubuntu
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4032,13 +4032,13 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 echo '' > /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/official-package-repositories.list <<'REPOS'
-deb [signed-by=/tmp/linuxmint-keyring.gpg] http://packages.linuxmint.com virginia main upstream import backport #id:linuxmint_main
+deb [signed-by=/tmp/linuxmint-keyring.gpg] http://packages.linuxmint.com wilma main upstream import backport #id:linuxmint_main
 
-deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu jammy-backports main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
 
-deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
 REPOS
 cat >/etc/apt/preferences.d/official-package-repositories.pref <<'PRIORITY'
 Package: *
@@ -4071,7 +4071,7 @@ chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
-specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-vera plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
+specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-wilma plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 case "${environment}" in
 	'Cinnamon')
@@ -6237,8 +6237,7 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-*
 dnf --setopt=reposdir=/etc/yum.repos.d/ update -y
-dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 ntfs-3g openssl os-prober sbsigntools
-dnf --setopt=reposdir=/etc/yum.repos.d/ install -y @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
+dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 ntfs-3g openssl os-prober sbsigntools @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
 systemctl set-default graphical.target
 cat >/root/anaconda-ks.cfg <<INITIALSETUP
 #version=DEVEL
@@ -6265,7 +6264,7 @@ timezone ${timezone}
 
 #Root password
 rootpw --lock
-user --groups=wheel,qubes --name=${username} --password=\$(openssl passwd -6 "${userpass}") --iscrypted
+user --groups=wheel,qubes --name=${username}
 INITIALSETUP
 systemctl enable initial-setup.service
 if [ "${install_type}" == "image" ]; then
@@ -8135,6 +8134,7 @@ export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/loc
 ${prepare_bootstrap}
 if [ -x /linuxloops/partition_script ]; then /linuxloops/partition_script; fi
 if [ -x /linuxloops/setup_and_mount_rootfs ]; then /linuxloops/setup_and_mount_rootfs; fi
+rm /linuxloops/setup_and_mount_rootfs
 if [ -x /linuxloops/mount_efi ]; then /linuxloops/mount_efi; fi
 if [ -x /linuxloops/prepare_chroot ]; then /linuxloops/prepare_chroot; fi
 if [ -x /linuxloops/enter_chroot ]; then /linuxloops/enter_chroot; fi
@@ -9868,6 +9868,7 @@ if mountpoint -q "${chrootdir}"/boot/efi; then umount "${chrootdir}"/boot/efi; f
 if mountpoint -q "${chrootdir}"/boot; then umount "${chrootdir}"/boot; fi
 if mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
 if [ "${distribution}" == "NixOS" ] && mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
+if mountpoint -q "${bootstrapdir}"/linuxloops; then umount "${bootstrapdir}"/linuxloops; fi
 if mountpoint -q "${bootstrapdir}"/isomount/data; then umount "${bootstrapdir}"/isomount/data; fi
 if mountpoint -q "${bootstrapdir}"/isomount/efi; then umount "${bootstrapdir}"/isomount/efi; fi
 if mountpoint -q "${bootstrapdir}"/isomount/iso; then umount "${bootstrapdir}"/isomount/iso; fi
@@ -10076,7 +10077,7 @@ losetup -d "${destination_device}"
 exit_with_error "Download of bootstrap image failed."
 }
 
-init_bootstrap()
+bootstrap()
 {
 return_value=0
 if [ "${systemd_init}" == "Yes" ]; then
@@ -10119,11 +10120,12 @@ mount --make-slave "${bootstrapdir}"/dev/pts
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/dev/shm
 mount -t tmpfs none "${bootstrapdir}"/run
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/tmp
+mkdir -p "${bootstrapdir}"/linuxloops
+mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/linuxloops
 cp /etc/hostname "${bootstrapdir}"/etc/hostname
 cp /etc/hosts "${bootstrapdir}"/etc/hosts
 rm -f "${bootstrapdir}"/etc/resolv.conf
 cp /etc/resolv.conf "${bootstrapdir}"/etc/resolv.conf
-mkdir -p "${bootstrapdir}"/linuxloops
 chroot_$(echo "${distribution}" | sed 's@[ !]@@g') || (return_value=1 && return)
 generate_bootstrap_init
 generate_partition_script
@@ -10144,6 +10146,7 @@ generate_create_swap
 generate_efi_entry
 generate_exit_chroot
 chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
+rm -f "${bootstrapdir}"/linuxloops/setup_and_mount_rootfs
 if [ "${return_value}" -eq 0 ]; then
 	generare_install_userpw
 	if [ -x "${bootstrapdir}"/linuxloops/install_userpw ]; then
@@ -10195,7 +10198,7 @@ else
 	boot_partition="${partition_path}"2
 	root_partition="${partition_path}"3
 fi
-init_bootstrap
+bootstrap
 if [ "${install_type}" == "image" ]; then losetup -d "${destination_device}"; fi
 return "${return_value}"
 }
