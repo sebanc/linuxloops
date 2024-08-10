@@ -119,7 +119,6 @@ case "${1}" in
 	;;
 	'Kali')
 	available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	#available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc kali current default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
@@ -183,7 +182,6 @@ case "${1}" in
 	;;
 	'Parrot')
 	available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
-	#available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
@@ -3793,19 +3791,6 @@ specific_packages="plymouth-themes synaptic kali-defaults-desktop kali-themes-co
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin
-"
-	;;
-	'Budgie/Full')
-	default_session="budgie-desktop"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin kali-linux-default
-"
-	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
@@ -3817,25 +3802,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman kali-linux-default
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-e17 terminology
-yes | DEBIAN_FRONTEND=noninteractive apt install network-manager- connman
-systemctl enable connman.service
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
-	'Enlightenment/Full')
-	default_session="enlightenment"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-e17 terminology kali-linux-default
-yes | DEBIAN_FRONTEND=noninteractive apt install network-manager- connman
-systemctl enable connman.service
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
@@ -3884,14 +3850,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Mate')
 	default_session="mate"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-power-manager mate-media blueman
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-media blueman
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-power-manager mate-media blueman kali-linux-default
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-media blueman kali-linux-default
 "
 	;;
 	'Plasma')
@@ -4924,6 +4890,7 @@ echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
 sed -i '/secure_path/d' /etc/sudoers
 sudo -u temp bash << 'NIXOSINSTALL'
 set -e
+ulimit -n 4096
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
@@ -5626,25 +5593,6 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal blueman nim anonsurf-gtk metasploit-framework nmap
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology
-yes | DEBIAN_FRONTEND=noninteractive apt install network-manager- connman
-systemctl enable connman.service
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
-	'Enlightenment/Full')
-	default_session="enlightenment"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter enlightenment terminology nim anonsurf-gtk metasploit-framework nmap
-yes | DEBIAN_FRONTEND=noninteractive apt install network-manager- connman
-systemctl enable connman.service
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
 	;;
 	'Gnome')
@@ -8509,7 +8457,11 @@ usermod -aG video '${username}'
 SURFACEDNF
 fi
 chmod 0755 "${bootstrapdir}"/linuxloops/install_surface
-if [ ! -z "${kernel_parameters}" ]; then kernel_parameters="acpi_enforce_resources=lax ${kernel_parameters}"; else kernel_parameters="acpi_enforce_resources=lax"; fi
+if [ ! -z "${kernel_parameters}" ]; then
+	kernel_parameters="acpi_enforce_resources=lax ${kernel_parameters}"
+else
+	kernel_parameters="acpi_enforce_resources=lax"
+fi
 }
 
 generate_install_nvidia()
@@ -8547,8 +8499,7 @@ emerge -uN x11-drivers/nvidia-drivers
 INSTALLNVIDIA
 elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
-hardware.opengl.enable = true;
-services.xserver.videoDrivers = [ \"nvidia\" ];
+services.xserver.videoDrivers = [ \"nvidia\" \"modesetting\" \"fbdev\" ];
 "
 elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -8601,7 +8552,11 @@ fi
 INSTALLNVIDIA
 	chmod 0755 "${bootstrapdir}"/linuxloops/install_nvidia
 fi
-if [ ! -z "${kernel_parameters}" ]; then kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off ${kernel_parameters}"; else kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off"; fi
+if [ ! -z "${kernel_parameters}" ]; then
+	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off ${kernel_parameters}"
+else
+	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off"
+fi
 }
 
 generate_install_fstab()
@@ -8719,25 +8674,25 @@ else
 	cat >"${bootstrapdir}"/linuxloops/install_fstab <<GENERATEFSTAB
 #!/bin/bash
 set -e
-if [ "${live}" == "Yes" ]; then rootfs_mount_flags="x-systemd.growfs"; fi
+if [ "${live}" == "Yes" ]; then rootfs_mount_flags=",x-systemd.growfs"; fi
 rm -f /etc/fstab
 touch /etc/fstab
 chmod 0644 /etc/fstab
 if [ "${encryption}" == "Yes" ]; then
 	if [ "${fstype}" == "btrfs" ]; then
-		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${root_partition}")) / btrfs subvol=@,compress=zstd,\${rootfs_mount_flags} 0 0" >> /etc/fstab
+		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${root_partition}")) / btrfs subvol=@,compress=zstd\${rootfs_mount_flags} 0 0" >> /etc/fstab
 		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${root_partition}")) /home btrfs subvol=@home,compress=zstd 0 0" >> /etc/fstab
 		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${root_partition}")) /var/swap btrfs subvol=@swap 0 0" >> /etc/fstab; fi
 	else
-		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${root_partition}")) / ext4 errors=remount-ro,\${rootfs_mount_flags} 0 1" >> /etc/fstab
+		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${root_partition}")) / ext4 errors=remount-ro\${rootfs_mount_flags} 0 1" >> /etc/fstab
 	fi
 else
 	if [ "${fstype}" == "btrfs" ]; then
-		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${root_partition}") / btrfs subvol=@,compress=zstd,\${rootfs_mount_flags} 0 0" >> /etc/fstab
+		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${root_partition}") / btrfs subvol=@,compress=zstd\${rootfs_mount_flags} 0 0" >> /etc/fstab
 		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${root_partition}") /home btrfs subvol=@home,compress=zstd 0 0" >> /etc/fstab
 		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${root_partition}") /var/swap btrfs subvol=@swap 0 0" >> /etc/fstab; fi
 	else
-		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${root_partition}") / ext4 errors=remount-ro,\${rootfs_mount_flags} 0 1" >> /etc/fstab
+		echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${root_partition}") / ext4 errors=remount-ro\${rootfs_mount_flags} 0 1" >> /etc/fstab
 	fi
 fi
 echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${boot_partition}") /boot ext4 defaults 0 2" >> /etc/fstab
@@ -9220,14 +9175,14 @@ boot.loader = {
 		useOSProber = false;
 	};
 };
-boot.plymouth.enable = true;
+#boot.plymouth.enable = true;
 
 console.earlySetup = true;
 console.keyMap = "${keymap}";
 i18n.defaultLocale = "${locale}.UTF-8";
 time.timeZone = "${timezone}";
 
-boot.kernelPackages = pkgs.linuxPackages_latest;
+boot.kernelPackages = pkgs.linuxPackages;
 hardware.cpu.intel.updateMicrocode = true;
 hardware.cpu.amd.updateMicrocode = true;
 hardware.enableAllFirmware = true;
