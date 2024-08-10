@@ -2043,10 +2043,10 @@ cat >"${bootstrapdir}"/linuxloops/install_script <<INSTALL_SCRIPT
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
 echo "Downloading BlissOS iso sha256"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS15/Gapps/Generic/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g')".sha256/download -o /root/bliss.iso.sha256
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g')".sha256/download -o /root/bliss.iso.sha256
 echo "Downloading BlissOS iso"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS15/Gapps/Generic/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1)" -o /root/bliss.iso; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1)" -o /root/bliss.iso; then
 		if [ "\$(sha256sum /root/bliss.iso | cut -d' ' -f1)" == "\$(cat /root/bliss.iso.sha256 | cut -d' ' -f1)" ]; then
 			echo "sha256sum verification succeeded"
 			break
