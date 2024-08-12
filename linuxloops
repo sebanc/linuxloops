@@ -1305,16 +1305,15 @@ chroot_Arch()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-reflector --latest 20 --completion-percent 90 --protocol https --sort rate --save /etc/pacman.d/mirrorlist --verbose
 pacstrap -G /mnt base base-devel
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
@@ -1582,9 +1581,9 @@ chroot_Artix()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -1592,7 +1591,10 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist | sed 's@^Server@#Server@g'
+sed -i 's@#Server = https://mirrors.dotsrc.org@Server = https://mirrors.dotsrc.org@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.clarkson.edu@Server = https://mirror.clarkson.edu@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = http://ftp.ntua.gr@Server = http://ftp.ntua.gr@g' /etc/pacman.d/mirrorlist
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
@@ -1606,7 +1608,7 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[community]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
@@ -1852,10 +1854,10 @@ chroot_BlendOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
@@ -2025,9 +2027,9 @@ chroot_BlissOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
@@ -2176,9 +2178,9 @@ chroot_Brunch()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano openssl sudo strace tar util-linux unzip xz zstd
 "
 
@@ -2294,9 +2296,9 @@ chroot_ChimeraOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip wget xz zstd
 "
 
@@ -2398,9 +2400,9 @@ chroot_ChromeOS-Flex()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 "
 
@@ -3475,10 +3477,10 @@ chroot_Gentoo()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl reflector sudo strace tar util-linux xz zstd
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
@@ -4250,9 +4252,9 @@ chroot_Manjaro()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -4261,12 +4263,14 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 set -e
 curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
-echo 'Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+echo 'Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+echo 'Server = https://mirrors.cicku.me/manjaro/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
-pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel pacman-mirrors manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
+pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4275,7 +4279,10 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman-mirrors --fasttrack 20
+sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.manjaro.org@Server = https://mirrors.manjaro.org@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors2.manjaro.org@Server = https://mirrors2.manjaro.org@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.cicku.me@Server = https://mirrors.cicku.me@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm systemd linux66 linux66-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
@@ -4872,9 +4879,9 @@ chroot_NixOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 "
 
@@ -6348,9 +6355,9 @@ chroot_SteamOS()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 "
 
@@ -7070,9 +7077,9 @@ chroot_Tails()
 {
 prepare_bootstrap="
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org/archlinux@Server = https://mirrors.kernel.org/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
 sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com/archlinux@Server = https://mirror.rackspace.com/archlinux@g' /etc/pacman.d/mirrorlist
+sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
 "
 
