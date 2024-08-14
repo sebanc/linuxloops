@@ -1219,10 +1219,13 @@ available_timezones=(
 
 chroot_AlmaLinux()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 dnf update -y
 dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -1303,13 +1306,15 @@ fi
 
 chroot_Arch()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -1323,6 +1328,7 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 pacman -Syu --noconfirm --needed linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
@@ -1579,22 +1585,24 @@ fi
 
 chroot_Artix()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist | sed 's@^Server@#Server@g'
-sed -i 's@#Server = https://mirrors.dotsrc.org@Server = https://mirrors.dotsrc.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.clarkson.edu@Server = https://mirror.clarkson.edu@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = http://ftp.ntua.gr@Server = http://ftp.ntua.gr@g' /etc/pacman.d/mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
+curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
@@ -1608,6 +1616,7 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
@@ -1852,13 +1861,15 @@ fi
 
 chroot_BlendOS()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -2025,13 +2036,15 @@ fi
 
 chroot_BlissOS()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -2176,13 +2189,15 @@ chmod 0755 "${bootstrapdir}"/linuxloops/install_script
 
 chroot_Brunch()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano openssl sudo strace tar util-linux unzip xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -2294,13 +2309,15 @@ chmod 0755 "${bootstrapdir}"/linuxloops/install_script
 
 chroot_ChimeraOS()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip wget xz zstd
-"
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq libarchive libnewt lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip wget xz zstd
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -2319,7 +2336,7 @@ chmod 0755 /usr/sbin/frzr-version
 sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/sbin/__frzr
 echo -e '#!/bin/bash\nexit 0' > /usr/sbin/frzr-release
 ln -s /mnt /frzr_root
-frzr deploy chimeraos/chimeraos:stable
+SHOW_UI=0 frzr deploy chimeraos/chimeraos:stable
 btrfs subvolume snapshot /mnt/deployments/\$(ls /mnt/deployments/ | grep 'chimeraos-' | tail -1) /mnt/deployments/tmp
 btrfs property set -fts /mnt/deployments/tmp ro false
 mount -o subvol=deployments/tmp "${root_partition}" /mnt
@@ -2398,13 +2415,15 @@ initramfs_type="iso_init_chimera"
 
 chroot_ChromeOS-Flex()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -2668,10 +2687,13 @@ chmod 0755 "${bootstrapdir}"/linuxloops/install_script
 
 chroot_Debian()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -2928,10 +2950,13 @@ fi
 
 chroot_Devuan()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -3170,10 +3195,13 @@ fi
 
 chroot_Elementary()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -3263,10 +3291,13 @@ fi
 
 chroot_Fedora()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 dnf update -y
 dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -3475,13 +3506,15 @@ fi
 
 chroot_Gentoo()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -3761,10 +3794,13 @@ fi
 
 chroot_Kali()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -3982,10 +4018,13 @@ fi
 
 chroot_Linuxmint()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -4133,10 +4172,13 @@ fi
 
 chroot_LMDE()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -4250,27 +4292,32 @@ fi
 
 chroot_Manjaro()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
-echo 'Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-echo 'Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-echo 'Server = https://mirrors.cicku.me/manjaro/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+echo '#Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+echo '#Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+echo '#Server = https://mirrors.cicku.me/manjaro/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.manjaro.org/repo/stable https://mirrors2.manjaro.org/stable https://mirrors.cicku.me/manjaro/stable; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
+sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /mnt/etc/pacman.d/mirrorlist
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4279,10 +4326,6 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.manjaro.org@Server = https://mirrors.manjaro.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors2.manjaro.org@Server = https://mirrors2.manjaro.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.cicku.me@Server = https://mirrors.cicku.me@g' /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm systemd linux66 linux66-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
@@ -4510,10 +4553,13 @@ fi
 
 chroot_MX()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -4771,10 +4817,13 @@ fi
 
 chroot_Neon()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -4877,13 +4926,15 @@ fi
 
 chroot_NixOS()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<NIXOS_PREPARE_CHROOT
 #!/bin/bash
@@ -5054,10 +5105,13 @@ initramfs_type="nixos_config"
 
 chroot_Nobara()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 dnf update -y
 dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -5214,10 +5268,13 @@ fi
 
 chroot_OpenSUSE()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 zypper --non-interactive refresh
 zypper --non-interactive install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -5490,10 +5547,13 @@ fi
 
 chroot_Parrot()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -5777,10 +5837,13 @@ fi
 
 chroot_Pop()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -5899,10 +5962,13 @@ fi
 
 chroot_Proxmox()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -6269,10 +6335,13 @@ fi
 
 chroot_RockyLinux()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 dnf update -y
 dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -6353,13 +6422,15 @@ fi
 
 chroot_SteamOS()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -7075,13 +7146,15 @@ fi
 
 chroot_Tails()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirrors.kernel.org@Server = https://mirrors.kernel.org@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://geo.mirror.pkgbuild.com@Server = https://geo.mirror.pkgbuild.com@g' /etc/pacman.d/mirrorlist
-sed -i 's@#Server = https://mirror.rackspace.com@Server = https://mirror.rackspace.com@g' /etc/pacman.d/mirrorlist
+cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -7152,10 +7225,13 @@ initramfs_type="iso_init"
 
 chroot_Ubuntu()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -7455,10 +7531,13 @@ fi
 
 chroot_Ubuntu-LTS()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -7742,12 +7821,15 @@ fi
 
 chroot_Void()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 echo 'repository=https://repo-default.voidlinux.org/current' > /usr/share/xbps.d/00-repository-main.conf
 xbps-install -Syu xbps
 xbps-install -Syu
 xbps-install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 yes | xbps-install -Sy -r /mnt -R https://repo-default.voidlinux.org/current base-system
@@ -7924,10 +8006,13 @@ fi
 
 chroot_Zorin()
 {
-prepare_bootstrap="
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-"
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
@@ -8088,7 +8173,7 @@ cat >"${bootstrapdir}"/linuxloops/bootstrap_init <<INITCHROOT
 set -e
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
-${prepare_bootstrap}
+if [ -x /linuxloops/prepare_bootstrap ]; then /linuxloops/prepare_bootstrap; fi
 if [ -x /linuxloops/partition_script ]; then /linuxloops/partition_script; fi
 if [ -x /linuxloops/setup_and_mount_rootfs ]; then /linuxloops/setup_and_mount_rootfs; fi
 rm -f /linuxloops/setup_and_mount_rootfs
