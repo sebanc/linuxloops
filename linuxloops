@@ -4311,15 +4311,13 @@ curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 echo '#Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 echo '#Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-echo '#Server = https://mirrors.cicku.me/manjaro/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 cur_speed=0; for i in https://mirrors.manjaro.org/repo/stable https://mirrors2.manjaro.org/stable https://mirrors.cicku.me/manjaro/stable; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
-sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
-sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /mnt/etc/pacman.d/mirrorlist
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -5624,7 +5622,9 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install parrot-archive-keyring
 rm /tmp/parrot-archive-keyring.gpg
 sed -i 's@ \[signed-by=/tmp/parrot-archive-keyring.gpg]@@g' /etc/apt/sources.list
+echo 'deb http://deb.parrotsec.org/parrot lory main contrib non-free non-free-firmware' > /etc/apt/sources.list.d/mirror.list
 echo 'deb http://mirror.parrot.sh/parrot lory main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/mirror.list
+echo 'deb http://mirrors.mit.edu/parrot lory main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/mirror.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') parrot-core
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
