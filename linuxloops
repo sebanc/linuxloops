@@ -4318,6 +4318,8 @@ curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/m
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
+sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /mnt/etc/pacman.d/mirrorlist
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
