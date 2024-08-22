@@ -5,7 +5,13 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
-<img src="linuxloops.png" width="200" /># Linuxloops
+<!-- Project Logo -->
+<p align="center">
+  <a href="https://github.com/sebanc/linuxloops" title="Linuxloops">
+   <img src="./linuxloops.png" width="128px" alt="Logo"/>
+  </a>
+</p>
+<h1 align="center">Linuxloops</h1>
 
 ## About This Project
 
