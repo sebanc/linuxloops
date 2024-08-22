@@ -3030,7 +3030,7 @@ fi
 
 chroot_Devuan()
 {
-if [ -z "${mirror_Devuan}" ]; then mirror_Devuan="http://deb.debian.org/debian"; fi
+if [ -z "${mirror_Devuan}" ]; then mirror_Devuan="http://deb.devuan.org/merged"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
