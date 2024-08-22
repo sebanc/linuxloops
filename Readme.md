@@ -5,7 +5,7 @@
 [![Issues][issues-shield]][issues-url]
 [![Discord][discord-shield]][discord-url]
 
-# Linuxloops
+<img src="linuxloops.png" width="200" /># Linuxloops
 
 ## About This Project
 

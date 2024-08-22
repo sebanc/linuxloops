@@ -35,6 +35,7 @@ available_distributions=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch
 btrfs_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 nvidia_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
 surface_supported=( "Arch" "BlendOS" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "Ubuntu" "Ubuntu-LTS" "Zorin" )
+mirrors_supported=( "AlmaLinux" "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Fedora" "Gentoo" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "OpenSUSE" "Parrot" "RockyLinux" "SteamOS" "Ubuntu" "Void" "Zorin" )
 
 list_environments()
 {
@@ -44,24 +45,28 @@ case "${1}" in
 	bootstrap="lxc almalinux 9 default"
 	bootloader_id="almalinux"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "AlmaLinux" )
 	;;
 	'Arch')
 	available_environments=( "None" "Budgie" "Cinnamon" "Deepin" "Deepin/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="arch"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Arch" )
 	;;
 	'Artix')
 	available_environments=( "None" "Budgie" "Cinnamon" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="artix"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Arch" "Artix" )
 	;;
 	'BlendOS')
 	available_environments=( "None" "Cinnamon" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="blendos"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "BlendOS" )
 	;;
 	'BlissOS')
 	available_environments=( "15/Gapps/Generic" "15/Gapps/Go" "15/Gapps/Surface" "15/FOSS/Generic" "15/FOSS/Go" "15/FOSS/Surface" "16/Gapps/Generic" "16/Gapps/Go" "16/Gapps/Surface" "16/FOSS/Generic" "16/FOSS/Go" "16/FOSS/Surface" )
@@ -92,30 +97,35 @@ case "${1}" in
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Debian" )
 	;;
 	'Devuan')
 	available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc devuan daedalus default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Devuan" )
 	;;
 	'Elementary')
 	available_environments=( "None" "Full" )
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Ubuntu" )
 	;;
 	'Fedora')
 	available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc fedora 40 default"
 	bootloader_id="fedora"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Fedora" )
 	;;
 	'Gentoo')
 	available_environments=( "None/Openrc" "None/Systemd" "Cinnamon/Openrc" "Cinnamon/Systemd" "Enlightenment/Openrc" "Enlightenment/Systemd" "Gnome/Openrc" "Gnome/Systemd" "i3/Openrc" "i3/Systemd" "Lxqt/Openrc" "Lxqt/Systemd" "Mate/Openrc" "Mate/Systemd" "Plasma/Openrc" "Plasma/Systemd" "Xfce/Openrc" "Xfce/Systemd" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="gentoo"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Gentoo" )
 	;;
 	'Kali')
 	available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -123,6 +133,7 @@ case "${1}" in
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
 	grub_theme="/boot/grub/themes/kali/theme.txt"
+	custom_mirrors_supported=( "Kali" )
 	;;
 	'Linuxmint')
 	available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Mate" "Mate/Full" "Xfce" "Xfce/Full" )
@@ -130,6 +141,7 @@ case "${1}" in
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
+	custom_mirrors_supported=( "Ubuntu" "Linuxmint" )
 	;;
 	'LMDE')
 	available_environments=( "None" "Cinnamon" "Cinnamon/Full" )
@@ -137,12 +149,14 @@ case "${1}" in
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/linuxmint/theme.txt"
+	custom_mirrors_supported=( "Debian" "Linuxmint" )
 	;;
 	'Manjaro')
 	available_environments=( "None" "Budgie" "Cinnamon" "Deepin" "Deepin/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="manjaro"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Manjaro" )
 	;;
 	'MX')
 	available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -150,6 +164,7 @@ case "${1}" in
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/mx_linux/theme.txt"
+	custom_mirrors_supported=( "Debian" "MX" )
 	;;
 	'Neon')
 	available_environments=( "None" "Essentials" "Full" )
@@ -157,6 +172,7 @@ case "${1}" in
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
 	grub_theme="/boot/grub/themes/breeze/theme.txt"
+	custom_mirrors_supported=( "Ubuntu" "Neon" )
 	;;
 	'NixOS')
 	available_environments=( "None" "Budgie/Full" "Cinnamon/Full" "Deepin/Full" "Gnome/Full" "i3/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
@@ -169,6 +185,7 @@ case "${1}" in
 	bootstrap="lxc fedora 40 default"
 	bootloader_id="fedora"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Fedora" "Nobara" )
 	;;
 	'OpenSUSE')
 	available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -179,24 +196,28 @@ case "${1}" in
 	gpg_check_extension=".sha256sum"
 	bootloader_id="opensuse"
 	bootloader_name="shim.efi"
+	custom_mirrors_supported=( "OpenSUSE" )
 	;;
 	'Parrot')
 	available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="grubx64.efi"
+	custom_mirrors_supported=( "Parrot" )
 	;;
 	'Pop')
 	available_environments=( "None" "Full" )
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Pop" "Ubuntu" )
 	;;
 	'Proxmox')
 	available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 	bootstrap="lxc debian bookworm default"
 	bootloader_id="debian"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Debian" "Proxmox" )
 	;;
 	'Qubes')
 	available_environments=( "Full" )
@@ -207,18 +228,21 @@ case "${1}" in
 	bootloader_id="qubes"
 	bootloader_name="grubx64.efi"
 	grub_theme="/boot/grub2/themes/qubes/theme.txt"
+	custom_mirrors_supported=( "Fedora" "Qubes" )
 	;;
 	'RockyLinux')
 	available_environments=( "None" "Full" )
 	bootstrap="lxc rockylinux 9 default"
 	bootloader_id="rocky"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "RockyLinux" )
 	;;
 	'SteamOS')
 	available_environments=( "None" "Desktop" "Gamescope" )
 	bootstrap="lxc archlinux current default"
 	bootloader_id="steamos"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "SteamOS" )
 	;;
 	'Tails')
 	available_environments=( "Full" )
@@ -231,6 +255,7 @@ case "${1}" in
 	bootstrap="lxc ubuntu noble default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Ubuntu" )
 	if [ -z "${github}" ]; then systemd_init="Yes"; fi
 	;;
 	'Ubuntu-LTS')
@@ -238,6 +263,7 @@ case "${1}" in
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Ubuntu" )
 	if [ -z "${github}" ]; then systemd_init="Yes"; fi
 	;;
 	'Void')
@@ -245,12 +271,14 @@ case "${1}" in
 	bootstrap="lxc voidlinux current default"
 	bootloader_id="voidlinux"
 	bootloader_name="grubx64.efi"
+	custom_mirrors_supported=( "Void" )
 	;;
 	'Zorin')
 	available_environments=( "None" "Core" "Core/Windows_apps_support" "Education" "Education/Windows_apps_support" )
 	bootstrap="lxc ubuntu jammy default"
 	bootloader_id="ubuntu"
 	bootloader_name="shimx64.efi"
+	custom_mirrors_supported=( "Ubuntu" "Zorin" )
 	if [ -z "${github}" ]; then systemd_init="Yes"; fi
 	;;
 esac
@@ -1222,6 +1250,10 @@ chroot_AlmaLinux()
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+if [ ! -z "${mirror_AlmaLinux}" ]; then
+	sed -i 's@^# baseurl=https://repo.almalinux.org/vault\|^# baseurl=https://repo.almalinux.org/almalinux@baseurl=${mirror_AlmaLinux}@g' /etc/yum.repos.d/almalinux-*.repo
+	sed -i 's@^mirrorlist=@#mirrorlist=@g' /etc/yum.repos.d/almalinux-*.repo
+fi
 dnf update -y
 dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
@@ -1238,6 +1270,10 @@ mount --make-slave /mnt/sys
 mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core openssl tar
+if [ ! -z "${mirror_AlmaLinux}" ]; then
+	sed -i 's@^# baseurl=https://repo.almalinux.org/vault\|^# baseurl=https://repo.almalinux.org/almalinux@baseurl=${mirror_AlmaLinux}@g' /mnt/etc/yum.repos.d/almalinux-*.repo
+	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/almalinux-*.repo
+fi
 umount /mnt/sys
 umount /mnt/proc
 umount /mnt/dev
@@ -1311,7 +1347,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -1590,7 +1630,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -1603,7 +1647,11 @@ sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Artix}" ]; then
+	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
@@ -1868,7 +1916,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -1889,7 +1941,11 @@ pacman-key --init
 pacman-key --populate
 mkdir -p /boot/grub
 grub-mkconfig -o /boot/grub/grub.cfg
-echo -e '[breakfast]\nServer = https://pkg-repo.blendos.co\nSigLevel = Never' >> /etc/pacman.conf
+if [ ! -z "${mirror_BlendOS}" ]; then
+	echo -e '[breakfast]\nServer = ${mirror_BlendOS}\nSigLevel = Never' >> /etc/pacman.conf
+else
+	echo -e '[breakfast]\nServer = https://pkg-repo.blendos.co\nSigLevel = Never' >> /etc/pacman.conf
+fi
 yes | pacman -Syu filesystem-blend akshara
 ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
 CHROOT_INIT
@@ -2043,7 +2099,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -2196,7 +2256,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano openssl sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -2316,7 +2380,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq libarchive libnewt lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip wget xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -2338,7 +2406,11 @@ chmod 0755 /usr/sbin/frzr-version
 sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/sbin/__frzr
 echo -e '#!/bin/bash\nexit 0' > /usr/sbin/frzr-release
 ln -s /mnt /frzr_root
-SHOW_UI=0 frzr deploy chimeraos/chimeraos:stable
+groupadd frzr
+usermod -aG frzr root
+if mountpoint -q /sys/firmware/efi/efivars; then mount -t tmpfs tmpfs /sys/firmware/efi/efivars; fi
+sudo SHOW_UI=0 frzr deploy chimeraos/chimeraos:stable
+if mountpoint -q /sys/firmware/efi/efivars; then umount /sys/firmware/efi/efivars; fi
 btrfs subvolume snapshot /mnt/deployments/\$(ls /mnt/deployments/ | grep 'chimeraos-' | tail -1) /mnt/deployments/tmp
 btrfs property set -fts /mnt/deployments/tmp ro false
 mount -o subvol=deployments/tmp "${root_partition}" /mnt
@@ -2422,7 +2494,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -2689,9 +2765,11 @@ chmod 0755 "${bootstrapdir}"/linuxloops/install_script
 
 chroot_Debian()
 {
+if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://deb.debian.org/debian @${mirror_Debian} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -2701,7 +2779,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -2709,14 +2787,14 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm main contrib non-free non-free-firmware
+# deb-src ${mirror_Debian} bookworm main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm-updates main contrib non-free non-free-firmware
+# deb-src ${mirror_Debian} bookworm-updates main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+# deb-src http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -2952,9 +3030,11 @@ fi
 
 chroot_Devuan()
 {
+if [ -z "${mirror_Devuan}" ]; then mirror_Devuan="http://deb.debian.org/debian"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://deb.devuan.org/merged @${mirror_Devuan} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -2964,7 +3044,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils daedalus /mnt http://deb.devuan.org/merged
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils daedalus /mnt ${mirror_Devuan}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -2972,10 +3052,10 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://deb.devuan.org/merged daedalus main contrib non-free non-free-firmware
-deb http://deb.devuan.org/merged daedalus-updates main contrib non-free non-free-firmware
-deb http://deb.devuan.org/merged daedalus-security main contrib non-free non-free-firmware
-#deb http://deb.devuan.org/merged daedalus-backports main contrib non-free non-free-firmware
+deb ${mirror_Devuan} daedalus main contrib non-free non-free-firmware
+deb ${mirror_Devuan} daedalus-updates main contrib non-free non-free-firmware
+deb ${mirror_Devuan} daedalus-security main contrib non-free non-free-firmware
+#deb ${mirror_Devuan} daedalus-backports main contrib non-free non-free-firmware
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -3197,9 +3277,11 @@ fi
 
 chroot_Elementary()
 {
+if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://archive.ubuntu.com/ubuntu @${mirror_Ubuntu} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -3209,7 +3291,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -3219,14 +3301,14 @@ set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} jammy main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy-updates main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} jammy-updates main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+# deb-src http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
 SOURCESLIST
 echo -e 'Package: *\nPin: release o=LP-PPA-elementary-os-*\nPin-Priority: 1000' > /etc/apt/preferences.d/elementary.pref
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -3296,6 +3378,14 @@ chroot_Fedora()
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+if [ ! -z "${mirror_Fedora}" ]; then
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates-testing.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
+fi
 dnf update -y
 dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
@@ -3312,6 +3402,14 @@ mount --make-slave /mnt/sys
 mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+if [ ! -z "${mirror_Fedora}" ]; then
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
+fi
 umount /mnt/sys
 umount /mnt/proc
 umount /mnt/dev
@@ -3513,7 +3611,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -3541,6 +3643,9 @@ echo "Verifying Gentoo stage 3 signature"
 gpg --verify /gentoo-stage3.tar.xz.asc /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 signature verification failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt || { echo -e "Gentoo stage 3 extraction failed."; exit 1; }
 rm /gentoo-stage3.tar.xz
+if [ ! -z "${mirror_Gentoo}" ]; then
+	sed -i 's@https://distfiles.gentoo.org@${mirror_Gentoo}@g' /mnt/etc/portage/binrepos.conf/gentoobinhost.conf
+fi
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -3796,9 +3901,11 @@ fi
 
 chroot_Kali()
 {
+if [ -z "${mirror_Kali}" ]; then mirror_Kali="http://http.kali.org/kali"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://kali.download/kali @${mirror_Kali} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -3808,14 +3915,14 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils kali-rolling /mnt http://http.kali.org/kali
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils kali-rolling /mnt ${mirror_Kali}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
 cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-echo 'deb http://http.kali.org/kali kali-rolling main contrib non-free non-free-firmware' > /etc/apt/sources.list
+echo 'deb ${mirror_Kali} kali-rolling main contrib non-free non-free-firmware' > /etc/apt/sources.list
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
@@ -4020,9 +4127,12 @@ fi
 
 chroot_Linuxmint()
 {
+if [ -z "${mirror_Linuxmint}" ]; then mirror_Linuxmint="http://packages.linuxmint.com"; fi
+if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://archive.ubuntu.com/ubuntu @${mirror_Ubuntu} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -4032,7 +4142,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils noble /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils noble /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4041,13 +4151,13 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 echo '' > /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/official-package-repositories.list <<'REPOS'
-deb [signed-by=/tmp/linuxmint-keyring.gpg] http://packages.linuxmint.com wilma main upstream import backport #id:linuxmint_main
+deb [signed-by=/tmp/linuxmint-keyring.gpg] ${mirror_Linuxmint} wilma main upstream import backport #id:linuxmint_main
 
-deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu noble-backports main restricted universe multiverse
+deb ${mirror_Ubuntu} noble main restricted universe multiverse
+deb ${mirror_Ubuntu} noble-updates main restricted universe multiverse
+deb ${mirror_Ubuntu} noble-backports main restricted universe multiverse
 
-deb http://security.ubuntu.com/ubuntu/ noble-security main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
 REPOS
 cat >/etc/apt/preferences.d/official-package-repositories.pref <<'PRIORITY'
 Package: *
@@ -4174,6 +4284,8 @@ fi
 
 chroot_LMDE()
 {
+if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
+if [ -z "${mirror_Linuxmint}" ]; then mirror_Linuxmint="http://packages.linuxmint.com"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -4186,7 +4298,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4195,11 +4307,11 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 echo '' > /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/official-package-repositories.list <<'REPOS'
-deb [signed-by=/tmp/linuxmint-keyring.gpg] http://packages.linuxmint.com faye main upstream import backport #id:linuxmint_main
+deb [signed-by=/tmp/linuxmint-keyring.gpg] ${mirror_Linuxmint} faye main upstream import backport #id:linuxmint_main
 
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
-deb http://deb.debian.org/debian bookworm-backports main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm-updates main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm-backports main contrib non-free non-free-firmware
 
 deb http://security.debian.org bookworm-security main contrib non-free non-free-firmware
 REPOS
@@ -4299,7 +4411,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -4309,17 +4425,25 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 set -e
 curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
-echo '#Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-echo '#Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.manjaro.org/repo/stable https://mirrors2.manjaro.org/stable https://mirrors.ocf.berkeley.edu/manjaro/stable; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Manjaro}" ]; then
+	echo 'Server = ${mirror_Manjaro}/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+else
+	echo '#Server = https://mirrors.manjaro.org/repo/stable/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors2.manjaro.org/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/stable/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirrors.manjaro.org/repo/stable https://mirrors2.manjaro.org/stable https://mirrors.ocf.berkeley.edu/manjaro/stable; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
 curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
 sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
-sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /mnt/etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Manjaro}" ]; then
+	echo 'Server = ${mirror_Manjaro}/stable/\$repo/\$arch' >> /mnt/etc/pacman.d/mirrorlist
+else
+	sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /mnt/etc/pacman.d/mirrorlist
+fi
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4555,6 +4679,8 @@ fi
 
 chroot_MX()
 {
+if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
+if [ -z "${mirror_MX}" ]; then mirror_MX="http://mxrepo.com"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -4567,7 +4693,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4575,18 +4701,18 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm main contrib non-free non-free-firmware
+# deb-src ${mirror_Debian} bookworm main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm-updates main contrib non-free non-free-firmware
+# deb-src ${mirror_Debian} bookworm-updates main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+# deb-src http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
 SOURCESLIST
 cat >/etc/apt/sources.list.d/mx.list <<'SOURCES'
-deb [signed-by=/tmp/mx-23-archive-keyring.gpg] http://mxrepo.com/mx/repo/ bookworm main non-free
-#deb http://mxrepo.com/mx/repo/ bookworm ahs
+deb [signed-by=/tmp/mx-23-archive-keyring.gpg] ${mirror_MX}/mx/repo bookworm main non-free
+#deb ${mirror_MX}/mx/repo bookworm ahs
 SOURCES
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -4819,6 +4945,8 @@ fi
 
 chroot_Neon()
 {
+if [ -z "${mirror_Neon}" ]; then mirror_Neon="http://archive.neon.kde.org/user"; fi
+if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -4831,7 +4959,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -4839,16 +4967,16 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} jammy main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy-updates main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} jammy-updates main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+# deb-src http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
 SOURCESLIST
-echo 'deb [signed-by=/tmp/neon-archive-keyring.gpg] http://archive.neon.kde.org/user/ jammy main' > /etc/apt/sources.list.d/neon.list
+echo 'deb [signed-by=/tmp/neon-archive-keyring.gpg] ${mirror_Neon} jammy main' > /etc/apt/sources.list.d/neon.list
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 curl -L https://origin.archive.neon.kde.org/user/pool/main/n/neon-keyring/\$(curl -L https://origin.archive.neon.kde.org/user/pool/main/n/neon-keyring | tr '>' '\n' | grep '<a href=' | grep '22.04' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
 yes | DEBIAN_FRONTEND=noninteractive apt update
@@ -4933,7 +5061,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -5110,6 +5242,14 @@ chroot_Nobara()
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+if [ ! -z "${mirror_Fedora}" ]; then
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates-testing.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
+fi
 dnf update -y
 dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
@@ -5141,6 +5281,14 @@ mount --make-slave /mnt/sys
 mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+if [ ! -z "${mirror_Fedora}" ]; then
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
+fi
 umount /mnt/sys
 umount /mnt/proc
 umount /mnt/dev
@@ -5270,9 +5418,11 @@ fi
 
 chroot_OpenSUSE()
 {
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://download.opensuse.org@${mirror_OpenSUSE}@g' /etc/zypp/repos.d/*.repo
 zypper --non-interactive refresh
 zypper --non-interactive install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
@@ -5281,9 +5431,9 @@ chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-zypper --root /mnt addrepo http://download.opensuse.org/tumbleweed/repo/oss/ repo-oss
-zypper --root /mnt addrepo http://download.opensuse.org/tumbleweed/repo/non-oss/ repo-non-oss
-zypper --root /mnt addrepo http://download.opensuse.org/update/tumbleweed/ repo-update
+zypper --root /mnt addrepo ${mirror_OpenSUSE}/tumbleweed/repo/oss/ repo-oss
+zypper --root /mnt addrepo ${mirror_OpenSUSE}/tumbleweed/repo/non-oss/ repo-non-oss
+zypper --root /mnt addrepo ${mirror_OpenSUSE}/update/tumbleweed/ repo-update
 rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-62b07e22.asc
 zypper --root /mnt refresh
 zypper --root /mnt --non-interactive install patterns-openSUSE-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper
@@ -5549,9 +5699,12 @@ fi
 
 chroot_Parrot()
 {
+if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
+if [ -z "${mirror_Parrot}" ]; then mirror_Parrot="https://deb.parrot.sh/parrot"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://deb.debian.org/debian @${mirror_Debian} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -5561,7 +5714,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -5569,8 +5722,8 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCES_LIST'
-deb [signed-by=/tmp/parrot-archive-keyring.gpg] https://deb.parrot.sh/parrot lory main contrib non-free non-free-firmware
-# deb-src https://deb.parrot.sh/parrot lory main contrib non-free non-free-firmware
+deb [signed-by=/tmp/parrot-archive-keyring.gpg] ${mirror_Parrot} lory main contrib non-free non-free-firmware
+# deb-src ${mirror_Parrot} lory main contrib non-free non-free-firmware
 SOURCES_LIST
 cat >/etc/apt/preferences.d/parrot-pinning <<'PARROT_PINNING'
 Package: *
@@ -5624,12 +5777,25 @@ yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install parrot-archive-keyring
 rm /tmp/parrot-archive-keyring.gpg
 sed -i 's@ \[signed-by=/tmp/parrot-archive-keyring.gpg]@@g' /etc/apt/sources.list
-echo 'deb http://deb.parrotsec.org/parrot lory main contrib non-free non-free-firmware' > /etc/apt/sources.list.d/mirror.list
-echo 'deb http://mirror.parrot.sh/parrot lory main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/mirror.list
-echo 'deb http://mirrors.mit.edu/parrot lory main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/mirror.list
+echo '' > /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/parrot.list <<'SOURCESLIST'
+deb ${mirror_Parrot} lory main contrib non-free non-free-firmware
+# deb-src ${mirror_Parrot} lory main contrib non-free non-free-firmware
+
+deb ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware
+# deb-src ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware
+
+deb https://deb.parrot.sh/direct/parrot lory-security main contrib non-free non-free-firmware
+# deb-src https://deb.parrot.sh/direct/parrot lory-security main contrib non-free non-free-firmware
+SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') parrot-core
+yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') parrot-core parrot-apps-basics
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
+if [ ! -z "${mirror_Parrot}" ]; then
+	sed -i 's@^deb https://deb.parrot.sh/parrot @#deb https://deb.parrot.sh/parrot @g' /etc/apt/sources.list.d/parrot.list
+	echo -e '\ndeb ${mirror_Parrot} lory main contrib non-free non-free-firmware\n# deb-src ${mirror_Parrot} lory main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/parrot.list
+	echo -e '\ndeb ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware\n# deb-src ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/parrot.list
+fi
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
 CHROOT_INIT
@@ -5841,9 +6007,11 @@ fi
 
 chroot_Pop()
 {
+if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://apt.pop-os.org/ubuntu"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://archive.ubuntu.com/ubuntu @${mirror_Ubuntu} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -5853,7 +6021,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -5894,6 +6062,9 @@ Package: *
 Pin: release o=pop-os-release
 Pin-Priority: 1001
 POP_DEFAULT_SETTINGS
+if [ ! -z "${mirror_Ubuntu}" ]; then
+	sed -i 's@http://apt.pop-os.org/ubuntu@${mirror_Ubuntu}@g' /etc/apt/sources.list.d/system.sources
+fi
 cat >/etc/apt/preferences.d/kernelstub <<'KERNELSTUB'
 Package: kernelstub
 Pin: release *
@@ -5966,9 +6137,11 @@ fi
 
 chroot_Proxmox()
 {
+if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://deb.debian.org/debian @${mirror_Debian} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -5978,7 +6151,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt http://deb.debian.org/debian
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils bookworm /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -5986,14 +6159,14 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian bookworm main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm main contrib non-free non-free-firmware
+# deb-src ${mirror_Debian} bookworm main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian-security/ bookworm-security main contrib non-free non-free-firmware
+deb ${mirror_Debian} bookworm-updates main contrib non-free non-free-firmware
+# deb-src ${mirror_Debian} bookworm-updates main contrib non-free non-free-firmware
 
-deb http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian bookworm-updates main contrib non-free non-free-firmware
+deb http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
+# deb-src http://deb.debian.org/debian-security bookworm-security main contrib non-free non-free-firmware
 SOURCESLIST
 echo 'deb [signed-by=/tmp/proxmox-release-bookworm.gpg] http://download.proxmox.com/debian/pve bookworm pve-no-subscription' > /etc/apt/sources.list.d/pve-install-repo.list
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
@@ -6004,10 +6177,10 @@ yes | DEBIAN_FRONTEND=noninteractive apt install proxmox-archive-keyring
 rm /tmp/proxmox-release-bookworm.gpg
 sed -i 's@ \[signed-by=/tmp/proxmox-release-bookworm.gpg]@@g' /etc/apt/sources.list.d/pve-install-repo.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g')
+yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') proxmox-ve postfix open-iscsi ifenslave
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-yes | DEBIAN_FRONTEND=noninteractive apt install proxmox-ve postfix open-iscsi ifenslave dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
+yes | DEBIAN_FRONTEND=noninteractive apt install dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils policykit-1 xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
 sed -i 's/^/#/' /etc/apt/sources.list.d/pve-enterprise.list
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
@@ -6235,7 +6408,6 @@ fi
 chroot_Qubes()
 {
 hostname=dom0
-
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
@@ -6250,6 +6422,12 @@ mount --make-slave /mnt/sys
 mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf qubes-release qubes-dom0-unwanted-packages
+if [ ! -z "${mirror_Fedora}" ]; then
+	sed -i 's@^#baseurl=http://download.fedoraproject.org/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
+	sed -i 's@^#baseurl=http://download.fedoraproject.org/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
+fi
 umount /mnt/sys
 umount /mnt/proc
 umount /mnt/dev
@@ -6342,6 +6520,10 @@ chroot_RockyLinux()
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+if [ ! -z "${mirror_RockyLinux}" ]; then
+	sed -i 's@^#baseurl=http://dl.rockylinux.org/\$contentdir@baseurl=${mirror_RockyLinux}@g' /etc/yum.repos.d/rocky*.repo
+	sed -i 's@^mirrorlist=@#mirrorlist=@g' /etc/yum.repos.d/rocky*.repo
+fi
 dnf update -y
 dnf install -y bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
@@ -6358,6 +6540,10 @@ mount --make-slave /mnt/sys
 mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever / -y @core openssl tar
+if [ ! -z "${mirror_RockyLinux}" ]; then
+	sed -i 's@^#baseurl=http://dl.rockylinux.org/\$contentdir@baseurl=${mirror_RockyLinux}@g' /mnt/etc/yum.repos.d/rocky*.repo
+	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/rocky*.repo
+fi
 umount /mnt/sys
 umount /mnt/proc
 umount /mnt/dev
@@ -6431,7 +6617,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -6542,8 +6732,13 @@ Include = /etc/pacman.d/mirrorlist
 #SigLevel = Optional TrustAll
 #Server = file:///home/custompkgs
 PACMAN-STEAMOS
-# Duplicate the Server line due to a bug in libalpm when using XferCommand
-echo -e 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch\nServer = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_SteamOS}" ]; then
+	# Duplicate the Server line due to a bug in libalpm when using XferCommand
+	echo -e 'Server = ${mirror_SteamOS}/\$repo/os/\$arch\nServer = ${mirror_SteamOS}/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
+else
+	# Duplicate the Server line due to a bug in libalpm when using XferCommand
+	echo -e 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch\nServer = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
+fi
 curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-3.6/os/x86_64/\$(curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-3.6/os/x86_64/ | cut -d'>' -f3 | cut -d'"' -f2 | grep '^holo-keyring.*.tar.zst\$' | tail -1) | tar -x --zstd -C / usr/share/pacman/keyrings/holo.gpg usr/share/pacman/keyrings/holo-trusted usr/share/pacman/keyrings/holo-revoked
 pacman-key --populate holo
 pacstrap -P -C /etc/pacman_steamos.conf -G /mnt base base-devel holo-keyring aria2
@@ -7155,7 +7350,11 @@ cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
@@ -7229,9 +7428,11 @@ initramfs_type="iso_init"
 
 chroot_Ubuntu()
 {
+if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://archive.ubuntu.com/ubuntu @${mirror_Ubuntu} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -7241,7 +7442,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils noble /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils noble /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -7249,14 +7450,14 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu noble main restricted universe multiverse
+deb ${mirror_Ubuntu} noble main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} noble main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu noble-updates main restricted universe multiverse
+deb ${mirror_Ubuntu} noble-updates main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} noble-updates main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu noble-security main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
+# deb-src http://security.ubuntu.com/ubuntu noble-security main restricted universe multiverse
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -7535,9 +7736,11 @@ fi
 
 chroot_Ubuntu-LTS()
 {
+if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://archive.ubuntu.com/ubuntu @${mirror_Ubuntu} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -7547,7 +7750,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -7555,14 +7758,14 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} jammy main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy-updates main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy-updates main restricted universe multiverse
+# deb-src ${mirror_Ubuntu} jammy-updates main restricted universe multiverse
 
-deb http://archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
-# deb-src http://archive.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
+# deb-src http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -7825,10 +8028,11 @@ fi
 
 chroot_Void()
 {
+if [ -z "${mirror_Void}" ]; then mirror_Void="https://repo-default.voidlinux.org/current"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-echo 'repository=https://repo-default.voidlinux.org/current' > /usr/share/xbps.d/00-repository-main.conf
+echo 'repository=${mirror_Void}' > /usr/share/xbps.d/00-repository-main.conf
 xbps-install -Syu xbps
 xbps-install -Syu
 xbps-install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
@@ -7836,7 +8040,7 @@ PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
-yes | xbps-install -Sy -r /mnt -R https://repo-default.voidlinux.org/current base-system
+yes | xbps-install -Sy -r /mnt -R ${mirror_Void} base-system
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -8010,9 +8214,11 @@ fi
 
 chroot_Zorin()
 {
+if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
+sed -i 's@http://archive.ubuntu.com/ubuntu @${mirror_Ubuntu} @g' /etc/apt/sources.list
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
 PREPARE_BOOTSTRAP
@@ -8022,7 +8228,7 @@ cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt http://archive.ubuntu.com/ubuntu
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils jammy /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
 
@@ -8032,9 +8238,9 @@ set -e
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install software-properties-common
 cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb http://archive.ubuntu.com/ubuntu/ jammy main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ jammy-updates main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy main restricted universe multiverse
+deb ${mirror_Ubuntu} jammy-updates main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu jammy-security main restricted universe multiverse
 SOURCESLIST
 add-apt-repository ppa:zorinos/apps -y
 add-apt-repository ppa:zorinos/drivers -y
@@ -10374,20 +10580,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 fi
 echo -e "${config}" > "${fullpath}".grub.txt
 chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".grub.txt
-if [ -f ./usb_bootloader.img ]; then
-	usbboot_loop=$(losetup --show -fP ./usb_bootloader.img)
-	mount "${usbboot_loop}"p1 "${chrootdir}"
-	echo -e "set timeout=5\n"> "${chrootdir}"/efi/boot/grub.cfg
-	echo -e "${config}" >> "${chrootdir}"/efi/boot/grub.cfg
-	umount "${chrootdir}"
-	losetup -d ${usbboot_loop}
-	finalise="The grub config to boot ${distribution} has been installed in the usb_bootloader.img file. Write this file to a usb flashdrive with Rufus, dd or any other image writing tool and boot from it."
-	if [ ! -z "${zenity}" ]; then
-		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${finalise}" --ok-label="Exit" 2>/dev/null
-	else
-		echo -e "${finalise}"
-	fi
-elif [ ! -z "${wsl}" ]; then
+if [ ! -z "${wsl}" ]; then
 	grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.\n\n********************************************************************************************\nIf you want to boot the image directly using Grub2Win:\nThe grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\nYou need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".\nPlease note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu.\n********************************************************************************************"
 	if [ ! -z "${zenity}" ]; then
 		zenity --height=480 --width=640 --title="LinuxLoops installer" --info --text="${grubinstall}" --ok-label="Exit" 2>/dev/null
@@ -10402,13 +10595,14 @@ elif [ ! -z "${brunch}" ]; then
 		echo -e "\n${grubinstall}"
 	fi
 elif [ ! -z "${chromeos}" ]; then
-	source=$(blkid --match-token LABEL=EFI-SYSTEM | head -1 | cut -d':' -f1)
 	mkdir -p /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
+	source=$(blkid --match-token LABEL=EFI-SYSTEM | head -1 | cut -d':' -f1)
 	mount "${source}" /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
-	rm -r /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/*
-	curl -L https://github.com/sebanc/linuxloops/raw/main/bootloaders/chromebook_boot.tar.gz -o /home/chronos/user/Downloads/chromebook_boot.tar.gz
-	tar zxf /home/chronos/user/Downloads/chromebook_boot.tar.gz -C /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
-	rm -f /home/chronos/user/Downloads/chromebook_boot.tar.gz
+	rm -rf /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/*
+	mkdir -p /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot
+	curl -L https://github.com/sebanc/brunch-unstable/raw/continuous-integration/efi-partition/efi/boot/bootx64.efi -o /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/bootx64.efi
+	curl -L https://github.com/sebanc/brunch-unstable/raw/continuous-integration/efi-partition/efi/boot/grubx64.efi -o /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grubx64.efi
+	curl -L https://github.com/sebanc/brunch-unstable/raw/continuous-integration/efi-partition/efi/boot/mmx64.efi -o /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/mmx64.efi
 	echo -e "set timeout=5\n"> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
 	echo -e "${config}" >> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
 	umount /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
@@ -10499,6 +10693,7 @@ if [ "${1}" == "available_timezones" ]; then for i in "${!available_timezones[@]
 if [ "${1}" == "btrfs_supported" ]; then for distribution in "${btrfs_supported[@]}"; do echo -e "\"${distribution}\""; done; fi
 if [ "${1}" == "nvidia_supported" ]; then for distribution in "${nvidia_supported[@]}"; do echo -e "\"${distribution}\""; done; fi
 if [ "${1}" == "surface_supported" ]; then for distribution in "${surface_supported[@]}"; do echo -e "\"${distribution}\""; done; fi
+if [ "${1}" == "mirrors_supported" ]; then for repository in "${mirrors_supported[@]}"; do echo -e "\"${repository}\""; done; fi
 if [ "${1}" == "all" ]; then
 	for distribution in "${available_distributions[@]}"; do
 		echo -en "\"${distribution}\" distribution:\n\tAvailable environments:"
@@ -10807,8 +11002,8 @@ if ! : >/dev/tcp/1.1.1.1/80; then echo -e "Internet connection not available, pl
 set_base_parameters()
 {
 if [ -z ${SUDO_UID} ]; then
-	SUDO_UID=0
-	SUDO_USER=root
+	SUDO_USER=${USER}
+	SUDO_UID=$(id -g ${USER})
 fi
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.linuxloops
 mkdir -p "${linuxloopsdir}"/tmp
@@ -10820,11 +11015,11 @@ if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]
 }
 
 set +H
-check_dependencies
 set_base_parameters
 if [ ${#} -eq 0 ]; then
 	if [ -z "$(command -v zenity)" ]; then echo "To use the GUI installer you need to install the \"zenity\" binary package." 2>/dev/null; usage; exit 1; fi
 	zenity=1
+	check_dependencies
 	zenity_installer
 else
 	while [ ${#} -gt 0 ]; do
@@ -10903,6 +11098,76 @@ else
 			-u | --usb-live)
 				live="Yes"
 			;;
+			-m | --custom-mirror)
+				shift
+				if [ -z "$(echo ${1} | cut -d'|' -f2)" ]; then echo "Please specify the repository name and the mirror separated with \"|\" such as \"Arch|https://example.com\"."; exit 1; fi
+				case "$(echo ${1} | cut -d'|' -f1)" in
+					AlmaLinux)
+						mirror_AlmaLinux="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Arch)
+						mirror_Arch="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Artix)
+						mirror_Artix="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					BlendOS)
+						mirror_BlendOS="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Debian)
+						mirror_Debian="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Devuan)
+						mirror_Devuan="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Fedora)
+						mirror_Fedora="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Gentoo)
+						mirror_Gentoo="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Kali)
+						mirror_Kali="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Linuxmint)
+						mirror_Linuxmint="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Manjaro)
+						mirror_Manjaro="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					MX)
+						mirror_MX="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Neon)
+						mirror_Neon="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					OpenSUSE)
+						mirror_OpenSUSE="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Parrot)
+						mirror_Parrot="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					RockyLinux)
+						mirror_RockyLinux="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					SteamOS)
+						mirror_SteamOS="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Ubuntu)
+						mirror_Ubuntu="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Void)
+						mirror_Void="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					Zorin)
+						mirror_Zorin="$(echo ${1} | cut -d'|' -f2)"
+					;;
+					*)
+						echo "Mirrors selection is not available for this repository, supported repositories are:"; list_array "mirrors_supported"
+						exit 1
+					;;
+				esac
+			;;
 			-l | --list)
 				list_array "all"
 				exit 0
@@ -10930,5 +11195,6 @@ else
 		esac
 		shift
 	done
+	check_dependencies
 	cli_installer
 fi
