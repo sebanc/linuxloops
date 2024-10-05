@@ -1,8 +1,8 @@
 # This declarative configuration file for Linuxloops will install Fedora with Cinnamon desktop environment and firefox browser in a 40GB image file.
 
 # Mandatory parameters
-distribution="Fedora" 						# Use `sudo bash ~/linuxloops -l` to list available distributions
-environment="Cinnamon" 						# Use `sudo bash ~/linuxloops -l` to list available environments
+distribution="Fedora" 						# Use `sudo -E bash ~/bin/linuxloops -l` to list available distributions
+environment="Cinnamon" 						# Use `sudo -E bash ~/bin/linuxloops -l` to list available environments
 destination="/home/user/Fedora.img" 				# Drive path (e.g. /dev/sdX) or disk image path (e.g. /home/user/Fedora.img)
 # Install size is not stricly mandatory but needed to define image files
 install_size=40 						# Size in GB (default: all available space for disk installs | 14 GB for images)
@@ -15,9 +15,9 @@ install_size=40 						# Size in GB (default: all available space for disk instal
 #useraccount_autologin="No" 					# Enable autologin for default user: "Yes" or "No" (default: "No")
 #user_password_for_encryption="No"				# Use user account password for encryption: "Yes" or "No" (default: "No")
 hostname="Fedora-Cinnamon" 					# String (default: automatically generated hostname)
-#locale="en_US" 						# System language (default: en_US). Use `sudo bash ~/linuxloops -ll` to list available locales
-#keymap="us" 							# Keyboard configuration (default: us). Use `sudo bash ~/linuxloops -lk` to list available keymaps
-#timezone="America/New_York" 					# Timezone (default: UTC).  Use `sudo bash ~/linuxloops -lt` to list available timezones
+#locale="en_US" 						# System language (default: en_US). Use `sudo -E bash ~/bin/linuxloops -ll` to list available locales
+#keymap="us" 							# Keyboard configuration (default: us). Use `sudo -E bash ~/bin/linuxloops -lk` to list available keymaps
+#timezone="America/New_York" 					# Timezone (default: UTC).  Use `sudo -E bash ~/bin/linuxloops -lt` to list available timezones
 #nvidia="No" 							# Install Nvidia proprietary drivers "Yes" or "No" (default: "No")
 #surface="No" 							# Apply linux-surface patches "Yes" / "No" (default: "No")
 #kernel_parameters="" 						# String (default: "")
