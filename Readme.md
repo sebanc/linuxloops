@@ -94,16 +94,16 @@ Install the `PyQtWebEngine` package for your distribution:
 - OpenSUSE: `sudo zypper in python3-PyQt6-WebEngine`  
 
 Start linuxloops in GUI mode:  
-`sudo bash ~/bin/linuxloops`  
+`sudo -E bash ~/bin/linuxloops`  
 
 For NixOS, start linuxloops in GUI mode directly from nix-shell:  
-`sudo nix-shell -p bash -p curl -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run 'bash ~/bin/linuxloops'`  
+`sudo -E nix-shell -p bash -p curl -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run 'bash ~/bin/linuxloops'`  
 
 ### CLI mode
 
 List of command line flags:  
 ```
-Usage: sudo bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
+Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
 -distro, --distribution <distribution name>		(Distribution to install)
 -env, --environment <environment name>			(Environment to install)
 -dst, --destination <disk name or disk image path>	(e.g. /dev/sda or /ubuntu.img)
@@ -143,11 +143,11 @@ Usage: sudo bash ~/bin/linuxloops -distro <distribution name> -env <environment 
 ```
 
 The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
-`sudo bash ~/bin/linuxloops -l`  
+`sudo -E bash ~/bin/linuxloops -l`  
 
 As an example:  
-`sudo bash ~/bin/linuxloops -distro Ubuntu -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
-`sudo bash ~/bin/linuxloops -distro Arch -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
+`sudo -E bash ~/bin/linuxloops -distro Ubuntu -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
+`sudo -E bash ~/bin/linuxloops -distro Arch -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
 ### Declarative mode
 
@@ -155,10 +155,10 @@ Have a look at the declarative configuration examples available here:
 [Declarative configuration examples][Declarative configuration examples]  
 
 The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
-`sudo bash ~/bin/linuxloops -l`  
+`sudo -E bash ~/bin/linuxloops -l`  
 
 Create your own declarative configuration and run the below command to start the install:  
-`sudo bash ~/bin/linuxloops -d <path_to_your_declarative_configuration>`  
+`sudo -E bash ~/bin/linuxloops -d <path_to_your_declarative_configuration>`  
 
 ## Complementary instructions
 

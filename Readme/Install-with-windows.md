@@ -28,7 +28,7 @@
 
 - To use the CLI installer:  
 ```
-Usage: sudo bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
+Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
 -distro, --distribution <distribution name>		(Distribution to install)
 -env, --environment <environment name>			(Environment to install)
 -dst, --destination <disk name or disk image path>	(e.g. /dev/sda or /ubuntu.img)
@@ -68,10 +68,10 @@ Usage: sudo bash ~/bin/linuxloops -distro <distribution name> -env <environment 
 ```
 
 The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
-`sudo bash ~/bin/linuxloops -l`  
+`sudo -E bash ~/bin/linuxloops -l`  
 
 As an example:  
-`sudo bash ~/bin/linuxloops -distro Arch -env Cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.  
+`sudo -E bash ~/bin/linuxloops -distro Arch -env Cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.  
 
 - To use the Declarative installer:  
 
@@ -79,10 +79,10 @@ Have a look at the declarative configuration examples available here:
 [Declarative configuration examples][Declarative configuration examples]  
 
 The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
-`sudo bash ~/bin/linuxloops -l`  
+`sudo -E bash ~/bin/linuxloops -l`  
 
 Create your own declarative configuration and run the below command to start the install:  
-`sudo bash ~/bin/linuxloops -d <path_to_your_declarative_configuration>`  
+`sudo -E bash ~/bin/linuxloops -d <path_to_your_declarative_configuration>`  
 
 4. Finalisation (For disk installs)  
 

@@ -4,7 +4,7 @@ usage()
 {
 cat << USAGE
 LinuxLoops: Adaptable / declarative linux distribution installer.
-Usage: sudo bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
+Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
 -distro, --distribution <distribution name>		(Distribution to install)
 -env, --environment <environment name>			(Environment to install)
 -dst, --destination <disk name or disk image path>	(e.g. /dev/sda or /ubuntu.img)
