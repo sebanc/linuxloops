@@ -1,27 +1,46 @@
-# This declarative configuration file for Linuxloops will install Fedora with Cinnamon desktop environment in an image file.
+# This declarative configuration file for Linuxloops will install Fedora with Cinnamon desktop environment and firefox browser in a 40GB image file.
 
 # Mandatory parameters
-distribution=Fedora 							# Use `sudo bash ~/linuxloops -l` to list available distributions
-environment=Cinnamon 						# Use `sudo bash ~/linuxloops -l` to list available environments
+distribution="Fedora" 						# Use `sudo bash ~/linuxloops -l` to list available distributions
+environment="Cinnamon" 						# Use `sudo bash ~/linuxloops -l` to list available environments
 destination="/home/user/Fedora.img" 				# Drive path (e.g. /dev/sdX) or disk image path (e.g. /home/user/Fedora.img)
+# Install size is not stricly mandatory but needed to define image files
+install_size=40 						# Size in GB (default: all available space for disk installs | 14 GB for images)
 
-# Mandatory parameters (except for BlissOS, Brunch, ChromeOS-Flex and Tails) but interactive if not provided.
-username="myusername"
-userpass="mypassword"
+# Mandatory parameters but interactive if not provided (not needed for BlissOS, Brunch, ChimeraOS, ChromeOS-Flex and Tails)
+#useraccount_name="myusername" 					# User account name
+#useraccount_password="mypassword" 				# User account password
 
 # Optional parameters
-install_size=40 						# Size in GB (default: all available space for disk installs | 14 GB for images)
-swap_size=0 							# Size in GB (default: 0)
-autologin=No 							# Yes / No (default: No)
-fstype=ext4 							# ext4 / btrfs (default: ext4)
-encryption=No 							# Yes / No (default: No)
+#useraccount_autologin="No" 					# Enable autologin for default user: "Yes" or "No" (default: "No")
+#user_password_for_encryption="No"				# Use user account password for encryption: "Yes" or "No" (default: "No")
 hostname="Fedora-Cinnamon" 					# String (default: automatically generated hostname)
-locale=en_US 							# Locale code (default: en_US). Use `sudo bash ~/linuxloops -ll` to list available locales
-keymap=fr 							# Keymap code (default: us). Use `sudo bash ~/linuxloops -lk` to list available keymaps
-timezone=Europe/Paris 						# Timezone (default: UTC).  Use `sudo bash ~/linuxloops -lt` to list available timezones
-nvidia=No 							# Yes / No (default: No)
-surface=No 							# Yes / No (default: No)
-kernel_parameters="" 						# String (default: "")
+#locale="en_US" 						# System language (default: en_US). Use `sudo bash ~/linuxloops -ll` to list available locales
+#keymap="us" 							# Keyboard configuration (default: us). Use `sudo bash ~/linuxloops -lk` to list available keymaps
+#timezone="America/New_York" 					# Timezone (default: UTC).  Use `sudo bash ~/linuxloops -lt` to list available timezones
+#nvidia="No" 							# Install Nvidia proprietary drivers "Yes" or "No" (default: "No")
+#surface="No" 							# Apply linux-surface patches "Yes" / "No" (default: "No")
+#kernel_parameters="" 						# String (default: "")
+
+# Optional partitioning parameters
+# By default linuxloops create a standard setup with 3 partitions (EFI, Boot and Root)
+# Additional partitions can be added by defining partition4 to partition8 variables in the format "<Mountpoint>*<Name>*<FS Type>*<Mountoptions>*<Size in GB>*<Encryption>"
+#efi_name="EFI"							# Specific name for the efi partition (default: "EFI", warning:using a custom EFI partition name is not recommended as incompatible with some BIOS)
+#efi_mountoptions=""						# Specific mountoptions for the efi partition (default: "")
+#boot_name="Boot"						# Specific name for the boot partition (default: "Boot")
+#boot_mountoptions=""						# Specific mountoptions for the boot partition (default: "")
+#root_name="Root"						# Specific name for the root partition (default: "Root")
+#root_fstype="btrfs" 						# FS type for root partition: "ext4" or "btrfs" (default: "ext4")
+#root_mountoptions=""						# Specific mountoptions for the root partition
+#root_size=19							# Calculated automatically (do not use unless you want to keep unallocated disk space)
+#root_encryption="No" 						# Yes / No (default: No)
+#partition4=""							# Add a custom partition defined in the format <Mountpoint>*<Name>*<FS Type>*<Mountoptions>*<Size in GB>*<Encryption>
+#partition5=""							# Add a custom partition defined in the format <Mountpoint>*<Name>*<FS Type>*<Mountoptions>*<Size in GB>*<Encryption>
+#partition6=""							# Add a custom partition defined in the format <Mountpoint>*<Name>*<FS Type>*<Mountoptions>*<Size in GB>*<Encryption>
+#partition7=""							# Add a custom partition defined in the format <Mountpoint>*<Name>*<FS Type>*<Mountoptions>*<Size in GB>*<Encryption>
+#partition8=""							# Add a custom partition defined in the format <Mountpoint>*<Name>*<FS Type>*<Mountoptions>*<Size in GB>*<Encryption>
+# Swap:A swap file of the defined size will be created on the rootfs (Swap is not mandatory but a minimum of 4 GB is generally recommended or 1.5 times the amount of RAM if you intend to use hibernation)
+#swap_size=0 							# Swap size in GB (default: 0)
 
 # List of additional packages to install (default: "")
 custom_packages="
@@ -30,5 +49,5 @@ firefox
 
 # Script that will be executed as root at the end of the install process (default: "").
 # Make sure to escape special characters inside the "custom_commands" variable, notably double quotes and dollar signs (for variables that should be interpreted inside the target install).
-custom_commands=""
+#custom_commands=""
 

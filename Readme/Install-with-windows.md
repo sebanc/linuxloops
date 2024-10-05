@@ -19,47 +19,59 @@
 
 2. Download the Linuxloops script:  
 
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o ~/linuxloops`  
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
   
 3. Launch the Linuxloops script  
 
-- To use the GUI installer, install the `zenity` package for your distribution and then run:  
-
-`sudo -E bash ~/linuxloops`
+- To use the GUI installer, install the `PyQtWebEngine` package:  
+`sudo apt install python3-venv python3-pyqt6.qtwebengine`  
 
 - To use the CLI installer:  
 ```
-Usage: sudo bash linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path> [-s <total install size>] [-z <swap size>] [-b] [-e] [-a] [-H <hostname>] [-L <locale>] [-K <keymap>] [-T <timezone>] [-n] [-S] [-c <custom_packages_list>] [-C <custom_script_path>] [-k <kernel_parameters_list>]
--distro, --distribution <distribution name>			(Distribution to install)
--env, --environment <environment name>				(Environment to install)
--dst, --destination <disk name or disk image path>		(e.g. /dev/sda or /ubuntu.img)
--s, --size <total install size>					(number in GB, minimum 14GB)
--z, --swapsize <swap size>					(number in GB)
--b, --btrfs							(Use btrfs for the root filesystem)
--e, --encrypt							(Encrypt the root filesystem)
--a, --autologin							(Enable user autologin)
--H, --hostname							(Provide a specific hostname)
--L, --locale <locale>						(specify locale to be used, by default "en_US")
--K, --keymap <keymap>						(specify keymap to be used, by default "us")
--T, --timezone <timezone>					(specify timezone to be used, by default "UTC")
--n, --nvidia							(Install nvidia drivers)
--S, --surface							(Add patches for Surface devices from github.com/linux-surface)
--c, --custom-packages						(list of additional packages to be installed - space separated)
--C, --custom-script						(bash script that should be run at the end of the install process)
--k, --kernel-parameters						(specific kernel parameters to be applied - space separated)
--d, --declarative <config_file_path>				(Use a declarative configuration file)
--l, --list							(List available distributions and environments)
--ll, --list-locales						(List available locales)
--lk, --list-keymaps						(List available keymaps)
--lt, --list-timezones						(List available timezones)
--h, --help							(Display this menu)
+Usage: sudo bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
+-distro, --distribution <distribution name>		(Distribution to install)
+-env, --environment <environment name>			(Environment to install)
+-dst, --destination <disk name or disk image path>	(e.g. /dev/sda or /ubuntu.img)
+-s, --size <total install size>				(number in GB, minimum 14GB)
+-z, --swapsize <swap size>				(number in GB)
+-b, --btrfs						(Use btrfs for the root filesystem)
+-e, --encrypt						(Encrypt the root filesystem)
+-a, --autologin						(Enable user autologin)
+    --efi-name						(EFI partition name)
+    --efi-mountoptions					(EFI partition specific mountoptions)
+    --boot-name						(Boot partition name)
+    --boot-mountoptions					(Boot partition specific mountoptions)
+    --root-name						(Root partition name)
+    --root-mountoptions					(Root partition specific mountoptions)
+-A, --add-partition <partition details>			(Add a partition according to the below format:
+							<mountpoint>*<name>*<fstype>*<mountoptions>*<size(in GB)>*<encryption>
+							ex: /home*Home*ext4*noatime,discard*20*Yes)
+-H, --hostname						(Provide a specific hostname)
+-L, --locale <locale>					(specify locale to be used, by default "en_US")
+-K, --keymap <keymap>					(specify keymap to be used, by default "us")
+-T, --timezone <timezone>				(specify timezone to be used, by default "UTC")
+-n, --nvidia						(Install nvidia drivers)
+-S, --surface						(Add patches for Surface devices from github.com/linux-surface)
+-c, --custom-packages					(list of additional packages to be installed - space separated)
+-C, --custom-script					(bash script that should be run at the end of the install process)
+-k, --kernel-parameters					(specific kernel parameters to be applied - space separated)
+-d, --declarative <config_file_path>			(Use a declarative configuration file)
+-m, --custom-mirror <mirror details>			(Add a custom mirror according to the below format:
+							<repository>*<mirror>
+							ex: Arch*https://mirrors.kernel.org/archlinux)
+-p, --user-password-for-encryption			(Use user account password for encryption)
+-l, --list						(List available distributions and environments)
+-ll, --list-locales					(List available locales)
+-lk, --list-keymaps					(List available keymaps)
+-lt, --list-timezones					(List available timezones)
+-h, --help						(Display this menu)
 ```
 
 The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
-`sudo bash ~/linuxloops -l`  
+`sudo bash ~/bin/linuxloops -l`  
 
 As an example:  
-`sudo bash ~/linuxloops -distro Arch -env Cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.  
+`sudo bash ~/bin/linuxloops -distro Arch -env Cinnamon -dst /mnt/c/Users/"username"/Downloads/Arch.img -s 14` will install Arch with the cinnamon desktop environment in a 14 GB image located at C:\Users\"username"\Downloads\Arch.img.  
 
 - To use the Declarative installer:  
 
@@ -67,10 +79,10 @@ Have a look at the declarative configuration examples available here:
 [Declarative configuration examples][Declarative configuration examples]  
 
 The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
-`sudo bash ~/linuxloops -l`  
+`sudo bash ~/bin/linuxloops -l`  
 
 Create your own declarative configuration and run the below command to start the install:  
-`sudo bash ~/linuxloops -d <path_to_your_declarative_configuration>`  
+`sudo bash ~/bin/linuxloops -d <path_to_your_declarative_configuration>`  
 
 4. Finalisation (For disk installs)  
 

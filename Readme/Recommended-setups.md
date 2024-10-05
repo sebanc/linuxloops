@@ -7,20 +7,12 @@
   
 # Recommended setups
 
-Those recommended setups aim at avoiding unnecessarily complex partition tables when several OS are installed.  
+Those recommended setups aim at avoiding unnecessarily complex partition tables when several OS images are installed.  
 
 
 ## My main OS is Linux and I don't use windows
 
-Nothing very specific in that case.  
-- Evaluate the space you will want to give to your Linuxloops OS images, free up disk space.  
-- If you want to start fresh, you can install a Linux distribution on your drive with Linuxloops, leaving the necessary space for your images unallocated.  
-
-Create an ext4 partition on the unallocated space.  
-
-Ensure that you use grub2 as bootloader.  
-
-Install your disk images on the ext4 partition.  
+Evaluate the space you will want to give to your Linuxloops OS images and add an unencrypted ext4 or btrfs partition to store your Linuxloops disk images.  
 
 
 ## My main OS is Linux and I occasionaly use Windows (Installing windows in a disk image)

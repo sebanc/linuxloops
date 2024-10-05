@@ -14,17 +14,17 @@ If something goes wrong (or for some other reason), you might want to recover da
 
 1. Run the following commands to mount the Linuxloops rootfs:  
 ```
-mkdir -p ./chroot
+mkdir -p ./linuxloops_root
 image=$(losetup -fP --show <path_to_the_linuxloops_image>)
-mount "$image"p3 ./chroot
+mount "$image"p3 ./linuxloops_root
 ```
 
-2. Recover your data from the ./chroot folder  
+2. Recover your data from the ./linuxloops_root folder  
 
 3. Unmount the Linuxloops rootfs:  
 
 ```
-umount ./chroot
+umount ./linuxloops_root
 losetup -d "$image"
 ```
 
@@ -35,18 +35,18 @@ losetup -d "$image"
 
 1. Run the following commands to mount the Linuxloops rootfs:  
 ```
-mkdir -p ./chroot
+mkdir -p ./linuxloops_root
 image=$(losetup -fP --show <path_to_the_linuxloops_image>)
-echo -n "<your_encryption_password>" | cryptsetup luksOpen "$image"p3 recovery_root -
-mount /dev/mapper/recovery_root ./chroot
+cryptsetup luksOpen "$image"p3 recovery_root
+mount /dev/mapper/recovery_root ./linuxloops_root
 ```
 
-2. Recover your data from the ./chroot folder  
+2. Recover your data from the ./linuxloops_root folder  
 
 3. Unmount the Linuxloops rootfs:  
 
 ```
-umount ./chroot
+umount ./linuxloops_root
 cryptsetup luksClose recovery_root
 losetup -d "$image"
 ```
