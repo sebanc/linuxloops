@@ -23,23 +23,28 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## Arch
 
-Arch Linux does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.  
+Arch Linux does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
 ## Artix
 
-Artix Linux does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.  
+Artix Linux does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
 ## BlendOS
 
-BlendOS does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.  
+BlendOS does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
 ## Brunch
 
 Before installing brunch, please refer to the [brunch readme][brunch-readme] for more information on device compatibility.  
 Please raise brunch issues on the brunch github repository.  
+
+
+## CachyOS
+
+CachyOS does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
 ## ChromeOS-Flex
@@ -61,7 +66,7 @@ Kali does not have secure boot support in full disk install.
 
 ## Manjaro
 
-Manjaro does not have secure boot support through its official repository. Linuxloops will pre-install the "shim-signed" bootloader AUR package.  
+Manjaro does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
 ## OpenSUSE

@@ -44,10 +44,10 @@ Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -env <environme
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "ChimeraOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-btrfs_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-nvidia_supported=( "Arch" "Artix" "BlendOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
-surface_supported=( "Arch" "BlendOS" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "Ubuntu" "Ubuntu-LTS" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChimeraOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+btrfs_supported=( "Arch" "Artix" "BlendOS" "CachyOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Qubes" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+nvidia_supported=( "Arch" "Artix" "BlendOS" "CachyOS" "Debian" "Devuan" "Elementary" "Fedora" "Gentoo" "Kali" "Linuxmint" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "SteamOS" "Ubuntu" "Ubuntu-LTS" "Void" "Zorin" )
+surface_supported=( "Arch" "BlendOS" "CachyOS" "Debian" "Elementary" "Fedora" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "Nobara" "Proxmox" "Ubuntu" "Ubuntu-LTS" "Zorin" )
 
 list_environments()
 {
@@ -91,6 +91,13 @@ case "${1}" in
 	bootstrap="lxc archlinux current default"
 	bootloader_id="boot"
 	bootloader_name="bootx64.efi"
+	;;
+	'CachyOS')
+	available_environments=( "x86-64/None" "x86-64/Budgie" "x86-64/Cinnamon" "x86-64/Deepin" "x86-64/Deepin/Full" "x86-64/Enlightenment" "x86-64/Gnome" "x86-64/Gnome/Full" "x86-64/i3" "x86-64/Lxde" "x86-64/Lxde/Full" "x86-64/Lxqt" "x86-64/Lxqt/Full" "x86-64/Mate" "x86-64/Mate/Full" "x86-64/Plasma" "x86-64/Plasma/Full" "x86-64/Xfce" "x86-64/Xfce/Full" "x86-64-v3/None" "x86-64-v3/Budgie" "x86-64-v3/Cinnamon" "x86-64-v3/Deepin" "x86-64-v3/Deepin/Full" "x86-64-v3/Enlightenment" "x86-64-v3/Gnome" "x86-64-v3/Gnome/Full" "x86-64-v3/i3" "x86-64-v3/Lxde" "x86-64-v3/Lxde/Full" "x86-64-v3/Lxqt" "x86-64-v3/Lxqt/Full" "x86-64-v3/Mate" "x86-64-v3/Mate/Full" "x86-64-v3/Plasma" "x86-64-v3/Plasma/Full" "x86-64-v3/Xfce" "x86-64-v3/Xfce/Full" "x86-64-v4/None" "x86-64-v4/Budgie" "x86-64-v4/Cinnamon" "x86-64-v4/Deepin" "x86-64-v4/Deepin/Full" "x86-64-v4/Enlightenment" "x86-64-v4/Gnome" "x86-64-v4/Gnome/Full" "x86-64-v4/i3" "x86-64-v4/Lxde" "x86-64-v4/Lxde/Full" "x86-64-v4/Lxqt" "x86-64-v4/Lxqt/Full" "x86-64-v4/Mate" "x86-64-v4/Mate/Full" "x86-64-v4/Plasma" "x86-64-v4/Plasma/Full" "x86-64-v4/Xfce" "x86-64-v4/Xfce/Full" )
+	bootstrap="lxc archlinux current default"
+	bootloader_id="cachyos"
+	bootloader_name="shimx64.efi"
+	mirrors_supported=( "Arch" "CachyOS" )
 	;;
 	'ChimeraOS')
 	available_environments=( "Stable" )
@@ -2383,6 +2390,320 @@ umount /isomount/data
 if [ "${install_type}" == "image" ]; then mkdir -p /mnt/etc/secureboot_key; curl -L https://github.com/sebanc/brunch/raw/main/brunch.der -o /mnt/etc/secureboot_key/MOK.der; fi
 INSTALL_SCRIPT
 chmod 0755 "${bootstrapdir}"/linuxloops/install_script
+}
+
+chroot_CachyOS()
+{
+cat >"${bootstrapdir}"/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://mirrors.kernel.org/archlinux https://geo.mirror.pkgbuild.com https://mirror.rackspace.com/archlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_bootstrap
+
+cat >"${bootstrapdir}"/linuxloops/prepare_chroot <<PREPARE_CHROOT
+#!/bin/bash
+set -e
+if [ "$(echo ${environment} | cut -d'/' -f1)" == "x86-64-v4" ]; then
+	curl -L https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v4.conf -o /etc/pacman_cachyos.conf
+	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v4-mirrorlist/cachyos-v4-mirrorlist -o /etc/pacman.d/cachyos-v4-mirrorlist
+
+elif [ "$(echo ${environment} | cut -d'/' -f1)" == "x86-64-v3" ]; then
+	curl -L https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v3.conf -o /etc/pacman_cachyos.conf
+	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v3-mirrorlist/cachyos-v3-mirrorlist -o /etc/pacman.d/cachyos-v3-mirrorlist
+else
+	curl -L https://github.com/CachyOS/docker/raw/refs/heads/master/pacman.conf -o /etc/pacman_cachyos.conf
+	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+fi
+if [ ! -z "${mirror_CachyOS}" ]; then
+	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch/\$repo' >> /etc/pacman.d/cachyos-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v3/\$repo' >> /etc/pacman.d/cachyos-v3-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v4/\$repo' >> /etc/pacman.d/cachyos-v4-mirrorlist; fi
+else
+	cur_speed=0; for i in https://cdn-1.cachyos.org https://cdn.cachyos.org/repo https://us.cachyos.org/repo; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/x86_64/cachyos/cachyos.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}
+	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v3-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v4-mirrorlist; fi
+fi
+curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos.gpg -o /usr/share/pacman/keyrings/cachyos.gpg
+curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos-trusted -o /usr/share/pacman/keyrings/cachyos-trusted
+curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos-revoked -o /usr/share/pacman/keyrings/cachyos-revoked
+pacman-key --populate cachyos
+pacstrap -C /etc/pacman_cachyos.conf -G /mnt base base-devel cachyos-keyring cachyos-hooks cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-rate-mirrors cachyos-settings
+cp /etc/pacman_cachyos.conf /mnt/etc/pacman.conf
+if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then cp /etc/pacman.d/cachyos-mirrorlist /mnt/etc/pacman.d/cachyos-mirrorlist; fi
+if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then cp /etc/pacman.d/cachyos-v3-mirrorlist /mnt/etc/pacman.d/cachyos-v3-mirrorlist; fi
+if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then cp /etc/pacman.d/cachyos-v4-mirrorlist /mnt/etc/pacman.d/cachyos-v4-mirrorlist; fi
+PREPARE_CHROOT
+chmod 0755 "${bootstrapdir}"/linuxloops/prepare_chroot
+
+cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
+#!/bin/bash
+set -e
+pacman-key --init
+pacman-key --populate
+pacman -Syu --noconfirm --needed mkinitcpio linux-cachyos linux-cachyos-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+CHROOT_INIT
+chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
+
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
+basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
+basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
+specific_packages="cachyos-wallpapers cachyos-plymouth-theme"
+desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
+desktop_services="avahi-daemon.service cups.service"
+case "$(echo ${environment} | cut -d'/' -f2-)" in
+	'Budgie')
+	default_session="budgie-desktop"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center
+systemctl enable lightdm.service
+"
+	;;
+	'Cinnamon')
+	default_session="cinnamon"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Deepin')
+	default_session="dde-x11"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal
+systemctl enable lightdm.service
+"
+	;;
+	'Deepin/Full')
+	default_session="dde-x11"
+	install_desktop="
+pacman -S --noconfirm --overwrite \"*\" ${desktop_base} lightdm lightdm-slick-greeter deepin deepin-terminal deepin-extra
+systemctl enable lightdm.service
+"
+	;;
+	'Enlightenment')
+	default_session="enlightenment"
+	install_desktop="
+systemctl disable NetworkManager.service
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology
+systemctl enable lightdm.service connman.service
+"
+	;;
+	'Gnome')
+	default_session="gnome-wayland"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal nautilus
+systemctl enable gdm.service
+"
+	;;
+	'Gnome/Full')
+	default_session="gnome-wayland"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} gdm gnome
+systemctl enable gdm.service
+"
+	;;
+	'i3')
+	default_session="i3"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman cachyos-i3wm-settings
+systemctl enable lightdm.service
+"
+	;;
+	'Lxde')
+	default_session="LXDE"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Lxde/Full')
+	default_session="LXDE"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Lxqt')
+	default_session="lxqt"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Lxqt/Full')
+	default_session="lxqt"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Mate')
+	default_session="mate"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager
+systemctl enable lightdm.service
+"
+	;;
+	'Mate/Full')
+	default_session="mate"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman
+systemctl enable lightdm.service
+"
+	;;
+	'Plasma')
+	default_session="plasma"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 cachyos-kde-settings
+systemctl enable sddm.service
+"
+	;;
+	'Plasma/Full')
+	default_session="plasma"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6 cachyos-kde-settings
+systemctl enable sddm.service
+"
+	;;
+	'Xfce')
+	default_session="xfce"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin cachyos-xfce-settings
+systemctl enable lightdm.service
+"
+	;;
+	'Xfce/Full')
+	default_session="xfce"
+	install_desktop="
+pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman cachyos-xfce-settings
+systemctl enable lightdm.service
+"
+	;;
+esac
+cat >"${bootstrapdir}"/linuxloops/install_desktop <<INSTALL_DESKTOP
+#!/bin/bash
+set -e
+if [ "${environment}" == "None" ]; then exit 0; fi
+${install_desktop}
+systemctl enable ${desktop_services}
+mkdir -p /usr/share/glib-2.0/schemas
+cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
+[org.gnome.desktop.background:Budgie]
+picture-uri="file:///usr/share/wallpapers/cachyos-wallpapers/Dracula.png"
+[org.gnome.desktop.interface:Budgie]
+gtk-theme="Arc"
+icon-theme="Papirus"
+[org.cinnamon.desktop.background]
+picture-uri="file:///usr/share/wallpapers/cachyos-wallpapers/Dracula.png"
+[org.cinnamon.desktop.interface]
+gtk-theme="Materia"
+icon-theme="Papirus"
+[org.cinnamon.desktop.wm.preferences]
+theme="Materia"
+DCONF
+if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
+mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
+cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+<?xml version="1.0" encoding="UTF-8"?>
+<channel name="xsettings" version="1.0">
+  <property name="Net" type="empty">
+    <property name="IconThemeName" type="string" value="Papirus"/>
+    <property name="ThemeName" type="string" value="Materia"/>
+  </property>
+</channel>
+XFCETHEME
+mkdir -p /etc/xdg/autostart
+cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
+[Desktop Entry]
+Type=Application
+Name=Nemo
+Comment=Start Nemo desktop at log in
+Exec=nemo-desktop
+OnlyShowIn=Budgie;
+AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
+X-GNOME-AutoRestart=true
+NoDisplay=true
+NEMODESKTOP
+plymouth-set-default-theme cachyos
+INSTALL_DESKTOP
+chmod 0755 "${bootstrapdir}"/linuxloops/install_desktop
+
+cat >"${bootstrapdir}"/linuxloops/install_user <<INSTALL_USER
+#!/bin/bash
+set -e
+useradd -s /bin/bash -m '${useraccount_name}'
+usermod -aG wheel '${useraccount_name}'
+echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
+cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
+polkit.addAdminRule(function(action, subject) {
+    return ["unix-group:wheel"];
+});
+POLKIT
+INSTALL_USER
+chmod 0755 "${bootstrapdir}"/linuxloops/install_user
+
+cat >"${bootstrapdir}"/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+if [ "${environment}" == "None" ]; then exit 0; fi
+if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
+case "${environment}" in
+	'Gnome'|'Gnome/Full')
+		if [ "${useraccount_autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Plasma'|'Plasma/Full')
+		mkdir -p /etc/sddm.conf.d
+		echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/99-linuxloops.conf
+		if [ "${useraccount_autologin}" == "Yes" ]; then
+			echo -e '\n[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+	*)
+		mkdir -p /etc/lightdm/lightdm.conf.d
+		if [ "${environment}" == "Deepin" ] || [ "${environment}" == "Deepin/Full" ]; then
+			echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-deepin-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf		
+		else
+			echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+			echo -e '[Greeter]\nbackground = /usr/share/backgrounds/archlinux/small.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
+		fi
+		if [ "${useraccount_autologin}" == "Yes" ]; then
+			groupadd -r autologin
+			usermod -aG autologin '${useraccount_name}'
+			echo -e 'autologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/99-linuxloops.conf
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${bootstrapdir}"/linuxloops/install_dmconfig
+
+surface_remove="linux-cachyos linux-cachyos-headers"
+initramfs_type="initcpio"
+if [ ! -z "${custom_packages}" ]; then
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/linuxloops/install_custom_packages
+	chmod 0755 "${bootstrapdir}"/linuxloops/install_custom_packages
+fi
+if [ ! -z "${custom_script}" ]; then
+	cp "${custom_script}" "${bootstrapdir}"/linuxloops/install_custom_script
+	chmod 0755 "${bootstrapdir}"/linuxloops/install_custom_script
+fi
 }
 
 chroot_ChimeraOS()
@@ -6591,7 +6912,11 @@ fi
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/linuxloops/install_dmconfig
 
-kernel_parameters="plymouth.ignore-serial-consoles"
+if [ ! -z "${kernel_parameters}" ]; then
+	kernel_parameters="plymouth.ignore-serial-consoles ${kernel_parameters}"
+else
+	kernel_parameters="plymouth.ignore-serial-consoles"
+fi
 xen_cmdline_extra="console=none dom0_mem=min:1024M dom0_mem=max:4096M ucode=scan smt=off gnttab_max_frames=2048 gnttab_max_maptrack_frames=4096"
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
@@ -8480,7 +8805,6 @@ rm -f /linuxloops/setup_and_mount_rootfs
 if [ -x /linuxloops/mount_efi ]; then /linuxloops/mount_efi; fi
 if [ -x /linuxloops/prepare_chroot ]; then /linuxloops/prepare_chroot; fi
 if [ -x /linuxloops/enter_chroot ]; then /linuxloops/enter_chroot; fi
-if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then /linuxloops/create_swap; fi
 if [ -x /linuxloops/efi_entry ]; then /linuxloops/efi_entry; fi
 INITCHROOT
 chmod 0755 "${bootstrapdir}"/linuxloops/bootstrap_init
@@ -8717,6 +9041,7 @@ if [ -f /linuxloops/install_surface ]; then \${chroot_cmd} /linuxloops/install_s
 if [ -f /linuxloops/install_nvidia ]; then \${chroot_cmd} /linuxloops/install_nvidia; fi
 if [ -f /linuxloops/install_fstab ]; then \${chroot_cmd} /linuxloops/install_fstab; fi
 if [ -f /linuxloops/install_initramfs ]; then \${chroot_cmd} /linuxloops/install_initramfs; fi
+if [ -f /linuxloops/install_swap ] && [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then /linuxloops/install_swap; fi
 if [ -f /linuxloops/install_bootloader ]; then \${chroot_cmd} /linuxloops/install_bootloader; fi
 if [ -f /linuxloops/install_custom_packages ]; then \${chroot_cmd} /linuxloops/install_custom_packages; fi
 if [ -f /linuxloops/install_custom_script ]; then \${chroot_cmd} /linuxloops/install_custom_script; fi
@@ -8850,7 +9175,7 @@ ninja -C build install
 cd /
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
-elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
+elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/linuxloops/install_surface <<SURFACEPACMAN
 #!/bin/bash
 set -e
@@ -8900,7 +9225,7 @@ fi
 generate_install_nvidia()
 {
 if [ ! "${nvidia}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "Manjaro" ]; then
+if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "Manjaro" ]; then
 	cat >"${bootstrapdir}"/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -9888,6 +10213,22 @@ if [ "${initramfs_type}" == "initcpio" ] || [ "${initramfs_type}" == "initramfst
 fi
 }
 
+generate_install_swap()
+{
+cat >"${bootstrapdir}"/linuxloops/install_swap <<CREATESWAP
+#!/bin/bash
+set -e
+echo "Please wait while the swap file is being generated..."
+mkdir -p /mnt/swap
+truncate -s 0 /mnt/swap/swapfile
+if [ "${root_fstype}" == "btrfs" ]; then chattr +C /mnt/swap/swapfile; fi
+fallocate -l "${swap_size}"G /mnt/swap/swapfile
+chmod 0600 /mnt/swap/swapfile
+mkswap /mnt/swap/swapfile
+CREATESWAP
+chmod 0755 "${bootstrapdir}"/linuxloops/install_swap
+}
+
 generate_install_bootloader()
 {
 if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
@@ -9902,7 +10243,26 @@ elif [ "${initramfs_type}" == "initramfstools" ]; then
 elif [ "${initramfs_type}" == "dracut" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} "; fi; cmdline="\${cmdline}rd.luks.uuid=\$(blkid -s UUID -o value "${root_partition}")"; fi
 fi
-cmdline_extra="quiet splash ${kernel_parameters}"
+if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
+	if [ "${root_fstype}" == "btrfs" ]; then
+		if [ "${encryption}" == "Yes" ]; then
+			if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} resume=UUID=\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value ${root_partition})) resume_offset=\$(btrfs inspect-internal map-swapfile -r /swap/swapfile)"; else cmdline="resume=UUID=\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value ${root_partition})) resume_offset=\$(btrfs inspect-internal map-swapfile -r /swap/swapfile)"; fi
+		else
+			if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} resume=UUID=\$(blkid -s UUID -o value ${root_partition}) resume_offset=\$(btrfs inspect-internal map-swapfile -r /swap/swapfile)"; else cmdline="resume=UUID=\$(blkid -s UUID -o value ${root_partition}) resume_offset=\$(btrfs inspect-internal map-swapfile -r /swap/swapfile)"; fi
+		fi
+	else
+		if [ "${encryption}" == "Yes" ]; then
+			if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} resume=UUID=\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value ${root_partition})) resume_offset=\$(filefrag -v /swap/swapfile | head -4 | tail -1 | tr -s ' ' | cut -d' ' -f5 | cut -d'.' -f1)"; else cmdline="resume=UUID=\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value ${root_partition})) resume_offset=\$(filefrag -v /swap/swapfile | head -4 | tail -1 | tr -s ' ' | cut -d' ' -f5 | cut -d'.' -f1)"; fi
+		else
+			if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} resume=UUID=\$(blkid -s UUID -o value ${root_partition}) resume_offset=\$(filefrag -v /swap/swapfile | head -4 | tail -1 | tr -s ' ' | cut -d' ' -f5 | cut -d'.' -f1)"; else cmdline="resume=UUID=\$(blkid -s UUID -o value ${root_partition}) resume_offset=\$(filefrag -v /swap/swapfile | head -4 | tail -1 | tr -s ' ' | cut -d' ' -f5 | cut -d'.' -f1)"; fi
+		fi
+	fi
+fi
+if [ ! -z "${kernel_parameters}" ]; then
+	cmdline_extra="quiet splash ${kernel_parameters}"
+else
+	cmdline_extra="quiet splash"
+fi
 cat >/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 #!/bin/bash
 set -e
@@ -9986,7 +10346,7 @@ GRUBINSTALL
 chmod 0755 /usr/sbin/grub-install
 grub-install --target=x86_64-efi --efi-directory=/boot/efi
 REINSTALLBOOTLOADER
-	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
+	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 pacman -Syu --noconfirm git fakeroot
 git clone https://aur.archlinux.org/shim-signed.git /tmp/shim-signed
@@ -10082,7 +10442,7 @@ cat >/usr/bin/linuxloops <<'LIVELAUNCHER'
 set -e
 sudo curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n" 2>/dev/null
 sudo chmod 0755 /usr/bin/linuxloops.real
-sudo bash /usr/bin/linuxloops.real "\${@}"
+sudo -E bash /usr/bin/linuxloops.real "\${@}"
 LIVELAUNCHER
 chmod 0755 /usr/bin/linuxloops
 mkdir -p /etc/skel/Desktop
@@ -10230,22 +10590,6 @@ SELINUXFIX
 chmod 0755 "${bootstrapdir}"/linuxloops/selinux_fix
 }
 
-generate_create_swap()
-{
-cat >"${bootstrapdir}"/linuxloops/create_swap <<CREATESWAP
-#!/bin/bash
-set -e
-echo "Please wait while the swap file is being generated..."
-mkdir -p /mnt/swap
-truncate -s 0 /mnt/swap/swapfile
-if [ "${root_fstype}" == "btrfs" ]; then chattr +C /mnt/swap/swapfile; fi
-fallocate -l "${swap_size}"G /mnt/swap/swapfile
-chmod 0600 /mnt/swap/swapfile
-mkswap /mnt/swap/swapfile
-CREATESWAP
-chmod 0755 "${bootstrapdir}"/linuxloops/create_swap
-}
-
 generate_efi_entry()
 {
 cat >"${bootstrapdir}"/linuxloops/efi_entry <<EFIENTRY
@@ -10326,6 +10670,13 @@ for ROOT in \$(find /proc/*/root 2>/dev/null); do
 	if echo "\${LINK}" | grep -q /mnt; then
 		PID=\$(basename \$(dirname "\${ROOT}"))
 		kill -STOP \${PID} 2>/dev/null
+	fi
+done
+sleep 2
+for ROOT in \$(find /proc/*/root 2>/dev/null); do
+	LINK="\$(readlink -f \${ROOT})"
+	if echo "\${LINK}" | grep -q /mnt; then
+		PID=\$(basename \$(dirname "\${ROOT}"))
 		kill -9 \${PID} 2>/dev/null
 	fi
 done
@@ -10368,6 +10719,13 @@ for ROOT in $(find /proc/*/root 2>/dev/null); do
 	if echo "${LINK}" | grep -q "${bootstrapdir}"; then
 		PID=$(basename $(dirname "${ROOT}"))
 		kill -STOP ${PID} 2>/dev/null
+	fi
+done
+sleep 2
+for ROOT in $(find /proc/*/root 2>/dev/null); do
+	LINK="$(readlink -f ${ROOT})"
+	if echo "${LINK}" | grep -q "${bootstrapdir}"; then
+		PID=$(basename $(dirname "${ROOT}"))
 		kill -9 ${PID} 2>/dev/null
 	fi
 done
@@ -10673,11 +11031,11 @@ generate_install_surface
 generate_install_nvidia
 generate_install_fstab
 generate_install_initramfs
+generate_install_swap
 generate_install_bootloader
 generate_cleanup
 generate_selinux_fix
 generate_install_live
-generate_create_swap
 generate_efi_entry
 generate_exit_chroot
 chroot "${bootstrapdir}" /linuxloops/bootstrap_init || return_value=1
@@ -10887,6 +11245,9 @@ case "${1}" in
 	"BlendOS")
 		mirror_BlendOS="${2}"
 	;;
+	"CachyOS")
+		mirror_CachyOS="${2}"
+	;;
 	"Debian")
 		mirror_Debian="${2}"
 	;;
@@ -11090,7 +11451,7 @@ while [ ${i} -ge 0 ]; do
 	if [ -z "$(echo ${extra_partitions[${i}]} | cut -d'*' -f1)" ]; then echo "Mountpoint was not provided for partition extra partition $(( ${i} + 1 ))."; exit 1; fi
 	if ! echo "${extra_partitions[${i}]}" | cut -d'*' -f1 | grep -Eq '/[a-zA-Z0-9_/-]*$'; then echo "Mountpoint provided for extra partition $(( ${i} + 1 )) is not valid: $(echo "${extra_partitions[${i}]}" | cut -d'*' -f1)."; exit 1; fi
 	extra_partitions[${i}]="$(echo $(realpath -m $(echo ${extra_partitions[${i}]} | cut -d'*' -f1)))*$(echo ${extra_partitions[${i}]} | cut -d'*' -f2-)"
-	for j in / /boot /boot/efi /etc /nix /nix/store /usr /usr/bin /usr/lib /usr/lib/x86_64-linux-gnu /usr/lib64 /usr/sbin /var /var/lib /var/lib/nixos /var/log; do if [ "$(echo ${extra_partitions[${i}]} | cut -d'*' -f1)" == "${j}" ]; then echo "The following mounpoints are not supported: /, /boot, /boot/efi, /etc, /nix, /nix/store, /usr, /usr/bin, /usr/lib, /usr/lib/x86_64-linux-gnu, /usr/lib64, /usr/sbin, /var, /var/lib, /var/lib/nixos, /var/log"; exit 1; fi; done
+	for j in / /bin /boot /boot/efi /etc /nix /nix/store /sbin /swap /usr /usr/bin /usr/lib /usr/lib/x86_64-linux-gnu /usr/lib64 /usr/sbin /var /var/lib /var/lib/nixos /var/log; do if [ "$(echo ${extra_partitions[${i}]} | cut -d'*' -f1)" == "${j}" ]; then echo "The following mounpoints are not supported: /, /bin, /boot, /boot/efi, /etc, /nix, /nix/store, /sbin, /swap, /usr, /usr/bin, /usr/lib, /usr/lib/x86_64-linux-gnu, /usr/lib64, /usr/sbin, /var, /var/lib, /var/lib/nixos, /var/log"; exit 1; fi; done
 	for j in {0..4}; do if [ ${j} -ne ${i} ] && [ ! -z "$(echo ${extra_partitions[${i}]} | cut -d'*' -f1)" ]; then if [ "$(echo ${extra_partitions[${i}]} | cut -d'*' -f1)" == "$(echo ${extra_partitions[${j}]} | cut -d'*' -f1)" ]; then echo "The mounpoint $(echo ${extra_partitions[${i}]} | cut -d'*' -f1) defined several times."; exit 1; fi; fi; done
 	if [ "$(echo ${extra_partitions[${i}]} | cut -d'*' -f1)" == "/home" ]; then separate_home="Yes"; fi
 	if [ -z "$(echo ${extra_partitions[${i}]} | cut -d'*' -f2)" ]; then echo "Name was not provided for extra partition $(( ${i} + 1 ))."; exit 1; fi
@@ -11267,8 +11628,7 @@ input:not(:disabled), select:not(:disabled) {
 <span align="center"><h1><img style="vertical-align: middle; margin-right: 15px" src="https://github.com/sebanc/linuxloops/raw/main/linuxloops.png" width="64px" alt="Logo"/>Linuxloops</h1></span>
 <hr style="border-top: 1px solid #bbbbbb;">
 """
-match args.menu:
-    case "information":
+if args.menu == "information":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div style="position: fixed; bottom: 15px; left: 15px;"><a onclick="exit()" href="#" class="pure-button round">Cancel</a></div>
@@ -11291,7 +11651,7 @@ match args.menu:
     })
 </script>
 """
-    case "radio":
+elif args.menu == "radio":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11328,7 +11688,7 @@ match args.menu:
     })
 </script>
 """
-    case "range":
+elif args.menu == "range":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11358,7 +11718,7 @@ match args.menu:
     })
 </script>
 """
-    case "disk":
+elif args.menu == "disk":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11399,7 +11759,7 @@ match args.menu:
     })
 </script>
 """
-    case "image":
+elif args.menu == "image":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11437,7 +11797,7 @@ match args.menu:
     })
 </script>
 """
-    case "partitioning":
+elif args.menu == "partitioning":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11478,7 +11838,7 @@ match args.menu:
     })
 </script>
 """
-    case "partitions":
+elif args.menu == "partitions":
         html += """
 <br>
 <div class="containing-table" id="response-container"></div>
@@ -11512,11 +11872,14 @@ match args.menu:
         if (element.value != "/" && element.value.substring(element.value.length - 1, element.value.length) == "/") { element.value = element.value.substring(0, element.value.length - 1) }
         switch(element.value) {
             case '/':
+            case '/bin':
             case '/boot':
             case '/boot/efi':
             case '/etc':
             case '/nix':
             case '/nix/store':
+            case '/sbin':
+            case '/swap':
             case '/usr':
             case '/usr/bin':
             case '/usr/lib':
@@ -11527,7 +11890,7 @@ match args.menu:
             case '/var/lib':
             case '/var/lib/nixos':
             case '/var/log':
-                alert("The following mounpoints are not supported: /, /boot, /boot/efi, /etc, /nix, /nix/store, /usr, /usr/bin, /usr/lib, /usr/lib/x86_64-linux-gnu, /usr/lib64, /usr/sbin, /var, /var/lib, /var/lib/nixos, /var/log")
+                alert("The following mounpoints are not supported: /, /bin, /boot, /boot/efi, /etc, /nix, /nix/store, /sbin, /swap, /usr, /usr/bin, /usr/lib, /usr/lib/x86_64-linux-gnu, /usr/lib64, /usr/sbin, /var, /var/lib, /var/lib/nixos, /var/log")
                 element.value = ""
                 return
         }
@@ -11592,7 +11955,7 @@ match args.menu:
     })
 </script>
 """
-    case "user":
+elif args.menu == "user":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11635,7 +11998,7 @@ match args.menu:
     })
 </script>
 """
-    case "parameters":
+elif args.menu == "parameters":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11668,7 +12031,7 @@ match args.menu:
     })
 </script>
 """
-    case "customizations":
+elif args.menu == "customizations":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11715,7 +12078,7 @@ match args.menu:
     })
 </script>
 """
-    case "progress":
+elif args.menu == "progress":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div class="containing-table" id="response-container"></div>
@@ -11738,7 +12101,7 @@ match args.menu:
             pidfile = open(args.writepid, 'w')
             pidfile.write(str(os.getpid()))
             pidfile.close()
-    case "finished":
+elif args.menu == "finished":
         html += """
 <div id='title' style="margin-top: 30px;"></div><br>
 <div style="position: fixed; bottom: 15px; right: 15px;"><a onclick="exit()" href="#" class="pure-button pure-button-primary round">Exit</a></div>
@@ -11756,7 +12119,7 @@ match args.menu:
     })
 </script>
 """
-    case "messagebox":
+elif args.menu == "messagebox":
         html = """
 <!DOCTYPE html>
 <html>
@@ -11784,7 +12147,7 @@ match args.menu:
     })
 </script>
 """
-    case _:
+else:
         if args.menu != "confirmation" and args.menu != "file-select" and args.menu != "file-open" and args.menu != "jsalert":
             print("Please select a menu to display.")
             sys.exit()

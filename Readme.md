@@ -51,6 +51,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |BlendOS         |v4              |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]|
 |BlissOS         |15 / 16         |                       |                                     |                                 |              |
 |Brunch          |Latest          |✓                      |                                     |✓ (partially included)           |[notes][Brunch-notes]|
+|CachyOS         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]|
 |ChimeraOS       |Stable          |✓                      |✓ (default)                          |                                 |              |
 |ChromeOS-Flex   |Latest          |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
 |Debian          |Bookworm        |✓                      |✓                                    |✓                                |              |
@@ -92,6 +93,7 @@ Install the `PyQtWebEngine` package for your distribution:
 - Arch-based distributions: `sudo pacman -Syu python-pyqt6-webengine`  
 - RHEL-based distributions: `sudo dnf install python3-pyqt6-webengine`  
 - OpenSUSE: `sudo zypper in python3-PyQt6-WebEngine`  
+- Gentoo: `sudo emerge dev-python/PyQt6-WebEngine`  
 
 Start linuxloops in GUI mode:  
 `sudo -E bash ~/bin/linuxloops`  
@@ -200,6 +202,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [Artix-notes]: ./Readme/Distro-notes.md#Artix
 [BlendOS-notes]: ./Readme/Distro-notes.md#BlendOS
 [Brunch-notes]: ./Readme/Distro-notes.md#Brunch
+[CachyOS-notes]: ./Readme/Distro-notes.md#CachyOS
 [ChromeOS-Flex-notes]: ./Readme/Distro-notes.md#ChromeOS-Flex
 [Fedora-notes]: ./Readme/Distro-notes.md#Fedora
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
