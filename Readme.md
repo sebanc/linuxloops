@@ -90,8 +90,8 @@ Download the Linuxloops script:
 
 Install the `PyQtWebEngine` package for your distribution:  
 - Debian / Ubuntu derivatives:  
-&nbsp;&nbsp;Debian 12 / Ubuntu 24.04 based distributions: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
-&nbsp;&nbsp;Older Debian / Ubuntu based distributions: `sudo apt install python3-venv python3-pyqt5.qtwebengine`  
+&nbsp;&nbsp;Debian 12 / Ubuntu 24.04 and above: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
+&nbsp;&nbsp;Older Debian / Ubuntu versions: `sudo apt install python3-venv python3-pyqt5.qtwebengine`  
 - Arch-based distributions: `sudo pacman -Syu python-pyqt6-webengine`  
 - RHEL-based distributions: `sudo dnf install python3-pyqt6-webengine`  
 - OpenSUSE: `sudo zypper in python3-PyQt6-WebEngine`  
