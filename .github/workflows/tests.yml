@@ -28,7 +28,7 @@ jobs:
               arg4=''
               arg5=''
               arg6=''
-              environment=$(sudo bash linuxloops --distribution Ubuntu --version 24.04 --list-environments | tr ' ' '\n' | grep -v 'x86-64-' | sort -R | head -1)
+              environment=$(sudo bash linuxloops --distribution $distribution --version $version --list-environments | tr ' ' '\n' | grep -v 'x86-64-' | sort -R | head -1)
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-btrfs)" == "Yes" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg1='-b'; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-nvidia)" == "Yes" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg2='-n'; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-surface)" == "Yes" ] && [ "${arg2}" == "" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
