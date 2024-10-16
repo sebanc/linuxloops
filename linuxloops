@@ -13460,7 +13460,7 @@ if [ ! $(list_array "available_timezones" | grep -w "${timezone}") ]; then echo 
 if [ ! -z "${hostname}" ] && ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then echo "Provided hostname contains invalid characters."; exit 1; fi
 if [ "${root_fstype}" == "btrfs" ] && [ ! "${btrfs_supported}" == "Yes" ]; then echo "Filesystem type btrfs is not available for this distribution version."; exit 1; fi
 if [ "${nvidia}" == "Yes" ] && [ ! "${nvidia_supported}" == "Yes" ]; then echo "nvidia proprietary driver is not available for this distribution version."; exit 1; fi
-if [ "${surface}" == "Yes" ] && [ "${surface_supported}" == "Yes" ]; then echo "Surface patches are not available for this distribution version."; exit 1; fi
+if [ "${surface}" == "Yes" ] && [ ! "${surface_supported}" == "Yes" ]; then echo "Surface patches are not available for this distribution version."; exit 1; fi
 if [ "${live}" == "Yes" ] && [ ! "${distribution}" == "Debian" ]; then echo "Linuxloops live can only be created with Debian distribution."; exit 1; fi
 if [ ! -z "${custom_script}" ] && [ ! -f "${custom_script}" ]; then echo "Custom script ${1} could not be found."; exit 1; fi
 if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ]; then
