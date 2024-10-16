@@ -27,9 +27,12 @@
 Ubuntu 24.04 and above: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
 Older Ubuntu versions: `sudo apt install python3-venv python3-pyqt5.qtwebengine`  
 
+Once the `PyQtWebEngine` package is installed, start linuxloops in GUI mode:  
+`bash ${HOME}/bin/linuxloops`  
+
 - To use the CLI installer:  
 ```
-Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -ver <distribution version> -env <environment name> -dst <disk name or disk image path>
+Usage: bash ${HOME}/bin/linuxloops -distro <distribution name> -ver <distribution version> -env <environment name> -dst <disk name or disk image path>
 -distro, --distribution <distribution name>		(Distribution to install)
 -ver, --version <version name>				(Distribution version to install)
 -env, --environment <environment name>			(Environment to install)
@@ -79,11 +82,11 @@ Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -ver <distribut
 ```
 
 The main parameters are: the distribution, the version, the environment and the destination. Use the below command to list available distributions, versions and environments:  
-`sudo -E bash ~/bin/linuxloops -l`  
+`bash ${HOME}/bin/linuxloops -l`  
 
 As an example:  
-`sudo -E bash ~/bin/linuxloops -distro Ubuntu -ver 24.04 -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
-`sudo -E bash ~/bin/linuxloops -distro Arch -ver Current -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
+`bash ${HOME}/bin/linuxloops -distro Ubuntu -ver 24.04 -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
+`bash ${HOME}/bin/linuxloops -distro Arch -ver Current -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
 - To use the Declarative installer:  
 
@@ -91,10 +94,10 @@ Have a look at the declarative configuration examples available here:
 [Declarative configuration examples][Declarative configuration examples]  
 
 The main parameters are: the distribution, the version and the environment. Use the below command to list available distributions and environments:  
-`sudo -E bash ~/bin/linuxloops -l`  
+`bash ${HOME}/bin/linuxloops -l`  
 
 Create your own declarative configuration and run the below command to start the install:  
-`sudo -E bash ~/bin/linuxloops -d <path_to_your_declarative_configuration>`  
+`bash ${HOME}/bin/linuxloops -d <path_to_your_declarative_configuration>`  
 
 4. Finalisation (For disk installs)  
 

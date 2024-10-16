@@ -4,7 +4,7 @@ usage()
 {
 cat << USAGE
 LinuxLoops: Adaptable / declarative linux distribution installer.
-Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -ver <distribution version> -env <environment name> -dst <disk name or disk image path>
+Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distribution version> -env <environment name> -dst <disk name or disk image path>
 -distro, --distribution <distribution name>		(Distribution to install)
 -ver, --version <version name>				(Distribution version to install)
 -env, --environment <environment name>			(Environment to install)
@@ -1986,7 +1986,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -9778,10 +9778,10 @@ INSTALLNVIDIA
 fi
 if [ -f "${bootstrapdir}"/linuxloops/install_nvidia ]; then
 	cat >>"${bootstrapdir}"/linuxloops/install_nvidia <<INSTALLNVIDIA
-if [ -f /usr/lib/systemd/system/nvidia-hibernate.service ]; then systemctl enable nvidia-hibernate.service; fi
-if [ -f /usr/lib/systemd/system/nvidia-resume.service ]; then systemctl enable nvidia-resume.service; fi
-if [ -f /usr/lib/systemd/system/nvidia-suspend.service ]; then systemctl enable nvidia-suspend.service; fi
-if [ -d /etc/systemd ]; then
+if [ -x /usr/lib/systemd/systemd ]; then
+	if [ -f /usr/lib/systemd/system/nvidia-hibernate.service ]; then systemctl enable nvidia-hibernate.service; fi
+	if [ -f /usr/lib/systemd/system/nvidia-resume.service ]; then systemctl enable nvidia-resume.service; fi
+	if [ -f /usr/lib/systemd/system/nvidia-suspend.service ]; then systemctl enable nvidia-suspend.service; fi
 	mkdir -p /etc/systemd/system-shutdown
 	cat >/etc/systemd/system-shutdown/nvidia.shutdown <<'SHUTDOWNFIX'
 #!/bin/sh
@@ -10958,7 +10958,7 @@ cat >/usr/bin/linuxloops <<'LIVELAUNCHER'
 set -e
 sudo curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n" 2>/dev/null
 sudo chmod 0755 /usr/bin/linuxloops.real
-sudo -E bash /usr/bin/linuxloops.real "\${@}"
+bash /usr/bin/linuxloops.real "\${@}"
 LIVELAUNCHER
 chmod 0755 /usr/bin/linuxloops
 mkdir -p /etc/skel/Desktop
@@ -10982,13 +10982,13 @@ Terminal=true
 Type=Application
 Categories=System;Filesystem;
 LIVEMENUICON
-mkdir -p /usr/share/glib-2.0/schemas
-cat >/usr/share/glib-2.0/schemas/zz_noscreenlock.gschema.override <<'DCONF'
-[org.cinnamon.desktop.screensaver]
-lock-delay=0
-lock-enabled=false
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
+#mkdir -p /usr/share/glib-2.0/schemas
+#cat >/usr/share/glib-2.0/schemas/zz_noscreenlock.gschema.override <<'DCONF'
+#[org.cinnamon.desktop.screensaver]
+#lock-delay=0
+#lock-enabled=false
+#DCONF
+#if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/repart.d
 echo -e '[Partition]\nType=linux-generic' > /etc/repart.d/50-root.conf
 cat >/etc/systemd/system/live-configuration.service <<'LIVE_CONFIGURATION_SERVICE'
@@ -11050,7 +11050,7 @@ for MODULE in nvidia_drm nvidia_modeset nvidia_uvm nvidia; do
 done
 NVIDIA_SHUTDOWNFIX
 chmod 0755 /etc/systemd/system-shutdown/nvidia.shutdown
-yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver broadcom-sta-dkms firmware-b43-installer breeze-gtk-theme- breeze-icon-theme- oxygen-icon-theme-
+yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver broadcom-sta-dkms firmware-b43-installer gnome-backgrounds- gnome-icon-theme- materia-gtk-theme- oxygen-icon-theme- papirus-icon-theme-
 rm -rf /lib/firmware/bnx2x /lib/firmware/dpaa2 /lib/firmware/liquidio /lib/firmware/mellanox /lib/firmware/mrvl/prestera /lib/firmware/netronome /lib/firmware/qcom /lib/firmware/qed /lib/firmware/ti-connectivity
 INSTALLLIVE
 chmod 0755 "${bootstrapdir}"/linuxloops/install_live
@@ -13600,6 +13600,13 @@ if [ -d /home/runner/work ]; then github=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
+if [[ $EUID -ne 0 ]]; then
+	if [ -f /etc/NIXOS ] && [ ${#} -eq 0 ]; then
+		exec sudo --preserve-env=DISPLAY,XAUTHORITY,WAYLAND_DISPLAY nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
+	else
+		exec sudo --preserve-env=DISPLAY,XAUTHORITY,WAYLAND_DISPLAY bash "$0" "$@"
+	fi
+fi
 set +H
 set_base_parameters
 if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
