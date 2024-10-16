@@ -33,52 +33,52 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 - The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distributions that are enabled by default as they contain necessary packages for standard use.  
 - For Arch based distributions, the "shim-signed" AUR package is included in order to support Secure Boot.  
 
+
 ## Supported Hardware
 
 ✔ Base Requirements:  
 - x86_64 based computer with UEFI BIOS.  
 - Administrative privileges on the device.  
-- A drive with at least 14 GB available space.  
+- A drive or partition with at least 14 GB available space.  
 
 
 ## Overview of supported distributions and features
 
-|**Distribution**|**Version**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
-|----------------|:--------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|--------------|
-|AlmaLinux       |9               |✓                      |                                     |                                 |[notes][AlmaLinux-notes]|
-|Arch            |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]|
-|Artix           |Current         |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]|
-|BlendOS         |v4              |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]|
-|BlissOS         |15 / 16         |                       |                                     |                                 |              |
-|Brunch          |Latest          |✓                      |                                     |✓ (partially included)           |[notes][Brunch-notes]|
-|CachyOS         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]|
-|ChimeraOS       |Stable          |✓                      |✓ (default)                          |                                 |              |
-|ChromeOS-Flex   |Latest          |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
-|Debian          |Bookworm        |✓                      |✓                                    |✓                                |              |
-|Devuan          |Daedalus        |✓                      |✓                                    |                                 |              |
-|Elementary      |7               |✓                      |✓                                    |✓                                |              |
-|Fedora          |40              |✓                      |✓                                    |✓                                |[notes][Fedora-notes]|
-|Gentoo          |Current         |✓                      |✓                                    |                                 |              |
-|Kali            |Current         |disk images only       |✓                                    |✓                                |[notes][Kali-notes]|
-|Linuxmint       |Wilma           |✓                      |✓                                    |✓                                |              |
-|LMDE            |Faye            |✓                      |✓                                    |✓                                |              |
-|Manjaro         |Current         |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]|
-|MX              |23              |✓                      |✓                                    |✓                                |              |
-|Neon            |Current         |✓                      |✓                                    |✓                                |              |
-|NixOS           |24.05           |✓                      |✓                                    |                                 |              |
-|Nobara          |40              |✓                      |✓                                    |✓                                |              |
-|OpenSUSE        |Tumbleweed      |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]|
-|Parrot          |Current         |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]|
-|Pop             |22.04           |✓                      |✓                                    |✓                                |              |
-|Proxmox         |VE 8            |✓                      |✓                                    |✓                                |              |
-|Qubes           |4.2.2           |                       |                                     |                                 |[notes][Qubes-notes]|
-|RockyLinux      |9               |✓                      |                                     |                                 |[notes][RockyLinux-notes]|
-|SteamOS         |3.6             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]|
-|Tails           |Latest          |✓                      |                                     |                                 |[notes][Tails-notes]|
-|Ubuntu          |24.04           |✓                      |✓                                    |✓                                |              |
-|Ubuntu-LTS      |22.04           |✓                      |✓                                    |✓                                |              |
-|Void            |Current         |                       |✓                                    |                                 |              |
-|Zorin           |17              |✓                      |✓                                    |✓                                |              |
+|**Distribution**|**Versions**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
+|----------------|:------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
+|AlmaLinux       |9                         |✓                      |                                     |                                 |[notes][AlmaLinux-notes]    |
+|Arch            |Current                   |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
+|Artix           |Current/Runit             |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
+|BlendOS         |v4                        |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
+|BlissOS         |15 16                     |                       |                                     |                                 |                            |
+|Brunch          |Stable Unstable           |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
+|CachyOS         |x86-64 x86-64-v3 x86-64-v4|✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
+|ChimeraOS       |Stable                    |✓                      |                                     |                                 |                            |
+|ChromeOS-Flex   |Stable                    |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
+|Debian          |Bookworm                  |✓                      |✓                                    |✓                                |                            |
+|Devuan          |Daedalus                  |✓                      |✓                                    |                                 |                            |
+|Elementary      |7                         |✓                      |✓                                    |✓                                |                            |
+|Fedora          |40                        |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
+|Gentoo          |23/Openrc 23/Systemd      |✓                      |✓                                    |                                 |                            |
+|Kali            |Rolling                   |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
+|Linuxmint       |Wilma                     |✓                      |✓                                    |✓                                |                            |
+|LMDE            |Faye                      |✓                      |✓                                    |✓                                |                            |
+|Manjaro         |Stable                    |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
+|MX              |23                        |✓                      |✓                                    |✓                                |                            |
+|Neon            |User                      |✓                      |✓                                    |✓                                |                            |
+|NixOS           |24.05                     |✓                      |✓                                    |                                 |                            |
+|Nobara          |40                        |✓                      |✓                                    |✓                                |                            |
+|OpenSUSE        |Tumbleweed                |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
+|Parrot          |Lory                      |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]       |
+|Pop             |22.04                     |✓                      |✓                                    |✓                                |                            |
+|Proxmox         |VE8                       |✓                      |✓                                    |✓                                |                            |
+|Qubes           |4.2.3                     |                       |                                     |                                 |[notes][Qubes-notes]        |
+|RockyLinux      |9                         |✓                      |                                     |                                 |[notes][RockyLinux-notes]   |
+|SteamOS         |3.6                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
+|Tails           |Stable                    |✓                      |                                     |                                 |[notes][Tails-notes]        |
+|Ubuntu          |24.04 24.10               |✓                      |✓                                    |✓                                |                            |
+|Void            |Current                   |                       |✓                                    |                                 |                            |
+|Zorin           |17                        |✓                      |✓                                    |✓                                |                            |
 
 
 ## Quick start
@@ -89,29 +89,35 @@ Download the Linuxloops script:
 ### GUI mode
 
 Install the `PyQtWebEngine` package for your distribution:  
-- Debian-based distributions: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
+- Debian / Ubuntu derivatives:  
+&nbsp;&nbsp;Debian 12 / Ubuntu 24.04 based distributions: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
+&nbsp;&nbsp;Older Debian / Ubuntu based distributions: `sudo apt install python3-venv python3-pyqt5.qtwebengine`  
 - Arch-based distributions: `sudo pacman -Syu python-pyqt6-webengine`  
 - RHEL-based distributions: `sudo dnf install python3-pyqt6-webengine`  
 - OpenSUSE: `sudo zypper in python3-PyQt6-WebEngine`  
 - Gentoo: `sudo emerge dev-python/PyQt6-WebEngine`  
+- Void: `sudo xbps-install python3-pyqt6-webengine python3-pyqt6-gui python3-pyqt6-widgets python3-pyqt6-network python3-pyqt6-webchannel python3-pyqt6-printsupport`  
 
-Start linuxloops in GUI mode:  
+Once the `PyQtWebEngine` package is installed, start linuxloops in GUI mode:  
 `sudo -E bash ~/bin/linuxloops`  
 
-For NixOS, start linuxloops in GUI mode directly from nix-shell:  
+Specific process for NixOS:  
+- Start linuxloops in GUI mode directly from nix-shell:  
 `sudo -E nix-shell -p bash -p curl -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run 'bash ~/bin/linuxloops'`  
 
 ### CLI mode
 
 List of command line flags:  
 ```
-Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -env <environment name> -dst <disk name or disk image path>
+Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -ver <distribution version> -env <environment name> -dst <disk name or disk image path>
 -distro, --distribution <distribution name>		(Distribution to install)
+-ver, --version <version name>				(Distribution version to install)
 -env, --environment <environment name>			(Environment to install)
 -dst, --destination <disk name or disk image path>	(e.g. /dev/sda or /ubuntu.img)
 -s, --size <total install size>				(number in GB, minimum 14GB)
 -z, --swapsize <swap size>				(number in GB)
 -b, --btrfs						(Use btrfs for the root filesystem)
+-r, --rootfs-compression				(Enable standard btrfs compression, implies -b)
 -e, --encrypt						(Encrypt the root filesystem)
 -a, --autologin						(Enable user autologin)
     --efi-name						(EFI partition name)
@@ -132,31 +138,39 @@ Usage: sudo -E bash ~/bin/linuxloops -distro <distribution name> -env <environme
 -c, --custom-packages					(list of additional packages to be installed - space separated)
 -C, --custom-script					(bash script that should be run at the end of the install process)
 -k, --kernel-parameters					(specific kernel parameters to be applied - space separated)
--d, --declarative <config_file_path>			(Use a declarative configuration file)
 -m, --custom-mirror <mirror details>			(Add a custom mirror according to the below format:
 							<repository>*<mirror>
 							ex: Arch*https://mirrors.kernel.org/archlinux)
 -p, --user-password-for-encryption			(Use user account password for encryption)
+-g, --grub-hide						(Hide the GRUB Bootloader)
+-G, --generate-declarative-config <config_file_path>	(Generate a declarative configuration file)
+-d, --apply-declarative-config <config_file_path>	(Use a declarative configuration file)
 -l, --list						(List available distributions and environments)
+-lb, --list-btrfs					(Confirms if btrfs is supported for chosen distribution/version)
+-ld, --list-distributions				(List available distributions)
+-le, --list-environments				(List available environments for chosen distribution/version)
 -ll, --list-locales					(List available locales)
 -lk, --list-keymaps					(List available keymaps)
+-ln, --list-nvidia					(Confirms if nvidia proprietary driver is supported for chosen distribution/version)
+-ls, --list-surface					(Confirms if Surface devices patches are supported for chosen distribution/version)
 -lt, --list-timezones					(List available timezones)
+-lv, --list-versions					(List available versions for chosen distribution)
 -h, --help						(Display this menu)
 ```
 
-The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
+The main parameters are: the distribution, the version, the environment and the destination. Use the below command to list available distributions, versions and environments:  
 `sudo -E bash ~/bin/linuxloops -l`  
 
 As an example:  
-`sudo -E bash ~/bin/linuxloops -distro Ubuntu -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
-`sudo -E bash ~/bin/linuxloops -distro Arch -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
+`sudo -E bash ~/bin/linuxloops -distro Ubuntu -ver 24.04 -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
+`sudo -E bash ~/bin/linuxloops -distro Arch -ver Current -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
 ### Declarative mode
 
 Have a look at the declarative configuration examples available here:  
 [Declarative configuration examples][Declarative configuration examples]  
 
-The only mandatory parameters are: the distribution, the environment and the destination. Use the below command to list available distributions and environments:  
+The main parameters are: the distribution, the version and the environment. Use the below command to list available distributions and environments:  
 `sudo -E bash ~/bin/linuxloops -l`  
 
 Create your own declarative configuration and run the below command to start the install:  

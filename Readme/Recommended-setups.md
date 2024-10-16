@@ -17,7 +17,7 @@ Evaluate the space you will want to give to your Linuxloops OS images and add an
 
 ## My main OS is Linux and I occasionaly use Windows (Installing windows in a disk image)
 
-Same principle as above but leave some unallocated space for your windows installation (Windows 11 requires at least G4 GB if you want to be able to update it).  
+Same principle as above but leave some unallocated space for your windows installation (Windows 11 requires at least 64 GB if you want to be able to update it).  
 
 Boot a Windows 11 installation USB flash drive on your computer.  
 
@@ -54,7 +54,7 @@ Install Grub2Win.
 
 Install your disk images on the ExFAT partition and copy the Linuxloops grub configurations in Grub2Win.  
 
-Reboot and launch your Linuxloops image from Grub2Win.  
+Reboot and launch your Linuxloops images from Grub2Win.  
 
 
 <!-- Reference Links -->
