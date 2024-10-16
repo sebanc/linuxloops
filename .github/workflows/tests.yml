@@ -27,6 +27,7 @@ jobs:
               arg3=''
               arg4=''
               arg5=''
+              arg6=''
               environment=$(sudo bash linuxloops --distribution $distribution --version $version --list-environments | grep -v 'x86-64-' | sort -R | head -1)
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-btrfs)" == "Yes" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg1='-b'; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-nvidia)" == "Yes" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg2='-n'; fi
@@ -34,7 +35,7 @@ jobs:
               if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChimeraOS" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
               if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChimeraOS" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg5='-e'; fi
               if [ "${i}" != "BlissOS" ] && [ "${i}" != "Brunch" ] && [ "${i}" != "ChimeraOS" ] && [ "${i}" != "ChromeOS-Flex" ] && [ "${i}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg6='-a'; fi
-              if [ -z "$matrix" ]; then matrix="\"$distribution#$version#$environment#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distribution#$env#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
+              if [ -z "$matrix" ]; then matrix="\"$distribution#$version#$environment#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distribution#$version#$environment#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
             done
           done
           echo "matrix=[$matrix]" >> $GITHUB_OUTPUT
