@@ -85,7 +85,7 @@ The main parameters are: the distribution, the version, the environment and the 
 `bash ${HOME}/bin/linuxloops -l`  
 
 As an example:  
-`bash ${HOME}/bin/linuxloops -distro Ubuntu -ver 24.04 -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
+`bash ${HOME}/bin/linuxloops -distro Ubuntu -ver 24.04 -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu 24.04 with the complete kde environment on the drive /dev/sdX with encryption.  
 `bash ${HOME}/bin/linuxloops -distro Arch -ver Current -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
 - To use the Declarative installer:  

@@ -19,7 +19,7 @@ jobs:
       - name: Set current date
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk
-        run: sudo bash linuxloops -distro Debian -ver Bookworm -env Plasma -dst linuxloops_live_${{ env.current_date }}.img -u -a -b -c "ark firefox-esr gparted kate okular python3-venv python3-pyqt6.qtwebengine" -H "linuxloops"
+        run: bash linuxloops -distro Debian -env Cinnamon -dst linuxloops_live_${{ env.current_date }}.img -u -a -b -H "linuxloops"
       - name: Compress Linuxloops Live Disk
         run: 7z a linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
       - name: Generate release details

@@ -45,40 +45,40 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 ## Overview of supported distributions and features
 
 |**Distribution**|**Versions**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
-|----------------|:------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
-|AlmaLinux       |9                         |✓                      |                                     |                                 |[notes][AlmaLinux-notes]    |
-|Arch            |Current                   |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
-|Artix           |Current/Runit             |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
-|BlendOS         |v4                        |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
-|BlissOS         |15 16                     |                       |                                     |                                 |                            |
-|Brunch          |Stable Unstable           |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
-|CachyOS         |x86-64 x86-64-v3 x86-64-v4|✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
-|ChimeraOS       |Stable                    |✓                      |                                     |                                 |                            |
-|ChromeOS-Flex   |Stable                    |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
-|Debian          |Bookworm                  |✓                      |✓                                    |✓                                |                            |
-|Devuan          |Daedalus                  |✓                      |✓                                    |                                 |                            |
-|Elementary      |7                         |✓                      |✓                                    |✓                                |                            |
-|Fedora          |40                        |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
-|Gentoo          |23/Openrc 23/Systemd      |✓                      |✓                                    |                                 |                            |
-|Kali            |Rolling                   |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
-|Linuxmint       |Wilma                     |✓                      |✓                                    |✓                                |                            |
-|LMDE            |Faye                      |✓                      |✓                                    |✓                                |                            |
-|Manjaro         |Stable                    |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
-|MX              |23                        |✓                      |✓                                    |✓                                |                            |
-|Neon            |User                      |✓                      |✓                                    |✓                                |                            |
-|NixOS           |24.05                     |✓                      |✓                                    |                                 |                            |
-|Nobara          |40                        |✓                      |✓                                    |✓                                |                            |
-|OpenSUSE        |Tumbleweed                |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
-|Parrot          |Lory                      |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]       |
-|Pop             |22.04                     |✓                      |✓                                    |✓                                |                            |
-|Proxmox         |VE8                       |✓                      |✓                                    |✓                                |                            |
-|Qubes           |4.2.3                     |                       |                                     |                                 |[notes][Qubes-notes]        |
-|RockyLinux      |9                         |✓                      |                                     |                                 |[notes][RockyLinux-notes]   |
-|SteamOS         |3.6                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
-|Tails           |Stable                    |✓                      |                                     |                                 |[notes][Tails-notes]        |
-|Ubuntu          |24.04 24.10               |✓                      |✓                                    |✓                                |                            |
-|Void            |Current                   |                       |✓                                    |                                 |                            |
-|Zorin           |17                        |✓                      |✓                                    |✓                                |                            |
+|----------------|:------------------------------------------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
+|AlmaLinux       |9                                                             |✓                      |                                     |                                 |[notes][AlmaLinux-notes]    |
+|Arch            |Current                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
+|Artix           |Current/Openrc<br>Current/Runit<br>Current/S6<br>Current/Dinit|✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
+|BlendOS         |v4                                                            |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
+|BlissOS         |15<br>16                                                      |                       |                                     |                                 |                            |
+|Brunch          |Stable Unstable                                               |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
+|CachyOS         |x86-64<br>x86-64-v3<br>x86-64-v4                              |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
+|ChimeraOS       |Stable<br>Unstable                                            |✓                      |                                     |                                 |                            |
+|ChromeOS-Flex   |Stable                                                        |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
+|Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
+|Devuan          |Daedalus<br>Testing<br>Unstable                               |✓                      |✓                                    |                                 |                            |
+|Elementary      |7                                                             |✓                      |✓                                    |✓                                |                            |
+|Fedora          |40<br>41<br>Rawhide                                           |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
+|Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
+|Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
+|Linuxmint       |Wilma                                                         |✓                      |✓                                    |✓                                |                            |
+|LMDE            |Faye                                                          |✓                      |✓                                    |✓                                |                            |
+|Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
+|MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
+|Neon            |User<br>Testing<br>Unstable                                   |✓                      |✓                                    |✓                                |                            |
+|NixOS           |24.05<br>24.11<br>Unstable                                    |✓                      |✓                                    |                                 |                            |
+|Nobara          |40                                                            |✓                      |✓                                    |✓                                |                            |
+|OpenSUSE        |15.6<br>Tumbleweed                                            |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
+|Parrot          |Lory                                                          |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]       |
+|Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
+|Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
+|Qubes           |4.2.3                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
+|RockyLinux      |9                                                             |✓                      |                                     |                                 |[notes][RockyLinux-notes]   |
+|SteamOS         |3.6                                                           |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
+|Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |
+|Ubuntu          |24.04<br>24.10<br>25.04                                       |✓                      |✓                                    |✓                                |                            |
+|Void            |Current                                                       |                       |✓                                    |                                 |                            |
+|Zorin           |17                                                            |✓                      |✓                                    |✓                                |                            |
 
 
 ## Quick start
@@ -159,7 +159,7 @@ The main parameters are: the distribution, the version, the environment and the 
 `bash ${HOME}/bin/linuxloops -l`  
 
 As an example:  
-`bash ${HOME}/bin/linuxloops -distro Ubuntu -ver 24.04 -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu with the complete kde environment on the drive /dev/sdX with encryption.  
+`bash ${HOME}/bin/linuxloops -distro Ubuntu -ver 24.04 -env Plasma/Full -dst /dev/sdX -e` will install Ubuntu 24.04 with the complete kde environment on the drive /dev/sdX with encryption.  
 `bash ${HOME}/bin/linuxloops -distro Arch -ver Current -env Cinnamon -dst ~/arch.img -s 30 -S` will install Arch with the cinnamon desktop environment and linux-surface patches in a 30 GB image located at /home/username/arch.img.  
 
 ### Declarative mode
