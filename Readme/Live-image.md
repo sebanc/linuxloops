@@ -9,7 +9,7 @@
 
 A Linuxloops live image is available in the releases section of this github repository.  
 
-This live image contains a Linuxmint system with Linuxloops installed by default to make the installation process even easier.  
+This live image contains a Debian system with Linuxloops installed by default to make the installation process even easier.  
 You can also install disk images grub boot configurations to the Linuxloops live image.  
 
 The default password for the "live" user account is: "linuxloops".  

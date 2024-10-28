@@ -66,7 +66,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
 |Neon            |User<br>Testing<br>Unstable                                   |✓                      |✓                                    |✓                                |                            |
-|NixOS           |24.05<br>24.11<br>Unstable                                    |✓                      |✓                                    |                                 |                            |
+|NixOS           |24.05<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
 |Nobara          |40                                                            |✓                      |✓                                    |✓                                |                            |
 |OpenSUSE        |15.6<br>Tumbleweed                                            |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]       |

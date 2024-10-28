@@ -160,8 +160,8 @@ case "${distribution}" in
 		default_version="User"
 		;;
 	'NixOS')
-		available_versions=( "24.05" "24.11" "Unstable" )
-		available_versions_longname=( "24.05_(Stable)" "24.11_(Testing)" "Unstable" )
+		available_versions=( "24.05" "Unstable" )
+		available_versions_longname=( "24.05_(Stable)" "Unstable" )
 		default_version="24.05"
 		;;
 	'Nobara')
@@ -3659,7 +3659,7 @@ mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 if [ "${brunch_version}" == "Unstable" ]; then brunch_url="https://api.github.com/repos/sebanc/brunch-unstable/releases/latest"; else brunch_url="https://api.github.com/repos/sebanc/brunch/releases/latest"; fi
-echo "Downloading Brunch"
+echo "Downloading Brunch ${brunch_version}"
 for i in 1 .. 3; do
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
 		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)" ]; then
@@ -5351,7 +5351,7 @@ set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
 deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z) main contrib non-free non-free-firmware
 deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
+deb http://deb.devuan.org/merged $(echo ${devuan_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
 #deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
@@ -5597,9 +5597,7 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
 deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-#deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
+deb http://deb.devuan.org/merged $(echo ${devuan_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -5844,9 +5842,6 @@ cat >"${bootstrapdir}"/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 cat >/etc/apt/sources.list <<'SOURCESLIST'
 deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-#deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
 SOURCESLIST
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt dist-upgrade
@@ -8109,6 +8104,7 @@ curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/m
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
 sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
+sed -i 's@/stable@/$(echo ${manjaro_version} | tr A-Z a-z)@g' /mnt/etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /mnt/etc/pacman.d/mirrorlist
 else
@@ -8395,6 +8391,7 @@ curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/m
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel
 sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
+sed -i 's@/stable@/$(echo ${manjaro_version} | tr A-Z a-z)@g' /mnt/etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /mnt/etc/pacman.d/mirrorlist
 else
@@ -10247,7 +10244,7 @@ if [ ! -z "${mirror_Parrot}" ]; then
 	echo -e '\ndeb ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware\n# deb-src ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/parrot.list
 fi
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-mediatek firmware-intel-graphics firmware-iwlwifi firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers-amd64 dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
 
@@ -11223,7 +11220,7 @@ chmod 0755 "${bootstrapdir}"/linuxloops/chroot_init
 hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
 basic_packages="gvfs udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
-specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-im-modules steam-jupiter-stable steam_notif_daemon vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
+specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-im-modules steam-jupiter-stable steam_notif_daemon vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
@@ -14404,7 +14401,7 @@ chmod 0755 "${bootstrapdir}"/linuxloops/install_initramfs
 generate_nixos_config()
 {
 if [ "${install_type}" == "image" ]; then cmdline="\\\\\\\${linuxloops_args}"; fi
-if [ -z "${cmdline}" ]; then cmdline="quiet"; else cmdline="${cmdline} quiet"; fi
+if [ -z "${cmdline}" ]; then cmdline="quiet splash systemd.log_target=null"; else cmdline="${cmdline} quiet splash systemd.log_target=null"; fi
 if [ ! -z "${kernel_parameters}" ]; then cmdline="${cmdline} ${kernel_parameters}"; fi
 cat >"${bootstrapdir}"/linuxloops/install_initramfs <<INITNIXOS
 #!/bin/bash
@@ -14456,7 +14453,7 @@ boot.loader = {
 	};
 	timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo 2; else echo 5; fi);
 };
-#boot.plymouth.enable = true;
+boot.plymouth.enable = true;
 
 console.earlySetup = true;
 console.keyMap = "${keymap}";
