@@ -13,7 +13,7 @@
 </p>
 <h1 align="center">Linuxloops</h1>
 
-## About This Project
+## About this project
 
 Linuxloops is an adaptable / declarative linux distribution installer.  
 
@@ -34,7 +34,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 - For Arch based distributions, the "shim-signed" AUR package is included in order to support Secure Boot.  
 
 
-## Supported Hardware
+## Supported hardware
 
 ✔ Base Requirements:  
 - x86_64 based computer with UEFI BIOS.  
