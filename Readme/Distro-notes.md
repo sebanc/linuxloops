@@ -59,6 +59,11 @@ On the first boot after install, fedora will relabel files for Selinux support (
 If you install the nvidia proprietary driver, the first boot after each kernel update will be long as the nvidia kernel modules are being rebuilt.  
 
 
+## Fedora-Atomic
+
+If you install the nvidia proprietary driver, you will need to disable Secure Boot.  
+
+
 ## Kali
 
 Kali does not have secure boot support in full disk install.  

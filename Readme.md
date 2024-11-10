@@ -51,14 +51,15 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Artix           |Current/Openrc<br>Current/Runit<br>Current/S6<br>Current/Dinit|✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
 |BlendOS         |v4                                                            |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
 |BlissOS         |15<br>16                                                      |                       |                                     |                                 |                            |
-|Brunch          |Stable Unstable                                               |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
+|Brunch          |Stable<br>Unstable                                            |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
 |CachyOS         |x86-64<br>x86-64-v3<br>x86-64-v4                              |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
 |ChimeraOS       |Stable<br>Unstable                                            |✓                      |                                     |                                 |                            |
 |ChromeOS-Flex   |Stable                                                        |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
 |Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing<br>Unstable                               |✓                      |✓                                    |                                 |                            |
 |Elementary      |7                                                             |✓                      |✓                                    |✓                                |                            |
-|Fedora          |40<br>41<br>Rawhide                                           |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
+|Fedora          |41<br>42<br>Rawhide                                           |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
+|Fedora-Atomic   |41<br>Rawhide                                                 |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
 |Linuxmint       |Wilma                                                         |✓                      |✓                                    |✓                                |                            |
@@ -216,6 +217,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [CachyOS-notes]: ./Readme/Distro-notes.md#CachyOS
 [ChromeOS-Flex-notes]: ./Readme/Distro-notes.md#ChromeOS-Flex
 [Fedora-notes]: ./Readme/Distro-notes.md#Fedora
+[Fedora-Atomic-notes]: ./Readme/Distro-notes.md#Fedora-Atomic
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
 [OpenSUSE-notes]: ./Readme/Distro-notes.md#OpenSUSE
