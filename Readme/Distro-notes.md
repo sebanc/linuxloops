@@ -7,10 +7,6 @@
   
 # Distributions specific notes
 
-## AlmaLinux
-
-On the first boot after install, almalinux will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and almalinux should boot normally on the second boot.  
-
 ### Specific note for almalinux installation in a disk image with secure boot enabled
 
 Disk images use the actual almalinux secure boot key. When the almalinux secure boot key changes which should be very rare, you will need to disable secure boot temporarily and enroll the new key with mokutil by running:  
@@ -54,8 +50,6 @@ ChromeOS-Flex disk images cannot be booted from a btrfs partition due to the abs
 
 ## Fedora
 
-On the first boot after install, fedora will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and fedora should boot normally on the second boot.  
-
 If you install the nvidia proprietary driver, the first boot after each kernel update will be long as the nvidia kernel modules are being rebuilt.  
 
 
@@ -95,10 +89,6 @@ parrot does not have secure boot support in full disk install.
 
 On the first boot you will be prompted to configure qubes, if you experience a crash after the first boot with the default qubes settings you should disable usb qubes in the configuration menu.  
 
-
-## RockyLinux
-
-On the first boot after install, rockylinux will relabel files for Selinux support (this might take a few minutes) and reboot. This is the expected behaviour and fedora should boot normally on the second boot.  
 
 ### Specific note for rockylinux installation in a disk image with secure boot enabled
 

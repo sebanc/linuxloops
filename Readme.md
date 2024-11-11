@@ -30,7 +30,8 @@ Linuxloops can be used from any Linux distribution or from Windows WSL, it has l
 Note: Windows WSL does not allow to write directly to a disk but you can create disk images and flash them to a drive using Rufus/Etcher or boot them from [Grub2Win][Grub2Win link].  
 
 For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
-- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distributions that are enabled by default as they contain necessary packages for standard use.  
+- The "EPEL" repo for RedHat based distributions as it contains necessary packages for standard use.  
+- The "RPM fusion" repo for Fedora when the nvidia proprietary driver installation is selected.  
 - For Arch based distributions, the "shim-signed" AUR package is included in order to support Secure Boot.  
 
 
@@ -46,14 +47,14 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 
 |**Distribution**|**Versions**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
 |----------------|:------------------------------------------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
-|AlmaLinux       |9                                                             |✓                      |                                     |                                 |[notes][AlmaLinux-notes]    |
+|AlmaLinux       |9                                                             |✓                      |                                     |                                 |                            |
 |Arch            |Current                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
 |Artix           |Current/Openrc<br>Current/Runit<br>Current/S6<br>Current/Dinit|✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
+|Bazzite         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |                                 |                            |
 |BlendOS         |v4                                                            |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
 |BlissOS         |15<br>16                                                      |                       |                                     |                                 |                            |
 |Brunch          |Stable<br>Unstable                                            |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
 |CachyOS         |x86-64<br>x86-64-v3<br>x86-64-v4                              |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
-|ChimeraOS       |Stable<br>Unstable                                            |✓                      |                                     |                                 |                            |
 |ChromeOS-Flex   |Stable                                                        |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
 |Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing<br>Unstable                               |✓                      |✓                                    |                                 |                            |
@@ -74,7 +75,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
 |Qubes           |4.2.3                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
-|RockyLinux      |9                                                             |✓                      |                                     |                                 |[notes][RockyLinux-notes]   |
+|RockyLinux      |9                                                             |✓                      |                                     |                                 |                            |
 |SteamOS         |3.6                                                           |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
 |Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |
 |Ubuntu          |24.04<br>24.10<br>25.04                                       |✓                      |✓                                    |✓                                |                            |
@@ -209,7 +210,6 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [discord-url]: https://discord.gg/x2EgK2M
 
 <!-- Internal Links -->
-[AlmaLinux-notes]: ./Readme/Distro-notes.md#AlmaLinux
 [Arch-notes]: ./Readme/Distro-notes.md#Arch
 [Artix-notes]: ./Readme/Distro-notes.md#Artix
 [BlendOS-notes]: ./Readme/Distro-notes.md#BlendOS
@@ -223,7 +223,6 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [OpenSUSE-notes]: ./Readme/Distro-notes.md#OpenSUSE
 [Parrot-notes]: ./Readme/Distro-notes.md#Parrot
 [Qubes-notes]: ./Readme/Distro-notes.md#Qubes
-[RockyLinux-notes]: ./Readme/Distro-notes.md#RockyLinux
 [SteamOS-notes]: ./Readme/Distro-notes.md#SteamOS
 [Tails-notes]: ./Readme/Distro-notes.md#Tails
 

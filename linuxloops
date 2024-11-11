@@ -54,7 +54,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChimeraOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
 
 distribution_parameters()
 {
@@ -73,6 +73,11 @@ case "${distribution}" in
 		available_versions=( "Current/Openrc" "Current/Runit" "Current/S6" "Current/Dinit" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Current/Openrc"
+		;;
+	'Bazzite')
+		available_versions=( "Stable" "Testing" "Unstable" )
+		available_versions_longname=( "${available_versions[@]}" )
+		default_version="Stable"
 		;;
 	'BlendOS')
 		available_versions=( "v4" )
@@ -93,11 +98,6 @@ case "${distribution}" in
 		available_versions=( "x86-64" "x86-64-v3" "x86-64-v4" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="x86-64"
-		;;
-	'ChimeraOS')
-		available_versions=( "Stable" "Unstable" )
-		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Stable"
 		;;
 	'ChromeOS-Flex')
 		available_versions=( "Stable" )
@@ -275,6 +275,19 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
+	'Bazzite')
+		available_environments=( "Bazzite" "Bazzite/Nvidia" "Bazzite/Nvidia/Open" "Bazzite/Gnome" "Bazzite/Gnome/Nvidia" "Bazzite/Gnome/Nvidia/Open" "Bazzite/Deck" "Bazzite/Deck/Gnome" )
+		bazzite_version="${version}"
+		bootloader_id="fedora"
+		bootloader_name="shimx64.efi"
+		bootstrap="lxc fedora 41 default"
+		btrfs_supported="Yes"
+		fedora_version="41"
+		mirrors_supported=( "Fedora-Atomic" )
+		nvidia_supported="No"
+		surface_supported="No"
+		if [ -z "${github}" ]; then systemd_init="Yes"; fi
+		;;
 	'BlendOS')
 		available_environments=( "None" "Cinnamon" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
 		blendos_version="${version}"
@@ -318,17 +331,6 @@ case "${distribution}" in
 		mirrors_supported=( "Arch" "CachyOS" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
-	'ChimeraOS')
-		available_environments=( "Stable" )
-		bootloader_id="systemd"
-		bootloader_name="systemd-bootx64.efi"
-		bootstrap="lxc archlinux current default"
-		btrfs_supported="Yes"
-		chimeraos_version="${version}"
-		mirrors_supported=()
-		nvidia_supported="No"
-		surface_supported="No"
 		;;
 	'ChromeOS-Flex')
 		available_environments=( "Standard" "Devmode" )
@@ -3300,6 +3302,132 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
+chroot_Bazzite()
+{
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+if [ ! -z "${mirror_Fedora}" ]; then
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates.repo
+	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates-testing.repo
+	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
+fi
+dnf update -y
+dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl ostree sbsigntools strace sudo tar util-linux xz zstd
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
+
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
+#!/bin/bash
+set -e
+ostree admin init-fs /mnt
+if [ ! -z "${mirror_Fedora_Atomic}" ]; then
+	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic ${mirror_Fedora_Atomic}
+else
+	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic $(curl -L https://ostree.fedoraproject.org/mirrorlist)
+fi
+ostree --repo=/mnt/ostree/repo pull --depth 1 atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(if echo ${environment} | tr A-Z a-z | grep -q gnome; then echo "silverblue"; else echo "kinoite"; fi)
+ostree admin --sysroot=/mnt os-init fedora
+ostree admin --sysroot=/mnt deploy --os=fedora atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(if echo ${environment} | tr A-Z a-z | grep -q gnome; then echo "silverblue"; else echo "kinoite"; fi)
+mkdir /atomic
+mount --move /mnt /atomic
+ostreedir=\$(find /atomic/ostree/deploy/fedora/deploy/ -maxdepth 1 | grep "\.0$")
+mount --bind \${ostreedir} /mnt
+mount --bind /atomic /mnt/sysroot
+mount --bind /mnt/sysroot/ostree/deploy/fedora/var /mnt/var
+mount --move /atomic/boot /mnt/boot
+mkdir -p "\$(realpath /mnt/home)" "\$(realpath /mnt/root)"
+chmod 0750 "\$(realpath /mnt/root)"
+if mountpoint -q /atomic/home; then mount --move /atomic/home /mnt/home; fi
+if [ ! -z ${swap_size} ] && [ ${swap_size} -ne 0 ]; then
+	mkdir -p "\$(realpath /mnt/var/swap)"
+	if mountpoint -q /atomic/var/swap; then mount --move /atomic/var/swap /mnt/var/swap; fi
+fi
+$(if [ ${#extra_partitions[@]} -ne 0 ]; then
+	for i in $(seq 0 $(( ${#extra_partitions[@]} - 1 ))); do
+		if [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then
+			cat <<CUSTOM_MOUNTS
+mkdir -p /mnt/var$(get_extra_partitions_attribute mountpoint ${i})
+if mountpoint -q /atomic$(get_extra_partitions_attribute mountpoint ${i}); then mount --move /atomic$(get_extra_partitions_attribute mountpoint ${i}) /mnt/var$(get_extra_partitions_attribute mountpoint ${i}); fi
+CUSTOM_MOUNTS
+		else
+			cat <<CUSTOM_MOUNTS
+mkdir -p /mnt$(get_extra_partitions_attribute mountpoint ${i})
+if mountpoint -q /atomic$(get_extra_partitions_attribute mountpoint ${i}); then mount --move /atomic$(get_extra_partitions_attribute mountpoint ${i}) /mnt$(get_extra_partitions_attribute mountpoint ${i}); fi
+CUSTOM_MOUNTS
+		fi
+	done
+fi)
+if [ -f /atomic/root/encryption.key ]; then mv /atomic/root/encryption.key /mnt/root/encryption.key; fi
+mkdir -p /mnt/etc/secureboot_key
+curl -L https://github.com/ublue-os/bazzite/blob/main/secure_boot.der -o /mnt/etc/secureboot_key/MOK.der
+PREPARE_CHROOT
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
+
+cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
+#!/bin/bash
+set -e
+mkdir /boot/linuxloops
+if [ "${install_type}" == "image" ]; then
+	mv /tmp/linuxloops/install_initramfs /boot/linuxloops/linuxloops
+	chmod 0755 /boot/linuxloops/linuxloops
+	(cd /boot/linuxloops && find . | cpio -o -H newc | gzip > /boot/linuxloops/linuxloops.img)
+else
+	rm /tmp/linuxloops/install_initramfs
+fi
+/usr/lib/ostree/ostree-remount
+rpm-ostree start-daemon
+rpm-ostree rebase ostree-unverified-registry:ghcr.io/ublue-os/$(echo ${environment} | tr A-Z a-z | sed 's@/@-@g')$(if [ "${nvidia}" == "Yes" ]; then echo "-nvidia"; fi):$(echo ${bazzite_version} | tr A-Z a-z)
+CHROOT_INIT
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
+
+cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
+#!/bin/bash
+set -e
+useradd -s /bin/bash -m '${useraccount_name}'
+usermod -aG wheel '${useraccount_name}'
+echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
+INSTALL_USER
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
+
+cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+case "${environment}" in
+	'Bazzite/Gnome'|'Bazzite/Gnome/Nvidia'|'Bazzite/Gnome/Nvidia/Open')
+		if [ "${useraccount_autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
+	'Bazzite'|'Bazzite/Nvidia'|'Bazzite/Nvidia/Open')
+		if [ "${useraccount_autologin}" == "Yes" ]; then
+			mkdir -p /etc/sddm.conf.d
+			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/99-linuxloops.conf
+			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+		fi
+	;;
+esac
+INSTALL_DMCONFIG
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
+
+initramfs_type="iso_init"
+if [ ! -z "${custom_packages}" ]; then
+	echo -e "#!/bin/bash\nset -e\nrpm-ostree -y install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+fi
+if [ ! -z "${custom_script}" ]; then
+	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
+	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
+fi
+}
+
 chroot_BlendOS()
 {
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
@@ -4095,125 +4223,6 @@ if [ ! -z "${custom_script}" ]; then
 	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
 fi
-}
-
-chroot_ChimeraOS()
-{
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
-if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
-else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
-fi
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq libarchive libnewt lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip wget xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-/tmp/linuxloops/install_script
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_script <<INSTALL_SCRIPT
-#!/bin/bash
-set -e
-git clone -b master https://github.com/ChimeraOS/frzr.git /tmp/frzr
-cp /tmp/frzr/__frzr* /tmp/frzr/frzr* /usr/sbin/
-chmod 0755 /usr/sbin/__frzr* /usr/sbin/frzr*
-rm -r /tmp/frzr
-sed -i 's@/sys/firmware/efi/efivars@/sys@g' /usr/sbin/__frzr-deploy
-echo -e '#!/bin/bash\nexit 0' > /usr/sbin/frzr-release
-groupadd frzr
-usermod -aG frzr root
-ln -s /mnt /frzr_root
-if mountpoint -q /sys/firmware/efi/efivars; then mount -t tmpfs tmpfs /sys/firmware/efi/efivars; fi
-frzr-deploy chimeraos/chimeraos:$(echo ${chimeraos_version} | tr A-Z a-z)
-if mountpoint -q /sys/firmware/efi/efivars; then umount /sys/firmware/efi/efivars; fi
-btrfs subvolume snapshot /mnt/deployments/\$(ls /mnt/deployments/ | grep 'chimeraos-' | tail -1) /mnt/deployments/tmp
-btrfs property set -fts /mnt/deployments/tmp ro false
-mount -o subvol=deployments/tmp "${root_partition}" /mnt
-mount -o subvol=home "${root_partition}" /mnt/home
-truncate -s 0 /mnt/var/swapfile
-chattr +C /mnt/var/swapfile
-if [ -z {swap_size} ] || [ {swap_size} -eq 0 ]; then
-	fallocate -l 2G /mnt/var/swapfile
-else
-	fallocate -l {swap_size}G /mnt/var/swapfile
-fi
-chmod 0600 /mnt/var/swapfile
-mkswap /mnt/var/swapfile
-mount -t proc none /mnt/proc
-mount -t sysfs none /mnt/sys
-mount -t devtmpfs none /mnt/dev
-mount -t devpts none /mnt/dev/pts
-mount -t tmpfs -o mode=1777 none /mnt/dev/shm
-mount -t tmpfs none /mnt/run
-mount -t tmpfs -o mode=1777 none /mnt/tmp
-chroot /mnt <<'CHROOT_STEAM'
-set -e
-mkdir -p /var/lib/pacman
-cp -r /usr/var/lib/pacman/local /var/lib/pacman/
-pacman -Syu --noconfirm xorg-server-xvfb
-mkdir -p /home/gamer
-chown 1000:1000 /home/gamer
-sudo -Hu 'gamer' cp -rT /etc/skel /home/gamer
-sudo -Hu 'gamer' xvfb-run steam -exitsteam
-CHROOT_STEAM
-umount /mnt/tmp
-umount /mnt/run
-umount /mnt/dev/shm
-umount /mnt/dev/pts
-umount /mnt/dev
-umount /mnt/sys
-umount /mnt/proc
-umount /mnt/home
-umount /mnt
-btrfs subvolume delete /mnt/deployments/tmp
-if [ "${install_type}" == "image" ]; then
-	mkdir /initramfs
-	cp /tmp/linuxloops/install_initramfs /initramfs/linuxloops
-	cd /initramfs
-	mkdir -p ./usr/local/bin ./usr/local/etc ./usr/local/lib
-	cp -a /usr/bin/busybox ./usr/local/bin/
-	echo 'alias cat="/usr/local/bin/busybox cat"' >> ./usr/local/etc/profile
-	echo 'alias grep="/usr/local/bin/busybox grep"' >> ./usr/local/etc/profile
-	echo 'alias mkdir="/usr/local/bin/busybox mkdir"' >> ./usr/local/etc/profile
-	echo 'alias mknod="/usr/local/bin/busybox mknod"' >> ./usr/local/etc/profile
-	echo 'alias ps="/usr/local/bin/busybox ps"' >> ./usr/local/etc/profile
-	echo 'alias sh="/usr/local/bin/busybox sh"' >> ./usr/local/etc/profile
-	for i in \$(ldd /usr/bin/blkid | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
-	cp -a /usr/bin/blkid ./usr/local/bin/
-	echo 'alias blkid="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/blkid"' >> ./usr/local/etc/profile
-	for i in \$(ldd /usr/bin/kmod | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
-	cp -a /usr/bin/kmod ./usr/local/bin/
-	echo 'alias kmod="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/kmod"' >> ./usr/local/etc/profile
-	for i in \$(ldd /usr/bin/losetup | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
-	cp -a /usr/bin/losetup ./usr/local/bin/
-	echo 'alias losetup="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/losetup"' >> ./usr/local/etc/profile
-	for i in \$(ldd /usr/bin/modprobe | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
-	cp -a /usr/bin/modprobe ./usr/local/bin/
-	echo 'alias modprobe="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/modprobe"' >> ./usr/local/etc/profile
-	for i in \$(ldd /usr/bin/ntfs-3g | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
-	cp -a /usr/bin/ntfs-3g ./usr/local/bin/
-	echo 'alias ntfs-3g="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/ntfs-3g"' >> ./usr/local/etc/profile
-	for i in \$(ldd /usr/bin/ntfsfix | cut -d' ' -f3); do cp "\${i}" ./usr/local/lib/; done
-	cp -a /usr/bin/ntfsfix ./usr/local/bin/
-	echo 'alias ntfsfix="LD_LIBRARY_PATH=/usr/local/lib /usr/local/lib/ld-linux-x86-64.so.2 /usr/local/bin/ntfsfix"' >> ./usr/local/etc/profile
-	chmod 0755 ./linuxloops
-	find . | cpio -o -H newc > /mnt/efi/linuxloops.img
-	cd ..
-	rm -r /initramfs
-fi
-INSTALL_SCRIPT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_script
-
-initramfs_type="iso_init_chimera"
 }
 
 chroot_ChromeOS-Flex()
@@ -6219,7 +6228,7 @@ mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf install -y fedora-repos-rawhide
 dnf update -y --enablerepo=rawhide fedora-gpg-keys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -6237,7 +6246,6 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
 CHROOT_INIT
@@ -6451,7 +6459,7 @@ mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf install -y fedora-repos-rawhide
 dnf update -y --enablerepo=rawhide fedora-gpg-keys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -6469,7 +6477,6 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
 CHROOT_INIT
@@ -6683,7 +6690,7 @@ mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
 dnf install -y fedora-repos-rawhide
 dnf update -y --enablerepo=rawhide fedora-gpg-keys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core grubby openssl tar gstreamer1-plugins-bad-free gstreamer1-plugins-ugly-free
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -6701,7 +6708,6 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
 CHROOT_INIT
@@ -10353,51 +10359,7 @@ cat >/etc/apt/sources.list <<'SOURCES_LIST'
 deb [signed-by=/tmp/parrot-archive-keyring.gpg] ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
 # deb-src ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
 SOURCES_LIST
-cat >/etc/apt/preferences.d/parrot-pinning <<'PARROT_PINNING'
-Package: *
-Pin: release a=parrot6
-Pin-Priority: 600
-
-Package: *
-Pin: release a=parrot6-backports
-Pin-Priority: 599
-
-Package: *
-Pin: release a=parrot6-updates
-Pin-Priority: 600
-
-Package: *
-Pin: release a=parrot6-security
-Pin-Priority: 600
-
-Package: *
-Pin: release a=parrot
-Pin-Priority: 600
-
-Package: *
-Pin: release a=parrot-backports
-Pin-Priority: 599
-
-Package: *
-Pin: release a=parrot-updates
-Pin-Priority: 600
-
-Package: *
-Pin: release a=parrot-security
-Pin-Priority: 600
-
-Package: *
-Pin: release o=Debian
-Pin-Priority: 50
-
-Package: *
-Pin: release o=Kali
-Pin-Priority: 50
-
-Package: *
-Pin: release o=Ubuntu
-Pin-Priority: 50
-PARROT_PINNING
+curl -L https://github.com/ParrotSec/parrot-core/raw/refs/heads/master/system_configs/apt/preferences.d/parrot-pinning -o /etc/apt/preferences.d/parrot-pinning
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 curl -L https://deb.parrot.sh/parrot/keyring.gpg | gpg --dearmor > /tmp/parrot-archive-keyring.gpg
@@ -13335,6 +13297,7 @@ if [ -x /tmp/linuxloops/setup_and_mount_rootfs ]; then /tmp/linuxloops/setup_and
 rm -f /tmp/linuxloops/setup_and_mount_rootfs
 if [ -x /tmp/linuxloops/mount_efi ]; then /tmp/linuxloops/mount_efi; fi
 if [ -x /tmp/linuxloops/prepare_chroot ]; then /tmp/linuxloops/prepare_chroot; fi
+if ([ ! -z "${github}" ] && [ "${distribution}" == "Bazzite" ]) || ([ ! -z "${github}" ] && [ "${distribution}" == "Fedora-Atomic" ]); then exit 0; fi
 if [ -x /tmp/linuxloops/enter_chroot ]; then /tmp/linuxloops/enter_chroot; fi
 if [ -x /tmp/linuxloops/efi_entry ]; then /tmp/linuxloops/efi_entry; fi
 INITCHROOT
@@ -13349,7 +13312,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/partition_script <<PARTITIONDEVICE
 set -e
 if [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ]; then
 	(echo "g"; echo "n"; echo "2"; echo ""; echo "+64M"; echo "t"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "x"; echo "n"; echo "KERN-A"; echo "r"; echo "n"; echo "3"; echo ""; echo "+4G"; echo "t"; echo "3"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "x"; echo "n"; echo "3"; echo "ROOT-A"; echo "r"; echo "n"; echo "4"; echo ""; echo "+64M"; echo "t"; echo "4"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "x"; echo "n"; echo "4"; echo "KERN-B"; echo "r"; echo "n"; echo "5"; echo ""; echo "+4G"; echo "t"; echo "5"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "x"; echo "n"; echo "5"; echo "ROOT-B"; echo "r"; echo "n"; echo "6"; echo ""; echo "+1K"; echo "t"; echo "6"; echo "FE3A2A5D-4F32-41A7-B725-ACCC3285A309"; echo "x"; echo "n"; echo "6"; echo "KERN-C"; echo "r"; echo "n"; echo "7"; echo ""; echo "+1G"; echo "t"; echo "7"; echo "3CB8E202-3B7E-47DD-8A3C-7FF2A13CFCEC"; echo "x"; echo "n"; echo "7"; echo "ROOT-C"; echo "r"; echo "n"; echo "8"; echo ""; echo "+16M"; echo "t"; echo "8"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "8"; echo "OEM"; echo "r"; echo "n"; echo "9"; echo ""; echo "+1K"; echo "t"; echo "9"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "x"; echo "n"; echo "9"; echo "reserved"; echo "r"; echo "n"; echo "10"; echo ""; echo "+1K"; echo "t"; echo "10"; echo "2E0A753D-9E48-43B0-8337-B15192CB1B5E"; echo "x"; echo "n"; echo "10"; echo "reserved"; echo "r"; echo "n"; echo "11"; echo ""; echo "+8M"; echo "t"; echo "11"; echo "CAB6E88E-ABF3-4102-A07A-D4BB9BE3C1D3"; echo "x"; echo "n"; echo "11"; echo "RWFW"; echo "r"; echo "n"; echo "12"; echo ""; echo "+64M"; echo "t"; echo "12"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "12"; echo "EFI-SYSTEM"; echo "r"; echo "n"; echo "1"; echo ""; echo "+$(( ${install_sizeMB} - 9434 - 3 ))M"; echo "t"; echo "1"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "1"; echo "STATE"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
-elif [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "ChimeraOS" ]; then
+elif [ "${distribution}" == "BlissOS" ]; then
 	(echo "g"; echo "n"; echo "1"; echo ""; echo "+512M"; echo "t"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "EFI"; echo "r"; echo "n"; echo "2"; echo ""; echo "+$(( ${install_sizeMB} - 512 - 3 ))M"; echo "t"; echo "2"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "2"; echo "ROOT"; echo "r"; sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
 else
 	(echo "g"; echo "n"; echo "1"; echo ""; echo "+128M"; echo "t"; echo "C12A7328-F81F-11D2-BA4B-00A0C93EC93B"; echo "x"; echo "n"; echo "EFI"; echo "r"; echo "n"; echo "2"; echo ""; echo "+896M"; echo "t"; echo "2"; echo "BC13C2FF-59E6-4262-A352-B275FD6F7172"; echo "x"; echo "n"; echo "2"; echo "BOOT"; echo "r"; echo "n"; echo "3"; echo ""; echo "+$(( ${root_sizeMB} - 3 ))M"; echo "t"; echo "3"; echo "0FC63DAF-8483-4772-8E79-3D69D8477DE4"; echo "x"; echo "n"; echo "3"; echo "ROOT"; echo "r"$(if [ ${#extra_partitions[@]} -ne 0 ]; then for i in $(seq 0 $(( ${#extra_partitions[@]} - 1 ))); do echo -n "; echo \"n\"; echo \"$(( ${i} + 4 ))\"; echo \"\"; echo \"+$(( $(get_extra_partitions_attribute size ${i}) * 1024 ))M\"; echo \"t\"; echo \"$(( ${i} + 4 ))\"; echo \"0FC63DAF-8483-4772-8E79-3D69D8477DE4\"; echo \"x\"; echo \"n\"; echo \"$(( ${i} + 4 ))\"; echo \"$(echo $(get_extra_partitions_attribute name ${i}) | tr a-z A-Z)\"; echo \"r\""; done; fi); sleep 5; echo "w") | fdisk -w always -W always "${destination_device}"
@@ -13364,73 +13327,63 @@ if [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ]
 cat >"${bootstrapdir}"/tmp/linuxloops/setup_and_mount_rootfs <<SETUPFILESYSTEMS
 #!/bin/bash
 set -e
-if [ "${distribution}" == "ChimeraOS" ]; then
-	mkfs.btrfs -K -L frzr_root -f "${root_partition}"
-	mkdir -p /mnt
-	mount -o "compress-force=zstd:15" "${root_partition}" /mnt
-	btrfs subvolume create /mnt/var
-	btrfs subvolume create /mnt/home
-	chattr +C /mnt/home
-	mkdir -p /mnt/etc
-	mkdir -p /mnt/.etc
+if [ "${root_encryption}" == "Yes" ]; then
+	echo -n '${encryption_password}' | cryptsetup --type luks2 --cipher aes-xts-plain64 --hash sha256 --key-size 256 --pbkdf argon2id luksFormat "${root_partition}" -
+	echo -n '${encryption_password}' | cryptsetup --type luks2 --cipher aes-xts-plain64 --hash sha256 --key-size 256 luksOpen "${root_partition}" luks-"\$(blkid -s UUID -o value "${root_partition}")" -
+	if [ "${root_fstype}" == "btrfs" ]; then
+		mkfs.btrfs -K -L "${root_name}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")"
+		mount /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
+		btrfs subvolume create /mnt/@
+		if [ -z "${separate_home}" ]; then btrfs subvolume create /mnt/@home; fi
+		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then btrfs subvolume create /mnt/@swap; fi
+		umount /mnt
+		mount -o "${final_root_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
+	else
+		mkfs.ext4 -E nodiscard -F -L "${root_name}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")"
+		mount -o "${final_root_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
+	fi
+	if [ "$(get_extra_partitions_attribute isencryptionused)" == "Yes" ]; then
+		mkdir -p /mnt/root
+		chmod 0750 /mnt/root
+		dd bs=512 count=4 if=/dev/random of=/mnt/root/encryption.key iflag=fullblock
+		chmod 0400 /mnt/root/encryption.key
+		echo -n '${encryption_password}' | cryptsetup luksAddKey "${root_partition}" /mnt/root/encryption.key -
+	fi
 else
+	if [ "${root_fstype}" == "btrfs" ]; then
+		mkfs.btrfs -K -L "${root_name}" "${root_partition}"
+		mount "${root_partition}" /mnt
+		btrfs subvolume create /mnt/@
+		if [ -z "${separate_home}" ]; then btrfs subvolume create /mnt/@home; fi
+		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then btrfs subvolume create /mnt/@swap; fi
+		umount /mnt
+		mount -o "${final_root_mountoptions}" "${root_partition}" /mnt
+	else
+		mkfs.ext4 -E nodiscard -F -L "${root_name}" "${root_partition}"
+		mount -o "${final_root_mountoptions}" "${root_partition}" /mnt
+	fi
+fi
+if [ "${root_fstype}" == "btrfs" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then
-		echo -n '${encryption_password}' | cryptsetup --type luks2 --cipher aes-xts-plain64 --hash sha256 --key-size 256 --pbkdf argon2id luksFormat "${root_partition}" -
-		echo -n '${encryption_password}' | cryptsetup --type luks2 --cipher aes-xts-plain64 --hash sha256 --key-size 256 luksOpen "${root_partition}" luks-"\$(blkid -s UUID -o value "${root_partition}")" -
-		if [ "${root_fstype}" == "btrfs" ]; then
-			mkfs.btrfs -K -L "${root_name}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")"
-			mount /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
-			btrfs subvolume create /mnt/@
-			if [ -z "${separate_home}" ]; then btrfs subvolume create /mnt/@home; fi
-			if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then btrfs subvolume create /mnt/@swap; fi
-			umount /mnt
-			mount -o "${final_root_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
-		else
-			mkfs.ext4 -E nodiscard -F -L "${root_name}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")"
-			mount -o "${final_root_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt
+		if [ -z "${separate_home}" ]; then
+			mkdir /mnt/home
+			mount -o "${final_home_subvol_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt/home
 		fi
-		if [ "$(get_extra_partitions_attribute isencryptionused)" == "Yes" ]; then
-			mkdir -p /mnt/root
-			chmod 0750 /mnt/root
-			dd bs=512 count=4 if=/dev/random of=/mnt/root/encryption.key iflag=fullblock
-			chmod 0400 /mnt/root/encryption.key
-			echo -n '${encryption_password}' | cryptsetup luksAddKey "${root_partition}" /mnt/root/encryption.key -
+		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
+			mkdir -p /mnt/var/swap
+			mount -o "${final_swap_subvol_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt/var/swap
 		fi
 	else
-		if [ "${root_fstype}" == "btrfs" ]; then
-			mkfs.btrfs -K -L "${root_name}" "${root_partition}"
-			mount "${root_partition}" /mnt
-			btrfs subvolume create /mnt/@
-			if [ -z "${separate_home}" ]; then btrfs subvolume create /mnt/@home; fi
-			if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then btrfs subvolume create /mnt/@swap; fi
-			umount /mnt
-			mount -o "${final_root_mountoptions}" "${root_partition}" /mnt
-		else
-			mkfs.ext4 -E nodiscard -F -L "${root_name}" "${root_partition}"
-			mount -o "${final_root_mountoptions}" "${root_partition}" /mnt
+		if [ -z "${separate_home}" ]; then
+			mkdir /mnt/home
+			mount -o "${final_home_subvol_mountoptions}" "${root_partition}" /mnt/home
+		fi
+		if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
+			mkdir -p /mnt/var/swap
+			mount -o "${final_swap_subvol_mountoptions}" "${root_partition}" /mnt/var/swap
 		fi
 	fi
-	if [ "${root_fstype}" == "btrfs" ]; then
-		if [ "${root_encryption}" == "Yes" ]; then
-			if [ -z "${separate_home}" ]; then
-				mkdir /mnt/home
-				mount -o "${final_home_subvol_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt/home
-			fi
-			if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
-				mkdir -p /mnt/var/swap
-				mount -o "${final_swap_subvol_mountoptions}" /dev/mapper/luks-"\$(blkid -s UUID -o value "${root_partition}")" /mnt/var/swap
-			fi
-		else
-			if [ -z "${separate_home}" ]; then
-				mkdir /mnt/home
-				mount -o "${final_home_subvol_mountoptions}" "${root_partition}" /mnt/home
-			fi
-			if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
-				mkdir -p /mnt/var/swap
-				mount -o "${final_swap_subvol_mountoptions}" "${root_partition}" /mnt/var/swap
-			fi
-		fi
-	fi
+fi
 $(if [ ${#extra_partitions[@]} -ne 0 ]; then
 	for i in $(seq 0 $(( ${#extra_partitions[@]} - 1 ))); do
 		cat <<MOUNTPARTITION
@@ -13467,7 +13420,6 @@ $(if [ ${#extra_partitions[@]} -ne 0 ]; then
 MOUNTPARTITION
 	done
 fi)
-fi
 SETUPFILESYSTEMS
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/setup_and_mount_rootfs
 }
@@ -13482,10 +13434,6 @@ if [ "${distribution}" == "BlissOS" ]; then
 	mkfs.fat -F 32 -n 'EFI' "${efi_partition}"
 	mkdir -p /mnt/boot/efi
 	mount "${efi_partition}" /mnt/boot/efi
-elif [ "${distribution}" == "ChimeraOS" ]; then
-	mkfs.fat -F 32 -n 'frzr_efi' "${efi_partition}"
-	mkdir -p /mnt/efi
-	mount -o fmask=0137,dmask=0027 "${efi_partition}" /mnt/efi
 elif [ "${distribution}" == "NixOS" ] && [ "${install_type}" == "image" ]; then
 	mkfs.ext4 -E nodiscard -F -L "${boot_name}" "${boot_partition}"
 	if tune2fs -l "${boot_partition}" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "${boot_partition}"; fi
@@ -13515,7 +13463,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/mount_efi
 
 generare_enter_chroot()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/enter_chroot <<ENTERCHROOT
 #!/bin/bash
 set -e
@@ -13554,7 +13502,7 @@ else
 fi
 if [ "${environment}" == "Enlightenment" ]; then
 	dns_manager="connman/resolv.conf"
-elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Nobara" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "SteamOS" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+elif [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Nobara" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "SteamOS" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	dns_manager="systemd/resolve/stub-resolv.conf"
 else
 	dns_manager="NetworkManager/resolv.conf"
@@ -13591,12 +13539,12 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/enter_chroot
 
 generate_install_settings()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_settings <<APPLYSETTINGS
 #!/bin/bash
 set -e
 if [ ! -f /etc/locale.gen ]; then echo "${locale}.UTF-8 UTF-8" > /etc/locale.gen; else sed -i 's@#${locale}.UTF-8 UTF-8\|# ${locale}.UTF-8 UTF-8@${locale}.UTF-8 UTF-8@g' /etc/locale.gen; fi
-if [ ! "${distribution}" == "Fedora-Atomic" ]; then
+if [ ! "${distribution}" == "Bazzite" ] && [ ! "${distribution}" == "Fedora-Atomic" ]; then
 	localedef -i ${locale} -f UTF-8 ${locale}.UTF-8
 fi
 echo "LANG=${locale}.UTF-8" > /etc/locale.conf
@@ -13645,7 +13593,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_settings
 
 generate_install_secureboot()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_secureboot <<SECUREBOOT
 #!/bin/bash
 set -e
@@ -13756,7 +13704,7 @@ fi
 
 generate_install_nvidia()
 {
-if [ ! "${nvidia}" == "Yes" ]; then return; fi
+if [ ! "${nvidia}" == "Yes" ] || [ "${distribution}" == "Bazzite" ]; then return; fi
 if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "Manjaro" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
@@ -13779,7 +13727,8 @@ elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf install -y akmod-nvidia
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+dnf install -y akmod-nvidia xorg-x11-drv-nvidia
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora-Atomic" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -13818,7 +13767,7 @@ elif [ "${distribution}" == "Parrot" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver -t $(echo ${parrot_version} | tr A-Z a-z)-backports
+yes | DEBIAN_FRONTEND=noninteractive apt install -t $(echo ${parrot_version} | tr A-Z a-z)-backports nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Pop" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -13868,7 +13817,7 @@ fi
 
 generate_install_fstab()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
 if [ "${distribution}" == "NixOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_fstab <<GENERATEFSTAB
 #!/bin/bash
@@ -14073,21 +14022,21 @@ $(if [ ${#extra_partitions[@]} -ne 0 ]; then
 		if [ "$(get_extra_partitions_attribute encryption ${i})" == "Yes" ]; then
 			if [ "$(get_extra_partitions_attribute fstype ${i})" == "btrfs" ]; then
 				cat <<FSTAB
-echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))")) $(if [ "${distribution}" == "Fedora-Atomic" ] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 0" >> /etc/fstab
+echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))")) $(if ([ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]) && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 0" >> /etc/fstab
 FSTAB
 			else
 				cat <<FSTAB
-echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))")) $(if [ "${distribution}" == "Fedora-Atomic" ] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 2" >> /etc/fstab
+echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))")) $(if ([ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]) && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 2" >> /etc/fstab
 FSTAB
 			fi
 		else
 			if [ "$(get_extra_partitions_attribute fstype ${i})" == "btrfs" ]; then
 				cat <<FSTAB
-echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))") $(if [ "${distribution}" == "Fedora-Atomic" ] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 0" >> /etc/fstab
+echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))") $(if ([ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]) && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 0" >> /etc/fstab
 FSTAB
 			else
 				cat <<FSTAB
-echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))") $(if [ "${distribution}" == "Fedora-Atomic" ] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 2" >> /etc/fstab
+echo -e "/dev/disk/by-uuid/\$(blkid -s UUID -o value "${partition_path}$(( ${i} + 4 ))") $(if ([ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]) && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/home/*" ]] && [ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root" ] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/root/*" ]] && [[ ! "$(get_extra_partitions_attribute mountpoint ${i})" == "/var/*" ]]; then echo /var; fi)$(get_extra_partitions_attribute mountpoint ${i}) $(get_extra_partitions_attribute fstype ${i}) $(get_extra_partitions_attribute mountoptions ${i}) 0 2" >> /etc/fstab
 FSTAB
 			fi
 		fi
@@ -14744,42 +14693,9 @@ add_linuxloops_udev_end
 add_linuxloops_post
 }
 
-generate_iso_init_chimera()
-{
-add_linuxloops_pre
-add_linuxloops_recovery
-add_linuxloops_udev_start
-add_linuxloops_main
-add_linuxloops_udev_end
-cat >>"${bootstrapdir}"/tmp/linuxloops/install_initramfs <<'INITSCRIPT'
-if [ -z "$linuxloops_init" ]; then
-	if [ -x /init ]; then
-		linuxloops_init="/init"
-	elif [ -x /sbin/init ]; then
-		linuxloops_init="/sbin/init"
-	else
-		echo "linuxloops: No init system found." > /dev/kmsg
-		recovery_shell
-	fi
-fi
-
-echo "linuxloops: boot sequence finished." > /dev/kmsg
-
-umount /run
-umount /sys
-#umount /proc
-umount /dev > /dev/null 2>&1 || umount -l /dev > /dev/null 2>&1 || echo "linuxloops: /dev was not properly unmounted" > /dev/kmsg
-
-echo "$(cat /proc/cmdline) rootflags=\"subvol=deployments/$(cat /proc/cmdline | cut -d'/' -f2)\"" > /cmdline
-mount --bind /cmdline /proc/cmdline
-
-rootflags="subvol=deployments/$(cat /proc/cmdline | cut -d'/' -f2)" exec "$linuxloops_init"
-INITSCRIPT
-}
-
 generate_install_initramfs()
 {
-if [ "${initramfs_type}" == "initcpio" ] || [ "${initramfs_type}" == "initramfstools" ] || [ "${initramfs_type}" == "dracut" ] || [ "${initramfs_type}" == "nixos_config" ] || [ "${initramfs_type}" == "iso_init" ] || [ "${initramfs_type}" == "iso_init_chimera" ]; then
+if [ "${initramfs_type}" == "initcpio" ] || [ "${initramfs_type}" == "initramfstools" ] || [ "${initramfs_type}" == "dracut" ] || [ "${initramfs_type}" == "nixos_config" ] || [ "${initramfs_type}" == "iso_init" ]; then
 	generate_"${initramfs_type}"
 fi
 }
@@ -14802,7 +14718,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_swap
 
 generate_install_bootloader()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_bootloader <<INSTALLEFI
 #!/bin/bash
 set -e
@@ -14811,7 +14727,7 @@ if [ "${initramfs_type}" == "initcpio" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} "; fi; cmdline="\${cmdline}cryptdevice=UUID=\$(blkid -s UUID -o value "${root_partition}"):luks-\$(blkid -s UUID -o value "${root_partition}") rd.luks.uuid=\$(blkid -s UUID -o value "${root_partition}")"; fi
 elif [ "${initramfs_type}" == "initramfstools" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} "; fi; cmdline="\${cmdline}cryptopts=target=luks-\$(blkid -s UUID -o value "${root_partition}"),source=/dev/disk/by-uuid/\$(blkid -s UUID -o value "${root_partition}"),luks"; fi
-elif [ "${initramfs_type}" == "dracut" ] || [ "${distribution}" == "Fedora-Atomic" ]; then
+elif [ "${initramfs_type}" == "dracut" ] || [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} "; fi; cmdline="\${cmdline}rd.luks.uuid=\$(blkid -s UUID -o value "${root_partition}")"; fi
 fi
 if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
@@ -14879,7 +14795,7 @@ fi
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 rm -rf /boot/efi/EFI
 REINSTALLBOOTLOADER
-if [ "${distribution}" == "Fedora-Atomic" ]; then
+if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then
 		if [ "${root_fstype}" == "btrfs" ]; then
 			cmdline_root="root=UUID=\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value ${root_partition})) rw rootflags=subvol=@"
@@ -15229,7 +15145,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/efi_entry
 
 generare_install_userpw()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_userpw <<INSTALLUSERPW
 #!/bin/bash
 set -e
@@ -15271,20 +15187,20 @@ else
 	chroot /mnt /tmp/linuxloops/set_userpw
 	if [ -f /tmp/linuxloops/selinux_fix ]; then chroot /mnt /tmp/linuxloops/selinux_fix; fi
 fi
-rm /mnt/tmp/linuxloops/set_userpw
+rm -f /mnt/tmp/linuxloops/set_userpw
 INSTALLUSERPW
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_userpw
 }
 
 generate_selinux_fix()
 {
-if [ "${distribution}" != "AlmaLinux" ] && [ "${distribution}" != "Fedora" ] && [ "${distribution}" != "Fedora-Atomic" ] && [ "${distribution}" != "RockyLinux" ]; then return; fi
+if [ "${distribution}" != "AlmaLinux" ] && [ "${distribution}" != "Bazzite" ] && [ "${distribution}" != "Fedora" ] && [ "${distribution}" != "Fedora-Atomic" ] && [ "${distribution}" != "RockyLinux" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/selinux_fix <<SELINUXFIX
 #!/bin/bash
 set -e
 mkdir -p /var/lib/bluetooth /var/lib/NetworkManager
 chmod 0700 /var/lib/bluetooth /var/lib/NetworkManager
-if [ "${distribution}" == "Fedora-Atomic" ]; then
+if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]; then
 	ostree admin finalize-staged
 	echo "Applying selinux labels..."
 	echo '/var/swap(/.*)?       system_u:object_r:swapfile_t:s0' >> /etc/selinux/targeted/contexts/files/file_contexts.local
@@ -15334,7 +15250,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/selinux_fix
 
 generate_exit_chroot()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/exit_chroot <<EXITCHROOT
 #!/bin/bash
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
@@ -15474,7 +15390,6 @@ if mountpoint -q "${bootstrapdir}"/run; then umount "${bootstrapdir}"/run; fi
 if mountpoint -q "${bootstrapdir}"/dev/shm; then umount "${bootstrapdir}"/dev/shm; fi
 if mountpoint -q "${bootstrapdir}"/dev/pts; then umount "${bootstrapdir}"/dev/pts; fi
 if mountpoint -q "${bootstrapdir}"/dev; then umount "${bootstrapdir}"/dev; fi
-if [ "${distribution}" == "ChimeraOS" ] && mountpoint -q "${bootstrapdir}"/sys/firmware/efi/efivars; then umount "${bootstrapdir}"/sys/firmware/efi/efivars; fi
 if mountpoint -q "${bootstrapdir}"/sys/firmware/efi/efivars; then umount "${bootstrapdir}"/sys/firmware/efi/efivars; fi
 if mountpoint -q "${bootstrapdir}"/sys; then umount "${bootstrapdir}"/sys; fi
 if mountpoint -q "${bootstrapdir}"/proc; then umount "${bootstrapdir}"/proc; fi
@@ -15756,6 +15671,7 @@ generate_efi_entry
 generate_exit_chroot
 chroot "${bootstrapdir}" /tmp/linuxloops/bootstrap_init || return_value=1
 rm -f "${bootstrapdir}"/tmp/linuxloops/setup_and_mount_rootfs
+if ([ ! -z "${github}" ] && [ "${distribution}" == "Bazzite" ]) || ([ ! -z "${github}" ] && [ "${distribution}" == "Fedora-Atomic" ]); then exit 0; fi
 if [ "${return_value}" -eq 0 ]; then
 	generare_install_userpw
 	generate_selinux_fix
@@ -15803,7 +15719,7 @@ else
 	partition_path="${destination_device}"p
 fi
 efi_partition="${partition_path}"1
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "ChimeraOS" ]; then
+if [ "${distribution}" == "BlissOS" ]; then
 	root_partition="${partition_path}"2
 else
 	boot_partition="${partition_path}"2
@@ -15824,7 +15740,22 @@ img_path=$(if [ $(findmnt -n -o TARGET -T ${fullpath}) == "/" ]; then echo "$(re
 if [ "$(df -T "${fullpath}" | tail -1 | cut -d' ' -f2)" == "btrfs" ] && [ ! -z $(command -v btrfs) ]; then img_subvol="$(btrfs subvolume show $(findmnt -n -o TARGET -T ${fullpath}) | grep Name: | sed 's@\t\| @@g' | cut -d':' -f2)"; fi
 if [ ! -z "${img_subvol}" ]; then img_path="/${img_subvol}${img_path}"; fi
 if [ -z "${wsl}" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "debian" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
-if [ "${distribution}" == "BlissOS" ]; then
+if [ "${distribution}" == "Bazzite" ]; then
+config="menuentry 'Bazzite' --class '$(echo Bazzite | tr [:upper:] [:lower:])' {${remove_tpm}
+	img_path=\"${img_path}\"
+	img_uuid=\"${img_uuid}\"
+	search --no-floppy --set=root --file \"\${img_path}\"
+	loopback loop \"\${img_path}\"
+	linuxloops_args=\"rdinit=/linuxloops img_path=\${img_path} img_uuid=\${img_uuid}\"
+	export linuxloops_args
+	if [ -f (loop,2)/grub2/grub.cfg ]; then
+		configfile (loop,2)/grub2/grub.cfg
+	else
+		configfile (loop,2)/grub/grub.cfg
+	fi
+}
+"
+elif [ "${distribution}" == "BlissOS" ]; then
 config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
 	insmod regexp
 	img_path=\"${img_path}\"
@@ -15864,17 +15795,6 @@ menuentry '${distribution} settings' --class '$(echo ${distribution} | tr [:uppe
 		cros_secure cros_debug img_uuid=\${img_uuid} img_path=\${img_path}
 	initrd (loop,7)/lib/firmware/amd-ucode.img (loop,7)/lib/firmware/intel-ucode.img (loop,7)/initramfs.img
 }
-}
-"
-elif [ "${distribution}" == "ChimeraOS" ]; then
-config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
-	img_path=\"${img_path}\"
-	img_uuid=\"${img_uuid}\"
-	search --no-floppy --set=root --file \"\${img_path}\"
-	loopback loop \"\${img_path}\"
-	for chimera in (loop,1)/chimeraos-*; do set root=\$chimera; done
-	linux \$root/vmlinuz-linux rdinit=/linuxloops img_uuid=\${img_uuid} img_path=\${img_path} root=/dev/loop0p2 rw quiet splash loglevel=3 rd.systemd.show_status=auto rd.udev.log_priority=3 ibt=off split_lock_detect=off iomem=relaxed nowatchdog
-	initrd \$root/initramfs-linux.img (loop,1)/linuxloops.img
 }
 "
 elif [ "${distribution}" == "ChromeOS-Flex" ]; then
@@ -16090,14 +16010,14 @@ check_home_space()
 find "${linuxloopsdir}"/cache/* -type f -mtime +7 -exec rm {} \; 2>/dev/null
 for removedir in "${linuxloopsdir}"/tmp/*; do if [ -d "${removedir}" ] && ! mountpoint -q "${removedir}"; then rm -rf "${removedir}"; fi; done
 case "${distribution}" in
+	'Bazzite')
+		available_space_needed=4
+	;;
 	'BlissOS')
 		available_space_needed=3
 	;;
 	'Brunch')
 		available_space_needed=7
-	;;
-	'ChimeraOS')
-		available_space_needed=3
 	;;
 	'ChromeOS-Flex')
 		available_space_needed=7
@@ -17352,7 +17272,7 @@ until false; do
 						if [ -z "${destination}" ]; then exit 1; elif [ "${destination}" == "refresh" ]; then continue; fi
 						if [ "${destination}" == "return" ]; then break; continue; fi
 						fullpath="${destination}"
-						if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then
+						if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then
 							if [ $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) - 14 )) -eq 0 ]; then
 								install_size=14
 							else
@@ -17396,7 +17316,7 @@ until false; do
 						if [ "${install_size}" == "return" ]; then continue; fi
 						install_sizeMB=$((install_size*1024))
 					fi
-					if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ]; then
+					if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ]; then
 						until false; do
 							if [ "${btrfs_supported}" == "Yes" ]; then
 								fsoptions=$(gui_launch -m partitioning -t "Partitioning" -p "$(( ${install_size} - 12 ))^ext4 filesystem^ext4 filesystem with rootfs encryption^btrfs filesystem^btrfs filesystem with rootfs encryption^btrfs filesystem with compression^btrfs filesystem with compression and rootfs encryption")
@@ -17667,7 +17587,7 @@ if [ ! -z "${swap_size}" ]; then
 	if [ -z "${swap_size##*[!0-9]*}" ] || [ "${swap_size}" -lt 0 ]; then echo "Provided swap size is not a positive integer: ${swap_size}."; exit 1; fi
 	if [ "${swap_size}" -gt 0 ] && [ $(( install_sizeMB - (swap_size * 1024) )) -lt $(( 12 * 1024 )) ]; then echo "At least 12 GB should be available for the root partition, please increase the installation size or reduce the swap size."; exit 1; fi
 fi
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChimeraOS" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then echo -e "rootfs encryption is not supported with ${distribution}.\n"; exit 1; fi
 	if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then echo -e "Swap cannot be enabled by design with ${distribution}.\n"; exit 1; fi
 fi
@@ -17681,7 +17601,7 @@ if [ "${nvidia}" == "Yes" ] && [ ! "${nvidia_supported}" == "Yes" ]; then echo "
 if [ "${surface}" == "Yes" ] && [ ! "${surface_supported}" == "Yes" ]; then echo "Surface patches are not available for this distribution version."; exit 1; fi
 if [ "${live}" == "Yes" ] && ([ ! "${distribution}" == "Debian" ] && [ ! "${distribution}" == "Linuxmint" ]); then echo "Linuxloops live can only be created with Debian or Linuxmint distributions."; exit 1; fi
 if [ ! -z "${custom_script}" ] && [ ! -f "${custom_script}" ]; then echo "Custom script ${1} could not be found."; exit 1; fi
-if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ]; then
+if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ]; then
 	if [ "${test_distribution}" == "Yes" ]; then
 		useraccount_name="test"
 		useraccount_password="test"
