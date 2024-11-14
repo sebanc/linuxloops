@@ -48,8 +48,8 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |**Distribution**|**Versions**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
 |----------------|:------------------------------------------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
 |AlmaLinux       |9                                                             |✓                      |                                     |                                 |                            |
-|Arch            |Current                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
-|Artix           |Current/Openrc<br>Current/Runit<br>Current/S6<br>Current/Dinit|✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
+|Arch            |Stable<br>Testing                                             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
+|Artix           |Openrc<br>Runit<br>S6<br>Dinit<br>(Stable<br>or<br>Testing)   |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
 |Bazzite         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |                                 |                            |
 |BlendOS         |v4                                                            |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
 |BlissOS         |15<br>16                                                      |                       |                                     |                                 |                            |
@@ -70,7 +70,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Neon            |User<br>Testing<br>Unstable                                   |✓                      |✓                                    |✓                                |                            |
 |NixOS           |24.05<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
 |Nobara          |40                                                            |✓                      |✓                                    |✓                                |                            |
-|OpenSUSE        |15.6<br>Tumbleweed                                            |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
+|OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]       |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
