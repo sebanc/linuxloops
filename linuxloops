@@ -6921,7 +6921,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -7165,7 +7165,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -7409,7 +7409,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -10777,9 +10777,9 @@ ulimit -n 4096
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 nix-channel --update
-nix-env -iA nixpkgs.nixos-install-tools
+nix-env -iA nixos.nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
@@ -10903,6 +10903,8 @@ esac
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
 sudo nixos-enter << 'NIXOSCHROOT'
 set -e
+nix-channel --remove nixos
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 nix-channel --update
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager '${useraccount_name}'
@@ -10961,13 +10963,14 @@ ulimit -n 4096
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 nix-channel --update
-nix-env -iA nixpkgs.nixos-install-tools
+nix-env -iA nixos.nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
+rm -rf /mnt/tmp/*
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -11086,6 +11089,8 @@ esac
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
 sudo nixos-enter << 'NIXOSCHROOT'
 set -e
+nix-channel --remove nixos
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 nix-channel --update
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager '${useraccount_name}'
@@ -16464,6 +16469,12 @@ ${nixos_nvidia}
 
 $(cat "${custom_script}" 2>/dev/null)
 
+nix.gc = {
+  automatic = true;
+  dates = "weekly";
+  options = "--delete-older-than 30d";
+};
+nix.settings.auto-optimise-store = true;
 nixpkgs.config.allowUnfree = true;
 
 # This value determines the NixOS release from which the default
