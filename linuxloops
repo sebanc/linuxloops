@@ -6139,7 +6139,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -6245,14 +6245,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome dbus-x11
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome blueman policykit-1-gnome dbus-x11
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 esac
@@ -6401,7 +6401,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -6507,14 +6507,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 esac
@@ -6660,7 +6660,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -6766,14 +6766,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 esac
@@ -6921,7 +6921,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -7027,14 +7027,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome
 yes | DEBIAN_FRONTEND=noninteractive apt purge slim
 "
 	;;
@@ -7165,7 +7165,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -7271,14 +7271,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome
 yes | DEBIAN_FRONTEND=noninteractive apt purge slim
 "
 	;;
@@ -7409,7 +7409,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -7515,14 +7515,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm sddm-theme
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome
 yes | DEBIAN_FRONTEND=noninteractive apt purge slim
 "
 	;;
@@ -9026,7 +9026,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes synaptic kali-defaults-desktop kali-themes-common"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -9117,14 +9117,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm kali-deskt
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-xfce network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-xfce network-manager-gnome blueman policykit-1-gnome kali-linux-default
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome kali-linux-default
 "
 	;;
 esac
@@ -9284,7 +9284,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-wilma plymouth-themes fonts-ubuntu mintdesktop mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -9318,14 +9318,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-whiskermenu-plugin xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-goodies xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-whiskermenu-plugin xfce4-goodies xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome
 "
 	;;
 esac
@@ -9432,7 +9432,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade grub2-theme-mint"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -10411,7 +10411,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="grub-themes-mx plymouth-themes-mx synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -10680,19 +10680,19 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 desktop_base="${hardware_support} ${basic_packages}"
 case "${environment}" in
 	'Essentials')
 	default_session="plasma"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm neon-essentials-desktop libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm neon-essentials-desktop plasma-desktop libpam-kwallet5
 "
 	;;
 	'Full')
 	default_session="plasma"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm neon-desktop libpam-kwallet5
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} sddm neon-desktop plasma-desktop libpam-kwallet5
 "
 	;;
 esac
@@ -12190,7 +12190,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes synaptic parrot-themes parrot-wallpapers"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -12382,6 +12382,7 @@ esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
+surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
@@ -12567,27 +12568,27 @@ deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z)-updates main contrib
 deb http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
 # deb-src http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
 SOURCESLIST
-echo 'deb [signed-by=/tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg] http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A-Z a-z) pve-no-subscription' > /etc/apt/sources.list.d/pve-install-repo.list
+echo 'deb [signed-by=/tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg] http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A-Z a-z) pve-no-subscription' > /etc/apt/sources.list.d/pve-enterprise.list
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 curl -L https://enterprise.proxmox.com/debian/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg -o /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install proxmox-archive-keyring
 rm /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
-sed -i 's@ \[signed-by=/tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg]@@g' /etc/apt/sources.list.d/pve-install-repo.list
+sed -i 's@ \[signed-by=/tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg]@@g' /etc/apt/sources.list.d/pve-enterprise.list
 apt clean
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install -o APT::Immediate-Configure=false --reinstall \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') proxmox-ve postfix open-iscsi ifenslave
 yes | DEBIAN_FRONTEND=noninteractive dpkg --configure -a
+echo 'deb http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A-Z a-z) pve-no-subscription' > /etc/apt/sources.list.d/pve-enterprise.list
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 yes | DEBIAN_FRONTEND=noninteractive apt update
 yes | DEBIAN_FRONTEND=noninteractive apt install dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
-sed -i 's/^/#/' /etc/apt/sources.list.d/pve-enterprise.list
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes synaptic"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -13874,7 +13875,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -14026,14 +14027,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 esac
@@ -14174,7 +14175,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -14326,14 +14327,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 esac
@@ -14474,7 +14475,7 @@ CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
-basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
+basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
 desktop_base="${hardware_support} ${basic_packages} ${basic_themes} ${specific_packages}"
@@ -14626,14 +14627,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 esac
@@ -15441,7 +15442,7 @@ set -e
 curl https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
-yes | DEBIAN_FRONTEND=noninteractive apt purge ${surface_remove}
+if [ ! -z "${surface_remove}" ]; then yes | DEBIAN_FRONTEND=noninteractive apt purge ${surface_remove}; fi
 yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.1.tar.gz | tar xz -C /usr/src
 dkms add -m v4l2loopback -v 0.13.1
@@ -15465,7 +15466,7 @@ pacman-key --lsign-key 56C464BAAC421453
 echo -e '[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/' >> /etc/pacman.conf
 pacman -Syu
 # deepin-anything-arch package depends on linux package
-if [ "${environment}" != "Deepin" ] && [ "${environment}" != "Deepin/Full" ]; then pacman -Rsc --noconfirm ${surface_remove}; fi
+if [ ! -z "${surface_remove}" ] && [ "${environment}" != "Deepin" ] && [ "${environment}" != "Deepin/Full" ]; then pacman -Rsc --noconfirm ${surface_remove}; fi
 pacman -S --noconfirm linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms
 usermod -aG video '${useraccount_name}'
 SURFACEPACMAN
@@ -19269,14 +19270,14 @@ if [ ! -z "${generate_config}" ]; then generate_declarative_config; fi
 if [ "${install_type}" == "disk" ]; then
 	confirmation=$(gui_launch -m confirmation -t "Drive erasing confirmation" -q "WARNING: All data on device ${destination} will be erased, are you sure you want to continue ?")
 	if [ -z "${confirmation}" ]; then exit 1; fi
-	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} with ${environment} environment on drive ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui_pid" &
+	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment on drive ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui_pid" &
 	start_install
 	kill $(cat /tmp/linuxloops_gui_pid) 2>/dev/null
 	rm /tmp/linuxloops_gui_pid
-	if [ ${return_value} -eq 1 ]; then exit_with_error "Failed to perform the installation of ${distribution} in chroot."; fi
+	if [ ${return_value} -eq 1 ]; then exit_with_error "Failed to perform the installation of ${distribution} ${version} in chroot."; fi
 	gui_launch -m finished -t "Installation finished" -q "Linuxloops installation process is finished.<br><br>You can now reboot your computer and start ${distribution} by selecting your device in the UEFI boot menu."
 else
-	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} with ${environment} environment in the disk image ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui_pid" &
+	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment in the disk image ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui_pid" &
 	start_install
 	kill $(cat /tmp/linuxloops_gui_pid) 2>/dev/null
 	rm /tmp/linuxloops_gui_pid
