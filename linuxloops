@@ -15591,7 +15591,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -15612,7 +15612,7 @@ ninja -C build install
 cd /
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
-elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Zorin" ]; then
+elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
