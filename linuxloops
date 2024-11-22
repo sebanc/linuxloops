@@ -595,7 +595,7 @@ case "${distribution}" in
 		mirrors_supported=( "Parrot" )
 		nvidia_supported="Yes"
 		parrot_version="${version}"
-		surface_supported="Yes"
+		surface_supported="No"
 		;;
 	'Pop')
 		available_environments=( "None" "Full" )
@@ -1825,7 +1825,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="archlinux-wallpaper plymouth"
@@ -2078,7 +2078,16 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux linux-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -2123,7 +2132,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="archlinux-wallpaper plymouth"
@@ -2376,7 +2385,17 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux linux-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -2429,7 +2448,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
@@ -2458,7 +2477,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-openrc cups cups-openrc nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -2698,7 +2717,17 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -2754,7 +2783,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
@@ -2783,7 +2812,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-openrc cups cups-openrc nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -3023,7 +3052,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[lib32-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[lib32-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3076,7 +3117,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
@@ -3103,7 +3144,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-runit cups cups-runit nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-runit cups cups-runit ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -3322,7 +3363,17 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3378,7 +3429,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
@@ -3405,7 +3456,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-runit cups cups-runit nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-runit cups cups-runit ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -3624,7 +3675,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[lib32-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[lib32-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3677,7 +3740,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
 CHROOT_INIT
@@ -3704,7 +3767,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-s6 cups cups-s6 nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -3916,7 +3979,17 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3972,7 +4045,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
 CHROOT_INIT
@@ -3999,7 +4072,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-s6 cups cups-s6 nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -4211,7 +4284,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[lib32-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[lib32-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -4264,7 +4349,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
@@ -4291,7 +4376,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-dinit cups cups-dinit nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -4510,7 +4595,17 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -4566,7 +4661,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-echo -e "\n# Arch\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
+echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm linux linux-headers dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
@@ -4593,7 +4688,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-dinit cups cups-dinit nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg nss-mdns pulseaudio system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets ttf-roboto-mono pamac"
@@ -4812,7 +4907,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-jack2 lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[lib32]\n#Include = /etc/pacman.d/mirrorlist@[lib32]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[lib32-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[lib32-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -4995,7 +5102,7 @@ if [ "${environment}" == "None" ]; then
 echo \"track: 'blendos-base'\" >> /system.yaml
 "
 else
-	custom_packages="iptables accountsservice alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-xhost xorg-server gvfs udisks2 polkit zstd fwupd adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto archlinux-wallpaper flatpak blendos-wallpapers blend-web-store ${custom_packages}"
+	custom_packages="iptables accountsservice alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-xhost xorg-server gvfs udisks2 polkit zstd fwupd adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto archlinux-wallpaper flatpak blendos-wallpapers blend-web-store ${custom_packages}"
 	case "${environment}" in
 		'Cinnamon')
 		default_session="cinnamon"
@@ -5051,7 +5158,19 @@ impl: 'https://github.com/blend-os/tracks/raw/main'
 SYSTEMYAML
 ${install_desktop}
 echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml
-if [ ! -z "${custom_packages}" ]; then for i in ${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done; fi
+if [ ! -z "${custom_packages}" ]; then
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="\${custom_packages} lib32-nvidia-utils"; fi
+			echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf
+		else
+			custom_packages="${custom_packages}"
+		fi
+		sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf
+	fi
+	for i in \${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done
+fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
 echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml
 if [ "${surface}" == "Yes" ]; then echo -e "  - 'binder_linux-dkms'" >> /system.yaml; fi
@@ -5481,7 +5600,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="cachyos-wallpapers cachyos-plymouth-theme"
@@ -5735,7 +5854,16 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-cachyos linux-cachyos-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -6138,7 +6266,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
@@ -6353,7 +6481,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -6400,7 +6536,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
@@ -6615,7 +6751,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -6659,7 +6803,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base plymouth-themes synaptic"
@@ -6874,7 +7018,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -6920,7 +7072,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
@@ -7121,7 +7273,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -7164,7 +7324,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
@@ -7365,7 +7525,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -7408,7 +7576,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-base devuan-baseconf synaptic"
@@ -7609,7 +7777,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -7709,7 +7885,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -7768,6 +7952,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -7873,6 +8058,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /usr/share/glib-2.0/schemas
@@ -8104,6 +8290,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /usr/share/glib-2.0/schemas
@@ -8335,6 +8522,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /usr/share/glib-2.0/schemas
@@ -8491,6 +8679,7 @@ else
 fi
 /usr/lib/ostree/ostree-remount
 rpm-ostree start-daemon
+rpm-ostree -y install --apply-live https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -8616,6 +8805,11 @@ getuto
 rm /tmp/linuxloops/install_secureboot
 mkdir /etc/portage/package.license
 echo -e "*/* *" >> /etc/portage/package.license/custom
+if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+	echo 'ABI_X86="32 64"' >> /etc/portage/make.conf
+else
+	echo 'ABI_X86="64"' >> /etc/portage/make.conf
+fi
 echo -e "\nMAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
 echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
 echo -e "\nGRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
@@ -8625,11 +8819,11 @@ echo -e "\nVIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi ve
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
 	echo -e "USE=\"bluetooth dbus dracut elogind policykit mount pam -systemd truetype X\"" >> /etc/portage/make.conf
-	emerge app-portage/gentoolkit
+	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
 	echo -e "USE=\"a52 aac acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify libproxy lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
-	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2
+	emerge app-portage/gentoolkit app-eselect/eselect-repository x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2
 fi
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio
 echo -e '[main]\nhostname-mode=none' > /etc/NetworkManager/NetworkManager.conf
@@ -8639,7 +8833,7 @@ rc-update add NetworkManager default
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto net-print/cups net-print/cups-filters sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/numix-gtk-theme x11-themes/numix-icon-theme x11-themes/numix-icon-theme-circle x11-themes/oxygen-gtk x11-themes/papirus-icon-theme x11-themes/xcursor-themes"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/numix-gtk-theme x11-themes/numix-icon-theme x11-themes/numix-icon-theme-circle x11-themes/oxygen-gtk x11-themes/papirus-icon-theme x11-themes/xcursor-themes"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -8768,6 +8962,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
+	if echo "${custom_packages}" | grep -q 'steam-launcher'; then
+		eselect repository enable steam-overlay
+		emerge --sync
+	fi
 	echo -e "#!/bin/bash\nset -e\nemerge ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
@@ -8830,6 +9028,11 @@ getuto
 rm /tmp/linuxloops/install_secureboot
 mkdir /etc/portage/package.license
 echo -e "*/* *" >> /etc/portage/package.license/custom
+if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+	echo 'ABI_X86="32 64"' >> /etc/portage/make.conf
+else
+	echo 'ABI_X86="64"' >> /etc/portage/make.conf
+fi
 echo -e "\nMAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
 echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
 echo -e "\nGRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
@@ -8840,12 +9043,12 @@ echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
 	echo -e "USE=\"bluetooth dbus dracut -elogind policykit mount pam systemd truetype X\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
-	emerge app-portage/gentoolkit
+	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
 	echo -e "USE=\"a52 aac acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify libproxy lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
-	emerge app-portage/gentoolkit x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2
+	emerge app-portage/gentoolkit app-eselect/eselect-repository x11-base/xorg-server dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2
 fi
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio
 echo -e '[main]\nhostname-mode=none' > /etc/NetworkManager/NetworkManager.conf
@@ -8853,7 +9056,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto net-print/cups net-print/cups-filters sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/numix-gtk-theme x11-themes/numix-icon-theme x11-themes/numix-icon-theme-circle x11-themes/oxygen-gtk x11-themes/papirus-icon-theme x11-themes/xcursor-themes"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs kde-frameworks/breeze-icons kde-frameworks/oxygen-icons kde-plasma/breeze-gtk media-fonts/dejavu media-fonts/noto media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs x11-misc/xdg-user-dirs-gtk x11-themes/adapta-gtk-theme x11-themes/adwaita-icon-theme x11-themes/gnome-backgrounds x11-themes/numix-gtk-theme x11-themes/numix-icon-theme x11-themes/numix-icon-theme-circle x11-themes/oxygen-gtk x11-themes/papirus-icon-theme x11-themes/xcursor-themes"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -8980,6 +9183,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
+	if echo "${custom_packages}" | grep -q 'steam-launcher'; then
+		eselect repository enable steam-overlay
+		emerge --sync
+	fi
 	echo -e "#!/bin/bash\nset -e\nemerge ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
@@ -9025,7 +9232,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes synaptic kali-defaults-desktop kali-themes-common"
@@ -9210,7 +9417,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -9283,7 +9498,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-gen
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons mint-backgrounds-wilma plymouth-themes fonts-ubuntu mintdesktop mintinstall mintsystem mintupdate mintupgrade ubuntu-system-adjustments grub2-theme-mint"
@@ -9363,7 +9578,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -9431,7 +9654,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="mint-artwork mint-themes mint-x-icons mint-y-icons plymouth-themes fonts-ubuntu mintinstall mintsystem mintupdate mintupgrade grub2-theme-mint"
@@ -9485,7 +9708,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -9547,7 +9778,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k"
 specific_packages="manjaro-wallpapers-18.0 manjaro-settings-manager matcha-gtk-theme plymouth-theme-manjaro"
@@ -9771,7 +10002,14 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux66 linux66-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -9834,7 +10072,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k"
 specific_packages="manjaro-wallpapers-18.0 manjaro-settings-manager matcha-gtk-theme plymouth-theme-manjaro"
@@ -10058,7 +10296,14 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux66 linux66-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -10121,7 +10366,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xorg-server"
 basic_packages="gvfs packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k"
 specific_packages="manjaro-wallpapers-18.0 manjaro-settings-manager matcha-gtk-theme plymouth-theme-manjaro"
@@ -10345,7 +10590,14 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux66 linux66-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -10410,7 +10662,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="grub-themes-mx plymouth-themes-mx synaptic mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork desktop-defaults-mx-applications desktop-defaults-mx-common"
@@ -10613,7 +10865,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -10679,7 +10939,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-generic linux-headers-gen
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed ffmpeg iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 desktop_base="${hardware_support} ${basic_packages}"
 case "${environment}" in
@@ -10733,7 +10993,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -10777,14 +11045,14 @@ ulimit -n 4096
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+nix-channel --remove nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixos.nixos-install-tools
+nix-env -iA nixpkgs.nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
-rm -rf /mnt/tmp/*
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -10963,14 +11231,14 @@ ulimit -n 4096
 sudo mkdir -p /nix && sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+nix-channel --remove nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixos.nixos-install-tools
+nix-env -iA nixpkgs.nixos-install-tools
 sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
-rm -rf /mnt/tmp/*
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -11175,9 +11443,9 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -11241,6 +11509,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 INSTALL_DESKTOP
@@ -11325,7 +11594,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
+hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters ffmpeg nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
 basic_packages="dbus-1-x11 gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme papirus-icon-theme"
 specific_packages="adobe-sourcecodepro-fonts cantarell-fonts plymouth-branding-openSUSE plymouth-dracut wallpaper-branding-openSUSE"
@@ -11564,6 +11833,11 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
+	if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+		custom_packages="${custom_packages} libvulkan1-32bit libvulkan_intel-32bit libvulkan_radeon-32bit liberation-fonts"
+		if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-gl-G06-32bit"; fi
+		echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
 	echo -e "#!/bin/bash\nset -e\nzypper --non-interactive install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
@@ -11604,7 +11878,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
+hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters ffmpeg nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
 basic_packages="dbus-1-x11 gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme papirus-icon-theme"
 specific_packages="adobe-sourcecodepro-fonts cantarell-fonts plymouth-branding-openSUSE plymouth-dracut wallpaper-branding-openSUSE"
@@ -11843,6 +12117,11 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
+	if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+		custom_packages="${custom_packages} libvulkan1-32bit libvulkan_intel-32bit libvulkan_radeon-32bit liberation-fonts"
+		if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-gl-G06-32bit"; fi
+		echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
 	echo -e "#!/bin/bash\nset -e\nzypper --non-interactive install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
@@ -11883,7 +12162,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
+hardware_support="alsa-utils alsa-firmware at-spi2-core avahi cups cups-filters ffmpeg nss-mdns pipewire pipewire-pulseaudio wireplumber system-config-printer"
 basic_packages="dbus-1-x11 gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme dejavu-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme papirus-icon-theme"
 specific_packages="adobe-sourcecodepro-fonts cantarell-fonts plymouth-branding-openSUSE plymouth-dracut wallpaper-branding-openSUSE"
@@ -12122,6 +12401,11 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
+	if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+		custom_packages="${custom_packages} libvulkan1-32bit libvulkan_intel-32bit libvulkan_radeon-32bit liberation-fonts"
+		if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-gl-G06-32bit"; fi
+		echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
 	echo -e "#!/bin/bash\nset -e\nzypper --non-interactive install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
@@ -12194,7 +12478,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-amd64 linux-headers
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes synaptic parrot-themes parrot-wallpapers"
@@ -12390,7 +12674,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-headers-* linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then echo "yes | DEBIAN_FRONTEND=noninteractive apt install -t $(echo ${parrot_version} | tr A-Z a-z)-backports nvidia-driver-libs:i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -12492,7 +12784,7 @@ case "${environment}" in
 	install_desktop="
 dpkg --add-architecture i386
 yes | DEBIAN_FRONTEND=noninteractive apt update
-yes | DEBIAN_FRONTEND=noninteractive apt install pop-desktop gnome-online-accounts pop-wallpapers cosmic-store packagekit
+yes | DEBIAN_FRONTEND=noninteractive apt install pop-desktop gnome-online-accounts pop-wallpapers cosmic-store packagekit pipewire-audio-client-libraries
 if dpkg -s ubuntu-session &>/dev/null; then yes | DEBIAN_FRONTEND=noninteractive apt purge ubuntu-session; fi
 "
 	;;
@@ -12531,7 +12823,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -12592,7 +12884,7 @@ yes | DEBIAN_FRONTEND=noninteractive apt install dkms pve-firmware wireless-regd
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed ffmpeg libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes synaptic"
@@ -12803,7 +13095,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="pve-kernel-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -13166,7 +13466,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service s
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
+hardware_support="alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups ffmpeg nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber system-config-printer xorg-server"
 basic_packages="gvfs udisks2 xdg-user-dirs-gtk"
 basic_themes="adobe-source-code-pro-fonts adwaita-icon-theme breeze-gtk breeze-icons gnome-backgrounds materia-gtk-theme noto-fonts oxygen-icons papirus-icon-theme ttf-dejavu ttf-roboto"
 specific_packages="archlinux-wallpaper dbus-broker flatpak gamescope mangohud openssh weston steam-im-modules steam-jupiter-stable steam_notif_daemon vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio lib32-pipewire lib32-fontconfig ttf-liberation wqy-zenhei"
@@ -13745,7 +14045,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux linux-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -13853,7 +14153,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,ubuntu-minimal,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -13879,7 +14179,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters ffmpeg firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
@@ -13888,7 +14188,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Budgie/Full')
@@ -13901,14 +14201,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon-desktop-environment network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Enlightenment')
@@ -14049,34 +14349,6 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
-mkdir -p /usr/share/glib-2.0/schemas
-cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.gnome.desktop.background:Budgie]
-picture-uri="file:///usr/share/backgrounds/warty-final-ubuntu.png"
-[org.gnome.desktop.interface:Budgie]
-gtk-theme="Arc"
-icon-theme="Papirus"
-[org.cinnamon.desktop.background]
-picture-uri="file:///usr/share/backgrounds/warty-final-ubuntu.png"
-[org.cinnamon.desktop.interface]
-gtk-theme="Materia"
-icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-mkdir -p /etc/xdg/autostart
-cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
-[Desktop Entry]
-Type=Application
-Name=Nemo
-Comment=Start Nemo desktop at log in
-Exec=nemo-desktop
-OnlyShowIn=Budgie;
-AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
-X-GNOME-AutoRestart=true
-NoDisplay=true
-NEMODESKTOP
 if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
 INSTALL_DESKTOP
@@ -14128,7 +14400,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -14153,7 +14433,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,ubuntu-minimal,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -14179,7 +14459,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters ffmpeg firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
@@ -14188,7 +14468,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Budgie/Full')
@@ -14201,14 +14481,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon-desktop-environment network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Enlightenment')
@@ -14349,34 +14629,6 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
-mkdir -p /usr/share/glib-2.0/schemas
-cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.gnome.desktop.background:Budgie]
-picture-uri="file:///usr/share/backgrounds/warty-final-ubuntu.png"
-[org.gnome.desktop.interface:Budgie]
-gtk-theme="Arc"
-icon-theme="Papirus"
-[org.cinnamon.desktop.background]
-picture-uri="file:///usr/share/backgrounds/warty-final-ubuntu.png"
-[org.cinnamon.desktop.interface]
-gtk-theme="Materia"
-icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-mkdir -p /etc/xdg/autostart
-cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
-[Desktop Entry]
-Type=Application
-Name=Nemo
-Comment=Start Nemo desktop at log in
-Exec=nemo-desktop
-OnlyShowIn=Budgie;
-AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
-X-GNOME-AutoRestart=true
-NoDisplay=true
-NEMODESKTOP
 if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
 INSTALL_DESKTOP
@@ -14428,7 +14680,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -14453,7 +14713,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 yes | DEBIAN_FRONTEND=noninteractive apt install debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,ubuntu-minimal,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -14479,7 +14739,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
+hardware_support="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters ffmpeg firmware-sof-signed iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer xserver-xorg"
 basic_packages="dbus-x11 dbus-user-session gvfs-fuse packagekit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk-theme breeze-icon-theme fonts-dejavu fonts-noto fonts-roboto gnome-backgrounds gnome-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="plymouth-themes ubuntu-wallpapers fonts-ubuntu"
@@ -14488,7 +14748,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Budgie/Full')
@@ -14501,14 +14761,14 @@ yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-g
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter cinnamon-desktop-environment network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
+yes | DEBIAN_FRONTEND=noninteractive apt install ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome notification-daemon update-manager
 "
 	;;
 	'Enlightenment')
@@ -14649,34 +14909,6 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
-mkdir -p /usr/share/glib-2.0/schemas
-cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.gnome.desktop.background:Budgie]
-picture-uri="file:///usr/share/backgrounds/warty-final-ubuntu.png"
-[org.gnome.desktop.interface:Budgie]
-gtk-theme="Arc"
-icon-theme="Papirus"
-[org.cinnamon.desktop.background]
-picture-uri="file:///usr/share/backgrounds/warty-final-ubuntu.png"
-[org.cinnamon.desktop.interface]
-gtk-theme="Materia"
-icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-mkdir -p /etc/xdg/autostart
-cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
-[Desktop Entry]
-Type=Application
-Name=Nemo
-Comment=Start Nemo desktop at log in
-Exec=nemo-desktop
-OnlyShowIn=Budgie;
-AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
-X-GNOME-AutoRestart=true
-NoDisplay=true
-NEMODESKTOP
 if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
 INSTALL_DESKTOP
@@ -14728,7 +14960,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -14746,7 +14986,7 @@ set -e
 echo 'repository=${mirror_Void}/$(echo ${void_version} | tr A-Z a-z)' > /usr/share/xbps.d/00-repository-main.conf
 xbps-install -Syu xbps
 xbps-install -Syu
-xbps-install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+xbps-install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux void-repo-nonfree xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
@@ -14769,7 +15009,7 @@ SETTINGS
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-filters mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon nss-mdns pulseaudio sof-firmware system-config-printer xorg"
+hardware_support="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-filters ffmpeg mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon nss-mdns pulseaudio sof-firmware system-config-printer xorg"
 basic_packages="dbus-elogind-x11 gvfs PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icons dejavu-fonts-ttf noto-fonts-ttf fonts-roboto-ttf gnome-backgrounds oxygen-icons5 papirus-icon-theme"
 specific_packages="font-adobe-source-code-pro"
@@ -14915,7 +15155,16 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nxbps-install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq '32bit\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} libgcc-32bit libstdc++-32bit libdrm-32bit libglvnd-32bit liberation-fonts-ttf"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-libs-32bit"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "xbps-install -y void-repo-multilib-nonfree" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "xbps-install -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nxbps-install -y ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -15081,7 +15330,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "yes | DEBIAN_FRONTEND=noninteractive apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\nyes | DEBIAN_FRONTEND=noninteractive apt install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -15440,7 +15697,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Parrot" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -15448,14 +15705,14 @@ curl https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/ke
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 if [ ! -z "${surface_remove}" ]; then yes | DEBIAN_FRONTEND=noninteractive apt purge ${surface_remove}; fi
-yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
+yes | DEBIAN_FRONTEND=noninteractive apt install linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libtiff-dev qt6-base-dev qt6-tools-dev-tools libqt6opengl6-dev
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.1.tar.gz | tar xz -C /usr/src
 dkms add -m v4l2loopback -v 0.13.1
 ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g' | xargs -n1 /usr/lib/dkms/dkms_autoinstaller start
-git clone -b v0.3.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
+git clone -b v0.3.2 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
 sed -i "s@-Wdeprecated-enum-enum-conversion@@g" ./meson.build
-meson build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
+meson setup build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
 ninja -C build
 ninja -C build install
 cd /
@@ -15521,7 +15778,7 @@ elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver
+yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver nvidia-vulkan-icd
 INSTALLNVIDIA
 elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -15533,14 +15790,12 @@ elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 dnf install -y akmod-nvidia xorg-x11-drv-nvidia
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora-Atomic" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-rpm-ostree -y install --apply-live https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 rpm-ostree -y install akmod-nvidia xorg-x11-drv-nvidia
 INSTALLNVIDIA
 elif [ "${distribution}" == "Gentoo" ]; then
@@ -15602,7 +15857,7 @@ if [ "${opensuse_version}" == "Slowroll" ] || [ "${opensuse_version}" == "Tumble
 else
 	zypper --non-interactive install openSUSE-repos-Leap-NVIDIA
 fi
-zypper --non-interactive install --auto-agree-with-licenses nvidia-glG06 nvidia-utils-G06 x11-video-nvidiaG06
+zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-utils-G06 x11-video-nvidiaG06
 INSTALLNVIDIA
 elif [ "${distribution}" == "Parrot" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -15626,8 +15881,6 @@ elif [ "${distribution}" == "Void" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-xbps-install -y void-repo-nonfree
-xbps-install -Syu
 xbps-install -y nvidia
 INSTALLNVIDIA
 fi
@@ -16081,7 +16334,7 @@ generate_initcpio()
 cat >"${bootstrapdir}"/tmp/linuxloops/install_initramfs <<INITCPIOSTART
 #!/bin/bash
 set -e
-if [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "SteamOS" ]; then
+if [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "SteamOS" ] || [ "${environment}" == "None" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then
 		sed -i 's@ block filesystems fsck)@ block encrypt filesystems fsck linuxloops)@g' /etc/mkinitcpio.conf
 	else
@@ -16116,6 +16369,10 @@ build() {
 	add_module "intel_lpss_pci"
 	add_module "loop"
 	add_module "nouveau"
+	add_module "nvidia"
+	add_module "nvidia_modeset"
+	add_module "nvidia_uvm"
+	add_module "nvidia_drm"
 	add_module "nvme"
 	add_module "quota_v1"
 	add_module "quota_v2"
@@ -16224,6 +16481,10 @@ esac
 	manual_add_modules "intel_lpss_pci"
 	manual_add_modules "loop"
 	manual_add_modules "nouveau"
+	manual_add_modules "nvidia"
+	manual_add_modules "nvidia_modeset"
+	manual_add_modules "nvidia_uvm"
+	manual_add_modules "nvidia_drm"
 	manual_add_modules "nvme"
 	manual_add_modules "quota_v1"
 	manual_add_modules "quota_v2"
@@ -16315,6 +16576,10 @@ installkernel() {
 	instmods "intel_lpss_pci"
 	instmods "loop"
 	instmods "nouveau"
+	instmods "nvidia"
+	instmods "nvidia_modeset"
+	instmods "nvidia_uvm"
+	instmods "nvidia_drm"
 	instmods "nvme"
 	instmods "quota_v1"
 	instmods "quota_v2"
@@ -16462,9 +16727,13 @@ services.pipewire = {
 };
 services.printing.enable = true;
 
-environment.systemPackages = with pkgs; [ ntfs3g openssl sbsigntool ${custom_packages} ];
+environment.systemPackages = with pkgs; [ ffmpeg ntfs3g openssl sbsigntool ${custom_packages} ];
+$(if echo "${custom_packages}" | grep -wq 'steam'; then echo -e 'programs.steam = {\n  enable = true;\n  remotePlay.openFirewall = true;\n  dedicatedServer.openFirewall = true;\n  localNetworkGameTransfers.openFirewall = true;\n};'; fi)
 
 ${nixos_desktop}
+
+hardware.opengl.enable = true;
+$(if echo "${custom_packages}" | grep -wq 'steam\|wine'; then echo -e 'hardware.opengl.driSupport32Bit = true;'; fi)
 ${nixos_nvidia}
 
 $(cat "${custom_script}" 2>/dev/null)
@@ -16490,7 +16759,7 @@ echo -e '# Do not modify this file which contains the linuxloops configuration.\
 cat /tmp/linuxloops/fstab >>/mnt/etc/nixos/linuxloops.nix
 cat >>/mnt/etc/nixos/linuxloops.nix <<'NIXOSLINUXLOOPS'
 #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/profiles/all-hardware.nix
-boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "amdgpu" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "i915" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "nouveau" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
+boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "amdgpu" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "i915" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "nouveau" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" $(if [ "${nvidia}" == "Yes" ]; then echo '"nvidia" "nvidia_modeset" "nvidia_uvm" "nvidia_drm" '; fi)];
 
 boot.initrd.compressor="gzip";
 boot.initrd.extraUtilsCommands = ''
@@ -16931,7 +17200,7 @@ if [ "${distribution}" == "Linuxmint" ]; then
 	yes | DEBIAN_FRONTEND=noninteractive apt install \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox gedit gparted evince python3-venv python3-pyqt6.qtwebengine language-selector-gnome
 else
 	yes | DEBIAN_FRONTEND=noninteractive apt purge breeze-gtk-theme breeze-icon-theme oxygen-icon-theme
-	yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox-esr gedit gparted python3-venv python3-pyqt6.qtwebengine
+	yes | DEBIAN_FRONTEND=noninteractive apt install nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox-esr gedit gparted python3-venv python3-pyqt6.qtwebengine
 fi
 apt clean
 INSTALLLIVE

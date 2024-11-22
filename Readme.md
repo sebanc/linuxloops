@@ -30,8 +30,7 @@ Linuxloops can be used from any Linux distribution or from Windows WSL, it has l
 Note: Windows WSL does not allow to write directly to a disk but you can create disk images and flash them to a drive using Rufus/Etcher or boot them from [Grub2Win][Grub2Win link].  
 
 For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
-- The "EPEL" repo for RedHat based distributions as it contains necessary packages for standard use.  
-- The "RPM fusion" repo for Fedora when the nvidia proprietary driver installation is selected.  
+- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distributions that are enabled by default as they contain necessary packages for standard use.  
 - For Arch based distributions, the "shim-signed" AUR package is included in order to support Secure Boot.  
 
 
@@ -71,7 +70,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |NixOS           |24.05<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
 |Nobara          |40                                                            |✓                      |✓                                    |✓                                |                            |
 |OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
-|Parrot          |Lory                                                          |disk images only       |✓                                    |✓                                |[notes][Parrot-notes]       |
+|Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
 |Qubes           |4.2.3                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |

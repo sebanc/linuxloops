@@ -22,9 +22,9 @@ The default password for the "live" user account is: "linuxloops".
 
 ## With Linux
 
-Download the live image and run the following command to write it to the disk (this example assumes your drive is /dev/sdX:  
+Download the live image and run the following command from the directory containing the linuxloops live image 7z archive to write it to the disk (this example assumes your USB flashdrive is /dev/sdX:  
 
-`7z x linuxloops_live_XXXXXXXX.7z linuxloops_live_*.img -so | sudo dd iflag=fullblock of=/dev/sdX oflag=direct conv=fsync bs=1M status=progress`  
+`7z x $(ls linuxloops_live_????????.7z | tail -1) linuxloops_live_*.img -so | sudo dd iflag=fullblock of=/dev/sdX oflag=direct conv=fsync bs=1M status=progress`  
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
@@ -32,7 +32,7 @@ If Secure Boot is enabled, you should see the blue shim screen, select "Enroll k
 
 ## With Windows
 
-Install 7zip and extract the linuxloops_live_XXXXXXXX.7z file.  
+Install 7zip and extract the linuxloops live 7z file.  
 
 Write the resulting image file to your USB flashdrive using Rufus, Etcher or a similar tool.  
 
