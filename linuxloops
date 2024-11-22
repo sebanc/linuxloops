@@ -7956,7 +7956,7 @@ dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
+hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed ffmpeg mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="dbus-x11 gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="dnfdragora dnf-plugin-system-upgrade f39-backgrounds plymouth-system-theme"
@@ -8058,7 +8058,6 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /usr/share/glib-2.0/schemas
@@ -8185,10 +8184,11 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
+hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed ffmpeg mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="dbus-x11 gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="dnfdragora dnf-plugin-system-upgrade f39-backgrounds plymouth-system-theme"
@@ -8290,7 +8290,6 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /usr/share/glib-2.0/schemas
@@ -8417,10 +8416,11 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
+hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed ffmpeg mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="dbus-x11 gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="dnfdragora dnf-plugin-system-upgrade f39-backgrounds plymouth-system-theme"
@@ -8522,7 +8522,6 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /usr/share/glib-2.0/schemas
@@ -11449,7 +11448,7 @@ dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
+hardware_support="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed ffmpeg mesa-vulkan-drivers nss-mdns system-config-printer xorg-x11-drivers"
 basic_packages="dbus-x11 gvfs-fuse PackageKit udisks2 xdg-user-dirs-gtk"
 basic_themes="adwaita-icon-theme breeze-gtk breeze-icon-theme dejavu-sans-fonts google-noto-sans-fonts google-roboto-fonts gnome-backgrounds materia-gtk-theme oxygen-icon-theme papirus-icon-theme"
 specific_packages="desktop-backgrounds ffmpeg flatpak gamemode gamescope goverlay lutris mangohud nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome openh264 plymouth-system-theme protonup-qt steam vkBasalt winetricks yumex"
@@ -11509,7 +11508,6 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 INSTALL_DESKTOP
@@ -16369,10 +16367,6 @@ build() {
 	add_module "intel_lpss_pci"
 	add_module "loop"
 	add_module "nouveau"
-	add_module "nvidia"
-	add_module "nvidia_modeset"
-	add_module "nvidia_uvm"
-	add_module "nvidia_drm"
 	add_module "nvme"
 	add_module "quota_v1"
 	add_module "quota_v2"
@@ -16384,6 +16378,10 @@ build() {
 	add_module "surface_hid_core"
 	add_module "usbhid"
 	add_module "xhci_pci"
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'add_module "nvidia"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'add_module "nvidia_modeset"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'add_module "nvidia_uvm"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'add_module "nvidia_drm"'; fi)
 
 	add_binary "bash"
 	add_binary "blkid"
@@ -16481,10 +16479,6 @@ esac
 	manual_add_modules "intel_lpss_pci"
 	manual_add_modules "loop"
 	manual_add_modules "nouveau"
-	manual_add_modules "nvidia"
-	manual_add_modules "nvidia_modeset"
-	manual_add_modules "nvidia_uvm"
-	manual_add_modules "nvidia_drm"
 	manual_add_modules "nvme"
 	manual_add_modules "quota_v1"
 	manual_add_modules "quota_v2"
@@ -16496,6 +16490,10 @@ esac
 	manual_add_modules "surface_hid_core"
 	manual_add_modules "usbhid"
 	manual_add_modules "xhci_pci"
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'manual_add_modules "nvidia"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'manual_add_modules "nvidia_modeset"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'manual_add_modules "nvidia_uvm"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'manual_add_modules "nvidia_drm"'; fi)
 
 	copy_exec "\$(command -v bash)"
 	copy_exec "\$(command -v blkid)"
@@ -16576,10 +16574,6 @@ installkernel() {
 	instmods "intel_lpss_pci"
 	instmods "loop"
 	instmods "nouveau"
-	instmods "nvidia"
-	instmods "nvidia_modeset"
-	instmods "nvidia_uvm"
-	instmods "nvidia_drm"
 	instmods "nvme"
 	instmods "quota_v1"
 	instmods "quota_v2"
@@ -16591,6 +16585,10 @@ installkernel() {
 	instmods "surface_hid_core"
 	instmods "usbhid"
 	instmods "xhci_pci"
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'instmods "nvidia"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'instmods "nvidia_modeset"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'instmods "nvidia_uvm"'; fi)
+	$(if [ "${nvidia}" == "Yes" ]; then echo 'instmods "nvidia_drm"'; fi)
 }
 
 install() {
