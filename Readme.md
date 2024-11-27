@@ -71,6 +71,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Nobara          |40                                                            |✓                      |✓                                    |✓                                |                            |
 |OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
+|PikaOS          |Nest                                                          |disk images only       |✓                                    |✓                                |                            |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
 |Qubes           |4.2.3                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
