@@ -57,7 +57,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |ChromeOS-Flex   |Stable                                                        |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
 |Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing<br>Unstable                               |✓                      |✓                                    |                                 |                            |
-|Elementary      |7                                                             |✓                      |✓                                    |✓                                |                            |
+|Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
 |Fedora          |41<br>42<br>Rawhide                                           |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
 |Fedora-Atomic   |41<br>Rawhide                                                 |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |

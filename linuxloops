@@ -115,9 +115,9 @@ case "${distribution}" in
 		default_version="Daedalus"
 		;;
 	'Elementary')
-		available_versions=( "7" )
+		available_versions=( "8" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="7"
+		default_version="8"
 		;;
 	'Fedora')
 		available_versions=( "41" "42" "Rawhide" )
@@ -403,14 +403,14 @@ case "${distribution}" in
 		available_environments=( "None" "Full" )
 		bootloader_id="ubuntu"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc ubuntu jammy default"
+		bootstrap="lxc ubuntu noble default"
 		btrfs_supported="Yes"
 		elementary_version="${version}"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Ubuntu" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		ubuntu_version="Jammy"
+		ubuntu_version="Noble"
 		;;
 	'Fedora')
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -3110,7 +3110,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/runit/sv/avahi-daemon /etc/runit/sv/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -3418,7 +3418,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/runit/sv/avahi-daemon /etc/runit/sv/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -3725,7 +3725,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/s6/adminsv/default/contents.d/avahi-daemon /etc/s6/adminsv/default/contents.d/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -4026,7 +4026,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/s6/adminsv/default/contents.d/avahi-daemon /etc/s6/adminsv/default/contents.d/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -4326,7 +4326,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="../avahi-daemon ../cupsd"
 case "${environment}" in
 	'Budgie')
@@ -4634,7 +4634,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="../avahi-daemon ../cupsd"
 case "${environment}" in
 	'Budgie')
@@ -6799,16 +6799,16 @@ DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} lightdm slick-gree
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
@@ -7558,16 +7558,16 @@ DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} lightdm slick-gree
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
@@ -7725,7 +7725,7 @@ add-apt-repository ppa:elementary-os/stable -y
 add-apt-repository ppa:elementary-os/os-patches -y
 apt clean
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g')
+DEBIAN_FRONTEND=noninteractive apt install -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') elementary-standard
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
@@ -7737,8 +7737,7 @@ case "${environment}" in
 	'Full')
 	default_session="pantheon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y pantheon-greeter elementary-desktop
-DEBIAN_FRONTEND=noninteractive apt purge -y gdm3 ubuntu-session
+DEBIAN_FRONTEND=noninteractive apt install -y pantheon pantheon-shell elementary-desktop elementary-artwork
 "
 	;;
 esac
@@ -7944,7 +7943,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install -y --disablerepo=rpmfusion-free-rawhide ffmpeg libheif
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -8167,7 +8166,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install -y --disablerepo=rpmfusion-free-rawhide ffmpeg libheif
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -8390,7 +8389,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install -y --disablerepo=rpmfusion-free-rawhide ffmpeg libheif
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -11341,7 +11340,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install -y --disablerepo=rpmfusion-free-rawhide ffmpeg libheif
+dnf swap -y ffmpeg-free ffmpeg --allowerasing
 ${install_desktop}
 systemctl enable ${desktop_services}
 INSTALL_DESKTOP
@@ -12530,13 +12529,14 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-echo -e '## This file is deprecated in PikaOS.\n## See `man deb822` and /etc/apt/sources.list.d/system.sources.' > /etc/apt/sources.list
+rm /etc/apt/sources.list
 curl -L https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/sources.list.d/system.sources -o /etc/apt/sources.list.d/system.sources
 if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
 curl -L https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/keyrings/pika-keyring.gpg.key -o /etc/apt/keyrings/pika-keyring.gpg.key
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 echo -e 'Package: *\nPin: release a=pika\nPin-Priority: 1000' > /etc/apt/preferences.d/downgrade
+apt clean
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') pika-sources
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
@@ -15647,7 +15647,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "PikaOS" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "PikaOS" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -15668,7 +15668,7 @@ ninja -C build install
 cd /
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
-elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Zorin" ]; then
+elif [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
