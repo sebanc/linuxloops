@@ -58,7 +58,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing<br>Unstable                               |✓                      |✓                                    |                                 |                            |
 |Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
-|Fedora          |41<br>42<br>Rawhide                                           |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
+|Fedora          |41<br>Rawhide                                                 |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
 |Fedora-Atomic   |41<br>Rawhide                                                 |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |

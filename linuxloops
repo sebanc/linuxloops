@@ -120,8 +120,8 @@ case "${distribution}" in
 		default_version="8"
 		;;
 	'Fedora')
-		available_versions=( "41" "42" "Rawhide" )
-		available_versions_longname=( "41_(Stable)" "42_(Testing)" "Rawhide_(Unstable)" )
+		available_versions=( "41" "Rawhide" )
+		available_versions_longname=( "41_(Stable)" "Rawhide_(Unstable)" )
 		default_version="41"
 		;;
 	'Fedora-Atomic')
@@ -6428,7 +6428,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 DEBIAN_FRONTEND=noninteractive apt install -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,linux-sysctl-defaults,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -6692,7 +6692,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 DEBIAN_FRONTEND=noninteractive apt install -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,linux-sysctl-defaults,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -7792,229 +7792,6 @@ fi
 }
 
 chroot_Fedora-41()
-{
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-if [ ! -z "${mirror_Fedora}" ]; then
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates-testing.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
-fi
-dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
-mount --bind /sys /mnt/sys
-mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
-dnf install -y fedora-repos-rawhide
-dnf update -y --enablerepo=rawhide fedora-gpg-keys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade grubby openssl tar
-if [ ! -z "${mirror_Fedora}" ]; then
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
-fi
-umount /mnt/sys
-umount /mnt/proc
-umount /mnt/dev
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-noto-sans-fonts google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
-desktop_services="avahi-daemon.service cups.service"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-defaults gnome-terminal nemo blueman dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Budgie/Full')
-	default_session="budgie-desktop"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @budgie-desktop @budgie-desktop-apps dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter cinnamon clutter-gtk gnome-terminal nemo paper-icon-theme blueman dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon/Full')
-	default_session="cinnamon"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environment dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-dnf install -y ${desktop_base} gdm gnome-shell gnome-backgrounds gnome-icon-theme nautilus gnome-terminal gnome-software gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-dnf install -y ${desktop_base} gdm @gnome-desktop xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @i3 volumeicon network-manager-applet blueman dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @lxde-desktop-environment lxde-icon-theme blueman dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt')
-	default_session="lxqt"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @lxqt-desktop-environment lxqt-themes blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter mate-desktop marco network-manager-applet blueman mate-session-manager mate-media mate-power-manager caja mate-terminal mate-themes libgnome-keyring dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @mate-desktop-environment dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet breeze-gtk breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment xdg-desktop-portal-kde
-"
-	;;
-	'Xfce')
-	default_session="xfce"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter xfdesktop xfce4-session xfce4-settings xfce4-notifyd yaru-theme network-manager-applet blueman thunar xfce4-appfinder xfce4-pulseaudio-plugin xfce4-power-manager xfce4-terminal  xfce4-settings libgnome-keyring dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce/Full')
-	default_session="xfce"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @xfce-desktop-environment dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-esac
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
-${install_desktop}
-systemctl enable ${desktop_services}
-mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
-<?xml version="1.0" encoding="UTF-8"?>
-<channel name="xsettings" version="1.0">
-  <property name="Net" type="empty">
-    <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia-dark"/>
-  </property>
-</channel>
-XFCETHEME
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			mkdir -p /etc/lightdm/lightdm.conf.d
-			echo -e '[Seat:*]\nautologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-initramfs_type="dracut"
-if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\ndnf install -y ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
-chroot_Fedora-42()
 {
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
@@ -12522,7 +12299,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 DEBIAN_FRONTEND=noninteractive apt install -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,linux-sysctl-defaults,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -12532,7 +12309,10 @@ set -e
 rm /etc/apt/sources.list
 curl -L https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/sources.list.d/system.sources -o /etc/apt/sources.list.d/system.sources
 if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
-curl -L https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/keyrings/pika-keyring.gpg.key -o /etc/apt/keyrings/pika-keyring.gpg.key
+mkdir /tmp/gnupg
+GNUPGHOME=/tmp/gnupg gpg --no-default-keyring --keyring /tmp/gnupg/keyring.gpg --keyserver keyserver.ubuntu.com --recv-key AB78C60DFB581603
+GNUPGHOME=/tmp/gnupg gpg --no-default-keyring --keyring /tmp/gnupg/keyring.gpg --output /etc/apt/trusted.gpg.d/pika-keyring.asc --export --armor
+rm -r /tmp/gnupg
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 echo -e 'Package: *\nPin: release a=pika\nPin-Priority: 1000' > /etc/apt/preferences.d/downgrade
@@ -12540,13 +12320,13 @@ apt clean
 apt update
 DEBIAN_FRONTEND=noninteractive apt install -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') pika-sources
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
+rm /etc/apt/preferences.d/downgrade /etc/apt/trusted.gpg.d/pika-keyring.asc
 if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
 cat >/etc/apt/preferences.d/booster <<'BOOSTER'
 Package: booster
 Pin: release *
 Pin-Priority: -1
 BOOSTER
-rm /etc/apt/preferences.d/downgrade
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 dpkg --add-architecture i386
 apt update
@@ -12554,7 +12334,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y kernel-pika linux-firmware wireles
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-wallpapers pikman pikman-update-manager system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Cosmic')
@@ -12567,7 +12347,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-cosmic-deskto
 	default_session="cosmic"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-cosmic-desktop policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-cosmic-desktop policykit-1-gnome xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
 "
 	;;
 	'Gnome')
@@ -12580,7 +12360,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-gnome-desktop
 	default_session="gnome"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-gnome-desktop policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-gnome-desktop policykit-1-gnome xdg-desktop-portal-gnome pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
 "
 	;;
 	'Hyprland')
@@ -12594,7 +12374,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-hyprland-desk
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install -y gdm3 kitty
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-hyprland-desktop mate-polkit xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-hyprland-desktop mate-polkit xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
 "
 	;;
 	'Plasma')
@@ -12607,7 +12387,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-kde-desktop p
 	default_session="plasma"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-kde-desktop polkit-kde-agent-1 xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} pika-kde-desktop polkit-kde-agent-1 xdg-desktop-portal-kde pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
 "
 	;;
 esac
@@ -14672,7 +14452,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 DEBIAN_FRONTEND=noninteractive apt install -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,ubuntu-minimal,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,linux-sysctl-defaults,locales,ubuntu-minimal,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
