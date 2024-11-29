@@ -1879,7 +1879,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
@@ -2164,7 +2164,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
@@ -2495,7 +2495,7 @@ rc-update add connmand default
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-icon-theme nautilus gnome-backgrounds xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal nautilus gnome-backgrounds xdg-desktop-portal-gnome
 ${desktop_services}
 rc-update add gdm default
 "
@@ -2826,7 +2826,7 @@ rc-update add connmand default
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ${desktop_services}
 rc-update add gdm default
 "
@@ -3146,7 +3146,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runi
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3454,7 +3454,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runi
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3753,7 +3753,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm /etc/s6/adm
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
@@ -4054,7 +4054,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm /etc/s6/adm
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
@@ -4362,7 +4362,7 @@ ln -s ${desktop_services} ../lightdm ../connmand /etc/dinit.d/boot.d/
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4670,7 +4670,7 @@ ln -s ${desktop_services} ../lightdm ../connmand /etc/dinit.d/boot.d/
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -5058,7 +5058,7 @@ echo \"track: 'cinnamon'\" >> /system.yaml
 		install_desktop="
 echo \"track: 'gnome'\" >> /system.yaml
 "
-		custom_packages="gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome ${custom_packages}"
+		custom_packages="gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome ${custom_packages}"
 		;;
 		'Lxqt')
 		default_session="lxqt"
@@ -5578,7 +5578,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds gnome-icon-theme nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
@@ -9438,7 +9438,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds gnome-icon-theme nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
@@ -9710,7 +9710,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds gnome-icon-theme nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
@@ -9982,7 +9982,7 @@ systemctl enable lightdm.service connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds gnome-icon-theme nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
