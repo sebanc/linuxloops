@@ -8169,7 +8169,6 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 dnf swap -y --allowerasing ffmpeg-free ffmpeg
-bash
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
