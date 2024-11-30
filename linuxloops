@@ -613,7 +613,7 @@ case "${distribution}" in
 		mirrors_supported=( "PikaOS" )
 		nvidia_supported="Yes"
 		pikaos_version="${version}"
-		surface_supported="Yes"
+		surface_supported="No"
 		;;
 	'Pop')
 		available_environments=( "None" "Full" )
@@ -12332,7 +12332,7 @@ BOOSTER
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 dpkg --add-architecture i386
 apt update
-DEBIAN_FRONTEND=noninteractive apt install -y kernel-pika linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
+DEBIAN_FRONTEND=noninteractive apt install -y kernel-pika dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -12444,7 +12444,6 @@ esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
-surface_remove="linux-image-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\nDEBIAN_FRONTEND=noninteractive apt install -y ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
@@ -15429,7 +15428,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "PikaOS" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
