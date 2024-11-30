@@ -17597,7 +17597,7 @@ if [ ! -z "${wsl}" ]; then
 else
 	img_uuid=$(blkid -s PARTUUID -o value "$(df "${fullpath}" --output=source | sed 1d)")
 fi
-img_path=$(if [ $(findmnt -n -o TARGET -T ${fullpath}) == "/" ]; then echo "$(realpath ${fullpath})"; else echo "$(realpath ${fullpath})" | sed "s#$(findmnt -n -o TARGET -T ${fullpath})##g"; fi)
+img_path=$(findmnt -n -o SOURCE $(findmnt -n -o TARGET -T "$fullpath") | cut -d"[" -f2 | cut -d"]" -f1)$(if [ $(findmnt -n -o TARGET -T ${fullpath}) == "/" ]; then echo "$(realpath ${fullpath})"; else echo "$(realpath ${fullpath})" | sed "s#$(findmnt -n -o TARGET -T ${fullpath})##g"; fi)
 if [ "$(df -T "${fullpath}" | tail -1 | cut -d' ' -f2)" == "btrfs" ] && [ ! -z $(command -v btrfs) ]; then img_subvol="$(btrfs subvolume show $(findmnt -n -o TARGET -T ${fullpath}) | grep Name: | sed 's@\t\| @@g' | cut -d':' -f2)"; fi
 if [ ! -z "${img_subvol}" ]; then img_path="/${img_subvol}${img_path}"; fi
 if [ -z "${wsl}" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "debian" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
