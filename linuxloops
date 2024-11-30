@@ -2485,7 +2485,7 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-rc-update delete NetworkManager
+rc-update delete NetworkManager default
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc enlightenment terminology connman connman-openrc xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
@@ -2495,7 +2495,7 @@ rc-update add connmand default
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal nautilus gnome-backgrounds xdg-desktop-portal-gnome
+pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ${desktop_services}
 rc-update add gdm default
 "
@@ -2816,7 +2816,7 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-rc-update delete NetworkManager
+rc-update delete NetworkManager default
 pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc enlightenment terminology connman connman-openrc xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
@@ -7842,6 +7842,7 @@ set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -8065,6 +8066,7 @@ set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -8166,7 +8168,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
+dnf swap -y --allowerasing ffmpeg-free ffmpeg
+bash
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -15659,9 +15662,9 @@ INSTALLNVIDIA
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_nvidia
 fi
 if [ ! -z "${kernel_parameters}" ]; then
-	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off ${kernel_parameters}"
+	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 nvidia.NVreg_EnableGpuFirmware=0 ibt=off ${kernel_parameters}"
 else
-	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off"
+	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 nvidia.NVreg_EnableGpuFirmware=0 ibt=off"
 fi
 }
 
