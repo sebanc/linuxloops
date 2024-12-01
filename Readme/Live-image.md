@@ -33,7 +33,7 @@ Reboot your computer and select the USB flashdrive from the UEFI boot menu.
 
 If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
 
-Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and click on the "Linuxloops installer" icon on the desktop.  
+Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and launch the "Linuxloops installer" from the desktop icon.  
 
 ## With Windows
 
@@ -45,7 +45,7 @@ Reboot your computer and select the USB flashdrive from the UEFI boot menu.
 
 If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
 
-Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and click on the "Linuxloops installer" icon on the desktop.  
+Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and launch the "Linuxloops installer" from the desktop icon.  
 
 
 <!-- Reference Links -->

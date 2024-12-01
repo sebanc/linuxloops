@@ -13,11 +13,9 @@
 </p>
 <h1 align="center">Linuxloops</h1>
 
-Linuxloops is a generic / declarative linux distribution installer that also supports installing linux distributions in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
+Linuxloops is a generic / declarative linux distribution installer that also supports installing linux distributions in disk image files which can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
 
-## Quick start (GUI installer)
-
-### Supported hardware
+## Supported hardware
 
 ✔ Base Requirements:  
 - x86_64 based computer with UEFI BIOS.  
@@ -25,17 +23,19 @@ Linuxloops is a generic / declarative linux distribution installer that also sup
 - A drive or partition with at least 14 GB available space.  
 - For native booting of disks images: A GRUB bootloader installed (or you can use the linuxloops live image one).  
 
+## Quick start (GUI installer)
+
 ### Install a linux distro to your HDD
 
 Linuxloops GUI installer can be run from most linux ditributions live images as long as they provide a desktop environment (according to the instructions in the next section), however the available space is often limited in live images and some distros (Bazzite, BlissOS, Brunch, ChromeOS-Flex, Fedora-Atomic, Qubes, Tails) will not be installable due to the lack of storage. As such, it is recommended to use the linuxloops live disk instead.  
 
-Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility, KDE ISO Image Writer, Rufus, Etcher...).  
+* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility, KDE ISO Image Writer, Rufus, Etcher...).  
 
-Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
+* Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
-If Secure Boot is enabled, you will see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
+* If Secure Boot is enabled, you will see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
 
-Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and click on the "Linuxloops installer" icon on the desktop.  
+* Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and launch the "Linuxloops installer" from the desktop icon.  
 
 Detailed instructions:
 [Using the Linuxloops Live image][live-image]  
@@ -44,21 +44,21 @@ Detailed instructions:
 
 Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using Rufus/Etcher or boot them using [Grub2Win][Grub2Win link].  
 
-Install the `curl` and `PyQtWebEngine` package for your distribution:  
-- Debian / Ubuntu derivatives:  
-&nbsp;&nbsp;&nbsp;&nbsp;Debian 12 / Ubuntu 24.04 and above: `sudo apt install curl python3-venv python3-pyqt6.qtwebengine`  
-&nbsp;&nbsp;&nbsp;&nbsp;Older Debian / Ubuntu versions: `sudo apt install curl python3-venv python3-pyqt5.qtwebengine`  
-- Arch-based distributions: `sudo pacman -Syu curl python-pyqt6-webengine`  
-- RHEL-based distributions: `sudo dnf install curl python3-pyqt6-webengine`  
-- OpenSUSE: `sudo zypper in curl python3-PyQt6-WebEngine`  
-- Gentoo: `sudo emerge net-misc/curl dev-python/PyQt6-WebEngine`  
-- Void: `sudo xbps-install curl python3-pyqt6-webengine python3-pyqt6-gui python3-pyqt6-widgets python3-pyqt6-network python3-pyqt6-webchannel python3-pyqt6-printsupport`  
-- NixOS: No package to install (python3Packages.pyqt6-webengine will be installed by linuxloops in nix-shell environment)  
+* Install the `curl` and `PyQtWebEngine` package for your distribution:  
+  * Debian / Ubuntu derivatives:  
+&nbsp;&nbsp;&nbsp;&nbsp;- Debian 12 / Ubuntu 24.04 and above: `sudo apt install curl python3-venv python3-pyqt6.qtwebengine`  
+&nbsp;&nbsp;&nbsp;&nbsp;- Older Debian / Ubuntu versions: `sudo apt install curl python3-venv python3-pyqt5.qtwebengine`  
+  * Arch-based distributions: `sudo pacman -Syu curl python-pyqt6-webengine`  
+  * RHEL-based distributions: `sudo dnf install curl python3-pyqt6-webengine`  
+  * OpenSUSE: `sudo zypper in curl python3-PyQt6-WebEngine`  
+  * Gentoo: `sudo emerge net-misc/curl dev-python/PyQt6-WebEngine`  
+  * Void: `sudo xbps-install curl python3-pyqt6-webengine python3-pyqt6-gui python3-pyqt6-widgets python3-pyqt6-network python3-pyqt6-webchannel python3-pyqt6-printsupport`  
+  * NixOS: No package to install (python3Packages.pyqt6-webengine will be installed by linuxloops in nix-shell environment)  
 
-Download the Linuxloops script:  
+* Download the Linuxloops script:  
 `curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
 
-Start linuxloops in GUI mode:  
+* Start linuxloops in GUI mode:  
 `bash ${HOME}/bin/linuxloops`  
 
 Detailed instructions:
@@ -216,6 +216,11 @@ Create your own declarative configuration and run the below command to start the
 [Data recovery from an image][recovery-guide]  
 [Recommended setups][recommended-setups]  
 [Secure Boot][secure-boot]  
+
+### Support
+
+Support for Linuxloops is provided in the dedicated section of the Brunch Discord server:  
+[![Discord][discord-shield]][discord-url]  
 
 ## Special Thanks
 
