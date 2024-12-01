@@ -165,9 +165,9 @@ case "${distribution}" in
 		default_version="User"
 		;;
 	'NixOS')
-		available_versions=( "24.05" "Unstable" )
-		available_versions_longname=( "24.05_(Stable)" "Unstable" )
-		default_version="24.05"
+		available_versions=( "24.11" "Unstable" )
+		available_versions_longname=( "24.11_(Stable)" "Unstable" )
+		default_version="24.11"
 		;;
 	'Nobara')
 		available_versions=( "40" )
@@ -10564,7 +10564,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_NixOS-24.05()
+chroot_NixOS-24.11()
 {
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
@@ -16477,7 +16477,7 @@ $(if echo "${custom_packages}" | grep -wq 'steam'; then echo -e 'programs.steam 
 
 ${nixos_desktop}
 
-hardware.opengl.enable = true;
+hardware.graphics.enable = true;
 $(if echo "${custom_packages}" | grep -wq 'steam\|wine'; then echo -e 'hardware.opengl.driSupport32Bit = true;'; fi)
 ${nixos_nvidia}
 
@@ -16497,7 +16497,7 @@ nixpkgs.config.allowUnfree = true;
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-system.stateVersion = "24.05"; # Did you read the comment?
+system.stateVersion = "24.11"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 echo -e '# Do not modify this file which contains the linuxloops configuration.\n# Please make changes to /etc/nixos/configuration.nix instead.\n{ config, lib, pkgs, modulesPath, ... }:\n\n{' > /mnt/etc/nixos/linuxloops.nix
@@ -18761,6 +18761,11 @@ elif args.menu == "finished":
     function showText(text) {
         document.getElementById('title').innerHTML = text
     }
+
+    function copy_configuration() {
+        document.getElementById('configuration').select()
+        document.execCommand("copy");
+    }
     
     function exit() {
         pywebview.api.destroy()
@@ -19323,7 +19328,7 @@ else
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	else
 		if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
-		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:<br><textarea cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)</textarea><br><br>Otherwise, add the grub config manually to another grub bootloader.<br><br>You can then reboot your computer and start ${distribution}."
+		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)</textarea><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>Otherwise, add the grub config manually to another grub bootloader.<br><br>You can then reboot your computer and start ${distribution}."
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	fi
 fi
