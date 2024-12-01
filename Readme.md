@@ -37,14 +37,14 @@ Linuxloops GUI installer can be run from most linux ditributions live images as 
 
 * Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and launch the "Linuxloops installer" from the desktop icon.  
 
-Detailed instructions:
+Detailed instructions:  
 [Using the Linuxloops Live image][live-image]  
 
 ### Install a linux distro on a USB flashdrive / SD card or in a disk image (Linux or Windows WSL)
 
 Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using Rufus/Etcher or boot them using [Grub2Win][Grub2Win link].  
 
-* Install the `curl` and `PyQtWebEngine` package for your distribution:  
+* Install the `curl` and `PyQtWebEngine` packages for your distribution:  
   * Debian / Ubuntu derivatives:  
 &nbsp;&nbsp;&nbsp;&nbsp;- Debian 12 / Ubuntu 24.04 and above: `sudo apt install curl python3-venv python3-pyqt6.qtwebengine`  
 &nbsp;&nbsp;&nbsp;&nbsp;- Older Debian / Ubuntu versions: `sudo apt install curl python3-venv python3-pyqt5.qtwebengine`  
@@ -61,7 +61,7 @@ Note: Windows WSL does not allow to write directly to a disk but you can create 
 * Start linuxloops in GUI mode:  
 `bash ${HOME}/bin/linuxloops`  
 
-Detailed instructions:
+Detailed instructions:  
 [Detailed instructions to install from Linux][linux-guide]  
 [Detailed instructions to install from Windows][windows-guide]  
 
