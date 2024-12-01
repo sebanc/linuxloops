@@ -19,10 +19,13 @@ The default password for the "live" user account is: "linuxloops".
 - Administrative privileges on the device.  
 - A 16GB (or more) USB flashdrive.  
 
-
 ## With Linux
 
-Download the live image and run the following command from the directory containing the linuxloops live image 7z archive to write it to the disk (this example assumes your USB flashdrive is /dev/sdX:  
+Download the linuxloops live 7z archive in the release section of this Github repository and either:  
+
+- Extract it using your archive manager (you might need to first install the `7zip` package) and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility, KDE ISO Image Writer, Etcher...).  
+
+- Or use the below terminal command from the directory containing the linuxloops live image 7z archive to write it to a disk (this example assumes your USB flashdrive is /dev/sdX:  
 
 `7z x $(ls linuxloops_live_????????.7z | tail -1) linuxloops_live_*.img -so | sudo dd iflag=fullblock of=/dev/sdX oflag=direct conv=fsync bs=1M status=progress`  
 
@@ -30,15 +33,19 @@ Reboot your computer and select the USB flashdrive from the UEFI boot menu.
 
 If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
 
+Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and click on the "Linuxloops installer" icon on the desktop.  
+
 ## With Windows
 
-Install 7zip and extract the linuxloops live 7z file.  
+Install 7zip, download the linuxloops live 7z archive in the release section of this Github repository and extract the linuxloops live 7z archive.  
 
 Write the resulting image file to your USB flashdrive using Rufus, Etcher or a similar tool.  
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
 If Secure Boot is enabled, you should see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
+
+Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and click on the "Linuxloops installer" icon on the desktop.  
 
 
 <!-- Reference Links -->

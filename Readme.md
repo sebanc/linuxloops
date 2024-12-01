@@ -13,33 +13,62 @@
 </p>
 <h1 align="center">Linuxloops</h1>
 
-## About this project
+Linuxloops is a generic / declarative linux distribution installer that also supports installing linux distributions in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
 
-Linuxloops is an adaptable / declarative linux distribution installer.  
+## Quick start (GUI installer)
 
-Why create a linux distribution installer ?  
-Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows minimal Linux installs with more DE options, to directly add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
-In addition, Linuxloops supports installing linux distributions in disk image files that can be booted natively by the GRUB bootloader (from btrfs, ext4, exfat or ntfs partitions) or in VMs.  
-
-
-## How does it work ?
-
-The Linuxloops script will chroot into a temporary rootfs image (usually a linux container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
-
-Linuxloops can be used from any Linux distribution or from Windows WSL, it has limited dependencies that are installed by default in most if not all Linux distros: bash, coreutils, curl, grep, sed, sudo, tar, util-linux, xz.  
-Note: Windows WSL does not allow to write directly to a disk but you can create disk images and flash them to a drive using Rufus/Etcher or boot them from [Grub2Win][Grub2Win link].  
-
-For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
-- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distributions that are enabled by default as they contain necessary packages for standard use.  
-- For Arch based distributions, the "shim-signed" AUR package is included in order to support Secure Boot.  
-
-
-## Supported hardware
+### Supported hardware
 
 ✔ Base Requirements:  
 - x86_64 based computer with UEFI BIOS.  
 - Administrative privileges on the device.  
 - A drive or partition with at least 14 GB available space.  
+- For native booting of disks images: A GRUB bootloader installed (or you can use the linuxloops live image one).  
+
+### Install a linux distro to your HDD
+
+Linuxloops GUI installer can be run from most linux ditributions live images as long as they provide a desktop environment (according to the instructions in the next section), however the available space is often limited in live images and some distros (Bazzite, BlissOS, Brunch, ChromeOS-Flex, Fedora-Atomic, Qubes, Tails) will not be installable due to the lack of storage. As such, it is recommended to use the linuxloops live disk instead.  
+
+Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility, KDE ISO Image Writer, Rufus, Etcher...).  
+
+Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
+
+If Secure Boot is enabled, you will see the blue shim screen, select "Enroll key from disk" -> EFI -> Debian.der, confirm and reboot your computer.  
+
+Once the live image has booted, set your keyboard layout (Preferences -> Keyboard -> Layout), connect to WiFi if needed and click on the "Linuxloops installer" icon on the desktop.  
+
+Detailed instructions:
+[Using the Linuxloops Live image][live-image]  
+
+### Install a linux distro on a USB flashdrive / SD card or in a disk image (Linux or Windows WSL)
+
+Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using Rufus/Etcher or boot them using [Grub2Win][Grub2Win link].  
+
+Install the `curl` and `PyQtWebEngine` package for your distribution:  
+- Debian / Ubuntu derivatives:  
+&nbsp;&nbsp;&nbsp;&nbsp;Debian 12 / Ubuntu 24.04 and above: `sudo apt install curl python3-venv python3-pyqt6.qtwebengine`  
+&nbsp;&nbsp;&nbsp;&nbsp;Older Debian / Ubuntu versions: `sudo apt install curl python3-venv python3-pyqt5.qtwebengine`  
+- Arch-based distributions: `sudo pacman -Syu curl python-pyqt6-webengine`  
+- RHEL-based distributions: `sudo dnf install curl python3-pyqt6-webengine`  
+- OpenSUSE: `sudo zypper in curl python3-PyQt6-WebEngine`  
+- Gentoo: `sudo emerge net-misc/curl dev-python/PyQt6-WebEngine`  
+- Void: `sudo xbps-install curl python3-pyqt6-webengine python3-pyqt6-gui python3-pyqt6-widgets python3-pyqt6-network python3-pyqt6-webchannel python3-pyqt6-printsupport`  
+- NixOS: No package to install (python3Packages.pyqt6-webengine will be installed by linuxloops in nix-shell environment)  
+
+Download the Linuxloops script:  
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
+
+Start linuxloops in GUI mode:  
+`bash ${HOME}/bin/linuxloops`  
+
+Detailed instructions:
+[Detailed instructions to install from Linux][linux-guide]  
+[Detailed instructions to install from Windows][windows-guide]  
+
+### Support
+
+Support for Linuxloops is provided in the dedicated section of the Brunch Discord server:  
+[![Discord][discord-shield]][discord-url]  
 
 
 ## Overview of supported distributions and features
@@ -83,28 +112,29 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 |Zorin           |17                                                            |✓                      |✓                                    |✓                                |                            |
 
 
-## Quick start
+## About this project
 
-Download the Linuxloops script:  
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
+Why create a linux distribution installer ?  
+Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows minimal Linux installs with more DE options, to directly add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
 
-### GUI mode
 
-Install the `PyQtWebEngine` package for your distribution:  
-- Debian / Ubuntu derivatives:  
-&nbsp;&nbsp;&nbsp;&nbsp;Debian 12 / Ubuntu 24.04 and above: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
-&nbsp;&nbsp;&nbsp;&nbsp;Older Debian / Ubuntu versions: `sudo apt install python3-venv python3-pyqt5.qtwebengine`  
-- Arch-based distributions: `sudo pacman -Syu python-pyqt6-webengine`  
-- RHEL-based distributions: `sudo dnf install python3-pyqt6-webengine`  
-- OpenSUSE: `sudo zypper in python3-PyQt6-WebEngine`  
-- Gentoo: `sudo emerge dev-python/PyQt6-WebEngine`  
-- Void: `sudo xbps-install python3-pyqt6-webengine python3-pyqt6-gui python3-pyqt6-widgets python3-pyqt6-network python3-pyqt6-webchannel python3-pyqt6-printsupport`  
-- NixOS: No package to install (python3Packages.pyqt6-webengine will be installed by linuxloops in nix-shell environment)  
+## How does it work ?
 
-Once the `PyQtWebEngine` package is installed, start linuxloops in GUI mode:  
-`bash ${HOME}/bin/linuxloops`  
+The Linuxloops script will chroot into a temporary rootfs image (usually a linux container rootfs or an actual distribution iso) and then perform the install from there using the target distribution package manager.  
+
+Linuxloops can be used from any Linux distribution or from Windows WSL, it has limited dependencies that are installed by default in most if not all Linux distros: bash, coreutils, curl, grep, sed, sudo, tar, util-linux, xz.  
+
+For security purpose, Linuxloops will not install packages/binaries that are not present in the official distribution repositories. The only exceptions are:  
+- The "RPM fusion" repo for Fedora and the "EPEL" repo for RedHat based distributions that are enabled by default as they contain necessary packages for standard use.  
+- For Arch based distributions, the "shim-signed" AUR package is included in order to support Secure Boot.  
+
+
+## Other install methods
 
 ### CLI mode
+
+Install the `curl` package for your distribution and download the Linuxloops script:  
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
 
 List of command line flags:  
 ```
@@ -166,6 +196,9 @@ As an example:
 
 ### Declarative mode
 
+Install the `curl` package for your distribution and download the Linuxloops script:  
+`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
+
 Have a look at the declarative configuration examples available here:  
 [Declarative configuration examples][Declarative configuration examples]  
 
@@ -175,23 +208,14 @@ The main parameters are: the distribution, the version and the environment. Use 
 Create your own declarative configuration and run the below command to start the install:  
 `bash ${HOME}/bin/linuxloops -d <path_to_your_declarative_configuration>`  
 
-## Complementary instructions
-
-### [Detailed instructions to install from Linux][linux-guide]
-### [Detailed instructions to install from Windows][windows-guide]
-### [Using the Linuxloops Live image][live-image]
-### [Use a disk image in a virtual machine][vm-guide]
-### [Data recovery from an image][recovery-guide]
-### [Recommended setups][recommended-setups]
-### [Secure Boot][secure-boot]
-
-
-## Support
-
-Support for Linuxloops is provided in the dedicated section of the Brunch Discord server:  
-
-[![Discord][discord-shield]][discord-url]
-
+### Detailed instructions
+[Detailed instructions to install from Linux][linux-guide]  
+[Detailed instructions to install from Windows][windows-guide]  
+[Using the Linuxloops Live image][live-image]  
+[Use a disk image in a virtual machine][vm-guide]  
+[Data recovery from an image][recovery-guide]  
+[Recommended setups][recommended-setups]  
+[Secure Boot][secure-boot]  
 
 ## Special Thanks
 
