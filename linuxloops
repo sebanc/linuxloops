@@ -1986,8 +1986,6 @@ picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -2271,8 +2269,6 @@ picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -2405,7 +2401,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -2614,8 +2610,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -2736,7 +2730,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -2945,8 +2939,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -3066,7 +3058,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3252,8 +3244,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -3374,7 +3364,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3560,8 +3550,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -3681,7 +3669,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3860,8 +3848,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -3982,7 +3968,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4161,8 +4147,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -4282,7 +4266,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4468,8 +4452,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -4590,7 +4572,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://us-mirror.artixlinux.org https://mirror.clarkson.edu/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4776,8 +4758,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -5685,8 +5665,6 @@ picture-uri="file:///usr/share/wallpapers/cachyos-wallpapers/Dracula.png"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -6218,7 +6196,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
@@ -6317,8 +6295,6 @@ picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 [org.mate.interface]
 icon-theme='Papirus'
 gtk-theme='Materia'
@@ -6482,7 +6458,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
@@ -6581,8 +6557,6 @@ picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 [org.mate.interface]
 icon-theme='Papirus'
 gtk-theme='Materia'
@@ -6743,7 +6717,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
@@ -6842,8 +6816,6 @@ picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 [org.mate.interface]
 icon-theme='Papirus'
 gtk-theme='Materia'
@@ -7006,7 +6978,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
@@ -7105,8 +7077,6 @@ picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.s
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/xdg/autostart
@@ -7254,7 +7224,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
@@ -7353,8 +7323,6 @@ picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.s
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/xdg/autostart
@@ -7502,7 +7470,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
@@ -7601,8 +7569,6 @@ picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.s
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/xdg/autostart
@@ -8986,8 +8952,6 @@ picture-uri="file:///usr/share/backgrounds/kali/login.svg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/xdg/autostart
@@ -10354,8 +10318,6 @@ picture-uri="file:///usr/share/backgrounds/default23.png"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/xdg/autostart
@@ -11358,8 +11320,6 @@ cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 INSTALL_DESKTOP
@@ -11638,8 +11598,6 @@ cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 INSTALL_DESKTOP
@@ -11918,8 +11876,6 @@ cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 INSTALL_DESKTOP
@@ -12202,8 +12158,6 @@ picture-uri="file:///usr/share/backgrounds/default.jpg"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/xdg/autostart
@@ -12680,7 +12634,7 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring gnome-packagekit policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
@@ -12775,8 +12729,6 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.interface]
 gtk-theme="Materia"
 icon-theme="Papirus"
-[org.cinnamon.desktop.wm.preferences]
-theme="Materia"
 [org.mate.interface]
 icon-theme='Papirus'
 gtk-theme='Materia'
@@ -15558,6 +15510,7 @@ INSTALLNVIDIA
 elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
 services.xserver.videoDrivers = [ \"nvidia\" \"modesetting\" \"fbdev\" ];
+hardware.nvidia.open = false;
 hardware.nvidia.powerManagement.enable = true;
 $(if [ \"${version}\" == \"Unstable\" ]; then echo 'hardware.nvidia.open = false;'; fi)
 "
@@ -17598,8 +17551,6 @@ else
 	img_uuid=$(blkid -s PARTUUID -o value "$(df "${fullpath}" --output=source | sed 1d)")
 fi
 img_path=$(findmnt -n -o SOURCE $(findmnt -n -o TARGET -T "$fullpath") | cut -d"[" -f2 | cut -d"]" -f1)$(if [ $(findmnt -n -o TARGET -T ${fullpath}) == "/" ]; then echo "$(realpath ${fullpath})"; else echo "$(realpath ${fullpath})" | sed "s#$(findmnt -n -o TARGET -T ${fullpath})##g"; fi)
-if [ "$(df -T "${fullpath}" | tail -1 | cut -d' ' -f2)" == "btrfs" ] && [ ! -z $(command -v btrfs) ]; then img_subvol="$(btrfs subvolume show $(findmnt -n -o TARGET -T ${fullpath}) | grep Name: | sed 's@\t\| @@g' | cut -d':' -f2)"; fi
-if [ ! -z "${img_subvol}" ]; then img_path="/${img_subvol}${img_path}"; fi
 if [ -z "${wsl}" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "debian" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
 if [ "${distribution}" == "Bazzite" ]; then
 config="menuentry 'Bazzite' --class '$(echo Bazzite | tr [:upper:] [:lower:])' {${remove_tpm}
