@@ -15512,7 +15512,6 @@ elif [ "${distribution}" == "NixOS" ]; then
 services.xserver.videoDrivers = [ \"nvidia\" \"modesetting\" \"fbdev\" ];
 hardware.nvidia.open = false;
 hardware.nvidia.powerManagement.enable = true;
-$(if [ \"${version}\" == \"Unstable\" ]; then echo 'hardware.nvidia.open = false;'; fi)
 "
 elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA

@@ -40,7 +40,7 @@ Linuxloops GUI installer can be run from most linux ditributions live images as 
 Detailed instructions:  
 [Using the Linuxloops Live image][live-image]  
 
-### Install a linux distro on a USB flashdrive / SD card or in a disk image (Linux or Windows WSL)
+### Install a linux distro on a USB flashdrive / SD card or in a disk image (from Linux or Windows WSL)
 
 Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using Rufus/Etcher or boot them using [Grub2Win][Grub2Win link].  
 
