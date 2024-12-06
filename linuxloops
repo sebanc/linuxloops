@@ -6114,7 +6114,7 @@ MODEDGRUB
 fi
 if [ "${install_type}" == "image" ]; then
 	mkdir -p /mnt/etc/secureboot_key
-	sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/efi/boot/bootx64.efi
+	sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/syslinux/vmlinuz.A
 	openssl pkcs7 -print_certs -inform der -in /mnt/etc/secureboot_key/MOK.tmp -out /mnt/etc/secureboot_key/MOK.pem
 	openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
 fi
@@ -12290,7 +12290,7 @@ DEBIAN_FRONTEND=noninteractive apt install -y kernel-pika dkms linux-firmware wi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Cosmic')
@@ -16893,11 +16893,9 @@ rm -rf /lib/firmware/bnx2x /lib/firmware/dpaa2 /lib/firmware/liquidio /lib/firmw
 if [ "${distribution}" == "Linuxmint" ]; then
 	rm -r /usr/share/icons/Bibata-Original*
 	rm -r /usr/share/icons/Mint-X*
-	DEBIAN_FRONTEND=noninteractive apt purge -y gnome-keyring breeze-gtk-theme breeze-icon-theme materia-gtk-theme oxygen-icon-theme papirus-icon-theme
-	DEBIAN_FRONTEND=noninteractive apt install -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox gedit gparted evince python3-venv python3-pyqt6.qtwebengine language-selector-gnome
+	DEBIAN_FRONTEND=noninteractive apt install -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox gedit gparted evince python3-venv python3-pyqt6.qtwebengine language-selector-gnome qemu-guest-agent spice-vdagent
 else
-	DEBIAN_FRONTEND=noninteractive apt purge -y breeze-gtk-theme breeze-icon-theme oxygen-icon-theme
-	DEBIAN_FRONTEND=noninteractive apt install -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox-esr gedit gparted python3-venv python3-pyqt6.qtwebengine
+	DEBIAN_FRONTEND=noninteractive apt install -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox-esr gedit gparted python3-venv python3-pyqt6.qtwebengine qemu-guest-agent spice-vdagent
 fi
 apt clean
 INSTALLLIVE
