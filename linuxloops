@@ -6516,14 +6516,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Plasma')
 	default_session="plasmawayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
 	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
@@ -7282,14 +7282,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Plasma')
 	default_session="plasmawayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
 	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
