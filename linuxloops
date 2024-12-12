@@ -15386,7 +15386,6 @@ apt update
 if [ ! -z "${surface_remove}" ]; then DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}; fi
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libtiff-dev qt6-base-dev qt6-tools-dev-tools libqt6opengl6-dev
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
-bash
 dkms add -m v4l2loopback -v 0.13.2
 dkms install -m v4l2loopback -v 0.13.2 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
 git clone -b v0.3.2 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
