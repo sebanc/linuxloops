@@ -19484,9 +19484,9 @@ if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]
 
 if [[ $EUID -ne 0 ]]; then
 	if [ -f /etc/NIXOS ] && [ ${#} -eq 0 ]; then
-		exec sudo --preserve-env=DISPLAY,XAUTHORITY,WAYLAND_DISPLAY nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
+		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
 	else
-		exec sudo --preserve-env=DISPLAY,XAUTHORITY,WAYLAND_DISPLAY bash "$0" "$@"
+		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
 fi
 set +H
