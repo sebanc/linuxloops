@@ -540,7 +540,7 @@ case "${distribution}" in
 		ubuntu_version="Noble"
 		;;
 	'NixOS')
-		available_environments=( "None" "Budgie/Full" "Cinnamon/Full" "Deepin/Full" "Gnome/Full" "i3/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
+		available_environments=( "None" "Budgie/Full" "Cinnamon/Full" "Gnome/Full" "i3/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
 		bootloader_id="nixos"
 		bootloader_name="grubx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -563,7 +563,7 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'OpenSUSE')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Deepin" "Deepin/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
 		bootloader_name="shim.efi"
 		btrfs_supported="Yes"
@@ -1849,21 +1849,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
 systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -1872,98 +1872,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
 systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2081,7 +2081,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -2132,21 +2132,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
 systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -2155,98 +2155,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
 systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2365,7 +2365,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -2419,7 +2419,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
 rc-update add NetworkManager default
@@ -2456,7 +2456,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2464,7 +2464,7 @@ rc-update add lightdm default
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2472,7 +2472,7 @@ rc-update add lightdm default
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic greetd-openrc packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic greetd-openrc packagekit xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add greetd default
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
@@ -2482,7 +2482,7 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 rc-update delete NetworkManager default
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc enlightenment terminology connman connman-openrc xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc enlightenment terminology connman connman-openrc xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 rc-update add connmand default
@@ -2491,7 +2491,7 @@ rc-update add connmand default
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ${desktop_services}
 rc-update add gdm default
 "
@@ -2499,7 +2499,7 @@ rc-update add gdm default
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome xdg-desktop-portal-gnome
 ${desktop_services}
 rc-update add gdm default
 "
@@ -2507,7 +2507,7 @@ rc-update add gdm default
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2515,7 +2515,7 @@ rc-update add lightdm default
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2523,7 +2523,7 @@ rc-update add lightdm default
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2531,7 +2531,7 @@ rc-update add lightdm default
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2539,7 +2539,7 @@ rc-update add lightdm default
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2547,7 +2547,7 @@ rc-update add lightdm default
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2555,7 +2555,7 @@ rc-update add lightdm default
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2563,7 +2563,7 @@ rc-update add lightdm default
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -2571,7 +2571,7 @@ rc-update add sddm default
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -2579,7 +2579,7 @@ rc-update add sddm default
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2587,7 +2587,7 @@ rc-update add lightdm default
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2691,7 +2691,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -2748,7 +2748,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
 rc-update add NetworkManager default
@@ -2785,7 +2785,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2793,7 +2793,7 @@ rc-update add lightdm default
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2801,7 +2801,7 @@ rc-update add lightdm default
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic greetd-openrc packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic greetd-openrc packagekit xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add greetd default
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
@@ -2811,7 +2811,7 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 rc-update delete NetworkManager default
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc enlightenment terminology connman connman-openrc xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc enlightenment terminology connman connman-openrc xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 rc-update add connmand default
@@ -2820,7 +2820,7 @@ rc-update add connmand default
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ${desktop_services}
 rc-update add gdm default
 "
@@ -2828,7 +2828,7 @@ rc-update add gdm default
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-openrc gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome xdg-desktop-portal-gnome
 ${desktop_services}
 rc-update add gdm default
 "
@@ -2836,7 +2836,7 @@ rc-update add gdm default
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2844,7 +2844,7 @@ rc-update add lightdm default
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2852,7 +2852,7 @@ rc-update add lightdm default
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2860,7 +2860,7 @@ rc-update add lightdm default
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2868,7 +2868,7 @@ rc-update add lightdm default
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2876,7 +2876,7 @@ rc-update add lightdm default
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2884,7 +2884,7 @@ rc-update add lightdm default
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2892,7 +2892,7 @@ rc-update add lightdm default
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -2900,7 +2900,7 @@ rc-update add sddm default
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -2908,7 +2908,7 @@ rc-update add sddm default
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2916,7 +2916,7 @@ rc-update add lightdm default
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -3022,7 +3022,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3076,7 +3076,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -3108,21 +3108,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic greetd-runit packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic greetd-runit packagekit xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/greetd /etc/runit/runsvdir/default/
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -3131,98 +3131,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 rm /etc/runit/runsvdir/default/NetworkManager
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit enlightenment terminology connman connman-runit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit enlightenment terminology connman connman-runit xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runit/runsvdir/default/
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome xdg-desktop-portal-gnome
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3325,7 +3325,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3382,7 +3382,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -3414,21 +3414,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic greetd-runit packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic greetd-runit packagekit xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/greetd /etc/runit/runsvdir/default/
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -3437,98 +3437,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 rm /etc/runit/runsvdir/default/NetworkManager
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit enlightenment terminology connman connman-runit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit enlightenment terminology connman connman-runit xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runit/runsvdir/default/
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-runit gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome xdg-desktop-portal-gnome
 ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon  breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon  breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3633,7 +3633,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3687,7 +3687,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -3719,14 +3719,14 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -3734,98 +3734,98 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	default_session="enlightenment"
 	install_desktop="
 rm /etc/s6/adminsv/default/contents.d/NetworkManager
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 enlightenment terminology connman connman-s6 xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 enlightenment terminology connman connman-s6 xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm /etc/s6/adminsv/default/contents.d/connmand
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome xdg-desktop-portal-gnome
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -3929,7 +3929,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -3986,7 +3986,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -4018,14 +4018,14 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4033,98 +4033,98 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	default_session="enlightenment"
 	install_desktop="
 rm /etc/s6/adminsv/default/contents.d/NetworkManager
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 enlightenment terminology connman connman-s6 xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 enlightenment terminology connman connman-s6 xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm /etc/s6/adminsv/default/contents.d/connmand
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-s6 gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome xdg-desktop-portal-gnome
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4230,7 +4230,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -4284,7 +4284,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -4316,21 +4316,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic greetd-dinit packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic greetd-dinit packagekit xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../greetd /etc/dinit.d/boot.d/
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -4339,98 +4339,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 rm /etc/dinit.d/boot.d/NetworkManager
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit enlightenment terminology connman connman-dinit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit enlightenment terminology connman connman-dinit xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm ../connmand /etc/dinit.d/boot.d/
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit gnome xdg-desktop-portal-gnome
 ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4533,7 +4533,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -4590,7 +4590,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -4622,21 +4622,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic greetd-dinit packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic greetd-dinit packagekit xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../greetd /etc/dinit.d/boot.d/
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -4645,98 +4645,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 rm /etc/dinit.d/boot.d/NetworkManager
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit enlightenment terminology connman connman-dinit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit enlightenment terminology connman connman-dinit xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm ../connmand /etc/dinit.d/boot.d/
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gdm-dinit gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit gnome xdg-desktop-portal-gnome
 ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal network-manager-applet blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4841,7 +4841,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch@[multilib-testing]\nInclude = /etc/pacman.d/mirrorlist-arch@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -5014,7 +5014,7 @@ if [ ! -z "${mirror_BlendOS}" ]; then
 else
 	echo -e '[breakfast]\nServer = https://pkg-repo.blendos.co\nSigLevel = Never' >> /etc/pacman.conf
 fi
-pacman -Syu --noconfirm --ask 4 filesystem-blend akshara
+pacman -Syu --noconfirm --needed --ask 4 filesystem-blend akshara
 ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -5105,7 +5105,7 @@ cat >>/system.yaml <<SYSTEMYAML
   - 'echo -e "[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/" >> /etc/pacman.conf'
   - 'pacman -Syu'
   - 'pacman -Rsc --noconfirm linux-zen linux-zen-headers'
-  - 'pacman -S --noconfirm linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms'
+  - 'pacman -S --noconfirm --needed linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms'
   - 'usermod -aG video "${useraccount_name}"'
 SYSTEMYAML
 fi
@@ -5528,21 +5528,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
 systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -5551,98 +5551,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
 systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman cachyos-i3wm-settings xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet blueman cachyos-i3wm-settings xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal network-manager-applet blueman mate-media mate-power-manager xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-terminal mate-extra network-manager-applet blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 cachyos-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 cachyos-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6 cachyos-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma dolphin konsole packagekit-qt6 cachyos-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin cachyos-xfce-settings materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet blueman xfce4-pulseaudio-plugin cachyos-xfce-settings materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman cachyos-xfce-settings materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet blueman cachyos-xfce-settings materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -5761,7 +5761,7 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -8405,7 +8405,6 @@ set -e
 localedef -i en_US -f UTF-8 en_US.UTF-8
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 emerge-webrsync
-rm -rf /etc/portage/gnupg /var/cache/binpkgs
 getuto
 /tmp/linuxloops/install_secureboot
 rm /tmp/linuxloops/install_secureboot
@@ -8627,7 +8626,6 @@ set -e
 localedef -i en_US -f UTF-8 en_US.UTF-8
 echo "LANG=en_US.UTF-8" > /etc/locale.conf
 emerge-webrsync
-rm -rf /etc/portage/gnupg /var/cache/binpkgs
 getuto
 /tmp/linuxloops/install_secureboot
 rm /tmp/linuxloops/install_secureboot
@@ -9361,7 +9359,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9372,21 +9370,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
 systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -9395,98 +9393,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
 systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9575,7 +9573,7 @@ if [ ! -z "${custom_packages}" ]; then
 			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		fi
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -9633,7 +9631,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9644,21 +9642,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
 systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -9667,98 +9665,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
 systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9847,7 +9845,7 @@ if [ ! -z "${custom_packages}" ]; then
 			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		fi
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -9905,7 +9903,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9916,21 +9914,21 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
 systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
@@ -9939,98 +9937,98 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 	default_session="enlightenment"
 	install_desktop="
 systemctl disable NetworkManager.service
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
 systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings xdg-desktop-portal-gnome
+pacman -S --noconfirm --needed ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter lxqt papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -10119,7 +10117,7 @@ if [ ! -z "${custom_packages}" ]; then
 			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		fi
 	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -10602,19 +10600,6 @@ xdg.portal.enable = true;
 xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 xdg.portal.xdgOpenUsePortal = true;"
 	;;
-	'Deepin/Full')
-	default_session="dde-x11"
-	nixos_desktop="
-${autologin_commands}
-services.displayManager.defaultSession = \"${default_session}\";
-services.xserver.desktopManager.deepin.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
-services.xserver.enable = true;
-services.xserver.xkb.layout = \"${keymap}\";
-xdg.portal.enable = true;
-xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-xdg.portal.xdgOpenUsePortal = true;"
-	;;
 	'Gnome/Full')
 	default_session="gnome"
 	nixos_desktop="
@@ -10811,19 +10796,6 @@ xdg.portal.xdgOpenUsePortal = true;"
 ${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
 services.xserver.desktopManager.cinnamon.enable = true;
-services.xserver.displayManager.lightdm.enable = true;
-services.xserver.enable = true;
-services.xserver.xkb.layout = \"${keymap}\";
-xdg.portal.enable = true;
-xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-xdg.portal.xdgOpenUsePortal = true;"
-	;;
-	'Deepin/Full')
-	default_session="dde-x11"
-	nixos_desktop="
-${autologin_commands}
-services.displayManager.defaultSession = \"${default_session}\";
-services.xserver.desktopManager.deepin.enable = true;
 services.xserver.displayManager.lightdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";
@@ -11192,20 +11164,6 @@ sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
-	'Deepin')
-	default_session="deepin"
-	install_desktop="
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Deepin/Full')
-	default_session="deepin"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman xdg-desktop-portal-gtk
-zypper --non-interactive remove sddm
-"
-	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
@@ -11470,20 +11428,6 @@ sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
-	'Deepin')
-	default_session="deepin"
-	install_desktop="
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Deepin/Full')
-	default_session="deepin"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman xdg-desktop-portal-gtk
-zypper --non-interactive remove sddm
-"
-	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
@@ -11746,20 +11690,6 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Deepin')
-	default_session="deepin"
-	install_desktop="
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Deepin/Full')
-	default_session="deepin"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install --auto-agree-with-licenses ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-deepin-deepin deepin-desktop-schemas-branding-openSUSE deepin-terminal deepin-file-manager deepin-polkit-agent NetworkManager-applet blueman xdg-desktop-portal-gtk
-zypper --non-interactive remove sddm
 "
 	;;
 	'Enlightenment')
@@ -13178,13 +13108,13 @@ case "${environment}" in
 	'Desktop')
 	default_session="plasmawayland"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 "
 	;;
 	'Gamescope')
 	default_session="deck-session"
 	install_desktop="
-pacman -S --noconfirm ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 cat >/usr/share/wayland-sessions/deck-session.desktop <<'DECK_SESSION'
 [Desktop Entry]
 Encoding=UTF-8
@@ -13747,7 +13677,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 surface_remove="linux linux-headers"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -15428,7 +15358,7 @@ pacman-key --lsign-key 56C464BAAC421453
 echo -e '[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/' >> /etc/pacman.conf
 pacman -Syu
 if [ ! -z "${surface_remove}" ]; then pacman -Rsc --noconfirm ${surface_remove}; fi
-pacman -S --noconfirm linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms
+pacman -S --noconfirm --needed linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms
 usermod -aG video '${useraccount_name}'
 SURFACEPACMAN
 elif [ "${distribution}" == "Fedora" ]; then
@@ -15471,7 +15401,7 @@ if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${d
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-pacman -S --noconfirm nvidia-dkms
+pacman -S --noconfirm --needed nvidia-dkms
 INSTALLNVIDIA
 elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] ||  "${distribution}" == "Proxmox" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -15580,7 +15510,7 @@ elif [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-pacman -S --noconfirm nvidia-dkms lib32-nvidia-utils
+pacman -S --noconfirm --needed nvidia-dkms lib32-nvidia-utils
 INSTALLNVIDIA
 elif [ "${distribution}" == "Void" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -16699,7 +16629,7 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi
 REINSTALLBOOTLOADER
 	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-pacman -Syu --noconfirm git fakeroot
+pacman -Syu --noconfirm --needed git fakeroot
 git clone https://aur.archlinux.org/shim-signed.git /tmp/shim-signed
 chown -R 'nobody':'nobody' /tmp/shim-signed
 sudo -u nobody bin/bash -c "cd /tmp/shim-signed && makepkg -s"
