@@ -21,18 +21,16 @@
   
 2. Launch the Linuxloops script  
 
-- To use the GUI installer, install the `PyQtWebEngine` package for your distribution:  
-Debian / Ubuntu derivatives:  
-&nbsp;&nbsp;&nbsp;&nbsp;Debian 12 / Ubuntu 24.04 and above: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
-&nbsp;&nbsp;&nbsp;&nbsp;Older Debian / Ubuntu versions: `sudo apt install python3-venv python3-pyqt5.qtwebengine`  
-Arch-based distributions: `sudo pacman -Syu python-pyqt6-webengine`  
-RHEL-based distributions: `sudo dnf install python3-pyqt6-webengine`  
-OpenSUSE: `sudo zypper in python3-PyQt6-WebEngine`  
-Gentoo: `sudo emerge dev-python/PyQt6-WebEngine`  
-Void: `sudo xbps-install python3-pyqt6-webengine python3-pyqt6-gui python3-pyqt6-widgets python3-pyqt6-network python3-pyqt6-webchannel python3-pyqt6-printsupport`  
-NixOS: No package to install (python3Packages.pyqt6-webengine will be installed by linuxloops in nix-shell environment)  
+- To use the GUI installer, install the below packages depending on your distribution:  
+  * Debian / Ubuntu based distributions: `sudo apt install curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils`  
+  * Arch based distributions: `sudo pacman -Syu curl libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * RHEL based distributions: `sudo dnf install curl libatomic libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * Gentoo: `sudo emerge app-arch/xz-utils dev-lang/python net-misc/curl x11-libs/libxkbcommon x11-libs/xcb-util-cursor x11-libs/xcb-util-keysyms x11-libs/xcb-util-wm`  
+  * OpenSUSE: `sudo zypper in curl libatomic1 libgthread-2_0-0 libxcb-cursor0 libxcb-keysyms1 libxcb-ewmh2 libxcb-icccm4 libxkbcommon-x11-0 python3-virtualenv xz`  
+  * Void: `sudo xbps-install curl libxkbcommon xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * NixOS: No packages to install (the necessary packages will be installed by linuxloops for use in nix-shell environment)  
 
-Once the `PyQtWebEngine` package is installed, start linuxloops in GUI mode:  
+Start linuxloops in GUI mode:  
 `bash ${HOME}/bin/linuxloops`  
 
 - To use the CLI installer:  

@@ -23,11 +23,16 @@
   
 3. Launch the Linuxloops script  
 
-- To use the GUI installer, install the `PyQtWebEngine` package:  
-Ubuntu 24.04 and above: `sudo apt install python3-venv python3-pyqt6.qtwebengine`  
-Older Ubuntu versions: `sudo apt install python3-venv python3-pyqt5.qtwebengine`  
+- To use the GUI installer, install the below packages depending on your distribution:  
+  * Debian / Ubuntu based distributions: `sudo apt install curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils`  
+  * Arch based distributions: `sudo pacman -Syu curl libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * RHEL based distributions: `sudo dnf install curl libatomic libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * Gentoo: `sudo emerge app-arch/xz-utils dev-lang/python net-misc/curl x11-libs/libxkbcommon x11-libs/xcb-util-cursor x11-libs/xcb-util-keysyms x11-libs/xcb-util-wm`  
+  * OpenSUSE: `sudo zypper in curl libatomic1 libgthread-2_0-0 libxcb-cursor0 libxcb-keysyms1 libxcb-ewmh2 libxcb-icccm4 libxkbcommon-x11-0 python3-virtualenv xz`  
+  * Void: `sudo xbps-install curl libxkbcommon xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * NixOS: No packages to install (the necessary packages will be installed by linuxloops for use in nix-shell environment)  
 
-Once the `PyQtWebEngine` package is installed, start linuxloops in GUI mode:  
+Start linuxloops in GUI mode:  
 `bash ${HOME}/bin/linuxloops`  
 
 - To use the CLI installer:  

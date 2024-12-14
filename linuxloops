@@ -722,7 +722,7 @@ case "${distribution}" in
 		esac
 		;;
 	'Void')
-		available_environments=( "None" "Budgie" "Cinnamon" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
+		available_environments=( "None" "Cinnamon" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
 		bootloader_id="voidlinux"
 		bootloader_name="grubx64.efi"
 		bootstrap="lxc voidlinux current default"
@@ -6431,7 +6431,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -6690,7 +6690,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -7197,7 +7197,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nautilus gnome-terminal policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment budgie-desktop-view arc-theme nautilus gnome-terminal policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -7443,7 +7443,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nautilus gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment budgie-desktop-view arc-theme nautilus gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -11130,6 +11130,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
 rpm --rebuilddb
+zypper --non-interactive update
 zypper --non-interactive install kernel-default-optional kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio
 systemctl disable wicked.service
 systemctl enable bluetooth.service NetworkManager.service
@@ -11395,6 +11396,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
+rpm --rebuilddb
+zypper --non-interactive update
 zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
@@ -11659,6 +11662,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
+rpm --rebuilddb
+zypper --non-interactive update
 zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
@@ -13816,14 +13821,14 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -14089,14 +14094,14 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -14362,14 +14367,14 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -14590,7 +14595,7 @@ fi
 
 chroot_Void()
 {
-if [ -z "${mirror_Void}" ]; then mirror_Void="https://repo-fastly.voidlinux.org"; fi
+if [ -z "${mirror_Void}" ]; then mirror_Void="https://cdimage.debian.org/mirror/voidlinux"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -14614,7 +14619,7 @@ set -e
 echo 'repository=${mirror_Void}/$(echo ${void_version} | tr A-Z a-z)' > /usr/share/xbps.d/00-repository-main.conf
 xbps-install -Syu
 xbps-install -y linux linux-headers dracut dkms linux-firmware wireless-regdb bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober sbsigntool mokutil dosfstools btrfs-progs cpio
-ln -s /etc/sv/bluetoothd /etc/sv/dbus /etc/sv/dhcpcd /etc/sv/named /etc/sv/NetworkManager /etc/sv/polkitd /etc/sv/uuidd /etc/runit/runsvdir/default/
+ln -s /etc/sv/bluetoothd /etc/sv/dbus /etc/sv/dhcpcd /etc/sv/elogind /etc/sv/NetworkManager /etc/sv/polkitd /etc/sv/uuidd /etc/runit/runsvdir/default/
 cat >>/etc/rc.conf <<SETTINGS
 KEYMAP="${keymap}"
 TIMEZONE="${timezone}"
@@ -14622,16 +14627,9 @@ SETTINGS
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-filters dbus-elogind-x11 dejavu-fonts-ttf ffmpeg font-adobe-source-code-pro fonts-roboto-ttf gvfs iio-sensor-proxy mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon noto-fonts-ttf nss-mdns pulseaudio sof-firmware system-config-printer udisks2 xdg-user-dirs-gtk xorg"
+desktop_base="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-elogind-x11 dejavu-fonts-ttf ffmpeg font-adobe-source-code-pro fonts-roboto-ttf gvfs iio-sensor-proxy mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon noto-fonts-ttf nss-mdns pulseaudio pipewire sof-firmware system-config-printer udisks2 xdg-user-dirs-gtk xorg"
 desktop_services="/etc/sv/avahi-daemon /etc/sv/cupsd /etc/sv/cups-browsed"
 case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter budgie-desktop nautilus gnome-terminal network-manager-applet blueman xdg-desktop-portal-gtk
-ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
@@ -14716,6 +14714,8 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 ln -s ${desktop_services} /etc/runit/runsvdir/default/
+mkdir -p /etc/pipewire/pipewire.conf.d
+ln -s /usr/share/examples/wireplumber/10-wireplumber.conf /etc/pipewire/pipewire.conf.d/
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
 
@@ -15403,7 +15403,7 @@ if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${d
 set -e
 pacman -S --noconfirm --needed nvidia-dkms
 INSTALLNVIDIA
-elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] ||  "${distribution}" == "Proxmox" ]; then
+elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] ||  [ "${distribution}" == "Proxmox" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -16819,9 +16819,9 @@ rm -rf /lib/firmware/bnx2x /lib/firmware/dpaa2 /lib/firmware/liquidio /lib/firmw
 if [ "${distribution}" == "Linuxmint" ]; then
 	rm -r /usr/share/icons/Bibata-Original*
 	rm -r /usr/share/icons/Mint-X*
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox gedit gparted evince python3-venv python3-pyqt6.qtwebengine language-selector-gnome qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox gedit gparted evince curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils language-selector-gnome qemu-guest-agent spice-vdagent
 else
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox-esr gedit gparted python3-venv python3-pyqt6.qtwebengine qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox-esr gedit gparted curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils qemu-guest-agent spice-vdagent
 fi
 apt clean
 INSTALLLIVE
@@ -18955,10 +18955,11 @@ if __name__ == '__main__':
         window = webview.create_window('Linuxloops - ' + args.title, html=html, js_api=api, resizable=False, width=800, height=600)
         webview.start(gui='qt')
 LINUXLOOPS_GUI
+chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"/gui/linuxloops_gui.py
 fi) &&
 	sudo -u ${SUDO_USER} bash<<PYTHONBUILD
-python3 -m venv --system-site-packages "${linuxloopsdir}"/gui &&
-(cd "${linuxloopsdir}"/gui && source ./bin/activate && pip install --upgrade pip qtpy pywebview > /dev/null) &&
+python3 -m venv "${linuxloopsdir}"/gui &&
+(cd "${linuxloopsdir}"/gui && source ./bin/activate && pip install --upgrade pip pyside6 pywebview qtpy > /dev/null) &&
 echo "$(sha256sum ${0} | cut -d' ' -f1)" > "${linuxloopsdir}"/gui/linuxloops.sha256sum
 PYTHONBUILD
 fi
@@ -18966,7 +18967,7 @@ fi
 
 gui_launch()
 {
-(cd "${linuxloopsdir}"/gui && source ./bin/activate && QTWEBENGINE_DISABLE_SANDBOX=1 python3 linuxloops_gui.py "${@}" 2>"${linuxloopsdir}"/gui/linuxloops_gui.log)
+(cd "${linuxloopsdir}"/gui && source ./bin/activate && QTWEBENGINE_DISABLE_SANDBOX=1 python3 linuxloops_gui.py "${@}" 2>/tmp/linuxloops_gui.log)
 }
 
 gui_installer()
@@ -19178,17 +19179,17 @@ if [ ! -z "${generate_config}" ]; then generate_declarative_config; fi
 if [ "${install_type}" == "disk" ]; then
 	confirmation=$(gui_launch -m confirmation -t "Drive erasing confirmation" -q "WARNING: All data on device ${destination} will be erased, are you sure you want to continue ?")
 	if [ -z "${confirmation}" ]; then exit 1; fi
-	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment on drive ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui_pid" &
+	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment on drive ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui.pid" &
 	start_install
-	kill $(cat /tmp/linuxloops_gui_pid) 2>/dev/null
-	rm /tmp/linuxloops_gui_pid
+	kill $(cat /tmp/linuxloops_gui.pid) 2>/dev/null
+	rm /tmp/linuxloops_gui.pid
 	if [ ${return_value} -eq 1 ]; then exit_with_error "Failed to perform the installation of ${distribution} ${version} in chroot."; fi
 	gui_launch -m finished -t "Installation finished" -q "Linuxloops installation process is finished.<br><br>You can now reboot your computer and start ${distribution} by selecting your device in the UEFI boot menu."
 else
-	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment in the disk image ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui_pid" &
+	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment in the disk image ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui.pid" &
 	start_install
-	kill $(cat /tmp/linuxloops_gui_pid) 2>/dev/null
-	rm /tmp/linuxloops_gui_pid
+	kill $(cat /tmp/linuxloops_gui.pid) 2>/dev/null
+	rm /tmp/linuxloops_gui.pid
 	if [ ${return_value} -eq 1 ]; then exit_with_error "Failed to perform the installation of ${distribution} in chroot."; fi
 	grub_config
 	if [ ! -z "${wsl}" ]; then
@@ -19484,7 +19485,7 @@ if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]
 
 if [[ $EUID -ne 0 ]]; then
 	if [ -f /etc/NIXOS ] && [ ${#} -eq 0 ]; then
-		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
+        exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
 	else
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
@@ -19501,7 +19502,6 @@ if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] &
 	if [ -z "$(command -v python3)" ]; then echo "To use the GUI installer you need to install the \"python3\" package."; exit 1; fi
 	if [ -z "$(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f1)$(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f2)" ] || [ $(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f1)$(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f2) -lt 310 ]; then echo "Please install python version 3.10 or above."; exit 1; fi
 	if ! python3 -c "import venv" 2>/dev/null; then echo "Please install python3-venv package."; exit 1; fi
-	if ! python3 -c "from PyQt5 import QtWebEngineCore" 2>/dev/null && ! python3 -c "from PyQt6 import QtWebEngineCore" 2>/dev/null; then echo "Please install either the pyqt5-webengine or PyQt6-webengine package."; exit 1; fi
 	gui=1
 	check_dependencies
 	gui_installer
