@@ -1843,7 +1843,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups ffmpeg gvfs iio-sensor-proxy nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -1856,7 +1856,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -1984,7 +1984,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -2126,7 +2126,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups ffmpeg gvfs iio-sensor-proxy nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -2139,7 +2139,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2267,7 +2267,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -2447,7 +2447,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="
 rc-update add avahi-daemon default
 rc-update add cupsd default
@@ -2464,7 +2464,7 @@ rc-update add lightdm default
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2608,7 +2608,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -2776,7 +2776,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="
 rc-update add avahi-daemon default
 rc-update add cupsd default
@@ -2793,7 +2793,7 @@ rc-update add lightdm default
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2937,7 +2937,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -3102,7 +3102,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/runit/sv/avahi-daemon /etc/runit/sv/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -3115,7 +3115,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3242,7 +3242,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -3408,7 +3408,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/runit/sv/avahi-daemon /etc/runit/sv/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -3421,7 +3421,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3548,7 +3548,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -3713,7 +3713,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/s6/adminsv/default/contents.d/avahi-daemon /etc/s6/adminsv/default/contents.d/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -3726,7 +3726,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -3846,7 +3846,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -4012,7 +4012,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="/etc/s6/adminsv/default/contents.d/avahi-daemon /etc/s6/adminsv/default/contents.d/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -4025,7 +4025,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4145,7 +4145,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -4310,7 +4310,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="../avahi-daemon ../cupsd"
 case "${environment}" in
 	'Budgie')
@@ -4323,7 +4323,7 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4450,7 +4450,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -4616,7 +4616,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy nss-mdns pamac pulseaudio sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="../avahi-daemon ../cupsd"
 case "${environment}" in
 	'Budgie')
@@ -4629,7 +4629,7 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4756,7 +4756,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -5024,14 +5024,14 @@ if [ "${environment}" == "None" ]; then
 echo \"track: 'blendos-base'\" >> /system.yaml
 "
 else
-	custom_packages="accountsservice adobe-source-code-pro-fonts alsa-lib alsa-topology-conf alsa-ucm-conf alsa-utils archlinux-wallpaper at-spi2-core avahi blendos-wallpapers blend-web-store cups ffmpeg flatpak fwupd gvfs iio-sensor-proxy iptables noto-fonts nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse polkit sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xorg-xhost xorg-server xorg-xinput zstd ${custom_packages}"
+	custom_packages="accountsservice adobe-source-code-pro-fonts alsa-lib alsa-topology-conf alsa-ucm-conf alsa-utils archlinux-wallpaper at-spi2-core avahi blendos-wallpapers blend-web-store cups ffmpeg flatpak fwupd gvfs iio-sensor-proxy iptables nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse polkit sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xorg-xhost xorg-server xorg-xinput zstd ${custom_packages}"
 	case "${environment}" in
 		'Cinnamon')
 		default_session="cinnamon"
 		install_desktop="
 echo \"track: 'cinnamon'\" >> /system.yaml
 "
-		custom_packages="gnome-terminal nemo network-manager-applet materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk ${custom_packages}"
+		custom_packages="gnome-terminal nemo network-manager-applet papirus-icon-theme xdg-desktop-portal-gtk ${custom_packages}"
 		;;
 		'Gnome')
 		default_session="gnome-wayland"
@@ -5522,7 +5522,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cachyos-wallpapers cachyos-plymouth-theme cups ffmpeg gvfs iio-sensor-proxy noto-fonts nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cachyos-wallpapers cachyos-plymouth-theme cups ffmpeg gvfs iio-sensor-proxy nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -5535,7 +5535,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -5663,7 +5663,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/wallpapers/cachyos-wallpapers/Dracula.png"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -6164,7 +6164,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -6175,14 +6175,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -6293,11 +6293,11 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 [org.mate.interface]
 icon-theme='Papirus'
-gtk-theme='Materia'
+gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -6426,7 +6426,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -6437,14 +6437,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -6555,11 +6555,11 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 [org.mate.interface]
 icon-theme='Papirus'
-gtk-theme='Materia'
+gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -6685,7 +6685,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -6696,14 +6696,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -6814,11 +6814,11 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 [org.mate.interface]
 icon-theme='Papirus'
-gtk-theme='Materia'
+gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -6946,7 +6946,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -6957,14 +6957,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -7075,7 +7075,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.svg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -7192,7 +7192,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -7203,14 +7203,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -7321,7 +7321,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.svg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -7438,7 +7438,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -7449,14 +7449,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -7567,7 +7567,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.svg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -7812,7 +7812,7 @@ echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-noto-sans-fonts google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
+desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -7830,13 +7830,13 @@ dnf install -y ${desktop_base} lightdm slick-greeter @budgie-desktop @budgie-des
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter cinnamon clutter-gtk gnome-terminal nemo paper-icon-theme blueman dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter cinnamon clutter-gtk gnome-terminal nemo paper-icon-theme blueman dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environment dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environment dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Gnome')
@@ -8036,7 +8036,7 @@ echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-noto-sans-fonts google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
+desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -8054,13 +8054,13 @@ dnf install -y ${desktop_base} lightdm slick-greeter @budgie-desktop @budgie-des
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter cinnamon clutter-gtk gnome-terminal nemo paper-icon-theme blueman dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter cinnamon clutter-gtk gnome-terminal nemo paper-icon-theme blueman dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environment dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environment dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Gnome')
@@ -8439,7 +8439,7 @@ rc-update add NetworkManager default
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/noto media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -8660,7 +8660,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/noto media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -8834,20 +8834,20 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
 "
 	;;
 	'Gnome')
@@ -8864,14 +8864,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-
 "
 	;;
 	'i3')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="i3"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome blueman policykit-1-gnome xdg-desktop-portal-gtk
 "
 	;;
 	'i3/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="i3"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -8946,7 +8946,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/kali/login.svg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -9092,7 +9092,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-header
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu grub2-theme-mint gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers mint-artwork mint-backgrounds-wilma mintdesktop mintinstall mintsystem mintupdate mintupgrade mint-themes mint-x-icons mint-y-icons pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-system-adjustments udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg fonts-dejavu fonts-roboto fonts-ubuntu grub2-theme-mint gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers mint-artwork mint-backgrounds-wilma mintdesktop mintinstall mintsystem mintupdate mintupgrade mint-themes mint-x-icons mint-y-icons pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-system-adjustments udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -9364,7 +9364,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg gvfs iio-sensor-proxy manjaro-settings-manager manjaro-wallpapers-18.0 matcha-gtk-theme noto-fonts nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-theme-manjaro sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg gvfs iio-sensor-proxy manjaro-settings-manager manjaro-wallpapers-18.0 matcha-gtk-theme nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-theme-manjaro sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -9377,7 +9377,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9636,7 +9636,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg gvfs iio-sensor-proxy manjaro-settings-manager manjaro-wallpapers-18.0 matcha-gtk-theme noto-fonts nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-theme-manjaro sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg gvfs iio-sensor-proxy manjaro-settings-manager manjaro-wallpapers-18.0 matcha-gtk-theme nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-theme-manjaro sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -9649,7 +9649,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9908,7 +9908,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg gvfs iio-sensor-proxy manjaro-settings-manager manjaro-wallpapers-18.0 matcha-gtk-theme noto-fonts nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-theme-manjaro sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg gvfs iio-sensor-proxy manjaro-settings-manager manjaro-wallpapers-18.0 matcha-gtk-theme nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-theme-manjaro sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -9921,7 +9921,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -10182,7 +10182,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups dbus-user-session dbus-x11 desktop-defaults-mx-applications desktop-defaults-mx-common ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto grub-themes-mx gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx plymouth-themes-mx wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups dbus-user-session dbus-x11 desktop-defaults-mx-applications desktop-defaults-mx-common ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto grub-themes-mx gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx plymouth-themes-mx wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -10193,14 +10193,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -10312,7 +10312,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/default23.png"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -10995,7 +10995,7 @@ dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts flatpak gamemode gamescope google-noto-sans-fonts google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy lutris mangohud mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme protonup-qt steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
+desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts flatpak gamemode gamescope google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy lutris mangohud mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme protonup-qt steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
@@ -11155,14 +11155,14 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -11275,7 +11275,7 @@ ${install_desktop}
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -11421,14 +11421,14 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -11541,7 +11541,7 @@ ${install_desktop}
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -11687,14 +11687,14 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon gnome-keyring-pam polkit-gnome gnome-terminal nemo NetworkManager-applet mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -11807,7 +11807,7 @@ ${install_desktop}
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -11965,7 +11965,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers parrot-themes parrot-wallpapers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers parrot-themes parrot-wallpapers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -11984,14 +11984,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Gnome')
@@ -12089,7 +12089,7 @@ icon-theme="Papirus"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/default.jpg"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
@@ -12221,7 +12221,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y kernel-pika initramfs-tool
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Cosmic')
@@ -12533,7 +12533,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y initramfs-tools dkms pve-f
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -12544,14 +12544,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -12658,11 +12658,11 @@ cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 gtk-theme="Arc"
 icon-theme="Papirus"
 [org.cinnamon.desktop.interface]
-gtk-theme="Materia"
+gtk-theme="Adwaita"
 icon-theme="Papirus"
 [org.mate.interface]
 icon-theme='Papirus'
-gtk-theme='Materia'
+gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -13107,7 +13107,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service s
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups dbus-broker ffmpeg flatpak gamescope gvfs iio-sensor-proxy lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio lib32-pipewire lib32-fontconfig mangohud noto-fonts nss-mdns openssh pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse steam-im-modules steam-jupiter-stable steam_notif_daemon sof-firmware system-config-printer ttf-dejavu ttf-liberation ttf-roboto udisks2 vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio weston wireplumber wqy-zenhei xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups dbus-broker ffmpeg flatpak gamescope gvfs iio-sensor-proxy lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio lib32-pipewire lib32-fontconfig mangohud nss-mdns openssh pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse steam-im-modules steam-jupiter-stable steam_notif_daemon sof-firmware system-config-printer ttf-dejavu ttf-liberation ttf-roboto udisks2 vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio weston wireplumber wqy-zenhei xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Desktop')
@@ -13816,7 +13816,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -13834,14 +13834,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -13945,14 +13945,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubunt
 "
 	;;
 	'Unity')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -14089,7 +14089,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -14107,14 +14107,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -14218,14 +14218,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubunt
 "
 	;;
 	'Unity')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -14362,7 +14362,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -14380,14 +14380,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-desktop network-manager-gnome blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -14491,14 +14491,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubunt
 "
 	;;
 	'Unity')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -14627,7 +14627,7 @@ SETTINGS
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-elogind-x11 dejavu-fonts-ttf ffmpeg font-adobe-source-code-pro fonts-roboto-ttf gvfs iio-sensor-proxy mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon noto-fonts-ttf nss-mdns pulseaudio pipewire sof-firmware system-config-printer udisks2 xdg-user-dirs-gtk xorg"
+desktop_base="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-elogind-x11 dejavu-fonts-ttf ffmpeg font-adobe-source-code-pro fonts-roboto-ttf gvfs iio-sensor-proxy mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon nss-mdns pulseaudio pipewire sof-firmware system-config-printer udisks2 xdg-user-dirs-gtk xorg"
 desktop_services="/etc/sv/avahi-daemon /etc/sv/cupsd /etc/sv/cups-browsed"
 case "${environment}" in
 	'Cinnamon')
@@ -15185,11 +15185,11 @@ mkdir -p \$(dirname /mnt/run/"\${dns_manager}")
 cp /etc/resolv.conf /mnt/run/"\${dns_manager}"
 \${chroot_cmd} /tmp/linuxloops/chroot_init
 if [ -f /tmp/linuxloops/install_desktop ]; then \${chroot_cmd} /tmp/linuxloops/install_desktop; fi
-if [ -f /tmp/linuxloops/install_live ]; then \${chroot_cmd} /tmp/linuxloops/install_live; fi
 if [ -f /tmp/linuxloops/install_user ]; then \${chroot_cmd} /tmp/linuxloops/install_user; fi
 if [ -f /tmp/linuxloops/install_dmconfig ]; then \${chroot_cmd} /tmp/linuxloops/install_dmconfig; fi
 if [ -f /tmp/linuxloops/install_settings ]; then \${chroot_cmd} /tmp/linuxloops/install_settings; fi
 if [ -f /tmp/linuxloops/install_secureboot ]; then \${chroot_cmd} /tmp/linuxloops/install_secureboot; fi
+if [ -f /tmp/linuxloops/install_live ]; then \${chroot_cmd} /tmp/linuxloops/install_live; fi
 if [ -f /tmp/linuxloops/install_surface ]; then \${chroot_cmd} /tmp/linuxloops/install_surface; fi
 if [ -f /tmp/linuxloops/install_nvidia ]; then \${chroot_cmd} /tmp/linuxloops/install_nvidia; fi
 if [ -f /tmp/linuxloops/install_fstab ]; then \${chroot_cmd} /tmp/linuxloops/install_fstab; fi
@@ -16718,6 +16718,13 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_live <<INSTALLLIVE
 #!/bin/bash
 set -e
 echo "live ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+cat >/etc/polkit-1/rules.d/49-nopasswd_live.rules <<'POLKIT'
+polkit.addRule(function(action, subject) {
+    if (subject.isInGroup("live")) {
+        return polkit.Result.YES ;
+    }
+}) ;
+POLKIT
 cat >/usr/bin/linuxloops <<'LIVELAUNCHER'
 #!/bin/bash
 set -e
@@ -16726,27 +16733,6 @@ sudo chmod 0755 /usr/bin/linuxloops.real
 bash /usr/bin/linuxloops.real "\${@}"
 LIVELAUNCHER
 chmod 0755 /usr/bin/linuxloops
-mkdir -p /etc/skel/Desktop
-cat >/etc/skel/Desktop/linuxloops.desktop <<'LIVEDESKTOPICON'
-[Desktop Entry]
-Name=Linuxloops installer
-Exec=linuxloops
-Icon=system-software-install
-Terminal=true
-Type=Application
-StartupNotify=false
-LIVEDESKTOPICON
-chmod 0755 /etc/skel/Desktop/linuxloops.desktop
-mkdir -p /etc/skel/.local/share/applications
-cat >/etc/skel/.local/share/applications/linuxloops.desktop <<'LIVEMENUICON'
-[Desktop Entry]
-Name=Linuxloops installer
-Exec=linuxloops
-Icon=system-software-install
-Terminal=true
-Type=Application
-Categories=System;Filesystem;
-LIVEMENUICON
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_noscreenlock.gschema.override <<'DCONF'
 [org.cinnamon.desktop.screensaver]
@@ -16819,11 +16805,34 @@ rm -rf /lib/firmware/bnx2x /lib/firmware/dpaa2 /lib/firmware/liquidio /lib/firmw
 if [ "${distribution}" == "Linuxmint" ]; then
 	rm -r /usr/share/icons/Bibata-Original*
 	rm -r /usr/share/icons/Mint-X*
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox gedit gparted evince curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils language-selector-gnome qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils evince file-roller firefox gedit gparted language-selector-gnome qemu-guest-agent spice-vdagent
 else
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer evince ffmpeg file-roller firefox-esr gedit gparted curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils evince file-roller firefox-esr gedit gparted qemu-guest-agent spice-vdagent
 fi
 apt clean
+sudo -u '${useraccount_name}' bash << 'INSTALLERICONS'
+mkdir -p \$HOME/Desktop
+cat >\$HOME/Desktop/linuxloops.desktop <<'LIVEDESKTOPICON'
+[Desktop Entry]
+Name=Linuxloops installer
+Exec=linuxloops
+Icon=system-software-install
+Terminal=true
+Type=Application
+StartupNotify=false
+LIVEDESKTOPICON
+chmod 0755 \$HOME/Desktop/linuxloops.desktop
+mkdir -p \$HOME/.local/share/applications
+cat >\$HOME/.local/share/applications/linuxloops.desktop <<'LIVEMENUICON'
+[Desktop Entry]
+Name=Linuxloops installer
+Exec=linuxloops
+Icon=system-software-install
+Terminal=true
+Type=Application
+Categories=System;Filesystem;
+LIVEMENUICON
+INSTALLERICONS
 INSTALLLIVE
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_live
 }
@@ -19485,7 +19494,7 @@ if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]
 
 if [[ $EUID -ne 0 ]]; then
 	if [ -f /etc/NIXOS ] && [ ${#} -eq 0 ]; then
-        exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
+        	exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
 	else
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
