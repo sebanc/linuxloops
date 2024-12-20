@@ -15409,7 +15409,7 @@ elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [
 set -e
 DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
-elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -15443,7 +15443,7 @@ elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf install -y nvidia-driver  libva-nvidia-driver
+dnf install -y nvidia-driver libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "OpenSUSE" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -15504,7 +15504,7 @@ elif [ "${distribution}" == "Pop" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y system76-driver-nvidia nvidia-vaapi-driver
+DEBIAN_FRONTEND=noninteractive apt install --purge -y system76-driver-nvidia
 INSTALLNVIDIA
 elif [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -15517,6 +15517,12 @@ elif [ "${distribution}" == "Void" ]; then
 #!/bin/bash
 set -e
 xbps-install -y nvidia nvidia-vaapi-driver
+INSTALLNVIDIA
+elif [ "${distribution}" == "Zorin" ]; then
+	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
+#!/bin/bash
+set -e
+DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1)
 INSTALLNVIDIA
 fi
 if [ -f "${bootstrapdir}"/tmp/linuxloops/install_nvidia ]; then
