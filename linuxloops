@@ -5509,7 +5509,6 @@ cp /etc/pacman_cachyos.conf /mnt/etc/pacman.conf
 if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then cp /etc/pacman.d/cachyos-mirrorlist /mnt/etc/pacman.d/cachyos-mirrorlist; fi
 if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then cp /etc/pacman.d/cachyos-v3-mirrorlist /mnt/etc/pacman.d/cachyos-v3-mirrorlist; fi
 if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then cp /etc/pacman.d/cachyos-v4-mirrorlist /mnt/etc/pacman.d/cachyos-v4-mirrorlist; fi
-bash
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
