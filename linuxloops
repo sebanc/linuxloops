@@ -6164,7 +6164,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -6426,7 +6426,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -6685,7 +6685,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -6946,7 +6946,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -7192,7 +7192,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -7438,7 +7438,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -7812,7 +7812,7 @@ echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
+desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-va-drivers mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -8036,7 +8036,7 @@ echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
+desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-roboto-fonts gvfs-fuse iio-sensor-proxy mesa-va-drivers mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -8834,7 +8834,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Cinnamon')
@@ -8864,14 +8864,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-
 "
 	;;
 	'i3')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-va-drivers mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="i3"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome blueman policykit-1-gnome xdg-desktop-portal-gtk
 "
 	;;
 	'i3/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy kali-defaults-desktop kali-themes-common libnss-mdns mesa-va-drivers mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="i3"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -9092,7 +9092,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-header
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg fonts-dejavu fonts-roboto fonts-ubuntu grub2-theme-mint gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers mint-artwork mint-backgrounds-wilma mintdesktop mintinstall mintsystem mintupdate mintupgrade mint-themes mint-x-icons mint-y-icons pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-system-adjustments udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg fonts-dejavu fonts-roboto fonts-ubuntu grub2-theme-mint gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers mint-artwork mint-backgrounds-wilma mintdesktop mintinstall mintsystem mintupdate mintupgrade mint-themes mint-x-icons mint-y-icons pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-system-adjustments udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -9244,7 +9244,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed gvfs-fuse ffmpeg fonts-ubuntu grub2-theme-mint iio-sensor-proxy libnss-mdns mesa-vulkan-drivers mintinstall mintsystem mintupdate mintupgrade mint-artwork mint-themes mint-x-icons mint-y-icons pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed gvfs-fuse ffmpeg fonts-ubuntu grub2-theme-mint iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers mintinstall mintsystem mintupdate mintupgrade mint-artwork mint-themes mint-x-icons mint-y-icons pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -9359,7 +9359,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9563,7 +9563,7 @@ esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
-surface_remove="linux612 linux612-headers"
+surface_remove="linux-meta linux-headers-meta"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
 	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
@@ -9631,7 +9631,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9835,7 +9835,7 @@ esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
-surface_remove="linux612 linux612-headers"
+surface_remove="linux-meta linux-headers-meta"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
 	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
@@ -9903,7 +9903,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux612 linux612-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -10107,7 +10107,7 @@ esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
-surface_remove="linux612 linux612-headers"
+surface_remove="linux-meta linux-headers-meta"
 initramfs_type="initcpio"
 if [ ! -z "${custom_packages}" ]; then
 	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
@@ -10182,7 +10182,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups dbus-user-session dbus-x11 desktop-defaults-mx-applications desktop-defaults-mx-common ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto grub-themes-mx gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx plymouth-themes-mx wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups dbus-user-session dbus-x11 desktop-defaults-mx-applications desktop-defaults-mx-common ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto grub-themes-mx gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers mx-greybird-themes mx-comfort-themes mx-icons-start mx-sound-theme-borealis mx-sound-theme-fresh-and-clean mx23-artwork pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse pipewire-setup-mx plymouth-themes-mx wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -10453,7 +10453,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-header
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Essentials')
 	default_session="plasma"
@@ -10995,7 +10995,7 @@ dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts flatpak gamemode gamescope google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy lutris mangohud mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme protonup-qt steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
+desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts flatpak gamemode gamescope google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy lutris mangohud mesa-va-drivers mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme protonup-qt steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
@@ -11965,7 +11965,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers parrot-themes parrot-wallpapers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers parrot-themes parrot-wallpapers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -12533,7 +12533,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y initramfs-tools dkms pve-f
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -13816,7 +13816,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -13945,14 +13945,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubunt
 "
 	;;
 	'Unity')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -14089,7 +14089,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -14218,14 +14218,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubunt
 "
 	;;
 	'Unity')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -14362,7 +14362,7 @@ if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -14491,14 +14491,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubunt
 "
 	;;
 	'Unity')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
+	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -15314,7 +15314,7 @@ curl https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/ke
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 if [ ! -z "${surface_remove}" ]; then DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}; fi
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libtiff-dev qt6-base-dev qt6-tools-dev-tools libqt6opengl6-dev
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libtiff-dev qt6-base-dev qt6-tools-dev-tools libqt6opengl6-dev libinput-dev
 curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
 dkms add -m v4l2loopback -v 0.13.2
 dkms install -m v4l2loopback -v 0.13.2 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
@@ -15401,37 +15401,37 @@ if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${d
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-pacman -S --noconfirm --needed nvidia-dkms
+pacman -S --noconfirm --needed nvidia-dkms libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] ||  [ "${distribution}" == "Proxmox" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vulkan-icd
+DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1)
+DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf install -y akmod-nvidia xorg-x11-drv-nvidia
+dnf install -y akmod-nvidia xorg-x11-drv-nvidia libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora-Atomic" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-rpm-ostree -y install akmod-nvidia xorg-x11-drv-nvidia
+rpm-ostree -y install akmod-nvidia xorg-x11-drv-nvidia libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Gentoo" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-emerge -uN x11-drivers/nvidia-drivers
+emerge -uN x11-drivers/nvidia-drivers media-libs/nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
@@ -15443,7 +15443,7 @@ elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf install -y nvidia-driver
+dnf install -y nvidia-driver  libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "OpenSUSE" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -15486,37 +15486,37 @@ if [ "${opensuse_version}" == "Slowroll" ] || [ "${opensuse_version}" == "Tumble
 else
 	zypper --non-interactive install openSUSE-repos-Leap-NVIDIA
 fi
-zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-utils-G06 x11-video-nvidiaG06
+zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-utils-G06 x11-video-nvidiaG06 libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Parrot" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y -t $(echo ${parrot_version} | tr A-Z a-z)-backports nvidia-driver
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -t $(echo ${parrot_version} | tr A-Z a-z)-backports nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "PikaOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-libs' | grep -v '\-full' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) \$(apt search nvidia | grep nvidia-driver-libs | tail -1 | grep -o -P '(nvidia-driver-libs-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386
+DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-libs' | grep -v '\-full' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) \$(apt search nvidia | grep nvidia-driver-libs | tail -1 | grep -o -P '(nvidia-driver-libs-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386 nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Pop" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y system76-driver-nvidia
+DEBIAN_FRONTEND=noninteractive apt install --purge -y system76-driver-nvidia nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-pacman -S --noconfirm --needed nvidia-dkms lib32-nvidia-utils
+pacman -S --noconfirm --needed nvidia-dkms lib32-nvidia-utils libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Void" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-xbps-install -y nvidia
+xbps-install -y nvidia nvidia-vaapi-driver
 INSTALLNVIDIA
 fi
 if [ -f "${bootstrapdir}"/tmp/linuxloops/install_nvidia ]; then
