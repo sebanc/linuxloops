@@ -5495,7 +5495,7 @@ if [ ! -z "${mirror_CachyOS}" ]; then
 	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v3/\$repo' >> /etc/pacman.d/cachyos-v3-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v4/\$repo' >> /etc/pacman.d/cachyos-v4-mirrorlist; fi
 else
-	cur_speed=0; for i in https://cdn-1.cachyos.org https://cdn.cachyos.org/repo https://us.cachyos.org/repo; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/x86_64/cachyos/cachyos.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}
+	cur_speed=0; for i in https://cdn.cachyos.org/repo https://mirror.cachyos.org/repo https://us.cachyos.org/repo; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/x86_64/cachyos/cachyos.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}
 	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v3-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v4-mirrorlist; fi
@@ -5509,6 +5509,7 @@ cp /etc/pacman_cachyos.conf /mnt/etc/pacman.conf
 if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then cp /etc/pacman.d/cachyos-mirrorlist /mnt/etc/pacman.d/cachyos-mirrorlist; fi
 if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then cp /etc/pacman.d/cachyos-v3-mirrorlist /mnt/etc/pacman.d/cachyos-v3-mirrorlist; fi
 if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then cp /etc/pacman.d/cachyos-v4-mirrorlist /mnt/etc/pacman.d/cachyos-v4-mirrorlist; fi
+bash
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -15431,7 +15432,7 @@ elif [ "${distribution}" == "Gentoo" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-emerge -uN x11-drivers/nvidia-drivers media-libs/nvidia-vaapi-driver
+emerge -uN x11-drivers/nvidia-drivers
 INSTALLNVIDIA
 elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
@@ -15481,12 +15482,8 @@ Xks0dFlInjDFyMgAwsOaVDTWwjBfAaklUysV+CxhhEvSnuGx9h8Mi88K6g8heA==
 -----END PGP PUBLIC KEY BLOCK-----
 NVIDIAREPOKEY
 rpm --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-db27fd5a-62589a51.asc
-if [ "${opensuse_version}" == "Slowroll" ] || [ "${opensuse_version}" == "Tumbleweed" ]; then
-	zypper --non-interactive install openSUSE-repos-${opensuse_version}-NVIDIA
-else
-	zypper --non-interactive install openSUSE-repos-Leap-NVIDIA
-fi
-zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-utils-G06 x11-video-nvidiaG06 libva-nvidia-driver
+zypper --non-interactive install openSUSE-repos-$(echo ${opensuse_version} | cut -d '/' -f1)-NVIDIA
+zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-utils-G06 x11-video-nvidiaG06
 INSTALLNVIDIA
 elif [ "${distribution}" == "Parrot" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
