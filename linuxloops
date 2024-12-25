@@ -54,7 +54,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "Gentoo" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "Gentoo" "GLF-OS" "Kali" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
 
 distribution_parameters()
 {
@@ -133,6 +133,11 @@ case "${distribution}" in
 		available_versions=( "23/Openrc" "23/Systemd" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="23/Openrc"
+		;;
+	'GLF-OS')
+		available_versions=( "Stable" )
+		available_versions_longname=( "Stable" )
+		default_version="Stable"
 		;;
 	'Kali')
 		available_versions=( "Rolling" )
@@ -456,6 +461,18 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
+	'GLF-OS')
+		available_environments=( "Gnome" )
+		bootloader_id="glfos"
+		bootloader_name="shimx64.efi"
+		bootstrap="lxc archlinux current default"
+		btrfs_supported="Yes"
+		chroot_function="${distribution}"
+		mirrors_supported=()
+		nixos_version="24.11"
+		nvidia_supported="Yes"
+		surface_supported="No"
+		;;
 	'Kali')
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
@@ -542,7 +559,7 @@ case "${distribution}" in
 	'NixOS')
 		available_environments=( "None" "Budgie/Full" "Cinnamon/Full" "Gnome/Full" "i3/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
 		bootloader_id="nixos"
-		bootloader_name="grubx64.efi"
+		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
 		btrfs_supported="Yes"
 		chroot_function="${distribution}-${version}"
@@ -8423,12 +8440,12 @@ echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/m
 echo -e "\nVIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
-	echo -e "USE=\"bluetooth dbus dracut elogind policykit mount pam -systemd truetype X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth cryptsetup dbus dracut elogind policykit mount pam -systemd truetype X\"" >> /etc/portage/make.conf
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify libproxy lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
-	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
+	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio
@@ -8439,7 +8456,7 @@ rc-update add NetworkManager default
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/liberation-fonts media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -8644,14 +8661,14 @@ echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/m
 echo -e "\nVIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
-	echo -e "USE=\"bluetooth dbus dracut -elogind policykit mount pam systemd truetype X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth cryptsetup dbus dracut -elogind policykit mount pam systemd truetype X\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify libproxy lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
-	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
+	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio
@@ -8660,7 +8677,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
+desktop_base="app-admin/system-config-printer gnome-base/gvfs media-fonts/dejavu media-fonts/liberation-fonts media-fonts/roboto media-video/ffmpeg net-print/cups net-print/cups-filters sys-firmware/sof-firmware sys-fs/udisks x11-base/xorg-drivers x11-misc/xdg-user-dirs-gtk"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -8796,6 +8813,75 @@ if [ ! -z "${custom_script}" ]; then
 	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
 fi
+}
+
+chroot_GLF-OS()
+{
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
+
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<NIXOS_PREPARE_CHROOT
+#!/bin/bash
+set -e
+if [ -f /tmp/linuxloops/install_swap ] && [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then /tmp/linuxloops/install_swap; fi
+/tmp/linuxloops/install_secureboot /mnt
+/tmp/linuxloops/install_fstab
+/tmp/linuxloops/install_initramfs
+groupadd -g 30000 nixbld
+useradd -u 30000 -g nixbld -G nixbld nixbld
+useradd -s /bin/bash -m 'temp'
+echo -e 'temp\ntemp' | passwd 'temp'
+echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
+sed -i '/secure_path/d' /etc/sudoers
+sudo -u temp bash << 'NIXOSINSTALL'
+set -e
+ulimit -n 4096
+sudo mkdir -p /nix && sudo chown -R temp /nix
+curl -L https://nixos.org/nix/install | sh
+. /home/temp/.nix-profile/etc/profile.d/nix.sh
+nix-channel --remove nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --update
+nix-env -iA nixpkgs.nixos-install-tools
+sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
+/tmp/linuxloops/install_user
+NIXOSINSTALL
+NIXOS_PREPARE_CHROOT
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
+
+if [ "${useraccount_autologin}" == "Yes" ]; then
+	autologin_commands="
+  # Enable automatic login for the user.
+  services.displayManager.autoLogin.enable = true;
+  services.displayManager.autoLogin.user = \"${useraccount_name}\";
+
+  # Workaround for autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
+  systemd.services.\"getty@tty1\".enable = false;
+  systemd.services.\"autovt@tty1\".enable = false;"
+fi
+
+cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
+sudo nixos-enter << 'NIXOSCHROOT'
+set -e
+nix-channel --remove nixos
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+nix-channel --update
+NIXOSCHROOT
+INSTALL_USER
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
+
+initramfs_type="nixos_config"
 }
 
 chroot_Kali()
@@ -10571,7 +10657,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 if [ "${useraccount_autologin}" == "Yes" ]; then
 	autologin_commands="
 services.displayManager.autoLogin.enable = true;
-services.displayManager.autoLogin.user = \"${useraccount_name}\";"
+services.displayManager.autoLogin.user = \"${useraccount_name}\";
+# Workaround for autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
+systemd.services.\"getty@tty1\".enable = false;
+systemd.services.\"autovt@tty1\".enable = false;"
 fi
 case "${environment}" in
 	'Budgie/Full')
@@ -10774,7 +10863,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 if [ "${useraccount_autologin}" == "Yes" ]; then
 	autologin_commands="
 services.displayManager.autoLogin.enable = true;
-services.displayManager.autoLogin.user = \"${useraccount_name}\";"
+services.displayManager.autoLogin.user = \"${useraccount_name}\";
+# Workaround for autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
+systemd.services.\"getty@tty1\".enable = false;
+systemd.services.\"autovt@tty1\".enable = false;"
 fi
 case "${environment}" in
 	'Budgie/Full')
@@ -12219,7 +12311,7 @@ dpkg --add-architecture i386
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y kernel-pika initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio
 # PikaOS has missing dependencies for desktop-file-utils, libdrm and mesa.
-DEBIAN_FRONTEND=noninteractive apt install --purge -y desktop-file-utils libdrm2-amdgpu libdrm-amdgpu-common mesa-hybrid
+DEBIAN_FRONTEND=noninteractive apt install --purge -y desktop-file-utils libdrm2-amdgpu libdrm-amdgpu-common libglib2.0-bin mesa-hybrid
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -15107,7 +15199,7 @@ if [ "${distribution}" == "BlissOS" ]; then
 	mkfs.fat -F 32 -n 'EFI' "${efi_partition}"
 	mkdir -p /mnt/boot/efi
 	mount "${efi_partition}" /mnt/boot/efi
-elif [ "${distribution}" == "NixOS" ] && [ "${install_type}" == "image" ]; then
+elif ([ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]) && [ "${install_type}" == "image" ]; then
 	mkfs.ext4 -E nodiscard -F -L "${boot_name}" "${boot_partition}"
 	if tune2fs -l "${boot_partition}" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "${boot_partition}"; fi
 	if tune2fs -l "${boot_partition}" | grep 'Filesystem features' | grep -q -w metadata_csum_seed; then tune2fs -O ^metadata_csum_seed "${boot_partition}"; fi
@@ -15136,7 +15228,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/mount_efi
 
 generare_enter_chroot()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/enter_chroot <<ENTERCHROOT
 #!/bin/bash
 set -e
@@ -15212,7 +15304,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/enter_chroot
 
 generate_install_settings()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_settings <<APPLYSETTINGS
 #!/bin/bash
 set -e
@@ -15280,7 +15372,7 @@ else
 	openssl x509 -outform DER -in \${1}/etc/secureboot_key/MOK.crt -out \${1}/etc/secureboot_key/MOK.der
 	chmod 0640 \${1}/etc/secureboot_key/*
 	cp \${1}/etc/secureboot_key/MOK.der \${1}/boot/efi/${distribution}.der
-	if [ "${distribution}" == "NixOS" ]; then
+	if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 		exit 0
 	elif [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Nobara" ]; then
 		chown root:akmods /etc/secureboot_key/*
@@ -15434,6 +15526,8 @@ elif [ "${distribution}" == "Gentoo" ]; then
 set -e
 emerge -uN x11-drivers/nvidia-drivers
 INSTALLNVIDIA
+elif [ "${distribution}" == "GLF-OS" ]; then
+	nixos_nvidia="nvidia_config.enable = true;"
 elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
 services.xserver.videoDrivers = [ \"nvidia\" \"modesetting\" \"fbdev\" ];
@@ -15550,7 +15644,7 @@ fi
 generate_install_fstab()
 {
 if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
-if [ "${distribution}" == "NixOS" ]; then
+if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_fstab <<GENERATEFSTAB
 #!/bin/bash
 set -e
@@ -16271,8 +16365,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 
 generate_nixos_config()
 {
-if [ "${install_type}" == "image" ]; then cmdline="\\\\\\\${linuxloops_args}"; fi
-if [ -z "${cmdline}" ]; then cmdline="quiet splash systemd.log_target=null"; else cmdline="${cmdline} quiet splash systemd.log_target=null"; fi
+cmdline="quiet splash systemd.log_target=null"
 if [ ! -z "${kernel_parameters}" ]; then cmdline="${cmdline} ${kernel_parameters}"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_initramfs <<INITNIXOS
 #!/bin/bash
@@ -16295,6 +16388,76 @@ if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 fi
 cmdline=\$(echo -n "\"\${cmdline}\"" | sed 's@ @" "@g')
 mkdir -p /mnt/etc/nixos
+if [ "${distribution}" == "GLF-OS" ]; then
+pacman -Syu --noconfirm --needed git
+git clone -b main https://github.com/GLF-OS/Nixos-by-GLF.git /tmp/GLF-OS-config
+cp -r /tmp/GLF-OS-config/nix-cfg/glf /mnt/etc/nixos/
+cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
+{ config, pkgs, lib, ... }:
+{
+  imports =
+    [ # Include the linuxloops configuration + GLF modules
+      ./linuxloops.nix
+      ./glf
+    ];
+
+  # Define your kernel command line parameters.
+  boot.kernelParams = [ \${cmdline} ];
+
+  # Enable boot logo.
+  boot.plymouth.enable = true;
+
+  # Install all firmwares.
+  hardware.cpu.intel.updateMicrocode = true;
+  hardware.cpu.amd.updateMicrocode = true;
+  hardware.enableAllFirmware = true;
+
+  # Define your hostname.
+  networking.hostName = "${hostname}";
+
+  # Enable networking
+  networking.networkmanager.enable = true;
+
+  # Set your time zone.
+  time.timeZone = "${timezone}";
+
+  # Select internationalisation properties.
+  i18n.defaultLocale = "${locale}.UTF-8";
+
+  # Disable logrotate config check due to a bug during install.
+  services.logrotate.checkConfig = false;
+
+  # Enable the X11 windowing system.
+  services.xserver.enable = true;
+  services.xserver.excludePackages = [ pkgs.xterm ];
+
+  # Enable the GNOME Desktop Environment.
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
+  
+  # Configure keymap in X11
+  services.xserver.xkb = {
+    layout = "${keymap}";
+    variant = "";
+  };
+
+  # Configure console keymap
+  console.keyMap = "${keymap}";
+
+  # Define a user account. Don't forget to set a password with ‘passwd’.
+  users.users.${useraccount_name} = {
+    isNormalUser = true;
+    extraGroups = [ "networkmanager" "wheel" ];
+  };
+
+${autologin_commands}
+
+  ${nixos_nvidia}
+
+  system.stateVersion = "24.11"; # DO NOT TOUCH 
+}
+NIXOSCONFIGURATION
+else
 cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
@@ -16306,24 +16469,6 @@ cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 imports = [ ./linuxloops.nix ];
 
 boot.kernelParams = [ \${cmdline} ];
-boot.loader = {
-	efi = {
-		canTouchEfiVariables = false;
-		efiSysMountPoint = "/boot/efi";
-	};
-	grub = {
-		configurationLimit = 5;
-		device = "nodev";
-		efiInstallAsRemovable = true;
-		efiSupport = true;
-		enable = true;
-		extraGrubInstallArgs = [ "--modules=all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo" ];
-		fsIdentifier = "uuid";
-		useOSProber = false;$(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo -e "\n		splashImage = null;"; fi)
-		timeoutStyle = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo "\"hidden\""; else echo "\"menu\""; fi);
-	};
-	timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo 2; else echo 5; fi);
-};
 boot.plymouth.enable = true;
 
 console.earlySetup = true;
@@ -16353,7 +16498,7 @@ services.pipewire = {
 };
 services.printing.enable = true;
 
-environment.systemPackages = with pkgs; [ ffmpeg ntfs3g openssl sbsigntool ${custom_packages} ];
+environment.systemPackages = with pkgs; [ ffmpeg ${custom_packages} ];
 $(if echo "${custom_packages}" | grep -wq 'steam'; then echo -e 'programs.steam = {\n  enable = true;\n  remotePlay.openFirewall = true;\n  dedicatedServer.openFirewall = true;\n  localNetworkGameTransfers.openFirewall = true;\n};'; fi)
 
 ${nixos_desktop}
@@ -16381,12 +16526,82 @@ nixpkgs.config.allowUnfree = true;
 system.stateVersion = "24.11"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
+fi
+cat >/mnt/etc/nixos/shim-signed.nix <<'NIXOSSHIM'
+{ pkgs }:
+pkgs.stdenv.mkDerivation {
+	pname = "shim-signed";
+	version = "15.8";
+	src = pkgs.fetchurl {
+		url = "http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb";
+		sha256 = "f8ed71ce2d91a304b6d5eb84997f846f331b554578bc02dbfe78e13ad8ac81a9";
+	};
+	unpackPhase = ''
+	runHook preUnpack
+	dpkg-deb -x \$src shim-signed
+	runHook postUnpack
+	'';
+	installPhase = ''
+	runHook preInstall
+	mkdir -p "\$out/share"
+	cp -r shim-signed/usr/lib/shim "\$out/share/"
+	runHook postInstall
+	'';
+	nativeBuildInputs = with pkgs; [ dpkg ];
+}
+NIXOSSHIM
 echo -e '# Do not modify this file which contains the linuxloops configuration.\n# Please make changes to /etc/nixos/configuration.nix instead.\n{ config, lib, pkgs, modulesPath, ... }:\n\n{' > /mnt/etc/nixos/linuxloops.nix
 cat /tmp/linuxloops/fstab >>/mnt/etc/nixos/linuxloops.nix
 cat >>/mnt/etc/nixos/linuxloops.nix <<'NIXOSLINUXLOOPS'
+$(if [ "${install_type}" == "image" ]; then echo -e "boot.kernelParams = [ \"\\\${linuxloops_args}\" ];\n"; fi)
+environment.systemPackages = with pkgs; [ ntfs3g openssl sbsigntool shim-signed ];
+nixpkgs.overlays = [ (final: prev: { shim-signed = prev.callPackage ./shim-signed.nix {}; }) ];
+
+boot.loader.efi.canTouchEfiVariables = false;
+boot.loader.efi.efiSysMountPoint = "/boot/efi";
+boot.loader.grub.configurationLimit = 5;
+boot.loader.grub.device = "nodev";
+boot.loader.grub.efiInstallAsRemovable = true;
+boot.loader.grub.efiSupport = true;
+boot.loader.grub.enable = true;
+boot.loader.grub.extraInstallCommands = ''	
+\${pkgs.coreutils}/bin/cat >/tmp/sbat.csv <<GRUBSBAT
+sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
+grub,3,Free Software Foundation,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
+grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
+GRUBSBAT
+\${pkgs.coreutils}/bin/rm -rf /boot/efi/EFI/BOOT /boot/efi/EFI/${bootloader_id}
+\${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+\${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+if [ -f \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest ] && [ -f \${pkgs.shim-signed}/share/shim/mmx64.efi ]; then
+	\${pkgs.coreutils}/bin/mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
+	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
+	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/${bootloader_id}/shimx64.efi
+	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
+	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/${bootloader_id}/mmx64.efi
+	if [ -x \${pkgs.sbsigntool}/bin/sbverify ] && [ -x \${pkgs.sbsigntool}/bin/sbattach ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
+		for grubefi in \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/BOOT/grubx64.efi) \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/"${bootloader_id}"/grubx64.efi); do
+				for sig in \$(\${pkgs.sbsigntool}/bin/sbverify --list "\$grubefi" | \${pkgs.gnugrep}/bin/grep '^signature' | \${pkgs.gnused}/bin/sed 's@signature @@g' | \${pkgs.coreutils}/bin/sort -r); do \${pkgs.sbsigntool}/bin/sbattach --signum "\$sig" --remove "\$grubefi"; done
+				\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\$grubefi" "\$grubefi"
+		done
+	fi
+fi
+if \${pkgs.coreutils}/bin/ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -x \${pkgs.sbsigntool}/bin/sbverify ]; then
+	for i in /boot/kernels/*-linux-*Image; do
+		if ! \${pkgs.sbsigntool}/bin/sbverify --list \$i | \${pkgs.gnugrep}/bin/grep -q 'CN=Linuxloops Machine Owner Key'; then
+			\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \$i \$i
+		fi
+	done
+fi
+'';
+boot.loader.grub.fsIdentifier = "uuid";
+boot.loader.grub.splashImage = null;
+boot.loader.grub.timeoutStyle = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo "\"hidden\""; else echo "\"menu\""; fi);
+boot.loader.grub.useOSProber = false;
+boot.loader.timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo 2; else echo 5; fi);
+
 #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/profiles/all-hardware.nix
 boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "amdgpu" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "i915" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "nouveau" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
-
 boot.initrd.compressor="gzip";
 boot.initrd.extraUtilsCommands = ''
 copy_bin_and_libs "\${pkgs.bash}/bin/bash"
@@ -16404,19 +16619,6 @@ copy_bin_and_libs "\${pkgs.procps}/bin/ps"
 copy_bin_and_libs "\${pkgs.kbd}/bin/setfont"
 copy_bin_and_libs "\${pkgs.util-linux}/bin/setsid"
 '';
-
-boot.loader.grub.extraInstallCommands = ''
-	if \${pkgs.coreutils}/bin/ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -x \${pkgs.sbsigntool}/bin/sbverify ]; then
-		for i in /boot/kernels/*-linux-*Image; do
-			if ! \${pkgs.sbsigntool}/bin/sbverify --list \$i | \${pkgs.gnugrep}/bin/grep -q 'CN=Linuxloops Machine Owner Key'; then
-				\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \$i \$i
-			fi
-		done
-	fi
-	\${pkgs.coreutils}/bin/mkdir -p /boot/efi/EFI/nixos
-	\${pkgs.coreutils}/bin/cp /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/nixos/grubx64.efi
-'';
-
 boot.initrd.preLVMCommands = ''
 INITNIXOS
 add_linuxloops_recovery
@@ -16460,7 +16662,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_swap
 
 generate_install_bootloader()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_bootloader <<INSTALLEFI
 #!/bin/bash
 set -e
@@ -16661,8 +16863,8 @@ cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
 cp /usr/share/shim-signed/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
 cp /usr/share/shim-signed/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
-if [ ! -z "\\\$(command -v sbverify)" ] && [ ! -z "\\\$(command -v sbattach)" ] && [ ! -z "\\\$(command -v sbsign)" ]; then
-	for grubefi in \\\$(find /boot/efi -iname "grubx64.efi"); do
+if [ ! -z "\\\$(command -v sbverify)" ] && [ ! -z "\\\$(command -v sbattach)" ] && [ ! -z "\\\$(command -v sbsign)" ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
+	for grubefi in \\\$(find /boot/efi/EFI/BOOT/grubx64.efi) \\\$(find /boot/efi/EFI/"${bootloader_id}"/grubx64.efi); do
 		for sig in \\\$(sbverify --list \\\$grubefi | grep '^signature' | sed 's@signature @@g' | sort -r); do sbattach --signum \\\$sig --remove \\\$grubefi; done
 		sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \\\$grubefi \\\$grubefi
 	done
@@ -16675,7 +16877,8 @@ REINSTALLBOOTLOADER
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 cat >/usr/share/grub/sbat.csv <<'GRUBSBAT'
 sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
-grub,1,Free Software Foundation,grub,2,https://www.gnu.org/software/grub/
+grub,3,Free Software Foundation,grub,2:\\\$(grub-install -V | cut -d' ' -f3),https//www.gnu.org/software/grub/
+grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\\\$(grub-install -V | cut -d' ' -f3),https//www.gnu.org/software/grub/
 GRUBSBAT
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
 grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
@@ -16686,6 +16889,14 @@ if [ -f /usr/share/shim/BOOTX64.EFI ]; then
 	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
 	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
 fi
+# Due to a bug with Fedora's shim used by Gentoo, use Ubuntu shim for initial key registration.
+mkdir /tmp/ubuntu_shim
+curl -L http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
+(cd /tmp/ubuntu_shim && ar p shim.deb data.tar.xz | tar -xJ)
+cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
+cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
+cp /tmp/ubuntu_shim/usr/lib/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
+cp /tmp/ubuntu_shim/usr/lib/shim/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
 REINSTALLBOOTLOADER
 	else
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
@@ -16699,8 +16910,8 @@ grub-mkconfig -o /boot/grub/grub.cfg
 REINSTALLBOOTLOADER
 fi
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-if [ ! -z "\\\$(command -v sbverify)" ] && [ ! -z "\\\$(command -v sbsign)" ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
-	for grubefi in \\\$(find /boot/efi -iname "grubx64.efi"); do
+if [ ! -z "\\\$(command -v sbverify)" ] && [ ! -z "\\\$(command -v sbattach)" ] && [ ! -z "\\\$(command -v sbsign)" ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
+	for grubefi in \\\$(find /boot/efi/EFI/BOOT/grubx64.efi) \\\$(find /boot/efi/EFI/"${bootloader_id}"/grubx64.efi); do
 			for sig in \\\$(sbverify --list "\\\$grubefi" | grep '^signature' | sed 's@signature @@g' | sort -r); do sbattach --signum "\\\$sig" --remove "\\\$grubefi"; done
 			sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\\\$grubefi" "\\\$grubefi"
 	done
@@ -16856,6 +17067,7 @@ elif [ ! -z "\$(command -v dnf)" ]; then
 	fi
 elif [ ! -z "\$(command -v emerge)" ]; then
 	emerge --depclean
+	eselect news read new
 elif [ ! -z "\$(command -v rpm-ostree)" ]; then
 	echo "Cleaning up"
 	rpm-ostree cleanup --base
@@ -16900,7 +17112,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_userpw <<INSTALLUSERPW
 set -e
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
-if [ "${distribution}" == "NixOS" ]; then mkdir /mnt/tmp/linuxloops; fi
+if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then mkdir /mnt/tmp/linuxloops; fi
 cat >/mnt/tmp/linuxloops/set_userpw <<'SETUSERPW'
 #!/bin/bash
 set -e
@@ -16919,7 +17131,7 @@ cp -r /.update_rootfs/lib/modules /lib/
 mkinitcpio -P
 BLENDOS_AKSHARA
 fi
-if [ "${distribution}" == "NixOS" ]; then
+if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	sed -i '1d' /mnt/tmp/linuxloops/set_userpw
 	sudo -u temp bash << 'NIXOSSETPW'
 . /home/temp/.nix-profile/etc/profile.d/nix.sh
@@ -17124,7 +17336,7 @@ if mountpoint -q "${bootstrapdir}"/atomic/var/swap; then umount "${bootstrapdir}
 if mountpoint -q "${bootstrapdir}"/atomic/root; then umount "${bootstrapdir}"/atomic/root; fi
 if mountpoint -q "${bootstrapdir}"/atomic/home; then umount "${bootstrapdir}"/atomic/home; fi
 if mountpoint -q "${bootstrapdir}"/atomic; then umount "${bootstrapdir}"/atomic; fi
-if [ "${distribution}" == "NixOS" ] && mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
+if ([ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]) && mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
 if mountpoint -q "${bootstrapdir}"/tmp/linuxloops; then umount "${bootstrapdir}"/tmp/linuxloops; fi
 if mountpoint -q "${bootstrapdir}"/isomount/data; then umount "${bootstrapdir}"/isomount/data; fi
 if mountpoint -q "${bootstrapdir}"/isomount/efi; then umount "${bootstrapdir}"/isomount/efi; fi
@@ -17376,7 +17588,7 @@ else
 	if ! mountpoint -q "${bootstrapdir}" || ! mountpoint -q "${homebinddir}" ; then echo "Linuxloops systemd init working directories could not be mounted."; exit 1; fi
 fi
 download_bootstrap ${bootstrap}
-if [ "${distribution}" == "NixOS" ]; then
+if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	mount --bind "${homebinddir}" "${chrootdir}"
 	if ! mountpoint -q "${chrootdir}" ; then echo "NixOS specific working directory could not be mounted."; exit 1; fi
 fi
@@ -17555,7 +17767,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 	initrd (loop,7)/initramfs.img (loop,7)/firmwares.img (loop,7)/modules.img
 }
 "
-elif [ "${distribution}" == "NixOS" ]; then
+elif [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
