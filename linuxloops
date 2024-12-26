@@ -8444,6 +8444,7 @@ if [ "${environment}" == "None" ]; then
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6' > /etc/portage/package.use/linuxloops
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
@@ -8489,7 +8490,6 @@ sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/displ
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-echo -e 'app-crypt/qca qt6\napp-text/poppler qt6' > /etc/portage/package.use/linuxloops
 emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement net-wireless/blueman sys-apps/xdg-desktop-portal-gtk
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
@@ -8504,7 +8504,6 @@ sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/displ
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-echo -e 'app-crypt/qca qt6\napp-text/poppler qt6' > /etc/portage/package.use/linuxloops
 emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/xdg-desktop-portal-kde
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-manager
 "
@@ -8666,6 +8665,7 @@ if [ "${environment}" == "None" ]; then
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6' > /etc/portage/package.use/linuxloops
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
@@ -8710,7 +8710,6 @@ systemctl enable lightdm.service
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-echo -e 'app-crypt/qca qt6\napp-text/poppler qt6' > /etc/portage/package.use/linuxloops
 emerge -uDN --noconfmem @world ${desktop_base} x11-misc/lightdm lxqt-base/lxqt-meta x11-terms/qterminal gnome-extra/nm-applet lxqt-base/lxqt-powermanagement net-wireless/blueman sys-apps/xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
@@ -8725,7 +8724,6 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-echo -e 'app-crypt/qca qt6\napp-text/poppler qt6' > /etc/portage/package.use/linuxloops
 emerge -uDN --noconfmem @world ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
