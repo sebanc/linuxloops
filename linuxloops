@@ -15681,6 +15681,7 @@ elif [ "${distribution}" == "Gentoo" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
+echo -e 'media-libs/nvidia-vaapi-driver ~amd64' > /etc/portage/package.accept_keywords/linuxloops
 emerge -uN x11-drivers/nvidia-drivers media-libs/nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "GLF-OS" ]; then
@@ -19601,7 +19602,7 @@ if [ "${declarative}" == "Yes" ]; then
 		cat >"${linuxloopsdir}"/custom_commands <<CUSTOM_COMMANDS
 #!/bin/bash
 set -e
-# Adds temporarily setuid bit to bubblewrap to be able to install flatpaks as namespaces cannot be created in chroot
+# Add temporarily setuid bit to bubblewrap to be able to install flatpaks (as namespaces cannot be created in chroot)
 if [ -x /usr/bin/bwrap ] && [ ! -u /usr/bin/bwrap ]; then bwrap_needs_setuid=1; chmod u+s /usr/bin/bwrap; fi
 ${custom_commands}
 if [ ! -z "\${bwrap_needs_setuid}" ]; then chmod u-s /usr/bin/bwrap; fi
