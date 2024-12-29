@@ -90,6 +90,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
 |GLF-OS          |Stable                                                        |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
+|KDE             |Rolling                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][KDE-notes]          |
 |Linuxmint       |Wilma                                                         |✓                      |✓                                    |✓                                |                            |
 |LMDE            |Faye                                                          |✓                      |✓                                    |✓                                |                            |
 |Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
@@ -247,6 +248,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [Fedora-notes]: ./Readme/Distro-notes.md#Fedora
 [Fedora-Atomic-notes]: ./Readme/Distro-notes.md#Fedora-Atomic
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
+[KDE-notes]: ./Readme/Distro-notes.md#KDE
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
 [OpenSUSE-notes]: ./Readme/Distro-notes.md#OpenSUSE
 [Parrot-notes]: ./Readme/Distro-notes.md#Parrot

@@ -63,6 +63,12 @@ If you install the nvidia proprietary driver, you will need to disable Secure Bo
 Kali does not have secure boot support in full disk install.  
 
 
+## KDE
+
+KDE Linux installed as a rolling release distro.  
+KDE Linux is based on Arch that does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
+
+
 ## Manjaro
 
 Manjaro does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  

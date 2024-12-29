@@ -1,12 +1,6 @@
 name: Build Linuxloops Live Disk
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - 'main'
-    paths:
-      - 'linuxloops'
-      - '.github/workflows/live.yml'
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
