@@ -95,9 +95,9 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |LMDE            |Faye                                                          |✓                      |✓                                    |✓                                |                            |
 |Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
-|Neon            |User<br>Testing<br>Unstable                                   |✓                      |✓                                    |✓                                |                            |
+|Neon            |User<br>Testing                                               |✓                      |✓                                    |✓                                |                            |
 |NixOS           |24.11<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
-|Nobara          |40                                                            |✓                      |✓                                    |✓                                |                            |
+|Nobara          |41                                                            |✓                      |✓                                    |✓                                |                            |
 |OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
 |PikaOS          |Nest                                                          |disk images only       |✓                                    |                                 |                            |
