@@ -12515,7 +12515,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y desktop-file-utils libdrm2
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver-non-free libnss-mdns mesa-va-drivers pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Cosmic')
@@ -15799,7 +15799,7 @@ elif [ "${distribution}" == "PikaOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-libs' | grep -v '\-full' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) \$(apt search nvidia | grep nvidia-driver-libs | tail -1 | grep -o -P '(nvidia-driver-libs-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386
+DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-libs' | grep -v '\-full' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) \$(apt search nvidia | grep nvidia-driver-libs | tail -1 | grep -o -P '(nvidia-driver-libs-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386 nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Pop" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
