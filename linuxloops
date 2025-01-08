@@ -15663,7 +15663,7 @@ if [ ! -z "${surface_remove}" ]; then pacman -Rsc --noconfirm ${surface_remove};
 pacman -S --noconfirm --needed linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms
 usermod -aG video '${useraccount_name}'
 SURFACEPACMAN
-elif [ "${distribution}" == "Fedora" ]; then
+elif [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEDNF
 #!/bin/bash
 set -e
@@ -15672,19 +15672,7 @@ dnf versionlock add kernel\*
 rm -rf /boot/.vmlinuz-* /boot/vmlinuz-* /boot/initramfs-* /boot/symvers-* /boot/System.map-* /usr/lib/modules/* /usr/src/kernels/*
 dnf config-manager addrepo --from-repofile=https://pkg.surfacelinux.com/fedora/linux-surface.repo
 dnf update -y
-dnf install -y --allowerasing kernel-surface kernel-surface-devel iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
-dkms add -m v4l2loopback -v 0.13.2
-dkms install -m v4l2loopback -v 0.13.2 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
-usermod -aG video '${useraccount_name}'
-SURFACEDNF
-elif [ "${distribution}" == "Nobara" ]; then
-	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEDNF
-#!/bin/bash
-set -e
-dnf config-manager --add-repo=https://pkg.surfacelinux.com/fedora/linux-surface.repo
-dnf update -y
-dnf install -y --allowerasing iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera v4l2loopback
+dnf install -y --allowerasing kernel-surface kernel-surface-devel iptsd libwacom-surface surface-control surface-dtx-daemon libcamera libcamera-tools libcamera-qcam libcamera-gstreamer libcamera-ipa pipewire-plugin-libcamera akmod-v4l2loopback
 usermod -aG video '${useraccount_name}'
 SURFACEDNF
 fi
@@ -17220,14 +17208,6 @@ if [ -f /usr/share/shim/BOOTX64.EFI ]; then
 	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
 	cp /usr/share/shim/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
 fi
-# Due to a bug with Fedora's shim used by Gentoo, use Ubuntu shim for initial key registration.
-mkdir /tmp/ubuntu_shim
-curl -L http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
-(cd /tmp/ubuntu_shim && ar p shim.deb data.tar.xz | tar -xJ)
-cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
-cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
-cp /tmp/ubuntu_shim/usr/lib/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
-cp /tmp/ubuntu_shim/usr/lib/shim/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
 REINSTALLBOOTLOADER
 	else
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
@@ -17250,6 +17230,16 @@ fi
 REINSTALLBOOTLOADER
 chmod 0755 /boot/linuxloops/reinstall-bootloader
 /boot/linuxloops/reinstall-bootloader
+# Due to a bug with certain shim binaries, use the Ubuntu shim for initial key registration.
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Gentoo" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "PikaOS" ] || [ "${distribution}" == "Proxmox" ]; then
+	mkdir /tmp/ubuntu_shim
+	curl -L http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
+	(cd /tmp/ubuntu_shim && ar p shim.deb data.tar.xz | tar -xJ)
+	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
+	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
+	cp /tmp/ubuntu_shim/usr/lib/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
+	cp /tmp/ubuntu_shim/usr/lib/shim/mmx64.efi /boot/efi/EFI/"${bootloader_id}"/mmx64.efi
+fi
 if [ -z "\$(find /boot/efi/EFI/BOOT/BOOTX64.EFI 2> /dev/null)" ]; then echo "Warning: The bootloader is not installed in the removable path."; fi
 if [ -z "\$(find /boot/efi/EFI/"${bootloader_id}"/"${bootloader_name}" 2> /dev/null)" ]; then echo "The bootloader is not correctly installed"; exit 1; fi
 INSTALLEFI
