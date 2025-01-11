@@ -83,7 +83,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |CachyOS         |x86-64<br>x86-64-v3<br>x86-64-v4                              |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
 |ChromeOS-Flex   |Stable                                                        |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
 |Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
-|Devuan          |Daedalus<br>Testing<br>Unstable                               |✓                      |✓                                    |                                 |                            |
+|Devuan          |Daedalus<br>Testing                                           |✓                      |✓                                    |                                 |                            |
 |Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
 |Fedora          |41<br>Rawhide                                                 |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
 |Fedora-Atomic   |41<br>Rawhide                                                 |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
@@ -100,7 +100,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Nobara          |41                                                            |✓                      |✓                                    |✓                                |                            |
 |OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
-|PikaOS          |Nest                                                          |disk images only       |✓                                    |                                 |                            |
+|PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
 |Qubes           |4.2.3                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
