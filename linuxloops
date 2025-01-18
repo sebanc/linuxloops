@@ -150,9 +150,9 @@ case "${distribution}" in
 		default_version="Rolling"
 		;;
 	'Linuxmint')
-		available_versions=( "Wilma" )
+		available_versions=( "Xia" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Wilma"
+		default_version="Xia"
 		;;
 	'LMDE')
 		available_versions=( "Faye" )
@@ -5878,6 +5878,9 @@ for (( i=1; i<=12; i++ )); do
 		1)
 			continue
 		;;
+		2)
+			part_source=4
+		;;
 		7)
 			mkfs.ext4 -E nodiscard -F -L "ROOT-C" "${partition_path}""\${i}"
 			if tune2fs -l "${partition_path}""\${i}" | grep 'Filesystem features' | grep -q -w large_dir; then tune2fs -O ^large_dir "${partition_path}""\${i}"; fi
@@ -5890,6 +5893,12 @@ for (( i=1; i<=12; i++ )); do
 			mkfs.fat -n 'EFI' "${partition_path}""\${i}"
 			mount "${partition_path}""\${i}" /isomount/efi
 			cp -r /isomount/tmp/* /isomount/efi/
+			if [ "${install_type}" == "image" ]; then
+				mkdir -p /mnt/etc/secureboot_key
+				sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/syslinux/vmlinuz.A
+				openssl pkcs7 -print_certs -inform der -in /mnt/etc/secureboot_key/MOK.tmp -out /mnt/etc/secureboot_key/MOK.pem
+				openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
+			fi
 			umount /isomount/efi
 			umount /isomount/tmp
 			continue
@@ -5900,6 +5909,23 @@ for (( i=1; i<=12; i++ )); do
 	esac
 	dd if="\${isomount}"p"\${part_source}" of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress
 done
+printf '\000' | dd of="\${isomount}"p3 seek=\$((0x464 + 3)) conv=notrunc count=1 bs=1 status=none
+mount "\${isomount}"p3 /mnt
+mount --bind /proc /mnt/proc
+mount --make-slave /mnt/proc
+mount --bind /sys /mnt/sys
+mount --make-slave /mnt/sys
+mount --bind /dev /mnt/dev
+mount --make-slave /mnt/dev
+chroot /mnt /bin/bash <<'GPT_PRIORITY'
+cgpt add -i 2 -S 0 -T 15 -P 15 "${destination_device}"
+cgpt add -i 4 -S 0 -T 15 -P 0 "${destination_device}"
+cgpt add -i 6 -S 0 -T 15 -P 0 "${destination_device}"
+GPT_PRIORITY
+umount /mnt/sys
+umount /mnt/proc
+umount /mnt/dev
+umount /mnt
 losetup -d "\${isomount}"
 rm -rf /isomount/data/*
 umount /isomount/data
@@ -6139,42 +6165,6 @@ INITSCRIPT
 	rm -r /isomount/rootc/initramfs
 	umount /isomount/rootc
 fi
-mount "${partition_path}"12 /isomount/efi
-if [ "${environment}" == "Devmode" ]; then
-	sed -i 's@defaultA=2@defaultA=0@g' /isomount/efi/efi/boot/grub.cfg
-	sed -i 's@defaultB=3@defaultB=1@g' /isomount/efi/efi/boot/grub.cfg
-	sed -i 's@menuentry "local image A" {@local_image_A="@g' /isomount/efi/efi/boot/grub.cfg
-	sed -i 's@menuentry "local image B" {@local_image_B="@g' /isomount/efi/efi/boot/grub.cfg
-	sed -i 's@menuentry "verified image A" {@verified_image_A="@g' /isomount/efi/efi/boot/grub.cfg
-	sed -i 's@menuentry "verified image B" {@verified_image_B="@g' /isomount/efi/efi/boot/grub.cfg
-	sed -i 's@menuentry "Alternate USB Boot" {@Alternate_USB_Boot="@g' /isomount/efi/efi/boot/grub.cfg
-	sed -i 's@}@"@g' /isomount/efi/efi/boot/grub.cfg
-	cat >>/isomount/efi/efi/boot/grub.cfg <<MODEDGRUB
-
-menuentry "local image A" {
-  \\\$local_image_A ${dev_mode}
-}
-
-menuentry "local image B" {
-  \\\$local_image_B ${dev_mode}
-}
-
-menuentry "verified image A" {
-  \\\$verified_image_A ${dev_mode}
-}
-
-menuentry "verified image B" {
-  \\\$verified_image_B ${dev_mode}
-}
-MODEDGRUB
-fi
-if [ "${install_type}" == "image" ]; then
-	mkdir -p /mnt/etc/secureboot_key
-	sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/syslinux/vmlinuz.A
-	openssl pkcs7 -print_certs -inform der -in /mnt/etc/secureboot_key/MOK.tmp -out /mnt/etc/secureboot_key/MOK.pem
-	openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
-fi
-umount /isomount/efi
 INSTALL_SCRIPT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_script
 }
@@ -10994,6 +10984,7 @@ enabled=1
 enabled_metadata=1
 priority=50
 NOBARAREPO
+dnf install -y --allowerasing nobara-gpg-keys nobara-repos nobara-release-workstation
 mkdir -p /mnt/dev /mnt/proc /mnt/sys
 mount --bind /proc /mnt/proc
 mount --make-slave /mnt/proc
@@ -11001,8 +10992,6 @@ mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
 mount --bind /dev /mnt/dev
 mount --make-slave /mnt/dev
-dnf install -y fedora-repos-rawhide
-dnf update -y --enablerepo=rawhide fedora-gpg-keys
 dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -15262,8 +15251,8 @@ if [ "${systemd_init}" == "Yes" ]; then
 	mount --make-slave /mnt/dev/console
 	ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
 	ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
-    ln -s /dev/null /mnt/etc/systemd/system/connman.service
-    ln -s /dev/null /mnt/etc/systemd/system/NetworkManager.service
+	ln -s /dev/null /mnt/etc/systemd/system/connman.service
+	ln -s /dev/null /mnt/etc/systemd/system/NetworkManager.service
 	touch /tmp/pid_ns
 	sudo -b container=chroot unshare --pid=/tmp/pid_ns --fork --mount-proc --kill-child --root=/mnt /lib/systemd/systemd --unit=basic.target
 	sleep 30
@@ -15305,8 +15294,8 @@ if [ -f /tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxl
 if [ -f /tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
 if [ "${systemd_init}" == "Yes" ]; then
 	rm /mnt/usr/sbin/policy-rc.d
-    rm /mnt/etc/systemd/system/connman.service
-    rm /mnt/etc/systemd/system/NetworkManager.service
+	rm /mnt/etc/systemd/system/connman.service
+	rm /mnt/etc/systemd/system/NetworkManager.service
 	rm /mnt/etc/systemd/system/systemd-resolved.service
 	rm /mnt/etc/systemd/system/systemd-binfmt.service
 	umount /mnt/dev/console
@@ -17753,7 +17742,7 @@ mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/dev/shm
 mount -t tmpfs none "${bootstrapdir}"/run
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/tmp
 mkdir -p "${bootstrapdir}"/tmp/linuxloops
-mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/tmp/linuxloops
+mount -t tmpfs -o mode=1777,exec,symfollow none "${bootstrapdir}"/tmp/linuxloops
 if [ -f /etc/hostname ]; then
     cp /etc/hostname "${bootstrapdir}"/etc/hostname
 else

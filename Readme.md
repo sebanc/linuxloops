@@ -91,7 +91,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |GLF-OS          |Stable                                                        |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
 |KDE             |Rolling                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][KDE-notes]          |
-|Linuxmint       |Wilma                                                         |✓                      |✓                                    |✓                                |                            |
+|Linuxmint       |Xia                                                           |✓                      |✓                                    |✓                                |                            |
 |LMDE            |Faye                                                          |✓                      |✓                                    |✓                                |                            |
 |Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
