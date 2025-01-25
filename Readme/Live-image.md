@@ -23,7 +23,7 @@ The default password for the "live" user account is: "linuxloops".
 
 Download the linuxloops live 7z archive in the release section of this Github repository and either:  
 
-- Extract it using your archive manager (you might need to first install the `7zip` package) and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility, KDE ISO Image Writer, Etcher...).  
+- Extract it using your archive manager (you might need to first install the `7zip` package) and write it to a USB flashdrive using an image writer (Gnome Disk Utility / KDE ISO Image Writer).  
 
 - Or use the below terminal command from the directory containing the linuxloops live image 7z archive to write it to a disk (this example assumes your USB flashdrive is /dev/sdX:  
 
@@ -39,7 +39,7 @@ Once the live image has booted, set your keyboard layout (Preferences -> Keyboar
 
 Install 7zip, download the linuxloops live 7z archive in the release section of this Github repository and extract the linuxloops live 7z archive.  
 
-Write the resulting image file to your USB flashdrive using Rufus, Etcher or a similar tool.  
+Write the resulting image file to your USB flashdrive using balenaEtcher.  
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 

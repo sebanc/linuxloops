@@ -29,7 +29,7 @@ Linuxloops is a generic / declarative linux distribution installer that also sup
 
 Linuxloops GUI installer can be run from most linux ditributions live images as long as they provide a desktop environment (according to the instructions in the next section), however the available space is often limited in live images and some distros (Bazzite, BlissOS, Brunch, ChromeOS-Flex, Fedora-Atomic, Qubes, Tails) will not be installable due to the lack of storage. As such, it is recommended to use the linuxloops live disk instead.  
 
-* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility, KDE ISO Image Writer, Rufus, Etcher...).  
+* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility / KDE ISO Image Writer for Linux or balenaEtcher for Windows).  
 
 * Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
@@ -76,7 +76,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |AlmaLinux       |9                                                             |✓                      |                                     |                                 |                            |
 |Arch            |Stable<br>Testing                                             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
 |Artix           |Openrc<br>Runit<br>S6<br>Dinit<br>(Stable<br>or<br>Testing)   |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
-|Bazzite         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |                                 |                            |
+|Bazzite         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Bazzite-notes]      |
 |BlendOS         |v4                                                            |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
 |BlissOS         |15<br>16                                                      |                       |                                     |                                 |                            |
 |Brunch          |Stable<br>Unstable                                            |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
@@ -241,6 +241,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 <!-- Internal Links -->
 [Arch-notes]: ./Readme/Distro-notes.md#Arch
 [Artix-notes]: ./Readme/Distro-notes.md#Artix
+[Bazzite-notes]: ./Readme/Distro-notes.md#Bazzite
 [BlendOS-notes]: ./Readme/Distro-notes.md#BlendOS
 [Brunch-notes]: ./Readme/Distro-notes.md#Brunch
 [CachyOS-notes]: ./Readme/Distro-notes.md#CachyOS

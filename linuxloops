@@ -1756,21 +1756,20 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
+mkdir -p /mnt/proc /mnt/sys
+mount -t proc none /mnt/proc
+mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
+mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever $(echo ${almalinux_version} | tr A-Z a-z) -y @core openssl tar
 if [ ! -z "${mirror_AlmaLinux}" ]; then
 	sed -i 's@^# baseurl=https://repo.almalinux.org/vault\|^# baseurl=https://repo.almalinux.org/almalinux@baseurl=${mirror_AlmaLinux}@g' /mnt/etc/yum.repos.d/almalinux-*.repo
 	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/almalinux-*.repo
 fi
 umount /mnt/sys
+umount /mnt/proc/sys
 umount /mnt/proc
-umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -4956,7 +4955,7 @@ CUSTOM_MOUNTS
 fi)
 if [ -f /atomic/root/encryption.key ]; then mv /atomic/root/encryption.key /mnt/root/encryption.key; fi
 mkdir -p /mnt/etc/secureboot_key
-curl -L https://github.com/ublue-os/bazzite/blob/main/secure_boot.der -o /mnt/etc/secureboot_key/MOK.der
+ln -s /usr/share/ublue-os/etc/pki/akmods/certs/akmods-ublue.der /mnt/etc/secureboot_key/MOK.der
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -7588,13 +7587,12 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
+mkdir -p /mnt/proc /mnt/sys
+mount -t proc none /mnt/proc
+mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
+mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
 dnf install -y fedora-repos-rawhide
 dnf update -y --enablerepo=rawhide fedora-gpg-keys
 dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade grubby openssl tar
@@ -7607,8 +7605,8 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
 fi
 umount /mnt/sys
+umount /mnt/proc/sys
 umount /mnt/proc
-umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -7618,7 +7616,8 @@ set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
-echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
+dnf config-manager setopt fedora-cisco-openh264.enabled=1
+dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -7720,7 +7719,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
+dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -7812,13 +7811,12 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
+mkdir -p /mnt/proc /mnt/sys
+mount -t proc none /mnt/proc
+mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
+mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
 dnf install -y fedora-repos-rawhide
 dnf update -y --enablerepo=rawhide fedora-gpg-keys
 dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade grubby openssl tar
@@ -7831,8 +7829,8 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
 fi
 umount /mnt/sys
+umount /mnt/proc/sys
 umount /mnt/proc
-umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -7841,8 +7839,9 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
-echo -e 'exclude=libheif-freeworld' >> /etc/dnf/dnf.conf
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
+dnf config-manager setopt fedora-cisco-openh264.enabled=1
+dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -7944,7 +7943,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y --allowerasing ffmpeg-free ffmpeg
+dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
 ${install_desktop}
 systemctl enable ${desktop_services}
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
@@ -9104,7 +9103,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-header
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg fonts-dejavu fonts-roboto fonts-ubuntu grub2-theme-mint gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers mint-artwork mint-backgrounds-wilma mintdesktop mintinstall mintsystem mintupdate mintupgrade mint-themes mint-x-icons mint-y-icons pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-system-adjustments udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed ffmpeg fonts-dejavu fonts-roboto fonts-ubuntu grub2-theme-mint gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers mint-artwork mint-backgrounds-wilma mintdesktop mintinstall mintsystem mintupdate mintupgrade mint-themes mint-x-icons mint-y-icons packagekit pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-system-adjustments udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -9256,7 +9255,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-he
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed gvfs-fuse ffmpeg fonts-ubuntu grub2-theme-mint iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers mintinstall mintsystem mintupdate mintupgrade mint-artwork mint-themes mint-x-icons mint-y-icons pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 firmware-sof-signed gvfs-fuse ffmpeg fonts-ubuntu grub2-theme-mint iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers mintinstall mintsystem mintupdate mintupgrade mint-artwork mint-themes mint-x-icons mint-y-icons packagekit pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-themes wireplumber system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
@@ -10985,13 +10984,12 @@ enabled_metadata=1
 priority=50
 NOBARAREPO
 dnf install -y --allowerasing nobara-gpg-keys nobara-repos nobara-release-workstation
-mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
+mkdir -p /mnt/proc /mnt/sys
+mount -t proc none /mnt/proc
+mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
+mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -11002,8 +11000,8 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
 fi
 umount /mnt/sys
+umount /mnt/proc/sys
 umount /mnt/proc
-umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -11013,10 +11011,12 @@ set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+dnf config-manager setopt fedora-cisco-openh264.enabled=1
+dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy intel-media-driver lutris mangohud mesa-va-drivers mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns ocl-icd plymouth-system-theme protonplus-next steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
+desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vdpau-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns ocl-icd plymouth-system-theme protonplus-next steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
@@ -11072,7 +11072,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf swap -y ffmpeg-free ffmpeg --allowerasing
+dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
 ${install_desktop}
 systemctl enable ${desktop_services}
 INSTALL_DESKTOP
@@ -12849,13 +12849,12 @@ set -e
 mkdir -p /etc/yum.fake.repos.d
 echo -e '[local]\nname = local\nbaseurl = file:///source\nenabled=1\ngpgcheck=0\nrepo_gpgcheck=0' > /etc/yum.fake.repos.d/local.repo
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d install -y coreutils util-linux
-mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
+mkdir -p /mnt/proc /mnt/sys
+mount -t proc none /mnt/proc
+mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
+mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf qubes-release qubes-dom0-unwanted-packages
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.fedoraproject.org/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -12864,8 +12863,8 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
 fi
 umount /mnt/sys
+umount /mnt/proc/sys
 umount /mnt/proc
-umount /mnt/dev
 rm -r /etc/yum.fake.repos.d
 mkdir -p /mnt/var/lib/qubes/template-packages
 cp /source/Packages/qubes-template-*.rpm /mnt/var/lib/qubes/template-packages/
@@ -12971,21 +12970,20 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-mkdir -p /mnt/dev /mnt/proc /mnt/sys
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
+mkdir -p /mnt/proc /mnt/sys
+mount -t proc none /mnt/proc
+mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
+mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
 dnf install --installroot=/mnt --releasever $(echo ${rockylinux_version} | tr A-Z a-z) -y @core openssl tar
 if [ ! -z "${mirror_RockyLinux}" ]; then
 	sed -i 's@^#baseurl=http://dl.rockylinux.org/\$contentdir@baseurl=${mirror_RockyLinux}@g' /mnt/etc/yum.repos.d/rocky*.repo
 	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/rocky*.repo
 fi
 umount /mnt/sys
+umount /mnt/proc/sys
 umount /mnt/proc
-umount /mnt/dev
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -13853,8 +13851,8 @@ LINUXLOOPSFIXBOTTOM
 	sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/live/vmlinuz
 	openssl pkcs7 -print_certs -inform der -in /mnt/etc/secureboot_key/MOK.tmp -out /mnt/etc/secureboot_key/MOK.pem
 	openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
+	umount /isomount
 fi
-umount /isomount
 INSTALL_SCRIPT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_script
 
@@ -13898,7 +13896,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd libfuse2 squashfuse sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -15230,6 +15228,20 @@ if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ 
 cat >"${bootstrapdir}"/tmp/linuxloops/enter_chroot <<ENTERCHROOT
 #!/bin/bash
 set -e
+ln -s /dev/null /mnt/etc/tmpfiles.d/static-nodes-permissions.conf
+ln -s /dev/null /mnt/etc/tmpfiles.d/tpm-udev.conf
+ln -s /dev/null /mnt/etc/udev/rules.d/50-udev-default.rules
+ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-modules-load.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-remount-fs.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-timedated.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-udev-load-credentials.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-udev-settle.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-udev-trigger.service
+ln -s /dev/null /mnt/etc/systemd/system/systemd-udevd.service
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
@@ -15246,22 +15258,20 @@ mkdir -p /mnt/tmp/linuxloops
 mount --bind /tmp/linuxloops /mnt/tmp/linuxloops
 mount --make-slave /mnt/tmp/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
-	mount --make-slave /mnt/dev
+	if [ -d /mnt/sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /mnt/sys/module/apparmor; fi
 	mount --bind \$(tty) /mnt/dev/console
 	mount --make-slave /mnt/dev/console
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
-	ln -s /dev/null /mnt/etc/systemd/system/connman.service
-	ln -s /dev/null /mnt/etc/systemd/system/NetworkManager.service
 	touch /tmp/pid_ns
 	sudo -b container=chroot unshare --pid=/tmp/pid_ns --fork --mount-proc --kill-child --root=/mnt /lib/systemd/systemd --unit=basic.target
 	sleep 30
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "/lib/systemd/systemd-udevd --daemon"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "mkdir -p ${bootstrapdir}"
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "ln -s / ${bootstrapdir}/mnt"
-	chroot_cmd="nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt"
+	if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
+		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
+		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "mkdir -p ${bootstrapdir}"
+		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "ln -s / ${bootstrapdir}/mnt"
+	fi
+	chroot_cmd="nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash"
 else
 	chroot_cmd="chroot /mnt"
 fi
@@ -15292,14 +15302,23 @@ if [ -f /tmp/linuxloops/install_initramfs ]; then \${chroot_cmd} /tmp/linuxloops
 if [ -f /tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linuxloops/install_bootloader; fi
 if [ -f /tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
-if [ "${systemd_init}" == "Yes" ]; then
+if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	rm /mnt/usr/sbin/policy-rc.d
-	rm /mnt/etc/systemd/system/connman.service
-	rm /mnt/etc/systemd/system/NetworkManager.service
-	rm /mnt/etc/systemd/system/systemd-resolved.service
-	rm /mnt/etc/systemd/system/systemd-binfmt.service
-	umount /mnt/dev/console
 fi
+rm /mnt/etc/systemd/system/systemd-udevd.service
+rm /mnt/etc/systemd/system/systemd-udev-trigger.service
+rm /mnt/etc/systemd/system/systemd-udev-settle.service
+rm /mnt/etc/systemd/system/systemd-udev-load-credentials.service
+rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service
+rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service
+rm /mnt/etc/systemd/system/systemd-timedated.service
+rm /mnt/etc/systemd/system/systemd-resolved.service
+rm /mnt/etc/systemd/system/systemd-remount-fs.service
+rm /mnt/etc/systemd/system/systemd-modules-load.service
+rm /mnt/etc/systemd/system/systemd-binfmt.service
+rm /mnt/etc/udev/rules.d/50-udev-default.rules
+rm /mnt/etc/tmpfiles.d/tpm-udev.conf
+rm /mnt/etc/tmpfiles.d/static-nodes-permissions.conf
 ENTERCHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/enter_chroot
 }
@@ -15395,7 +15414,6 @@ else
 	rm -rf /var/lib/dkms/mok.pub /var/lib/dkms/mok.key
 	ln -s /etc/secureboot_key/MOK.der /var/lib/dkms/mok.pub
 	ln -s /etc/secureboot_key/MOK.key /var/lib/dkms/mok.key
-
 fi
 SECUREBOOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_secureboot
@@ -17261,8 +17279,8 @@ NIXOSCHROOT
 NIXOSSETPW
 rm -rf /mnt/tmp/*
 elif [ "${systemd_init}" == "Yes" ]; then
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt /tmp/linuxloops/set_userpw
-	if [ -f /tmp/linuxloops/selinux_fix ]; then nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt /tmp/linuxloops/selinux_fix; fi
+	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash /tmp/linuxloops/set_userpw
+	if [ -f /tmp/linuxloops/selinux_fix ]; then nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash /tmp/linuxloops/selinux_fix; fi
 else
 	chroot /mnt /tmp/linuxloops/set_userpw
 	if [ -f /tmp/linuxloops/selinux_fix ]; then chroot /mnt /tmp/linuxloops/selinux_fix; fi
@@ -17281,8 +17299,6 @@ set -e
 mkdir -p /var/lib/bluetooth /var/lib/NetworkManager
 chmod 0700 /var/lib/bluetooth /var/lib/NetworkManager
 if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]; then
-	ostree admin finalize-staged
-	sed -i "/(ostree:1)/,/}/d" /boot/loader/grub.cfg
 	echo "Applying selinux labels..."
 	echo '/var/swap(/.*)?       system_u:object_r:swapfile_t:s0' >> /etc/selinux/targeted/contexts/files/file_contexts.local
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /boot
@@ -17302,6 +17318,8 @@ setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts
 RELABEL_CUSTOM_MOUNT
 		done
 	fi)
+	ostree admin finalize-staged
+	sed -i "/(ostree:1)/,/}/d" /boot/loader/grub.cfg
 else
 	echo "Applying selinux labels..."
 	echo '/var/swap(/.*)?       system_u:object_r:swapfile_t:s0' >> /etc/selinux/targeted/contexts/files/file_contexts.local
@@ -17360,6 +17378,7 @@ if mountpoint -q /mnt/dev/shm; then umount /mnt/dev/shm; fi
 if mountpoint -q /mnt/dev/pts; then umount /mnt/dev/pts; fi
 if mountpoint -q /mnt/dev/console; then umount /mnt/dev/console; fi
 if mountpoint -q /mnt/dev; then umount /mnt/dev; fi
+if mountpoint -q /mnt/sys/module/apparmor; then umount /mnt/sys/module/apparmor; fi
 if mountpoint -q /mnt/sys/firmware/efi/efivars; then umount /mnt/sys/firmware/efi/efivars; fi
 if mountpoint -q /mnt/sys; then umount /mnt/sys; fi
 if mountpoint -q /mnt/proc/sys; then umount /mnt/proc/sys; fi
@@ -17426,6 +17445,7 @@ if mountpoint -q "${chrootdir}"/dev/shm; then umount "${chrootdir}"/dev/shm; fi
 if mountpoint -q "${chrootdir}"/dev/pts; then umount "${chrootdir}"/dev/pts; fi
 if mountpoint -q "${chrootdir}"/dev/console; then umount "${chrootdir}"/dev/console; fi
 if mountpoint -q "${chrootdir}"/dev; then umount "${chrootdir}"/dev; fi
+if mountpoint -q "${chrootdir}"/sys/module/apparmor; then umount "${chrootdir}"/sys/module/apparmor; fi
 if mountpoint -q "${chrootdir}"/sys/firmware/efi/efivars; then umount "${chrootdir}"/sys/firmware/efi/efivars; fi
 if mountpoint -q "${chrootdir}"/sys; then umount "${chrootdir}"/sys; fi
 if mountpoint -q "${chrootdir}"/proc/sys; then umount "${chrootdir}"/proc/sys; fi
@@ -17571,55 +17591,54 @@ if [ "${1}" == "iso" ]; then
 	fi
 elif [ "${1}" == "lxc" ]; then
 	master_key=E7FB0CAEC8173D669066514CBAEFF88C22F6E216
-	for lxcserver in https://sgp1lxdmirror01.do.letsbuildthe.cloud https://sfo3lxdmirror01.do.letsbuildthe.cloud https://fra1lxdmirror01.do.letsbuildthe.cloud; do
-		available_builds=$(curl -Ls ${lxcserver}/images/"${2}"/"${3}"/amd64/"${4}"/ | tr '>' '\n' | grep '<a href' | cut -d '=' -f2 | cut -d'"' -f2 | cut -d'/' -f1 | sort -r)
-		for build in ${available_builds}; do
-			if [ "${build}" == "" ] || [ "${build}" == ".." ] || ! curl -L --output /dev/null --silent --head --fail https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz; then continue; fi
-			echo "Downloading lxc rootfs checksum"
-			rm -f "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
-			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/SHA256SUMS -o "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
-			if [ -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz ] && [ -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc ] && [ "$(sha256sum ${linuxloopsdir}/cache/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/cache/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
-				if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
-				if ([ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz) && tar xf "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz -C "${bootstrapdir}"; then
-					echo "Using cached lxc rootfs."
+	cur_speed=0; for lxcserver in https://sgp1lxdmirror01.do.letsbuildthe.cloud https://sfo3lxdmirror01.do.letsbuildthe.cloud https://fra1lxdmirror01.do.letsbuildthe.cloud; do if ! avg_speed=$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "${lxcserver}/images" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror ${lxcserver} is ${avg_speed}; if [ ${avg_speed} -gt ${cur_speed} ]; then cur_speed=${avg_speed}; lxc_mirror=${lxcserver}; fi; done; echo Using mirror ${lxc_mirror}
+	available_builds=$(curl -Ls ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/ | tr '>' '\n' | grep '<a href' | cut -d '=' -f2 | cut -d'"' -f2 | cut -d'/' -f1 | sort -r)
+	for build in ${available_builds}; do
+		if [ "${build}" == "" ] || [ "${build}" == ".." ] || ! curl -L --output /dev/null --silent --head --fail ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz; then continue; fi
+		echo "Downloading lxc rootfs checksum"
+		rm -f "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
+		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/SHA256SUMS -o "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
+		if [ -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz ] && [ -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc ] && [ "$(sha256sum ${linuxloopsdir}/cache/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/cache/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
+			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
+			if ([ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz) && tar xf "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz -C "${bootstrapdir}"; then
+				echo "Using cached lxc rootfs."
+				rm -f "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
+				return 0
+			fi
+		fi
+		rm -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz*
+		echo "Downloading lxc rootfs image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz..."
+		if ! sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; fi
+		echo "Verifying lxc rootfs checksum"
+		if [ "$(sha256sum ${linuxloopsdir}/cache/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/cache/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
+			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
+				echo "Warning: lxc rootfs cannot be verified as gpg is not available."
+				skip_gpg=1
+			elif [ -z "${master_key}" ]; then
+				echo "Warning: lxc rootfs cannot be verified as no master key provided."
+				skip_gpg=1
+			else
+				echo "Importing lxc master key"
+				sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkp://keyserver.ubuntu.com:80 --recv "${master_key}"
+				echo "Downloading lxc rootfs signature"
+				sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc
+				echo "Verifying lxc rootfs signature"
+			fi
+			if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then
+				if tar xf "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz -C "${bootstrapdir}"; then
+					echo "lxc rootfs successfylly extracted."
 					rm -f "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
 					return 0
-				fi
-			fi
-			rm -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz*
-			echo "Downloading lxc rootfs image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz..."
-			if ! sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from https://images.linuxcontainers.org/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; fi
-			echo "Verifying lxc rootfs checksum"
-			if [ "$(sha256sum ${linuxloopsdir}/cache/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/cache/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
-				if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
-					echo "Warning: lxc rootfs cannot be verified as gpg is not available."
-					skip_gpg=1
-				elif [ -z "${master_key}" ]; then
-					echo "Warning: lxc rootfs cannot be verified as no master key provided."
-					skip_gpg=1
 				else
-					echo "Importing lxc master key"
-					sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkp://keyserver.ubuntu.com:80 --recv "${master_key}"
-					echo "Downloading lxc rootfs signature"
-					sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://images.linuxcontainers.org/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc
-					echo "Verifying lxc rootfs signature"
-				fi
-				if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then
-					if tar xf "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz -C "${bootstrapdir}"; then
-						echo "lxc rootfs successfylly extracted."
-						rm -f "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
-						return 0
-					else
-						echo "Failed to extract lxc rootfs, trying next image."
-					fi
-				else
-					echo "signature verification failed, trying next image."
+					echo "Failed to extract lxc rootfs, trying next image."
 				fi
 			else
-				echo "sha256sum verification failed, trying next image."
+				echo "signature verification failed, trying next image."
 			fi
-			rm -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz* "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
-		done
+		else
+			echo "sha256sum verification failed, trying next image."
+		fi
+		rm -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz* "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
 	done
 elif [ "${1}" == "rootfs-xz" ]; then
 	echo "Downloading rootfs image checksum"

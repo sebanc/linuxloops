@@ -27,6 +27,13 @@ Arch Linux does not have secure boot support through its official repository. Li
 Artix Linux does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
+## Bazzite
+
+Secure boot does not work out of the box on Bazzite, you have to disable secure boot in the bios first, then boot into Bazzite and run:  
+`sudo mokutil --import /etc/secureboot_key/MOK.der`  
+Reboot, enroll the key in shim and re-enable secureboot.  
+
+
 ## BlendOS
 
 BlendOS does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
