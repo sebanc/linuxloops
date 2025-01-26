@@ -39,7 +39,7 @@ Once the live image has booted, set your keyboard layout (Preferences -> Keyboar
 
 Install 7zip, download the linuxloops live 7z archive in the release section of this Github repository and extract the linuxloops live 7z archive.  
 
-Write the resulting image file to your USB flashdrive using balenaEtcher.  
+Write the resulting image file to your USB flashdrive using Rufus.  
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 

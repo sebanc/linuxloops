@@ -29,7 +29,7 @@ Linuxloops is a generic / declarative linux distribution installer that also sup
 
 Linuxloops GUI installer can be run from most linux ditributions live images as long as they provide a desktop environment (according to the instructions in the next section), however the available space is often limited in live images and some distros (Bazzite, BlissOS, Brunch, ChromeOS-Flex, Fedora-Atomic, Qubes, Tails) will not be installable due to the lack of storage. As such, it is recommended to use the linuxloops live disk instead.  
 
-* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using your favorite image writer (Gnome Disk Utility / KDE ISO Image Writer for Linux or balenaEtcher for Windows).  
+* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using an image writer (Gnome Disk Utility / KDE ISO Image Writer for Linux or Rufus for Windows).  
 
 * Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
@@ -45,12 +45,12 @@ Detailed instructions:
 Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using Rufus/Etcher or boot them using [Grub2Win][Grub2Win link].  
 
 * Install the below packages depending on your distribution:  
-  * Debian / Ubuntu based distributions: `sudo apt install curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils`  
-  * Arch based distributions: `sudo pacman -Syu curl libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
-  * RHEL based distributions: `sudo dnf install curl libatomic libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
-  * Gentoo: `sudo emerge app-arch/xz-utils dev-lang/python net-misc/curl x11-libs/libxkbcommon x11-libs/xcb-util-cursor x11-libs/xcb-util-keysyms x11-libs/xcb-util-wm`  
-  * OpenSUSE: `sudo zypper in curl libatomic1 libgthread-2_0-0 libxcb-cursor0 libxcb-keysyms1 libxcb-ewmh2 libxcb-icccm4 libxkbcommon-x11-0 python3-virtualenv xz`  
-  * Void: `sudo xbps-install curl libxkbcommon xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * Debian / Ubuntu based distributions: `sudo apt install curl fontconfig libasound2t64 libatomic1 libnss3 libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libxkbcommon-x11-0 libxkbfile1 python3-venv xz-utils`  
+  * Arch based distributions: `sudo pacman -Syu curl fontconfig libxkbcommon-x11 nss python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * RHEL based distributions: `sudo dnf install curl fontconfig libatomic libxkbcommon-x11 nss python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * Gentoo: `sudo emerge app-arch/xz-utils dev-lang/python dev-libs/nss media-libs/fontconfig net-misc/curl x11-libs/libxkbcommon x11-libs/xcb-util-cursor x11-libs/xcb-util-keysyms x11-libs/xcb-util-wm`  
+  * OpenSUSE: `sudo zypper in curl fontconfig libatomic1 libgthread-2_0-0 libxcb-cursor0 libxcb-ewmh2 libxcb-keysyms1 libxcb-icccm4 libxcb-shape0 libxkbcommon-x11-0 libxkbfile1 mozilla-nss python3-virtualenv xz`  
+  * Void: `sudo xbps-install curl fontconfig libxkbcommon nss xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
   * NixOS: No packages to install (the necessary packages will be installed by linuxloops for use in nix-shell environment)  
 
 * Download the Linuxloops script:  
