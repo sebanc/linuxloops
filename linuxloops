@@ -599,19 +599,19 @@ case "${distribution}" in
 		opensuse_version="${version}"
 		surface_supported="No"
 		case "${version}" in
-			'15.6')
-				bootstrap="rootfs-xz https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
+			'Leap/15.6')
+				bootstrap="rootfs-xz https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
 				;;
 			*)
-				bootstrap="rootfs-xz https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
 				;;
 		esac
 		;;
@@ -1779,7 +1779,7 @@ set -e
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
 dnf --enablerepo=crb install -y almalinux-sb-certs
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -1880,7 +1880,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 systemctl enable lightdm.service
 "
 	;;
@@ -2165,7 +2165,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 systemctl enable lightdm.service
 "
 	;;
@@ -2492,7 +2492,7 @@ rc-update add lightdm default
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2823,7 +2823,7 @@ rc-update add lightdm default
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -3147,7 +3147,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3455,7 +3455,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3762,7 +3762,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4063,7 +4063,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4363,7 +4363,7 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4671,7 +4671,7 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -5084,7 +5084,7 @@ else
 		install_desktop="
 echo \"track: 'cinnamon'\" >> /system.yaml
 "
-		custom_packages="gnome-terminal nemo network-manager-applet gnome-keyring papirus-icon-theme xdg-desktop-portal-gtk ${custom_packages}"
+		custom_packages="gnome-terminal nemo network-manager-applet gnome-keyring papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations ${custom_packages}"
 		;;
 		'Gnome')
 		default_session="gnome-wayland"
@@ -5588,7 +5588,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 systemctl enable lightdm.service
 "
 	;;
@@ -6220,14 +6220,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -6484,14 +6484,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -6745,14 +6745,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -7008,14 +7008,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -7256,14 +7256,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -7504,7 +7504,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -7614,7 +7614,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap
+dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
@@ -7838,7 +7838,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap
+dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
@@ -8727,14 +8727,14 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Gnome')
@@ -9099,7 +9099,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -9108,14 +9108,14 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Mate')
@@ -9260,14 +9260,14 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 esac
@@ -9388,7 +9388,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings network-manager-applet gnome-keyring gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings network-manager-applet gnome-keyring gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 systemctl enable lightdm.service
 "
 	;;
@@ -9660,7 +9660,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings network-manager-applet gnome-keyring gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings network-manager-applet gnome-keyring gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 systemctl enable lightdm.service
 "
 	;;
@@ -9932,7 +9932,7 @@ systemctl enable lightdm.service
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings network-manager-applet gnome-keyring gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings network-manager-applet gnome-keyring gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
 systemctl enable lightdm.service
 "
 	;;
@@ -10204,14 +10204,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -10462,7 +10462,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -10962,16 +10962,26 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)-x86_64
+curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
 cat >/etc/yum.repos.d/nobara.repo <<'NOBARAREPO'
-[nobara-baseos-\$releasever]
-name=nobara-baseos-\$releasever
-#baseurl=https://nobara-baseos.nobaraproject.org/\$releasever/
-mirrorlist=https://mirrors.nobaraproject.org/$(echo ${nobara_version} | tr A-Z a-z)/baseos
+[nobara]
+name=nobara
+mirrorlist=https://mirrors.nobaraproject.org/rolling/nobara
 type=rpm-md
 skip_if_unavailable=True
 gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$releasever-\$basearch
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
+repo_gpgcheck=0
+enabled=1
+enabled_metadata=1
+
+[nobara-updates]
+name=nobara-updates
+mirrorlist=https://mirrors.nobaraproject.org/rolling/baseos
+type=rpm-md
+skip_if_unavailable=True
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
 repo_gpgcheck=0
 enabled=1
 enabled_metadata=1
@@ -11003,14 +11013,14 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap
+dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vdpau-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns ocl-icd plymouth-system-theme protonplus-next steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
+desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts goverlay gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vdpau-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme protonplus-next steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
@@ -11066,7 +11076,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
+dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ocl-icd ffmpeg-free mozilla-openh264 gstreamer1-plugins-bad-free-extras libavcodec-free libavcodec-freeworld libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mesa-libgallium-freeworld mesa-va-drivers-freeworld mesa-vdpau-drivers-freeworld openh264 x264-libs x265-libs gstreamer1-plugins-bad-free-extras.i686 libavcodec-free.i686 libavcodec-freeworld.i686 libavdevice-free.i686 libavfilter-free.i686 libavformat-free.i686 libavutil-free.i686 libpostproc-free.i686 libswresample-free.i686 libswscale-free.i686 mesa-libgallium-freeworld.i686 mesa-va-drivers-freeworld.i686 mesa-vdpau-drivers-freeworld.i686 openh264.i686 x264-libs.i686 x265-libs.i686
 ${install_desktop}
 systemctl enable ${desktop_services}
 INSTALL_DESKTOP
@@ -12060,14 +12070,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Gnome')
@@ -12497,7 +12507,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 echo 'autoinstall_all_kernels="y"' >> /etc/dkms/framework.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -12623,7 +12633,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
@@ -12870,7 +12880,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-*
 dnf --setopt=reposdir=/etc/yum.repos.d/ update -y
-dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion bubblewrap cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 ntfs-3g openssl os-prober sbsigntools @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
+dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion bubblewrap cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 langpacks-${packages_locale} ntfs-3g openssl os-prober sbsigntools @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
 systemctl set-default graphical.target
 cat >/root/anaconda-ks.cfg <<INITIALSETUP
 #version=DEVEL
@@ -12987,7 +12997,7 @@ set -e
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
 dnf --enablerepo=crb install -y rocky-sb-certs
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -13890,7 +13900,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -13913,14 +13923,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -14163,7 +14173,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -14186,14 +14196,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -14436,7 +14446,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -14459,14 +14469,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -14936,7 +14946,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -16476,6 +16486,7 @@ add_linuxloops_post
 echo -e "LINUXLOOPSBINARY" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 echo -e "chmod 0755 /boot/linuxloops/linuxloops" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 echo -e "(cd /boot/linuxloops && find . | cpio -o -H newc | gzip > /boot/linuxloops/linuxloops-recovery.img)" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
+echo -e "mkdir -p /etc/dracut.conf.d" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 echo -e "echo 'hostonly=\"no\"' > /etc/dracut.conf.d/99-linuxloops.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 echo -e "dracut --regenerate-all --force" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_initramfs
@@ -17184,6 +17195,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/cleanup <<CLEANUP
 #!/bin/bash
 set -e
 if [ ! -z "\$(command -v apt)" ]; then
+	if [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(check-language-support -l ${packages_locale}); fi
 	rm -f /etc/apt/apt.conf.d/99linuxloops
 	DEBIAN_FRONTEND=noninteractive apt autoremove -y
 elif [ ! -z "\$(command -v dnf)" ]; then
@@ -17798,8 +17810,18 @@ end_bootstrap
 trap '' INT TERM
 }
 
+set_packages_locale()
+{
+if [ "$(echo ${locale} | cut -d'_' -f1)" == "C" ]; then
+	packages_locale="en"
+else
+	packages_locale="$(echo ${locale} | cut -d'_' -f1)"
+fi
+}
+
 start_install()
 {
+set_packages_locale
 if [ "${install_type}" == "disk" ]; then
 	for i in ls "${fullpath}"?*; do
 		umount ${i} > /dev/null 2>&1
@@ -19355,7 +19377,7 @@ until false; do
 						done
 						destination=$(gui_launch -m disk -t "Drive selection" -p "${list}" -q "Select the target drive:" | cut -d' ' -f1)
 						if [ -z "${destination}" ]; then exit 1; elif [ "${destination}" == "refresh" ]; then continue; fi
-						if [ ! -z "${wsl}" ] && [ "${destination}" == "return" ]; then break; continue 2; elif [ "${destination}" == "return" ]; then break; continue; fi
+						if [ "${destination}" == "return" ]; then break; continue; fi
 						fullpath="${destination}"
 						if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then
 							if [ $(( ($(lsblk -drnbpf -o SIZE ${destination}) / 1024 /1024 / 1024) - 14 )) -eq 0 ]; then
@@ -19379,7 +19401,7 @@ until false; do
 							destination=$(gui_launch -m image -t "Image file creation" -q "Please select the image file path:" -p "$(eval echo ~${SUDO_USER})/${distribution}.img")
 						fi
 						if [ -z "${destination}" ]; then exit 1; fi
-						if [ "${destination}" == "return" ]; then break; continue; fi
+						if [ ! -z "${wsl}" ] && [ "${destination}" == "return" ]; then break 2; continue; elif [ "${destination}" == "return" ]; then break; continue; fi
 						if [ "$(echo -n ${destination} | tail -c 4)" != ".img" ]; then destination="${destination}.img"; fi
 						if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's@[^/]*$@@')" ]); then gui_launch -m messagebox -t "Error in image file path selection" -q "Desination path does not exist, please provide an existing path."; continue; fi
 						if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then gui_launch -m messagebox -t "Error in image file path selection" -q "Linuxloops disk images cannot be booted from an encrypted partition."; continue; fi
@@ -19533,7 +19555,7 @@ else
 	if [ ${return_value} -eq 1 ]; then exit_with_error "Failed to perform the installation of ${distribution} in chroot."; fi
 	grub_config
 	if [ ! -z "${wsl}" ]; then
-		grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.<br><br>********************************************************************************************<br>If you want to boot the image directly using Grub2Win:<br>The grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt<br>You need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".<br>Please note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):<br>- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.<br>- Disable fast startup.<br>- Disable hibernation.<br><br>Once done, reboot your computer and select ${distribution} from the Grub2Win menu.<br>********************************************************************************************"
+		grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.<br><br>********************************************************************************************<br>If you want to boot the image directly using Grub2Win:<br>The grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt<br>You need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".<br><br>Please note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):<br>- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.<br>- Disable fast startup.<br>- Disable hibernation.<br><br>Once done, reboot your computer and select ${distribution} from the Grub2Win menu.<br>********************************************************************************************"
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	elif [ ! -z "${brunch}" ]; then
 		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><textarea cols=\"80\" rows=\"14\" style=\"font-size: 14px;\">${config}</textarea><br><br>Now copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.<br><br>Once done, press CTRL+X and then ENTER to save, reboot your computer and start ${distribution}"
