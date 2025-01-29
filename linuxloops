@@ -17763,7 +17763,11 @@ mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/dev/shm
 mount -t tmpfs none "${bootstrapdir}"/run
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/tmp
 mkdir -p "${bootstrapdir}"/tmp/linuxloops
-mount -t tmpfs -o mode=1777,exec,symfollow none "${bootstrapdir}"/tmp/linuxloops
+if [ ! -z "${brunch}" ] || [ ! -z "${chromeos}" ]; then
+	mount -t ramfs -o mode=1777,exec,symfollow none "${bootstrapdir}"/tmp/linuxloops
+else
+	mount -t tmpfs -o mode=1777,exec,symfollow none "${bootstrapdir}"/tmp/linuxloops
+fi
 if [ -f /etc/hostname ]; then
     cp /etc/hostname "${bootstrapdir}"/etc/hostname
 else
@@ -19705,7 +19709,7 @@ compute_partitions
 if [ ! $(list_array "available_locales" | grep -w "${locale}") ]; then echo "Locale ${locale} is not available, supported locales are:"; echo $(list_array "available_locales" | sed -e 's@\n@ @g'); exit 1; fi
 if [ ! $(list_array "available_keymaps" | grep -w "${keymap}") ]; then echo "Keymap ${keymap} is not available, supported keympas are:"; echo $(list_array "available_keymaps" | sed -e 's@\n@ @g'); exit 1; fi
 if [ ! $(list_array "available_timezones" | grep -w "${timezone}") ]; then echo "Timezone ${timezone} is not available, supported timezones are:"; echo $(list_array "available_timezones" | sed -e 's@\n@ @g'); exit 1; fi
-if [ ! -z "${chromeos}" ] && [ ! -z "${hostname}" ] && ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then echo "Provided hostname contains invalid characters."; exit 1; fi
+if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ ! -z "${hostname}" ] && ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then echo "Provided hostname contains invalid characters."; exit 1; fi
 if [ "${root_fstype}" == "btrfs" ] && [ ! "${btrfs_supported}" == "Yes" ]; then echo "Filesystem type btrfs is not available for this distribution version."; exit 1; fi
 if [ "${nvidia}" == "Yes" ] && [ ! "${nvidia_supported}" == "Yes" ]; then echo "nvidia proprietary driver is not available for this distribution version."; exit 1; fi
 if [ "${surface}" == "Yes" ] && [ ! "${surface_supported}" == "Yes" ]; then echo "Surface patches are not available for this distribution version."; exit 1; fi
