@@ -306,7 +306,7 @@ case "${distribution}" in
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="No"
 		surface_supported="No"
-		if [ -z "${github}" ]; then systemd_init="Yes"; fi
+		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		;;
 	'BlendOS')
 		available_environments=( "None" "Cinnamon" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
@@ -449,7 +449,7 @@ case "${distribution}" in
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="Yes"
 		surface_supported="No"
-		if [ -z "${github}" ]; then systemd_init="Yes"; fi
+		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		;;
 	'Gentoo')
 		available_environments=( "None" "Cinnamon" "Enlightenment" "Gnome" "i3" "Lxqt" "Mate" "Plasma" "Xfce" )
@@ -733,7 +733,7 @@ case "${distribution}" in
 		mirrors_supported=( "Ubuntu" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		if [ -z "${github}" ]; then systemd_init="Yes"; fi
+		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		case "${version}" in
 			'24.04')
 				ubuntu_version="Noble"
@@ -767,7 +767,7 @@ case "${distribution}" in
 		mirrors_supported=( "Ubuntu" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		if [ -z "${github}" ]; then systemd_init="Yes"; fi
+		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		ubuntu_version="Jammy"
 		zorin_version="${version}"
 		;;
@@ -17971,7 +17971,7 @@ echo -e "${config}" > "${fullpath}".grub.txt
 chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".grub.txt
 if [ ! -z "${chromeos}" ]; then
 	mkdir -p /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
-	source=$(blkid --match-token LABEL=EFI-SYSTEM | head -1 | cut -d':' -f1)
+	source=$(blkid --match-token PARTLABEL=EFI-SYSTEM | head -1 | cut -d':' -f1)
 	mount "${source}" /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	rm -rf /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot
 	mkdir -p /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot
@@ -19565,7 +19565,7 @@ else
 		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><textarea cols=\"80\" rows=\"14\" style=\"font-size: 14px;\">${config}</textarea><br><br>Now copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.<br><br>Once done, press CTRL+X and then ENTER to save, reboot your computer and start ${distribution}"
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	elif [ ! -z "${chromeos}" ]; then
-		grubinstall="The grub config needed to boot ${distribution} has been added to your boot partition 12, if not already done, refer to MrChromebox instructions to allow booting from legacy hdd boot (through RW_LEGACY firmware or ALT firmware), then reboot your computer and press CTRL+L to start ${distribution}."
+		grubinstall="The grub config needed to boot ${distribution} has been added to the EFI (partition 12). If not already done enable booting from ALT firmware, then reboot your computer and press CTRL+L to start ${distribution}."
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	else
 		if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
