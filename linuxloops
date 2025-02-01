@@ -8655,7 +8655,7 @@ nix-channel --remove nixpkgs
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
 nix-env -iA nixpkgs.nixos-install-tools
-sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
+sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install --flake /mnt/etc/nixos#GLF-OS
 /tmp/linuxloops/install_user
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
@@ -8663,7 +8663,6 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
 if [ "${useraccount_autologin}" == "Yes" ]; then
 	autologin_commands="
-  # Enable automatic login for the user.
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = \"${useraccount_name}\";
 
@@ -8675,9 +8674,10 @@ fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
 sudo nixos-enter << 'NIXOSCHROOT'
 set -e
-nix-channel --remove nixos
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
-nix-channel --update
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install --noninteractive flathub org.dupot.easyflatpak
+useradd -m '${useraccount_name}'
+usermod -aG wheel,networkmanager,scanner,lp,disk '${useraccount_name}'
 NIXOSCHROOT
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
@@ -15583,7 +15583,7 @@ Xks0dFlInjDFyMgAwsOaVDTWwjBfAaklUysV+CxhhEvSnuGx9h8Mi88K6g8heA==
 NVIDIAREPOKEY
 rpm --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-db27fd5a-62589a51.asc
 zypper --non-interactive install openSUSE-repos-$(echo ${opensuse_version} | cut -d '/' -f1)-NVIDIA
-zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-utils-G06 x11-video-nvidiaG06
+zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-video-G06
 INSTALLNVIDIA
 elif [ "${distribution}" == "Parrot" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -16215,7 +16215,6 @@ cat >/boot/linuxloops/initcpio-hook/linuxloops <<'INSTALLHOOK'
 build() {
 	add_module "8250_dw"
 	add_module "aes"
-	add_module "amdgpu"
 	add_module "atkbd"
 	add_module "btrfs"
 	add_module "cbc"
@@ -16224,11 +16223,9 @@ build() {
 	add_module "ext4"
 	add_module "fuse"
 	add_module "i8042"
-	add_module "i915"
 	add_module "intel_lpss"
 	add_module "intel_lpss_pci"
 	add_module "loop"
-	add_module "nouveau"
 	add_module "nvme"
 	add_module "quota_v1"
 	add_module "quota_v2"
@@ -16323,7 +16320,6 @@ esac
 
 	manual_add_modules "8250_dw"
 	manual_add_modules "aes"
-	manual_add_modules "amdgpu"
 	manual_add_modules "atkbd"
 	manual_add_modules "btrfs"
 	manual_add_modules "cbc"
@@ -16332,11 +16328,9 @@ esac
 	manual_add_modules "ext4"
 	manual_add_modules "fuse"
 	manual_add_modules "i8042"
-	manual_add_modules "i915"
 	manual_add_modules "intel_lpss"
 	manual_add_modules "intel_lpss_pci"
 	manual_add_modules "loop"
-	manual_add_modules "nouveau"
 	manual_add_modules "nvme"
 	manual_add_modules "quota_v1"
 	manual_add_modules "quota_v2"
@@ -16414,7 +16408,6 @@ check() {
 installkernel() {
 	instmods "8250_dw"
 	instmods "aes"
-	instmods "amdgpu"
 	instmods "atkbd"
 	instmods "btrfs"
 	instmods "cbc"
@@ -16423,11 +16416,9 @@ installkernel() {
 	instmods "ext4"
 	instmods "fuse"
 	instmods "i8042"
-	instmods "i915"
 	instmods "intel_lpss"
 	instmods "intel_lpss_pci"
 	instmods "loop"
-	instmods "nouveau"
 	instmods "nvme"
 	instmods "quota_v1"
 	instmods "quota_v2"
@@ -16494,7 +16485,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 
 generate_nixos_config()
 {
-cmdline="quiet splash systemd.log_target=null"
+cmdline="systemd.log_target=null quiet"
 if [ ! -z "${kernel_parameters}" ]; then cmdline="${cmdline} ${kernel_parameters}"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_initramfs <<INITNIXOS
 #!/bin/bash
@@ -16520,70 +16511,51 @@ mkdir -p /mnt/etc/nixos
 if [ "${distribution}" == "GLF-OS" ]; then
 pacman -Syu --noconfirm --needed git
 git clone -b main https://github.com/GLF-OS/Nixos-by-GLF.git /tmp/GLF-OS-config
-cp -r /tmp/GLF-OS-config/nix-cfg/glf /mnt/etc/nixos/
+cp -r /tmp/GLF-OS-config/iso-cfg/* /mnt/etc/nixos/
+cp -r /tmp/GLF-OS-config/assets /mnt/etc/nixos/
+cp -r /tmp/GLF-OS-config/modules /mnt/etc/nixos/
 cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
-{ config, pkgs, lib, ... }:
+{ pkgs, lib, ... }:
+
 {
-  imports =
-    [ # Include the linuxloops configuration + GLF modules
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  imports = [
       ./linuxloops.nix
-      ./glf
+      ./customConfig
     ];
 
-  # Define your kernel command line parameters.
-  boot.kernelParams = [ \${cmdline} ];
+  glf.nvidia_config.enable = false;
+  glf.standBy.enable = false;
 
-  # Enable boot logo.
+  boot.kernelParams = [ \${cmdline} ];
   boot.plymouth.enable = true;
 
-  # Install all firmwares.
   hardware.cpu.intel.updateMicrocode = true;
   hardware.cpu.amd.updateMicrocode = true;
   hardware.enableAllFirmware = true;
 
-  # Define your hostname.
-  networking.hostName = "${hostname}";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
-
-  # Set your time zone.
-  time.timeZone = "${timezone}";
-
-  # Select internationalisation properties.
   i18n.defaultLocale = "${locale}.UTF-8";
 
-  # Disable logrotate config check due to a bug during install.
-  services.logrotate.checkConfig = false;
-
-  # Enable the X11 windowing system.
-  services.xserver.enable = true;
-  services.xserver.excludePackages = [ pkgs.xterm ];
-
-  # Enable the GNOME Desktop Environment.
-  services.xserver.displayManager.gdm.enable = true;
-  services.xserver.desktopManager.gnome.enable = true;
-  
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "${keymap}";
-    variant = "";
-  };
-
-  # Configure console keymap
   console.keyMap = "${keymap}";
-
-  # Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.${useraccount_name} = {
-    isNormalUser = true;
-    extraGroups = [ "networkmanager" "wheel" ];
+  services.xserver = {
+    enable = true;
+    excludePackages = [ pkgs.xterm ];
+    xkb.layout = "${keymap}";
+    xkb.variant = "";
   };
+
+  time.timeZone = "${timezone}";
+
+  networking.hostName = "${hostname}";
+  networking.networkmanager.enable = true;
+
+  services.logrotate.checkConfig = false;
 
 ${autologin_commands}
 
   ${nixos_nvidia}
 
-  system.stateVersion = "24.11"; # DO NOT TOUCH 
+  system.stateVersion = "24.11"; # DO NOT TOUCH
 }
 NIXOSCONFIGURATION
 else
@@ -16731,7 +16703,7 @@ boot.loader.grub.useOSProber = false;
 boot.loader.timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo 2; else echo 5; fi);
 
 #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/profiles/all-hardware.nix
-boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "amdgpu" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "i915" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "nouveau" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
+boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
 boot.initrd.compressor="gzip";
 boot.initrd.extraUtilsCommands = ''
 copy_bin_and_libs "\${pkgs.bash}/bin/bash"
@@ -16823,9 +16795,9 @@ if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 fi
 if [ ! "${distribution}" == "Artix" ] && [ ! "${distribution}" == "Devuan" ] && [ ! "${distribution}" == "Gentoo" ] && [ ! "${distribution}" == "Void" ]; then
 	if [ ! -z "${kernel_parameters}" ]; then
-		cmdline_extra="loglevel=3 quiet splash systemd.log_target=null ${kernel_parameters}"
+		cmdline_extra="systemd.log_target=null quiet splash loglevel=4 ${kernel_parameters}"
 	else
-		cmdline_extra="loglevel=3 quiet splash systemd.log_target=null"
+		cmdline_extra="systemd.log_target=null quiet splash loglevel=4"
 	fi
 else
 	if [ ! -z "${kernel_parameters}" ]; then
