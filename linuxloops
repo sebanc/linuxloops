@@ -2429,7 +2429,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -2760,7 +2760,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3090,7 +3090,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3398,7 +3398,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3705,7 +3705,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4006,7 +4006,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4306,7 +4306,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4614,7 +4614,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
