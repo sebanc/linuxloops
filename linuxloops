@@ -2429,7 +2429,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -2760,7 +2760,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3090,7 +3090,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3398,7 +3398,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3705,7 +3705,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4006,7 +4006,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4306,7 +4306,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4614,7 +4614,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux https://mirrors.cloud.tencent.com/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirror1.artixlinux.org/repos https://ftp.sh.cvut.cz/artix-linux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -6214,26 +6214,26 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
@@ -6241,20 +6241,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -6312,14 +6312,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -6478,26 +6478,26 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
@@ -6505,20 +6505,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -6576,14 +6576,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -6739,26 +6739,26 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
@@ -6766,20 +6766,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -6837,14 +6837,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -7002,26 +7002,26 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
@@ -7029,20 +7029,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -7100,14 +7100,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt purge -y slim
 "
 	;;
@@ -7250,26 +7250,26 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment budgie-desktop-view arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment budgie-desktop-view arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
@@ -7277,20 +7277,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -7348,14 +7348,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt purge -y slim
 "
 	;;
@@ -8727,34 +8727,34 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome kali-linux-default xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring kali-linux-default xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver kali-defaults-desktop kali-themes-common libnss-mdns mesa-va-drivers mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'i3/Full')
@@ -8762,7 +8762,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	default_session="i3"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome kali-linux-default xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit kali-linux-default xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -8807,14 +8807,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm kali-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -9108,14 +9108,14 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon mint-info-cinnamon cinnamon-desktop-environment gnome-panel gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Mate')
@@ -9134,14 +9134,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-whiskermenu-plugin xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-whiskermenu-plugin xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-whiskermenu-plugin xfce4-goodies xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-xfce mint-info-xfce xfce4 xfce4-whiskermenu-plugin xfce4-goodies xfce4-power-manager xfce4-terminal thunar greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -9260,14 +9260,14 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mint-meta-cinnamon cinnamon-desktop-environment gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 esac
@@ -10198,26 +10198,26 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring arc-theme nautilus gnome-terminal policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring arc-theme nautilus gnome-terminal mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
@@ -10225,20 +10225,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -10297,14 +10297,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -11174,27 +11174,27 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -11217,14 +11217,14 @@ systemctl enable connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland polkit-gnome gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland polkit-gnome gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
@@ -11440,27 +11440,27 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -11483,14 +11483,14 @@ systemctl enable connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland polkit-gnome gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland polkit-gnome gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
@@ -11706,27 +11706,27 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon polkit-gnome gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
@@ -11749,14 +11749,14 @@ systemctl enable connman.service
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland polkit-gnome gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland polkit-gnome gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
+zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
@@ -12057,53 +12057,53 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring arc-theme nemo gnome-terminal libgdk-pixbuf2.0-bin mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring arc-theme nautilus gnome-terminal libgdk-pixbuf2.0-bin mate-polkit papirus-icon-theme xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n nim anonsurf-gtk metasploit-framework nmap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome nim anonsurf-gtk metasploit-framework nmap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'i3/Full')
 	default_session="i3"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Lxde')
@@ -12148,14 +12148,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm parro
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 esac
@@ -12317,27 +12317,27 @@ case "${environment}" in
 	'Cosmic')
 	default_session="cosmic"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-cosmic-desktop policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-cosmic-desktop mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Cosmic/Full')
 	default_session="cosmic"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-cosmic-desktop policykit-1-gnome xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-cosmic-desktop mate-polkit xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
 "
 	;;
 	'Gnome')
 	default_session="gnome"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
 "
 	;;
 	'Hyprland')
@@ -12522,7 +12522,7 @@ case "${environment}" in
 	install_desktop="
 dpkg --add-architecture i386
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y pop-desktop gnome-online-accounts pop-wallpapers cosmic-store packagekit policykit-1-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y pop-desktop gnome-online-accounts pop-wallpapers cosmic-store packagekit mate-polkit
 if dpkg -s ubuntu-session &>/dev/null; then DEBIAN_FRONTEND=noninteractive apt purge -y ubuntu-session; fi
 "
 	;;
@@ -12627,26 +12627,26 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Enlightenment')
 	default_session="enlightenment"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
 find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 "
@@ -12654,20 +12654,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -12725,14 +12725,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -13910,27 +13910,27 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -13945,20 +13945,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -14023,21 +14023,21 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm ubunt
 	'Ubuntu')
 	default_session="ubuntu-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Ubuntu/Full')
 	default_session="ubuntu-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Unity')
 	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
@@ -14045,20 +14045,20 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -14183,27 +14183,27 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -14218,20 +14218,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -14296,21 +14296,21 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm ubunt
 	'Ubuntu')
 	default_session="ubuntu-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Ubuntu/Full')
 	default_session="ubuntu-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Unity')
 	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
@@ -14318,20 +14318,20 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -14456,27 +14456,27 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
 "
 	;;
 	'Budgie/Full')
 	default_session="budgie-desktop"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Enlightenment')
@@ -14491,20 +14491,20 @@ find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -14569,21 +14569,21 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm ubunt
 	'Ubuntu')
 	default_session="ubuntu-wayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Ubuntu/Full')
 	default_session="ubuntu-wayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Unity')
 	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
 	default_session="unity"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Unity/Full')
@@ -14591,20 +14591,20 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	default_session="unity"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring policykit-1-gnome notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman policykit-1-gnome materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 esac
