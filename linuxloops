@@ -1798,6 +1798,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
+dnf remove -y setroubleshoot-plugins
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
 
@@ -1980,14 +1981,14 @@ systemctl enable sddm.service
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2020,7 +2021,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -2265,14 +2265,14 @@ systemctl enable sddm.service
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2305,7 +2305,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -2429,7 +2428,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -2607,7 +2606,7 @@ rc-update add sddm default
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2615,7 +2614,7 @@ rc-update add lightdm default
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2648,7 +2647,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -2760,7 +2758,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -2938,7 +2936,7 @@ rc-update add sddm default
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2946,7 +2944,7 @@ rc-update add lightdm default
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2979,7 +2977,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -3090,7 +3087,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3247,14 +3244,14 @@ ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3286,7 +3283,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -3398,7 +3394,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3555,14 +3551,14 @@ ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3594,7 +3590,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -3705,7 +3700,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3854,14 +3849,14 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -3894,7 +3889,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -4006,7 +4000,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4155,14 +4149,14 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4195,7 +4189,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -4306,7 +4299,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4463,14 +4456,14 @@ ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4502,7 +4495,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -4614,7 +4606,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://us-mirror.artixlinux.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://eu-mirror.artixlinux.org/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4771,14 +4763,14 @@ ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4810,7 +4802,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -5119,7 +5110,7 @@ echo \"track: 'plasma'\" >> /system.yaml
 		install_desktop="
 echo \"track: 'xfce'\" >> /system.yaml
 "
-		custom_packages="blueman network-manager-applet gnome-keyring xfce4-pulseaudio-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk ${custom_packages}"
+		custom_packages="blueman network-manager-applet gnome-keyring xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk ${custom_packages}"
 		;;
 	esac
 fi
@@ -5688,14 +5679,14 @@ systemctl enable sddm.service
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin cachyos-xfce-settings materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin cachyos-xfce-settings papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman cachyos-xfce-settings materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman cachyos-xfce-settings papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -5728,7 +5719,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -6312,14 +6302,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -6353,7 +6343,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -6576,14 +6565,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -6617,7 +6606,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -6837,14 +6825,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -6878,7 +6866,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -7100,14 +7087,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt purge -y slim
 "
 	;;
@@ -7348,14 +7335,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 DEBIAN_FRONTEND=noninteractive apt purge -y slim
 "
 	;;
@@ -7615,7 +7602,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
 CHROOT_INIT
@@ -7705,13 +7692,13 @@ dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment xdg-des
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter xfdesktop xfce4-session xfce4-settings xfce4-notifyd yaru-theme network-manager-applet gnome-keyring gnome-keyring-pam blueman thunar xfce4-appfinder xfce4-pulseaudio-plugin xfce4-power-manager xfce4-terminal  xfce4-settings dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter xfdesktop xfce4-session xfce4-settings xfce4-notifyd yaru-theme network-manager-applet gnome-keyring gnome-keyring-pam blueman thunar xfce4-appfinder xfce4-pulseaudio-plugin xfce4-power-manager xfce4-terminal  xfce4-settings dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @xfce-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter @xfce-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -7728,7 +7715,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia-dark"/>
   </property>
 </channel>
 XFCETHEME
@@ -7929,13 +7915,13 @@ dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment xdg-des
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter xfdesktop xfce4-session xfce4-settings xfce4-notifyd yaru-theme network-manager-applet gnome-keyring gnome-keyring-pam blueman thunar xfce4-appfinder xfce4-pulseaudio-plugin xfce4-power-manager xfce4-terminal  xfce4-settings dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter xfdesktop xfce4-session xfce4-settings xfce4-notifyd yaru-theme network-manager-applet gnome-keyring gnome-keyring-pam blueman thunar xfce4-appfinder xfce4-pulseaudio-plugin xfce4-power-manager xfce4-terminal  xfce4-settings dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @xfce-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+dnf install -y ${desktop_base} lightdm slick-greeter @xfce-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -7952,7 +7938,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia-dark"/>
   </property>
 </channel>
 XFCETHEME
@@ -8807,14 +8792,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm kali-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -9488,14 +9473,14 @@ systemctl enable sddm.service
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9760,14 +9745,14 @@ systemctl enable sddm.service
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -10032,14 +10017,14 @@ systemctl enable sddm.service
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -10297,14 +10282,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager xfce4-terminal thunar xfce4-notifyd xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop desktop-defaults-mx-xfce papirus-mxblue xfce4-docklike-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -11288,14 +11273,14 @@ zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -11554,14 +11539,14 @@ zypper --non-interactive install ${desktop_base} sddm patterns-kde-kde konsole b
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -11820,14 +11805,14 @@ zypper --non-interactive install ${desktop_base} sddm patterns-kde-kde konsole b
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -12725,14 +12710,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -12762,7 +12747,6 @@ cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCE
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
     <property name="IconThemeName" type="string" value="Papirus"/>
-    <property name="ThemeName" type="string" value="Materia"/>
   </property>
 </channel>
 XFCETHEME
@@ -13016,6 +13000,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
+dnf remove -y setroubleshoot-plugins
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
 
@@ -14051,14 +14036,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -14324,14 +14309,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -14597,14 +14582,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Xfce')
 	default_session="xubuntu"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit materia-gtk-theme papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -17514,7 +17499,7 @@ if [ "${1}" == "iso" ]; then
 				echo "sha256sum verification failed, retrying download..."
 			fi
 		fi
-		if [ "${i}" -eq 3 ]; then losetup -d "${destination_device}"; exit_with_error "Download of ${distribution} iso image from ${2} failed"; fi
+		if [ "${i}" -eq 3 ]; then if [ "${install_type}" == "image" ]; then losetup -d "${destination_device}"; fi; exit_with_error "Download of ${distribution} iso image from ${2} failed"; fi
 	done
 	if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
 		echo "Warning: iso cannot be verified as gpg is not available."
@@ -17583,7 +17568,7 @@ elif [ "${1}" == "lxc" ]; then
 		fi
 		rm -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz*
 		echo "Downloading lxc rootfs image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz..."
-		if ! sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then losetup -d "${destination_device}"; exit_with_error "Download of ${2} lxc image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; fi
+		if ! sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then if [ "${install_type}" == "image" ]; then losetup -d "${destination_device}"; fi; exit_with_error "Download of ${2} lxc image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; fi
 		echo "Verifying lxc rootfs checksum"
 		if [ "$(sha256sum ${linuxloopsdir}/cache/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/cache/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
 			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
@@ -17643,7 +17628,7 @@ elif [ "${1}" == "rootfs-xz" ]; then
 				echo "sha256sum verification failed, retrying download..."
 			fi
 		fi
-		if [ "${i}" -eq 3 ]; then losetup -d "${destination_device}"; exit_with_error "Download of ${distribution} rootfs from ${2} failed"; fi
+		if [ "${i}" -eq 3 ]; then if [ "${install_type}" == "image" ]; then losetup -d "${destination_device}"; fi; exit_with_error "Download of ${distribution} rootfs from ${2} failed"; fi
 	done
 	if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
 		echo "Warning: rootfs cannot be verified as gpg is not available."
@@ -17671,7 +17656,7 @@ elif [ "${1}" == "rootfs-xz" ]; then
 	fi
 	rm "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz*
 fi
-losetup -d "${destination_device}"
+if [ "${install_type}" == "image" ]; then losetup -d "${destination_device}"; fi
 exit_with_error "Download of bootstrap image failed."
 }
 
