@@ -120,13 +120,13 @@ case "${distribution}" in
 		default_version="8"
 		;;
 	'Fedora')
-		available_versions=( "41" "Rawhide" )
-		available_versions_longname=( "41_(Stable)" "Rawhide_(Unstable)" )
+		available_versions=( "41" )
+		available_versions_longname=( "${available_versions[@]}" )
 		default_version="41"
 		;;
 	'Fedora-Atomic')
-		available_versions=( "41" "Rawhide" )
-		available_versions_longname=( "41_(Stable)" "Rawhide_(Unstable)" )
+		available_versions=( "41" )
+		available_versions_longname=( "${available_versions[@]}" )
 		default_version="41"
 		;;
 	'Gentoo')
@@ -425,19 +425,10 @@ case "${distribution}" in
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc fedora 41 default"
 		btrfs_supported="Yes"
-		chroot_function="${distribution}-${version}"
 		fedora_version="${version}"
 		mirrors_supported=( "Fedora" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		case "${version}" in
-			'41')
-				surface_supported="Yes"
-				;;
-			*)
-				surface_supported="No"
-				;;
-		esac
 		;;
 	'Fedora-Atomic')
 		available_environments=( "Kinoite" "Onyx" "Sericea" "Silverblue" )
@@ -5138,7 +5129,7 @@ if [ ! -z "${custom_packages}" ]; then
 	for i in \${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done
 fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
-echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml
+echo -e "aur-packages:\n  - 'aur/python-gbinder'\n  - 'shim-signed'" >> /system.yaml
 if [ "${surface}" == "Yes" ]; then echo -e "  - 'binder_linux-dkms'" >> /system.yaml; fi
 echo -e "commands:" >> /system.yaml;
 if [ "${surface}" == "Yes" ]; then
@@ -7553,7 +7544,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_Fedora-41()
+chroot_Fedora()
 {
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
@@ -7580,8 +7571,6 @@ mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install -y fedora-repos-rawhide
-dnf update -y --enablerepo=rawhide fedora-gpg-keys
 dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -7603,7 +7592,6 @@ set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
-dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -7639,229 +7627,6 @@ dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environme
 	default_session="gnome-wayland"
 	install_desktop="
 dnf install -y ${desktop_base} gdm gnome-shell network-manager-applet gnome-keyring gnome-keyring-pam gnome-backgrounds gnome-icon-theme nautilus gnome-terminal gnome-software xdg-desktop-portal-gnome
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-dnf install -y ${desktop_base} gdm @gnome-desktop network-manager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @i3 volumeicon network-manager-applet gnome-keyring gnome-keyring-pam blueman dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @lxde-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam lxde-icon-theme blueman dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt')
-	default_session="lxqt"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @lxqt-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam lxqt-themes blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter mate-desktop marco network-manager-applet gnome-keyring gnome-keyring-pam blueman mate-session-manager mate-media mate-power-manager caja mate-terminal mate-themes dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @mate-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet breeze-gtk breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze @kde-desktop-environment xdg-desktop-portal-kde
-"
-	;;
-	'Xfce')
-	default_session="xfce"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter xfdesktop xfce4-session xfce4-settings xfce4-notifyd yaru-theme network-manager-applet gnome-keyring gnome-keyring-pam blueman thunar xfce4-appfinder xfce4-pulseaudio-plugin xfce4-power-manager xfce4-terminal  xfce4-settings dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce/Full')
-	default_session="xfce"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @xfce-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-esac
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
-${install_desktop}
-systemctl enable ${desktop_services}
-mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
-<?xml version="1.0" encoding="UTF-8"?>
-<channel name="xsettings" version="1.0">
-  <property name="Net" type="empty">
-    <property name="IconThemeName" type="string" value="Papirus"/>
-  </property>
-</channel>
-XFCETHEME
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		echo -e '[Greeter]\nbackground = /usr/share/backgrounds/default.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			mkdir -p /etc/lightdm/lightdm.conf.d
-			echo -e '[Seat:*]\nautologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-initramfs_type="dracut"
-if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\ndnf install -y ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
-chroot_Fedora-Rawhide()
-{
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-if [ ! -z "${mirror_Fedora}" ]; then
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates-testing.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
-fi
-dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-mkdir -p /mnt/proc /mnt/sys
-mount -t proc none /mnt/proc
-mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
-mount --make-slave /mnt/proc/sys
-mount --bind /sys /mnt/sys
-mount --make-slave /mnt/sys
-dnf install -y fedora-repos-rawhide
-dnf update -y --enablerepo=rawhide fedora-gpg-keys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade grubby openssl tar
-if [ ! -z "${mirror_Fedora}" ]; then
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
-fi
-umount /mnt/sys
-umount /mnt/proc/sys
-umount /mnt/proc
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
-dnf config-manager setopt fedora-cisco-openh264.enabled=1
-dnf upgrade --refresh -y
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-desktop_base="alsa-lib alsa-sof-firmware alsa-topology alsa-utils at-spi2-core avahi cups cups-browsed dbus-x11 dejavu-sans-fonts desktop-backgrounds dnfdragora google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver mesa-va-drivers mesa-vulkan-drivers nss-mdns plymouth-system-theme system-config-printer udisks2 xdg-user-dirs-gtk xorg-x11-drivers"
-desktop_services="avahi-daemon.service cups.service"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-defaults network-manager-applet gnome-keyring gnome-keyring-pam gnome-terminal nemo blueman dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Budgie/Full')
-	default_session="budgie-desktop"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @budgie-desktop @budgie-desktop-apps network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter cinnamon clutter-gtk network-manager-applet gnome-keyring gnome-keyring-pam gnome-terminal nemo paper-icon-theme blueman dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon/Full')
-	default_session="cinnamon"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam dnfdragora-updater papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-dnf install -y ${desktop_base} gdm gnome-shell network-manager-applet gnome-keyring gnome-keyring-pam gnome-backgrounds gnome-icon-theme nautilus gnome-terminal gnome-software gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')

@@ -85,8 +85,8 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing                                           |✓                      |✓                                    |                                 |                            |
 |Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
-|Fedora          |41<br>Rawhide                                                 |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
-|Fedora-Atomic   |41<br>Rawhide                                                 |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
+|Fedora          |41                                                            |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
+|Fedora-Atomic   |41                                                            |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
 |GLF-OS          |Stable                                                        |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
