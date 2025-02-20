@@ -103,7 +103,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
-|Qubes           |4.2.3                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
+|Qubes           |4.2.4                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
 |RockyLinux      |9                                                             |✓                      |                                     |                                 |                            |
 |SteamOS         |3.6                                                           |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
 |Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |

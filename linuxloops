@@ -210,9 +210,9 @@ case "${distribution}" in
 		default_version="VE8"
 		;;
 	'Qubes')
-		available_versions=( "4.2.3" )
+		available_versions=( "4.2.4" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="4.2.3"
+		default_version="4.2.4"
 		;;
 	'RockyLinux')
 		available_versions=( "9" )
@@ -10712,31 +10712,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/41/baseos/nobara-repos/41/nobara.repo -o /etc/yum.repos.d/nobara.repo
+curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-fedora-$(echo ${nobara_version} | tr A-Z a-z)-primary -o /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${nobara_version} | tr A-Z a-z)-primary
 curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-cat >/etc/yum.repos.d/nobara.repo <<'NOBARAREPO'
-[nobara]
-name=nobara
-mirrorlist=https://mirrors.nobaraproject.org/rolling/nobara
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-repo_gpgcheck=0
-enabled=1
-enabled_metadata=1
-
-[nobara-updates]
-name=nobara-updates
-mirrorlist=https://mirrors.nobaraproject.org/rolling/baseos
-type=rpm-md
-skip_if_unavailable=True
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-repo_gpgcheck=0
-enabled=1
-enabled_metadata=1
-priority=50
-NOBARAREPO
+curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)
 dnf install -y --allowerasing nobara-gpg-keys nobara-repos nobara-release-workstation
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
