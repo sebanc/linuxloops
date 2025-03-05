@@ -8394,19 +8394,21 @@ useradd -u 30000 -g nixbld -G nixbld nixbld
 useradd -s /bin/bash -m 'temp'
 echo -e 'temp\ntemp' | passwd 'temp'
 echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
-sed -i '/secure_path/d' /etc/sudoers
+#sed -i '/secure_path/d' /etc/sudoers
 sudo -u temp bash << 'NIXOSINSTALL'
 set -e
 ulimit -n 4096
-sudo mkdir -p /nix && sudo chown -R temp /nix
+sudo mkdir -p /nix
+sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
-. /home/temp/.nix-profile/etc/profile.d/nix.sh
+source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-channel --remove nixpkgs
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.nixos-install-tools
-sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install --flake /mnt/etc/nixos#GLF-OS
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#GLF-OS
 /tmp/linuxloops/install_user
+/tmp/linuxloops/install_flatpak
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
@@ -8422,15 +8424,22 @@ if [ "${useraccount_autologin}" == "Yes" ]; then
 fi
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo nixos-enter << 'NIXOSCHROOT'
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
-flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-flatpak install --noninteractive flathub org.dupot.easyflatpak
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager,scanner,lp,disk '${useraccount_name}'
 NIXOSCHROOT
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
+
+cat >"${bootstrapdir}"/tmp/linuxloops/install_flatpak <<INSTALL_FLATPAK
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+set -e
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+flatpak install --noninteractive flathub org.dupot.easyflatpak
+NIXOSCHROOT
+INSTALL_FLATPAK
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_flatpak
 
 initramfs_type="nixos_config"
 }
@@ -10317,14 +10326,15 @@ sed -i '/secure_path/d' /etc/sudoers
 sudo -u temp bash << 'NIXOSINSTALL'
 set -e
 ulimit -n 4096
-sudo mkdir -p /nix && sudo chown -R temp /nix
+sudo mkdir -p /nix
+sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
-. /home/temp/.nix-profile/etc/profile.d/nix.sh
+source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-channel --remove nixpkgs
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.nixos-install-tools
-sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install)
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
@@ -10464,7 +10474,7 @@ custom_packages="xfce.xfce4-pulseaudio-plugin ${custom_packages}"
 esac
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo nixos-enter << 'NIXOSCHROOT'
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager '${useraccount_name}'
@@ -10473,7 +10483,7 @@ INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-sudo nixos-enter << 'NIXOSCHROOT'
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 if [ "${useraccount_autologin}" == "Yes" ] && [ "${environment}" == "Plasma/Full" ]; then
 	su -- '${useraccount_name}' << 'DISABLE_KWALLET'
@@ -10520,14 +10530,15 @@ sed -i '/secure_path/d' /etc/sudoers
 sudo -u temp bash << 'NIXOSINSTALL'
 set -e
 ulimit -n 4096
-sudo mkdir -p /nix && sudo chown -R temp /nix
+sudo mkdir -p /nix
+sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
-. /home/temp/.nix-profile/etc/profile.d/nix.sh
+source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-channel --remove nixpkgs
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.nixos-install-tools
-sudo NIX_PATH=/home/temp/.nix-defexpr/channels nixos-install
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install)
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
@@ -10667,7 +10678,7 @@ custom_packages="xfce.xfce4-pulseaudio-plugin ${custom_packages}"
 esac
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo nixos-enter << 'NIXOSCHROOT'
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager '${useraccount_name}'
@@ -10676,7 +10687,7 @@ INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-sudo nixos-enter << 'NIXOSCHROOT'
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 if [ "${useraccount_autologin}" == "Yes" ] && [ "${environment}" == "Plasma/Full" ]; then
 	su -- '${useraccount_name}' << 'DISABLE_KWALLET'
@@ -16975,8 +16986,8 @@ fi
 if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	sed -i '1d' /mnt/tmp/linuxloops/set_userpw
 	sudo -u temp bash << 'NIXOSSETPW'
-. /home/temp/.nix-profile/etc/profile.d/nix.sh
-sudo nixos-enter << 'NIXOSCHROOT'
+source \$HOME/.nix-profile/etc/profile.d/nix.sh
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 /tmp/linuxloops/set_userpw
 NIXOSCHROOT
@@ -17077,6 +17088,7 @@ sleep 5
 if mountpoint -q /mnt/tmp/linuxloops; then umount /mnt/tmp/linuxloops; fi
 rm -rf /mnt/tmp/linuxloops
 if mountpoint -q /mnt/tmp; then umount /mnt/tmp; fi
+if mountpoint -q /mnt/run/keys; then umount /mnt/run/keys; fi
 if mountpoint -q /mnt/run; then umount /mnt/run; fi
 if mountpoint -q /mnt/dev/shm; then umount /mnt/dev/shm; fi
 if mountpoint -q /mnt/dev/pts; then umount /mnt/dev/pts; fi
@@ -17144,6 +17156,7 @@ done
 sleep 5
 if mountpoint -q "${chrootdir}"/tmp/linuxloops; then umount "${chrootdir}"/tmp/linuxloops; fi
 if mountpoint -q "${chrootdir}"/tmp; then umount "${chrootdir}"/tmp; fi
+if mountpoint -q "${chrootdir}"/run/keys; then umount "${chrootdir}"/run/keys; fi
 if mountpoint -q "${chrootdir}"/run; then umount "${chrootdir}"/run; fi
 if mountpoint -q "${chrootdir}"/dev/shm; then umount "${chrootdir}"/dev/shm; fi
 if mountpoint -q "${chrootdir}"/dev/pts; then umount "${chrootdir}"/dev/pts; fi
@@ -19120,7 +19133,8 @@ until false; do
 							gui_launch -m messagebox -t "Error in image file path selection" -q "Not enough space to create the image file, the minimum size is 14 GB. Verify that the path you have selected points to a partition with more than 14 GB available."
 							continue
 						elif [ $(( ${maximum_image_size} - 14 )) -eq 0 ]; then
-							gui_launch -m messagebox -t "Image file size selection" -q "Exactly 14GB is available on this drive, the installer will proceed with the creation of a 14GB image."
+							confirmation=$(gui_launch -m confirmation -t "Image file size selection" -q "Exactly 14GB is available on this drive, the installer will proceed with the creation of a 14GB image.")
+							if [ -z "${confirmation}" ]; then exit 1; fi
 							install_size=14
 						else
 							install_size=$(gui_launch -m range -t "Image file size selection" -p "14^14^${maximum_image_size}" -q "This partition has ${maximum_image_size} GB available. How much would you like to allocate for ${distribution} ?")
