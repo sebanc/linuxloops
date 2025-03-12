@@ -8401,11 +8401,13 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-nix-channel --remove nixpkgs
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
-nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#GLF-OS
+nix-channel --remove nixpkgs
+sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo \$(command -v nix-channel) --update
+sudo \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#GLF-OS --no-root-passwd
+/tmp/linuxloops/install_channel
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_flatpak
 NIXOSINSTALL
@@ -8422,8 +8424,16 @@ if [ "${useraccount_autologin}" == "Yes" ]; then
   systemd.services.\"autovt@tty1\".enable = false;"
 fi
 
+cat >"${bootstrapdir}"/tmp/linuxloops/install_channel <<INSTALL_CHANNEL
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
+set -e
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+NIXOSCHROOT
+INSTALL_CHANNEL
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_channel
+
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager,scanner,lp,disk '${useraccount_name}'
@@ -8432,7 +8442,7 @@ INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_flatpak <<INSTALL_FLATPAK
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 flatpak install --noninteractive flathub org.dupot.easyflatpak
@@ -10328,11 +10338,12 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-nix-channel --remove nixpkgs
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
-nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install)
+nix-channel --remove nixpkgs
+sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo \$(command -v nix-channel) --update
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
+/tmp/linuxloops/install_channel
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
@@ -10471,8 +10482,16 @@ custom_packages="xfce.xfce4-pulseaudio-plugin ${custom_packages}"
 	;;
 esac
 
+cat >"${bootstrapdir}"/tmp/linuxloops/install_channel <<INSTALL_CHANNEL
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
+set -e
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+NIXOSCHROOT
+INSTALL_CHANNEL
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_channel
+
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager '${useraccount_name}'
@@ -10481,7 +10500,7 @@ INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 if [ "${useraccount_autologin}" == "Yes" ] && [ "${environment}" == "Plasma/Full" ]; then
 	su -- '${useraccount_name}' << 'DISABLE_KWALLET'
@@ -10531,11 +10550,12 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl -L https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-nix-channel --remove nixpkgs
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
-nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install)
+nix-channel --remove nixpkgs
+sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo \$(command -v nix-channel) --update
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
+/tmp/linuxloops/install_channel
 /tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
@@ -10654,7 +10674,7 @@ services.displayManager.sddm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";
 xdg.portal.enable = true;
-xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-kde ];
+xdg.portal.extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
 xdg.portal.xdgOpenUsePortal = true;"
 	;;
 	'Xfce/Full')
@@ -10674,8 +10694,16 @@ custom_packages="xfce.xfce4-pulseaudio-plugin ${custom_packages}"
 	;;
 esac
 
+cat >"${bootstrapdir}"/tmp/linuxloops/install_channel <<INSTALL_CHANNEL
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
+set -e
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+NIXOSCHROOT
+INSTALL_CHANNEL
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_channel
+
 cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
 usermod -aG wheel,networkmanager '${useraccount_name}'
@@ -10684,7 +10712,7 @@ INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 if [ "${useraccount_autologin}" == "Yes" ] && [ "${environment}" == "Plasma/Full" ]; then
 	su -- '${useraccount_name}' << 'DISABLE_KWALLET'
@@ -11512,7 +11540,7 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	default_session="lxde"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring gnome-keyring-pamblueman xdg-desktop-portal-gtk
+zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -16249,51 +16277,52 @@ mkdir -p /mnt/etc/nixos
 if [ "${distribution}" == "GLF-OS" ]; then
 pacman -Syu --noconfirm --needed git
 git clone -b main https://github.com/GLF-OS/Nixos-by-GLF.git /tmp/GLF-OS-config
-cp -r /tmp/GLF-OS-config/iso-cfg/* /mnt/etc/nixos/
-cp -r /tmp/GLF-OS-config/assets /mnt/etc/nixos/
-cp -r /tmp/GLF-OS-config/modules /mnt/etc/nixos/
+cp /tmp/GLF-OS-config/iso-cfg/flake.nix /mnt/etc/nixos/
+cp /tmp/GLF-OS-config/iso-cfg/flake.lock /mnt/etc/nixos/
+cp -r /tmp/GLF-OS-config/iso-cfg/customConfig /mnt/etc/nixos/
 cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 { pkgs, lib, ... }:
 
 {
-  nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  imports = [
-      ./linuxloops.nix
-      ./customConfig
-    ];
+nix.settings.experimental-features = [ "nix-command" "flakes" ];
+imports = [
+  ./hardware-configuration.nix
+  ./linuxloops.nix
+  ./customConfig
+];
 
-  glf.nvidia_config.enable = false;
-  glf.standBy.enable = false;
+glf.nvidia_config.enable = false;
+glf.standBy.enable = false;
 
-  boot.kernelParams = [ \${cmdline} ];
-  boot.plymouth.enable = true;
+boot.kernelParams = [ \${cmdline} ];
+boot.plymouth.enable = true;
 
-  hardware.cpu.intel.updateMicrocode = true;
-  hardware.cpu.amd.updateMicrocode = true;
-  hardware.enableAllFirmware = true;
+hardware.cpu.intel.updateMicrocode = true;
+hardware.cpu.amd.updateMicrocode = true;
+hardware.enableAllFirmware = true;
 
-  i18n.defaultLocale = "${locale}.UTF-8";
+i18n.defaultLocale = "${locale}.UTF-8";
 
-  console.keyMap = "${keymap}";
-  services.xserver = {
-    enable = true;
-    excludePackages = [ pkgs.xterm ];
-    xkb.layout = "${keymap}";
-    xkb.variant = "";
-  };
+console.keyMap = "${keymap}";
+services.xserver = {
+  enable = true;
+  excludePackages = [ pkgs.xterm ];
+  xkb.layout = "${keymap}";
+  xkb.variant = "";
+};
 
-  time.timeZone = "${timezone}";
+time.timeZone = "${timezone}";
 
-  networking.hostName = "${hostname}";
-  networking.networkmanager.enable = true;
+networking.hostName = "${hostname}";
+networking.networkmanager.enable = true;
 
-  services.logrotate.checkConfig = false;
+services.logrotate.checkConfig = false;
 
 ${autologin_commands}
 
-  ${nixos_nvidia}
+${nixos_nvidia}
 
-  system.stateVersion = "24.11"; # DO NOT TOUCH
+system.stateVersion = "24.11"; # DO NOT TOUCH
 }
 NIXOSCONFIGURATION
 else
@@ -16305,7 +16334,10 @@ cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 { config, pkgs, ... }:
 
 {
-imports = [ ./linuxloops.nix ];
+imports = [
+  ./hardware-configuration.nix
+  ./linuxloops.nix
+];
 
 boot.kernelParams = [ \${cmdline} ];
 boot.plymouth.enable = true;
@@ -16369,34 +16401,40 @@ NIXOSCONFIGURATION
 fi
 cat >/mnt/etc/nixos/shim-signed.nix <<'NIXOSSHIM'
 { pkgs }:
-pkgs.stdenv.mkDerivation {
-	pname = "shim-signed";
-	version = "15.8";
-	src = pkgs.fetchurl {
-		url = "http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb";
-		sha256 = "f8ed71ce2d91a304b6d5eb84997f846f331b554578bc02dbfe78e13ad8ac81a9";
-	};
-	unpackPhase = ''
-	runHook preUnpack
-	dpkg-deb -x \$src shim-signed
-	runHook postUnpack
-	'';
-	installPhase = ''
-	runHook preInstall
-	mkdir -p "\$out/share"
-	cp -r shim-signed/usr/lib/shim "\$out/share/"
-	runHook postInstall
-	'';
-	nativeBuildInputs = with pkgs; [ dpkg ];
+pkgs.stdenv.mkDerivation rec {
+  pname = "shim-signed";
+  version = "15.8";
+  src = pkgs.fetchurl {
+    url = "http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb";
+    sha256 = "f8ed71ce2d91a304b6d5eb84997f846f331b554578bc02dbfe78e13ad8ac81a9";
+  };
+  unpackPhase = ''
+    runHook preUnpack
+    dpkg-deb -x \$src shim-signed
+    runHook postUnpack
+  '';
+  installPhase = ''
+    runHook preInstall
+    mkdir -p "\$out/share"
+    cp -r shim-signed/usr/lib/shim "\$out/share/"
+    runHook postInstall
+  '';
+  nativeBuildInputs = with pkgs; [ dpkg ];
 }
 NIXOSSHIM
-echo -e '# Do not modify this file which contains the linuxloops configuration.\n# Please make changes to /etc/nixos/configuration.nix instead.\n{ config, lib, pkgs, modulesPath, ... }:\n\n{' > /mnt/etc/nixos/linuxloops.nix
-cat /tmp/linuxloops/fstab >>/mnt/etc/nixos/linuxloops.nix
-cat >>/mnt/etc/nixos/linuxloops.nix <<'NIXOSLINUXLOOPS'
-$(if [ "${install_type}" == "image" ]; then echo -e "boot.kernelParams = [ \"\\\${linuxloops_args}\" ];\n"; fi)
-environment.systemPackages = with pkgs; [ ntfs3g openssl sbsigntool shim-signed ];
-nixpkgs.overlays = [ (final: prev: { shim-signed = prev.callPackage ./shim-signed.nix {}; }) ];
+echo -e '# This file contains the fstab configuration.\n{ config, lib, pkgs, modulesPath, ... }:\n\n{' > /mnt/etc/nixos/hardware-configuration.nix
+cat /tmp/linuxloops/fstab >>/mnt/etc/nixos/hardware-configuration.nix
+echo -e "}" >> /mnt/etc/nixos/hardware-configuration.nix
+cat >/mnt/etc/nixos/linuxloops.nix <<'NIXOSLINUXLOOPS'
+# Do not modify this file which contains the linuxloops configuration.
+# Please make changes to /etc/nixos/configuration.nix instead.
+{ config, lib, pkgs, modulesPath, ... }:
 
+{
+nixpkgs.overlays = [ (final: prev: { shim-signed = prev.callPackage ./shim-signed.nix {}; }) ];
+environment.systemPackages = with pkgs; [ ntfs3g openssl sbsigntool shim-signed ];
+
+$(if [ "${install_type}" == "image" ]; then echo -e "boot.kernelParams = [ \"\\\${linuxloops_args}\" ];\n"; fi)
 boot.loader.efi.canTouchEfiVariables = false;
 boot.loader.efi.efiSysMountPoint = "/boot/efi";
 boot.loader.grub.configurationLimit = 5;
@@ -16405,34 +16443,34 @@ boot.loader.grub.efiInstallAsRemovable = true;
 boot.loader.grub.efiSupport = true;
 boot.loader.grub.enable = true;
 boot.loader.grub.extraInstallCommands = ''	
-\${pkgs.coreutils}/bin/cat >/tmp/sbat.csv <<GRUBSBAT
+  \${pkgs.coreutils}/bin/cat >/tmp/sbat.csv <<GRUBSBAT
 sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
 grub,3,Free Software Foundation,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
 grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
 GRUBSBAT
-\${pkgs.coreutils}/bin/rm -rf /boot/efi/EFI/BOOT /boot/efi/EFI/${bootloader_id}
-\${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-\${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-if [ -f \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest ] && [ -f \${pkgs.shim-signed}/share/shim/mmx64.efi ]; then
-	\${pkgs.coreutils}/bin/mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
-	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
-	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/${bootloader_id}/shimx64.efi
-	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
-	\${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/${bootloader_id}/mmx64.efi
-	if [ -x \${pkgs.sbsigntool}/bin/sbverify ] && [ -x \${pkgs.sbsigntool}/bin/sbattach ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
-		for grubefi in \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/BOOT/grubx64.efi) \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/"${bootloader_id}"/grubx64.efi); do
-				for sig in \$(\${pkgs.sbsigntool}/bin/sbverify --list "\$grubefi" | \${pkgs.gnugrep}/bin/grep '^signature' | \${pkgs.gnused}/bin/sed 's@signature @@g' | \${pkgs.coreutils}/bin/sort -r); do \${pkgs.sbsigntool}/bin/sbattach --signum "\$sig" --remove "\$grubefi"; done
-				\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\$grubefi" "\$grubefi"
-		done
-	fi
-fi
-if \${pkgs.coreutils}/bin/ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -x \${pkgs.sbsigntool}/bin/sbverify ]; then
-	for i in /boot/kernels/*-linux-*Image; do
-		if ! \${pkgs.sbsigntool}/bin/sbverify --list \$i | \${pkgs.gnugrep}/bin/grep -q 'CN=Linuxloops Machine Owner Key'; then
-			\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \$i \$i
-		fi
-	done
-fi
+  \${pkgs.coreutils}/bin/rm -rf /boot/efi/EFI/BOOT /boot/efi/EFI/${bootloader_id}
+  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+  if [ -f \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest ] && [ -f \${pkgs.shim-signed}/share/shim/mmx64.efi ]; then
+    \${pkgs.coreutils}/bin/mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
+    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
+    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/${bootloader_id}/shimx64.efi
+    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
+    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/${bootloader_id}/mmx64.efi
+    if [ -x \${pkgs.sbsigntool}/bin/sbverify ] && [ -x \${pkgs.sbsigntool}/bin/sbattach ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
+      for grubefi in \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/BOOT/grubx64.efi) \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/"${bootloader_id}"/grubx64.efi); do
+        for sig in \$(\${pkgs.sbsigntool}/bin/sbverify --list "\$grubefi" | \${pkgs.gnugrep}/bin/grep '^signature' | \${pkgs.gnused}/bin/sed 's@signature @@g' | \${pkgs.coreutils}/bin/sort -r); do \${pkgs.sbsigntool}/bin/sbattach --signum "\$sig" --remove "\$grubefi"; done
+        \${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\$grubefi" "\$grubefi"
+      done
+    fi
+  fi
+  if \${pkgs.coreutils}/bin/ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -x \${pkgs.sbsigntool}/bin/sbverify ]; then
+    for i in /boot/kernels/*-linux-*Image; do
+      if ! \${pkgs.sbsigntool}/bin/sbverify --list \$i | \${pkgs.gnugrep}/bin/grep -q 'CN=Linuxloops Machine Owner Key'; then
+        \${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \$i \$i
+      fi
+    done
+  fi
 '';
 boot.loader.grub.fsIdentifier = "uuid";
 boot.loader.grub.splashImage = null;
@@ -16444,20 +16482,20 @@ boot.loader.timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" 
 boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
 boot.initrd.compressor="gzip";
 boot.initrd.extraUtilsCommands = ''
-copy_bin_and_libs "\${pkgs.bash}/bin/bash"
-copy_bin_and_libs "\${pkgs.util-linux}/bin/blkid"
-copy_bin_and_libs "\${pkgs.cryptsetup}/bin/cryptsetup"
-copy_bin_and_libs "\${pkgs.coreutils}/bin/cut"
-copy_bin_and_libs "\${pkgs.e2fsprogs}/bin/e2fsck"
-copy_bin_and_libs "\${pkgs.findutils}/bin/find"
-copy_bin_and_libs "\${pkgs.gnugrep}/bin/grep"
-copy_bin_and_libs "\${pkgs.util-linux}/bin/losetup"
-copy_bin_and_libs "\${pkgs.util-linux}/bin/lsblk"
-copy_bin_and_libs "\${pkgs.ntfs3g}/bin/ntfs-3g"
-copy_bin_and_libs "\${pkgs.ntfs3g}/bin/ntfsfix"
-copy_bin_and_libs "\${pkgs.procps}/bin/ps"
-copy_bin_and_libs "\${pkgs.kbd}/bin/setfont"
-copy_bin_and_libs "\${pkgs.util-linux}/bin/setsid"
+  copy_bin_and_libs "\${pkgs.bash}/bin/bash"
+  copy_bin_and_libs "\${pkgs.util-linux}/bin/blkid"
+  copy_bin_and_libs "\${pkgs.cryptsetup}/bin/cryptsetup"
+  copy_bin_and_libs "\${pkgs.coreutils}/bin/cut"
+  copy_bin_and_libs "\${pkgs.e2fsprogs}/bin/e2fsck"
+  copy_bin_and_libs "\${pkgs.findutils}/bin/find"
+  copy_bin_and_libs "\${pkgs.gnugrep}/bin/grep"
+  copy_bin_and_libs "\${pkgs.util-linux}/bin/losetup"
+  copy_bin_and_libs "\${pkgs.util-linux}/bin/lsblk"
+  copy_bin_and_libs "\${pkgs.ntfs3g}/bin/ntfs-3g"
+  copy_bin_and_libs "\${pkgs.ntfs3g}/bin/ntfsfix"
+  copy_bin_and_libs "\${pkgs.procps}/bin/ps"
+  copy_bin_and_libs "\${pkgs.kbd}/bin/setfont"
+  copy_bin_and_libs "\${pkgs.util-linux}/bin/setsid"
 '';
 boot.initrd.preLVMCommands = ''
 INITNIXOS
@@ -16984,7 +17022,7 @@ if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	sed -i '1d' /mnt/tmp/linuxloops/set_userpw
 	sudo -u temp bash << 'NIXOSSETPW'
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-enter) << 'NIXOSCHROOT'
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 /tmp/linuxloops/set_userpw
 NIXOSCHROOT
