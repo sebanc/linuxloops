@@ -16252,7 +16252,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 
 generate_nixos_config()
 {
-cmdline="systemd.log_target=null vt.global_cursor_default=0 quiet"
+cmdline="systemd.log_target=null quiet"
 if [ ! -z "${kernel_parameters}" ]; then cmdline="${cmdline} ${kernel_parameters}"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_initramfs <<INITNIXOS
 #!/bin/bash
@@ -16581,15 +16581,15 @@ if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 fi
 if [ ! "${distribution}" == "Artix" ] && [ ! "${distribution}" == "Devuan" ] && [ ! "${distribution}" == "Gentoo" ] && [ ! "${distribution}" == "Void" ]; then
 	if [ ! -z "${kernel_parameters}" ]; then
-		cmdline_extra="systemd.log_target=null vt.global_cursor_default=0 quiet splash loglevel=3 ${kernel_parameters}"
+		cmdline_extra="systemd.log_target=null quiet splash loglevel=3 ${kernel_parameters}"
 	else
-		cmdline_extra="systemd.log_target=null vt.global_cursor_default=0 quiet splash loglevel=3"
+		cmdline_extra="systemd.log_target=null quiet splash loglevel=3"
 	fi
 else
 	if [ ! -z "${kernel_parameters}" ]; then
-		cmdline_extra="vt.global_cursor_default=0 quiet splash loglevel=3 ${kernel_parameters}"
+		cmdline_extra="quiet splash loglevel=3 ${kernel_parameters}"
 	else
-		cmdline_extra="vt.global_cursor_default=0 quiet splash loglevel=3"
+		cmdline_extra="quiet splash loglevel=3"
 	fi
 fi
 cat >/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
