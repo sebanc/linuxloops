@@ -135,9 +135,9 @@ case "${distribution}" in
 		default_version="23/Openrc"
 		;;
 	'GLF-OS')
-		available_versions=( "Stable" )
-		available_versions_longname=( "Stable" )
-		default_version="Stable"
+		available_versions=( "Alpha" )
+		available_versions_longname=( "Alpha" )
+		default_version="Alpha"
 		;;
 	'Kali')
 		available_versions=( "Rolling" )
@@ -462,7 +462,7 @@ case "${distribution}" in
 		btrfs_supported="Yes"
 		chroot_function="${distribution}"
 		mirrors_supported=()
-		nixos_version="24.11"
+		nixos_version="Unstable"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -8436,7 +8436,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
-usermod -aG wheel,networkmanager,scanner,lp,disk '${useraccount_name}'
+usermod -aG wheel '${useraccount_name}'
 NIXOSCHROOT
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
@@ -8445,7 +8445,9 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_flatpak <<INSTALL_FLATPAK
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+chmod u+s \$(find /nix/store | grep bubblewrap | grep /bin/bwrap)
 flatpak install --noninteractive flathub org.dupot.easyflatpak
+chmod u-s \$(find /nix/store | grep bubblewrap | grep /bin/bwrap)
 NIXOSCHROOT
 INSTALL_FLATPAK
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_flatpak
@@ -10494,7 +10496,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
-usermod -aG wheel,networkmanager '${useraccount_name}'
+usermod -aG wheel '${useraccount_name}'
 NIXOSCHROOT
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
@@ -10706,7 +10708,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
 useradd -m '${useraccount_name}'
-usermod -aG wheel,networkmanager '${useraccount_name}'
+usermod -aG wheel '${useraccount_name}'
 NIXOSCHROOT
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
@@ -10748,7 +10750,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/41/baseos/nobara-repos/41/nobara.repo -o /etc/yum.repos.d/nobara.repo
+curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/nobara.repo -o /etc/yum.repos.d/nobara.repo
 curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-fedora-$(echo ${nobara_version} | tr A-Z a-z)-primary -o /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${nobara_version} | tr A-Z a-z)-primary
 curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
 curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)
@@ -10779,7 +10781,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+dnf install -y rpmfusion-free-release rpmfusion-nonfree-release
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
 CHROOT_INIT
@@ -11793,23 +11795,22 @@ sed -i 's@ \[signed-by=/tmp/parrot-archive-keyring.gpg]@@g' /etc/apt/sources.lis
 echo '' > /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/parrot.list <<'SOURCESLIST'
 deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-# deb-src ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-
+deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
 deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
-# deb-src ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
 
 deb https://deb.parrot.sh/direct/parrot $(echo ${parrot_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-# deb-src https://deb.parrot.sh/direct/parrot $(echo ${parrot_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
 SOURCESLIST
 apt clean
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') parrot-core parrot-apps-basics
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
-if [ ! -z "${mirror_Parrot}" ]; then
-	sed -i 's@^deb https://deb.parrot.sh/parrot @#deb https://deb.parrot.sh/parrot @g' /etc/apt/sources.list.d/parrot.list
-	echo -e '\ndeb ${mirror_Parrot} lory main contrib non-free non-free-firmware\n# deb-src ${mirror_Parrot} lory main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/parrot.list
-	echo -e '\ndeb ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware\n# deb-src ${mirror_Parrot} lory-backports main contrib non-free non-free-firmware' >> /etc/apt/sources.list.d/parrot.list
-fi
+cat >/etc/apt/sources.list.d/parrot.list <<'SOURCESLIST'
+deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
+deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
+deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
+
+deb https://deb.parrot.sh/direct/parrot $(echo ${parrot_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
+SOURCESLIST
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
@@ -16251,7 +16252,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 
 generate_nixos_config()
 {
-cmdline="systemd.log_target=null quiet"
+cmdline="systemd.log_target=null vt.global_cursor_default=0 quiet"
 if [ ! -z "${kernel_parameters}" ]; then cmdline="${cmdline} ${kernel_parameters}"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_initramfs <<INITNIXOS
 #!/bin/bash
@@ -16292,6 +16293,7 @@ imports = [
 ];
 
 glf.nvidia_config.enable = false;
+glf.printing.enable = false;
 glf.standBy.enable = false;
 
 boot.kernelParams = [ \${cmdline} ];
@@ -16301,9 +16303,11 @@ hardware.cpu.intel.updateMicrocode = true;
 hardware.cpu.amd.updateMicrocode = true;
 hardware.enableAllFirmware = true;
 
-i18n.defaultLocale = "${locale}.UTF-8";
-
+console.earlySetup = true;
 console.keyMap = "${keymap}";
+i18n.defaultLocale = "${locale}.UTF-8";
+time.timeZone = "${timezone}";
+
 services.xserver = {
   enable = true;
   excludePackages = [ pkgs.xterm ];
@@ -16311,16 +16315,19 @@ services.xserver = {
   xkb.variant = "";
 };
 
-time.timeZone = "${timezone}";
-
 networking.hostName = "${hostname}";
 networking.networkmanager.enable = true;
 
-services.logrotate.checkConfig = false;
+hardware.sane.enable = true;
+services.avahi.enable = true;
+services.avahi.nssmdns4 = true;
+services.printing.enable = true;
 
 ${autologin_commands}
 
 ${nixos_nvidia}
+
+services.logrotate.checkConfig = false;
 
 system.stateVersion = "24.11"; # DO NOT TOUCH
 }
@@ -16353,20 +16360,21 @@ hardware.cpu.amd.updateMicrocode = true;
 hardware.enableAllFirmware = true;
 
 hardware.bluetooth.enable = true;
-hardware.sensor.iio.enable = true;
 hardware.pulseaudio.enable = false;
-networking.hostName = "${hostname}";
-networking.networkmanager.enable = true;
-
-services.avahi.enable = true;
-services.avahi.nssmdns4 = true;
-services.logrotate.checkConfig = false;
 services.pipewire = {
   enable = true;
   alsa.enable = true;
   alsa.support32Bit = true;
   pulse.enable = true;
 };
+hardware.sensor.iio.enable = true;
+
+networking.hostName = "${hostname}";
+networking.networkmanager.enable = true;
+
+hardware.sane.enable = true;
+services.avahi.enable = true;
+services.avahi.nssmdns4 = true;
 services.printing.enable = true;
 
 environment.systemPackages = with pkgs; [ firefox ffmpeg ${custom_packages} ];
@@ -16376,7 +16384,7 @@ ${nixos_desktop}
 
 hardware.graphics.enable = true;
 hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
-$(if echo "${custom_packages}" | grep -wq 'steam\|wine'; then echo -e 'hardware.opengl.driSupport32Bit = true;'; fi)
+$(if echo "${custom_packages}" | grep -wq 'steam\|wine'; then echo -e 'hardware.graphics.enable32Bit = true;'; fi)
 ${nixos_nvidia}
 
 $(cat "${custom_script}" 2>/dev/null)
@@ -16388,6 +16396,8 @@ nix.gc = {
 };
 nix.settings.auto-optimise-store = true;
 nixpkgs.config.allowUnfree = true;
+
+services.logrotate.checkConfig = false;
 
 # This value determines the NixOS release from which the default
 # settings for stateful data, like file locations and database versions
@@ -16571,15 +16581,15 @@ if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 fi
 if [ ! "${distribution}" == "Artix" ] && [ ! "${distribution}" == "Devuan" ] && [ ! "${distribution}" == "Gentoo" ] && [ ! "${distribution}" == "Void" ]; then
 	if [ ! -z "${kernel_parameters}" ]; then
-		cmdline_extra="systemd.log_target=null quiet splash loglevel=4 ${kernel_parameters}"
+		cmdline_extra="systemd.log_target=null vt.global_cursor_default=0 quiet splash loglevel=3 ${kernel_parameters}"
 	else
-		cmdline_extra="systemd.log_target=null quiet splash loglevel=4"
+		cmdline_extra="systemd.log_target=null vt.global_cursor_default=0 quiet splash loglevel=3"
 	fi
 else
 	if [ ! -z "${kernel_parameters}" ]; then
-		cmdline_extra="loglevel=3 quiet splash ${kernel_parameters}"
+		cmdline_extra="vt.global_cursor_default=0 quiet splash loglevel=3 ${kernel_parameters}"
 	else
-		cmdline_extra="loglevel=3 quiet splash"
+		cmdline_extra="vt.global_cursor_default=0 quiet splash loglevel=3"
 	fi
 fi
 cat >/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
@@ -16708,7 +16718,7 @@ grub-install.real "\\\$@" --bootloader-id="${bootloader_id}"
 # Do not use removable as Ubuntu will install the live iso version in that case which has a specific GRUB configuration path
 grub-install.real "\\\$@" --bootloader-id="BOOT"
 rm -f /boot/efi/EFI/BOOT/BOOTX64.EFI
-mv /boot/efi/EFI/BOOT/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
+if [ -f /boot/efi/EFI/BOOT/shimx64.efi ]; then mv /boot/efi/EFI/BOOT/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI; else mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI; fi
 find /boot/efi -type f -iname fbx64.efi -exec rm {} \;
 find /boot/efi -type f -iname bootx64.csv -exec rm {} \;
 GRUBINSTALL

@@ -29,7 +29,7 @@ Linuxloops is a generic / declarative linux distribution installer that also sup
 
 Linuxloops GUI installer can be run from most linux ditributions live images as long as they provide a desktop environment (according to the instructions in the next section), however the available space is often limited in live images and some distros (Bazzite, BlissOS, Brunch, ChromeOS-Flex, Fedora-Atomic, Qubes, Tails) will not be installable due to the lack of storage. As such, it is recommended to use the linuxloops live disk instead.  
 
-* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive using an image writer (Gnome Disk Utility / KDE ISO Image Writer for Linux or Rufus for Windows).  
+* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive (16GB minimum) using an image writer (Gnome Disk Utility / KDE ISO Image Writer for Linux or Rufus for Windows).  
 
 * Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
@@ -88,7 +88,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Fedora          |41                                                            |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
 |Fedora-Atomic   |41                                                            |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
-|GLF-OS          |Stable                                                        |✓                      |✓                                    |                                 |                            |
+|GLF-OS          |Alpha                                                         |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
 |KDE             |Rolling                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][KDE-notes]          |
 |Linuxmint       |Xia                                                           |✓                      |✓                                    |✓                                |                            |
