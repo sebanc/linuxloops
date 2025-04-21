@@ -8545,9 +8545,9 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L "https://gitlab.com/kalilinux/packages/kali-archive-keyring/-/raw/kali/master/archive-key.asc?ref_type=heads&inline=false" -o /tmp/archive-key.asc
+curl -L "https://gitlab.com/kalilinux/packages/kali-archive-keyring/-/raw/kali/master/archive-key-old.asc?ref_type=heads&inline=false" -o /tmp/archive-key.asc
 DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-gpg --no-keyring --no-default-keyring --no-auto-check-trustdb --no-options --import-options import-export --import < /tmp/archive-key.asc > /usr/share/keyrings/kali-archive-keyring.gpg
+cat /tmp/archive-key.asc | gpg --dearmor > /usr/share/keyrings/kali-archive-keyring.gpg
 rm /tmp/archive-key.asc
 debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils kali-$(echo ${kali_version} | tr A-Z a-z) /mnt ${mirror_Kali}
 PREPARE_CHROOT
@@ -16267,7 +16267,7 @@ NIXOSCONFIGURATION
 fi
 cat >/mnt/etc/nixos/shim-signed.nix <<'NIXOSSHIM'
 { pkgs }:
-pkgs.stdenv.mkDerivation rec {
+pkgs.stdenv.mkDerivation rec {archive
   pname = "shim-signed";
   version = "15.8";
   src = pkgs.fetchurl {
