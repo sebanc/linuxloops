@@ -66,6 +66,16 @@ If you install the nvidia proprietary driver, the first boot after each kernel u
 If you install the nvidia proprietary driver, you will need to disable Secure Boot.  
 
 
+## FoxFlake
+
+FoxFlake proposes 3 bundles of apps that respectively contain:  
+- Standard bundle: Firefox, Thunderbird and LibreOffice.  
+- Gaming bundle: Steam, Heroic and Lutris.  
+- Studio bundle: DaVinci Resolve, OBS Studio, Blender, Kdenlive, GIMP, Audacity.  
+
+For more information on FoxFlake, please refer to the [FoxFlake readme][foxflake-readme].  
+
+
 ## Kali
 
 Kali does not have secure boot support in full disk install.  
@@ -116,7 +126,7 @@ Reboot, enroll the key in shim and re-enable secureboot.
 
 ## SteamOS
 
-SteamOS installed from the 3.6 branch of the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
+SteamOS installed from the SteamOS packages repository (https://steamdeck-packages.steamos.cloud/archlinux-mirror/) with minor adjustments to support standard computers usage.  
 Packages can be installed and updated with pacman, however native packages available in the SteamOS packages repository are not the latest versions, therefore for sensitive apps such as web browsers and such it is recommended to use the flatpak version (available by default in the Discover app).  
 
 2 environments are available:
@@ -142,4 +152,5 @@ Tails disk images can only be installed on ext4 partitions (due to the lack of k
 
 <!-- Internal Links -->
 [brunch-readme]: https://github.com/sebanc/brunch/blob/main/README.md
+[foxflake-readme]: https://github.com/sebanc/foxflake/blob/main/Readme.md
 

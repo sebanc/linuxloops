@@ -85,8 +85,9 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing                                           |✓                      |✓                                    |                                 |                            |
 |Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
-|Fedora          |41                                                            |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
-|Fedora-Atomic   |41                                                            |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
+|Fedora          |42                                                            |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
+|Fedora-Atomic   |42                                                            |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
+|FoxFlake        |Stable<br>Unstable                                            |✓                      |✓                                    |                                 |[notes][FoxFlake-notes]     |
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
 |GLF-OS          |Alpha                                                         |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
@@ -105,9 +106,9 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
 |Qubes           |4.2.4                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
 |RockyLinux      |9                                                             |✓                      |                                     |                                 |                            |
-|SteamOS         |3.6                                                           |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
+|SteamOS         |3.7                                                           |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
 |Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |
-|Ubuntu          |24.04<br>24.10<br>25.04                                       |✓                      |✓                                    |✓                                |                            |
+|Ubuntu          |24.04<br>25.04                                                |✓                      |✓                                    |✓                                |                            |
 |Void            |Current                                                       |                       |✓                                    |                                 |                            |
 |Zorin           |17                                                            |✓                      |✓                                    |✓                                |                            |
 
@@ -248,6 +249,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [ChromeOS-Flex-notes]: ./Readme/Distro-notes.md#ChromeOS-Flex
 [Fedora-notes]: ./Readme/Distro-notes.md#Fedora
 [Fedora-Atomic-notes]: ./Readme/Distro-notes.md#Fedora-Atomic
+[FoxFlake-notes]: ./Readme/Distro-notes.md#FoxFlake
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
 [KDE-notes]: ./Readme/Distro-notes.md#KDE
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro

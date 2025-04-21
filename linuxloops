@@ -54,7 +54,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
 
 distribution_parameters()
 {
@@ -120,14 +120,19 @@ case "${distribution}" in
 		default_version="8"
 		;;
 	'Fedora')
-		available_versions=( "41" )
+		available_versions=( "42" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="41"
+		default_version="42"
 		;;
 	'Fedora-Atomic')
-		available_versions=( "41" )
+		available_versions=( "42" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="41"
+		default_version="42"
+		;;
+	'FoxFlake')
+		available_versions=( "Stable" "Unstable" "Stable-Test" "Unstable-Test" )
+		available_versions_longname=( "${available_versions[@]}" )
+		default_version="Stable"
 		;;
 	'Gentoo')
 		available_versions=( "23/Openrc" "23/Systemd" )
@@ -136,7 +141,7 @@ case "${distribution}" in
 		;;
 	'GLF-OS')
 		available_versions=( "Alpha" )
-		available_versions_longname=( "Alpha" )
+		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Alpha"
 		;;
 	'Kali')
@@ -220,9 +225,9 @@ case "${distribution}" in
 		default_version="9"
 		;;
 	'SteamOS')
-		available_versions=( "3.6" )
+		available_versions=( "3.7" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="3.6"
+		default_version="3.7"
 		;;
 	'Tails')
 		available_versions=( "Stable" )
@@ -230,8 +235,8 @@ case "${distribution}" in
 		default_version="Stable"
 		;;
 	'Ubuntu')
-		available_versions=( "24.04" "24.10" "25.04" )
-		available_versions_longname=( "24.04_(LTS)" "24.10_(Interim)" "25.04_(Testing)" )
+		available_versions=( "24.04" "25.04" )
+		available_versions_longname=( "24.04_(LTS)" "25.04_(Interim)" )
 		default_version="24.04"
 		;;
 	'Void')
@@ -300,9 +305,9 @@ case "${distribution}" in
 		bazzite_version="${version}"
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 41 default"
+		bootstrap="lxc fedora 42 default"
 		btrfs_supported="Yes"
-		fedora_version="41"
+		fedora_version="42"
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="No"
 		surface_supported="No"
@@ -423,7 +428,7 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 41 default"
+		bootstrap="lxc fedora 42 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=( "Fedora" )
@@ -434,13 +439,26 @@ case "${distribution}" in
 		available_environments=( "Kinoite" "Onyx" "Sericea" "Silverblue" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 41 default"
+		bootstrap="lxc fedora 42 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="Yes"
 		surface_supported="No"
 		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
+		;;
+	'FoxFlake')
+		available_environments=( "Gnome/Minimal" "Gnome/Standard" "Gnome/Gaming" "Gnome/Studio" "Gnome/Standard+Gaming" "Gnome/Standard+Studio" "Gnome/Gaming+Studio" "Gnome/Full" "Plasma/Minimal" "Plasma/Standard" "Plasma/Gaming" "Plasma/Studio" "Plasma/Standard+Gaming" "Plasma/Standard+Studio" "Plasma/Gaming+Studio" "Plasma/Full" )
+		bootloader_id="foxflake"
+		bootloader_name="shimx64.efi"
+		bootstrap="lxc archlinux current default"
+		btrfs_supported="Yes"
+		chroot_function="${distribution}"
+		foxflake_version="${version}"
+		mirrors_supported=()
+		nixos_version="24.11"
+		nvidia_supported="Yes"
+		surface_supported="No"
 		;;
 	'Gentoo')
 		available_environments=( "None" "Cinnamon" "Enlightenment" "Gnome" "i3" "Lxqt" "Mate" "Plasma" "Xfce" )
@@ -462,7 +480,7 @@ case "${distribution}" in
 		btrfs_supported="Yes"
 		chroot_function="${distribution}"
 		mirrors_supported=()
-		nixos_version="Unstable"
+		nixos_version="24.11"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -572,7 +590,7 @@ case "${distribution}" in
 		available_environments=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 41 default"
+		bootstrap="lxc fedora 42 default"
 		btrfs_supported="Yes"
 		mirrors_supported=( "Fedora" "Nobara" )
 		nobara_version="${version}"
@@ -728,9 +746,6 @@ case "${distribution}" in
 		case "${version}" in
 			'24.04')
 				ubuntu_version="Noble"
-				;;
-			'24.10')
-				ubuntu_version="Oracular"
 				;;
 			'25.04')
 				ubuntu_version="Plucky"
@@ -1865,7 +1880,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2149,7 +2164,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2474,7 +2489,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2804,7 +2819,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -3128,7 +3143,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3435,7 +3450,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3741,7 +3756,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4041,7 +4056,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4340,7 +4355,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4647,7 +4662,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4983,13 +4998,13 @@ case "${environment}" in
 	'Bazzite/Gnome'|'Bazzite/Gnome/Nvidia'|'Bazzite/Gnome/Nvidia/Open')
 		if [ "${useraccount_autologin}" == "Yes" ]; then
 			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=gnome-wayland' >> /etc/\${gdm_folder}/custom.conf
 		fi
 	;;
 	'Bazzite'|'Bazzite/Nvidia'|'Bazzite/Nvidia/Open')
 		if [ "${useraccount_autologin}" == "Yes" ]; then
 			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
+			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=plasma' >> /etc/sddm.conf.d/zz_linuxloops.conf
 			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
 mkdir -p \$HOME/.config
 echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
@@ -4999,6 +5014,8 @@ DISABLE_KWALLET
 esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
+
+kernel_parameters="bluetooth.disable_ertm=1 preempt=full"
 
 initramfs_type="iso_init"
 if [ ! -z "${custom_packages}" ]; then
@@ -5111,6 +5128,7 @@ set -e
 mkdir -p /usr/etc
 cat >/system.yaml <<'SYSTEMYAML'
 repo: 'https://pkg-repo.blendos.co'
+arch-repo: 'https://geo.mirror.pkgbuild.com'
 impl: 'https://github.com/blend-os/tracks/raw/main'
 SYSTEMYAML
 ${install_desktop}
@@ -5563,7 +5581,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring arc-gtk-theme gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring gnome-control-center papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -7590,7 +7608,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
 dnf upgrade --refresh -y
 CHROOT_INIT
@@ -7926,6 +7944,76 @@ if [ ! -z "${custom_script}" ]; then
 	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
 fi
+}
+
+chroot_FoxFlake()
+{
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
+
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<NIXOS_PREPARE_CHROOT
+#!/bin/bash
+set -e
+if [ -f /tmp/linuxloops/install_swap ] && [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then /tmp/linuxloops/install_swap; fi
+/tmp/linuxloops/install_secureboot /mnt
+/tmp/linuxloops/install_fstab
+/tmp/linuxloops/install_initramfs
+groupadd -g 30000 nixbld
+useradd -u 30000 -g nixbld -G nixbld nixbld
+useradd -s /bin/bash -m 'temp'
+echo -e 'temp\ntemp' | passwd 'temp'
+echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
+sudo -u temp bash << 'NIXOSINSTALL'
+set -e
+ulimit -n 4096
+sudo mkdir -p /nix
+sudo chown -R temp /nix
+curl -L https://nixos.org/nix/install | sh
+source \$HOME/.nix-profile/etc/profile.d/nix.sh
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+nix-channel --remove nixpkgs
+sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo \$(command -v nix-channel) --update
+sudo \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z)  --no-root-passwd
+/tmp/linuxloops/install_dmconfig
+NIXOSINSTALL
+NIXOS_PREPARE_CHROOT
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
+
+if [ "${useraccount_autologin}" == "Yes" ]; then
+	autologin_commands="
+  # Autologin
+  foxflake.environment.autologin = true;
+  foxflake.environment.autologinUser = \"${useraccount_name}\";
+"
+fi
+
+cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
+set -e
+if [ "${useraccount_autologin}" == "Yes" ] && [ "\$(echo ${environment} | cut -d'/' -f1)" == "Plasma" ]; then
+	su -- '${useraccount_name}' << 'DISABLE_KWALLET'
+mkdir -p \$HOME/.config
+echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
+DISABLE_KWALLET
+fi
+NIXOSCHROOT
+INSTALL_DMCONFIG
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
+
+initramfs_type="nixos_config"
 }
 
 chroot_Gentoo-Openrc()
@@ -8406,9 +8494,8 @@ nix-channel --remove nixpkgs
 sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo \$(command -v nix-channel) --update
 sudo \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#GLF-OS --no-root-passwd
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd
 /tmp/linuxloops/install_channel
-/tmp/linuxloops/install_user
 /tmp/linuxloops/install_flatpak
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
@@ -8417,11 +8504,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 if [ "${useraccount_autologin}" == "Yes" ]; then
 	autologin_commands="
   services.displayManager.autoLogin.enable = true;
-  services.displayManager.autoLogin.user = \"${useraccount_name}\";
-
-  # Workaround for autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-  systemd.services.\"getty@tty1\".enable = false;
-  systemd.services.\"autovt@tty1\".enable = false;"
+  services.displayManager.autoLogin.user = \"${useraccount_name}\";"
 fi
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_channel <<INSTALL_CHANNEL
@@ -8431,15 +8514,6 @@ nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr 
 NIXOSCHROOT
 INSTALL_CHANNEL
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_channel
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
-set -e
-useradd -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-NIXOSCHROOT
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_flatpak <<INSTALL_FLATPAK
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
@@ -9151,7 +9225,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-keyring gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-keyring gnome-terminal nemo papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9423,7 +9497,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-keyring gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-keyring gnome-terminal nemo papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9695,7 +9769,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-keyring gnome-terminal nemo arc-gtk-theme papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-keyring gnome-terminal nemo papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -10346,7 +10420,6 @@ sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${
 sudo \$(command -v nix-channel) --update
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
 /tmp/linuxloops/install_channel
-/tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
@@ -10355,10 +10428,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 if [ "${useraccount_autologin}" == "Yes" ]; then
 	autologin_commands="
 services.displayManager.autoLogin.enable = true;
-services.displayManager.autoLogin.user = \"${useraccount_name}\";
-# Workaround for autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-systemd.services.\"getty@tty1\".enable = false;
-systemd.services.\"autovt@tty1\".enable = false;"
+services.displayManager.autoLogin.user = \"${useraccount_name}\";"
 fi
 case "${environment}" in
 	'Budgie/Full')
@@ -10492,15 +10562,6 @@ NIXOSCHROOT
 INSTALL_CHANNEL
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_channel
 
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
-set -e
-useradd -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-NIXOSCHROOT
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
 cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
@@ -10558,7 +10619,6 @@ sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${
 sudo \$(command -v nix-channel) --update
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
 /tmp/linuxloops/install_channel
-/tmp/linuxloops/install_user
 /tmp/linuxloops/install_dmconfig
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
@@ -10567,10 +10627,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 if [ "${useraccount_autologin}" == "Yes" ]; then
 	autologin_commands="
 services.displayManager.autoLogin.enable = true;
-services.displayManager.autoLogin.user = \"${useraccount_name}\";
-# Workaround for autologin: https://github.com/NixOS/nixpkgs/issues/103746#issuecomment-945091229
-systemd.services.\"getty@tty1\".enable = false;
-systemd.services.\"autovt@tty1\".enable = false;"
+services.displayManager.autoLogin.user = \"${useraccount_name}\";"
 fi
 case "${environment}" in
 	'Budgie/Full')
@@ -10704,15 +10761,6 @@ NIXOSCHROOT
 INSTALL_CHANNEL
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_channel
 
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
-set -e
-useradd -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-NIXOSCHROOT
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
 cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
 set -e
@@ -10780,7 +10828,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y rpmfusion-free-release rpmfusion-nonfree-release
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
@@ -11465,6 +11513,7 @@ rpm --rebuilddb
 zypper --non-interactive update
 zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service NetworkManager.service
+bash
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -12077,7 +12126,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y desktop-file-utils libdrm2
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver-non-free libnss-mdns mesa-va-drivers pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-drivers pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
+desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver-non-free libnss-mdns mesa-va-drivers pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Cosmic')
@@ -12946,7 +12995,7 @@ else
 	# Duplicate the Server line due to a bug in libalpm when using XferCommand
 	echo -e 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch\nServer = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
 fi
-curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-3.6/os/x86_64/\$(curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-3.6/os/x86_64/ | cut -d'>' -f3 | cut -d'"' -f2 | grep '^holo-keyring.*.tar.zst\$' | tail -1) | tar -x --zstd -C / usr/share/pacman/keyrings/holo.gpg usr/share/pacman/keyrings/holo-trusted usr/share/pacman/keyrings/holo-revoked
+curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/\$(curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/ | cut -d'>' -f3 | cut -d'"' -f2 | grep '^holo-keyring.*.tar.zst\$' | tail -1) | tar -x --zstd -C / usr/share/pacman/keyrings/holo.gpg usr/share/pacman/keyrings/holo-trusted usr/share/pacman/keyrings/holo-revoked
 pacman-key --populate holo
 pacstrap -P -C /etc/pacman_steamos.conf -G /mnt base base-devel holo-keyring aria2
 PREPARE_CHROOT
@@ -13902,279 +13951,6 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_Ubuntu-24.10()
-{
-if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@http://archive.ubuntu.com/ubuntu @${mirror_Ubuntu} @g' /etc/apt/sources.list
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,ubuntu-minimal,xz-utils $(echo ${ubuntu_version} | tr A-Z a-z) /mnt ${mirror_Ubuntu}
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
-
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
-
-deb http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
-# deb-src http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
-SOURCESLIST
-apt update
-DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
-echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
-echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
-if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-noto fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire pipewire-audio-client-libraries pipewire-pulse plymouth-themes system-config-printer ubuntu-wallpapers udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring budgie-applications-menu-applet budgie-brightness-controller-applet budgie-hotcorners-applet budgie-indicator-applet budgie-network-manager-applet budgie-rotation-lock-applet budgie-trash-applet ubuntu-budgie-themes pocillo-icon-theme nemo gnome-terminal plank gjs mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
-"
-	;;
-	'Budgie/Full')
-	default_session="budgie-desktop"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-lightdm-theme ubuntu-budgie-desktop budgie-desktop-environment network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk libgdk-pixbuf2.0-bin gnome-icon-theme
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop-minimal gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Cinnamon/Full')
-	default_session="cinnamon"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus notification-daemon update-manager xdg-desktop-portal-gnome
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde openbox lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde openbox network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt')
-	default_session="Lubuntu"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm lubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring lubuntu-default-settings openbox qterminal pcmanfm-qt lubuntu-artwork humanity-icon-theme blueman lxqt-policykit lubuntu-update-notifier xdg-desktop-portal-gtk qml6-module-qtqml-workerscript papirus-icon-theme
-"
-	;;
-	'Lxqt/Full')
-	default_session="Lubuntu"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm lubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring openbox qterminal pcmanfm-qt lubuntu-artwork humanity-icon-theme blueman lxqt-policykit lubuntu-update-notifier xdg-desktop-portal-gtk qml6-module-qtqml-workerscript papirus-icon-theme
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-mate-desktop mate-session-manager ubuntu-mate-themes ubuntu-mate-wallpapers mate-control-center mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja ayatana-indicator-application ayatana-indicator-datetime ayatana-indicator-notifications ayatana-indicator-power ayatana-indicator-session ayatana-indicator-sound network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-mate-desktop mate-session-manager network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm kubuntu-desktop dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm kubuntu-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Studio/Full')
-	default_session="plasma"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm ubuntustudio-desktop ardour obs-studio krita gimp kdenlive digikam darktable patchance polkit-kde-agent-1 xdg-desktop-portal-kde
-"
-	;;
-	'Ubuntu')
-	default_session="ubuntu-wayland"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound notification-daemon update-manager xdg-desktop-portal-gnome
-"
-	;;
-	'Ubuntu/Full')
-	default_session="ubuntu-wayland"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
-"
-	;;
-	'Unity')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
-	default_session="unity"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
-"
-	;;
-	'Unity/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto fonts-ubuntu gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers plymouth-themes pulseaudio pulseaudio-module-bluetooth system-config-printer ubuntu-wallpapers udisks2 xdg-user-dirs-gtk xserver-xorg"
-	default_session="unity"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntu-unity-desktop indicator-applet indicator-application indicator-session nautilus gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce')
-	default_session="xubuntu"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin xubuntu-icon-theme xfce4-power-manager-plugins xfce4-pulseaudio-plugin xfce4-terminal thunar xfce4-notifyd greybird-gtk-theme elementary-xfce-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce/Full')
-	default_session="xubuntu"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm lightdm-gtk-greeter xubuntu-desktop xfce4-session xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk
-"
-	;;
-esac
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-${install_desktop}
-if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
-if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
-update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG sudo '${useraccount_name}'
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full'|'Ubuntu'|'Ubuntu/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	'Lxqt'|'Lxqt/Full'|'Plasma'|'Plasma/Full'|'Studio/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		if [ ! "$(echo ${environment} | cut -d'/' -f1)" == "Budgie" ] && [ ! "$(echo ${environment} | cut -d'/' -f1)" == "Cinnamon" ] && [ ! "$(echo ${environment} | cut -d'/' -f1)" == "Mate" ] && [ ! "$(echo ${environment} | cut -d'/' -f1)" == "Xfce" ]; then echo -e '[Greeter]\nbackground = /usr/share/backgrounds/warty-final-ubuntu.png\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf; fi
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			mkdir -p /etc/lightdm/lightdm.conf.d
-			echo -e '[Seat:*]\nautologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
-initramfs_type="initramfstools"
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
-		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} \$(apt search nvidia | grep libnvidia-gl | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(libnvidia-gl-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386"; fi
-			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		fi
-		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		echo "apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	fi
-	echo -e "#!/bin/bash\nset -e\nDEBIAN_FRONTEND=noninteractive apt install --purge -y ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
 chroot_Ubuntu-25.04()
 {
 if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
@@ -14975,7 +14751,7 @@ else
 		if tune2fs -l "${boot_partition}" | grep "Filesystem features" | grep -q -w metadata_csum_seed; then tune2fs -O ^metadata_csum_seed "${boot_partition}"; fi
 		if tune2fs -l "${boot_partition}" | grep "Filesystem features" | grep -q -w orphan_file; then tune2fs -O ^orphan_file "${boot_partition}"; fi
 	fi
-	if ([ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]) && [ "${install_type}" == "image" ]; then
+	if ([ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]) && [ "${install_type}" == "image" ]; then
 		losetup --show -fP "${boot_partition}" > /tmp/linuxloops/boot_loop
 		mount -o "${final_boot_mountoptions}" \$(cat /tmp/linuxloops/boot_loop) /mnt/boot
 		mkdir /mnt/boot/efi
@@ -14994,7 +14770,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/mount_efi
 
 generare_enter_chroot()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/enter_chroot <<ENTERCHROOT
 #!/bin/bash
 set -e
@@ -15085,7 +14861,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/enter_chroot
 
 generate_install_settings()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_settings <<APPLYSETTINGS
 #!/bin/bash
 set -e
@@ -15159,7 +14935,7 @@ else
 	openssl x509 -outform DER -in \${1}/etc/secureboot_key/MOK.crt -out \${1}/etc/secureboot_key/MOK.der
 	chmod 0640 \${1}/etc/secureboot_key/*
 	cp \${1}/etc/secureboot_key/MOK.der \${1}/boot/efi/${distribution}.der
-	if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
+	if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 		exit 0
 	elif [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Nobara" ]; then
 		chown root:akmods /etc/secureboot_key/*
@@ -15294,6 +15070,12 @@ elif [ "${distribution}" == "Fedora-Atomic" ]; then
 set -e
 rpm-ostree -y install akmod-nvidia xorg-x11-drv-nvidia libva-nvidia-driver
 INSTALLNVIDIA
+elif [ "${distribution}" == "FoxFlake" ]; then
+	foxflake_nvidia="
+  # Nvidia open source driver support
+  foxflake.nvidia.enable = true;
+
+"
 elif [ "${distribution}" == "Gentoo" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
@@ -15417,7 +15199,7 @@ fi
 generate_install_fstab()
 {
 if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
-if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
+if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_fstab <<GENERATEFSTAB
 #!/bin/bash
 set -e
@@ -16275,13 +16057,84 @@ if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 fi
 cmdline=\$(echo -n "\"\${cmdline}\"" | sed 's@ @" "@g')
 mkdir -p /mnt/etc/nixos
-if [ "${distribution}" == "GLF-OS" ]; then
-pacman -Syu --noconfirm --needed git
-git clone -b main https://github.com/GLF-OS/Nixos-by-GLF.git /tmp/GLF-OS-config
-cp /tmp/GLF-OS-config/iso-cfg/flake.nix /mnt/etc/nixos/
-cp /tmp/GLF-OS-config/iso-cfg/flake.lock /mnt/etc/nixos/
-cp -r /tmp/GLF-OS-config/iso-cfg/customConfig /mnt/etc/nixos/
-cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
+if [ "${distribution}" == "FoxFlake" ]; then
+curl -L https://raw.githubusercontent.com/sebanc/foxflake/refs/heads/$(echo ${foxflake_version} | tr A-Z a-z)/installer/target-configuration/flake.nix -o /mnt/etc/nixos/flake.nix
+case "$(echo ${environment} | cut -d'/' -f2)" in
+	'Minimal')
+		bundles=' '
+	;;
+	'Standard')
+		bundles='"standard"'
+	;;
+	'Gaming')
+		bundles='"gaming"'
+	;;
+	'Studio')
+		bundles='"studio"'
+	;;
+	'Standard+Gaming')
+		bundles='"standard" "gaming"'
+	;;
+	'Standard+Studio')
+		bundles='"standard" "studio"'
+	;;
+	'Gaming+Studio')
+		bundles='"gaming" "studio"'
+	;;
+	'Full')
+		bundles='"standard" "gaming" "studio"'
+	;;
+esac
+	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
+{ pkgs, lib, ... }:
+
+{
+  # Imports
+  imports =
+    [
+      ./hardware-configuration.nix
+      ./linuxloops.nix
+    ];
+
+  # Desktop environment type
+  foxflake.environment.type = "$(echo ${environment} | cut -d'/' -f1 | tr A-Z a-z)";
+
+${autologin_commands}
+
+  # Bundles, system packages, flatpaks and waydroid configuration
+  foxflake.system.bundles = [ \${bundles} ];         # e.g.: "standard" and/or "gaming" and/or "studio"
+  foxflake.system.packages = with pkgs; [ ];         # e.g.: with pkgs; [ firefox ]
+  foxflake.system.flatpaks = [ ];                    # e.g.: [ "org.mozilla.firefox" ];
+  foxflake.system.waydroid = true;
+
+  # User configuration (including user packages and flatpaks)
+  foxflake.users.${useraccount_name}.extraGroups = [ "wheel" "networkmanager" ];
+  foxflake.users.${useraccount_name}.packages = with pkgs; [ ];         # e.g.: with pkgs; [ firefox ]
+  foxflake.users.${useraccount_name}.flatpaks = [ ];                    # e.g.: [ "org.mozilla.firefox" ];
+
+${foxflake_nvidia}
+
+  # Keyboard configuration
+  foxflake.internationalisation.keyboard.layout = "${keymap}";
+  foxflake.internationalisation.keyboard.variant = "";
+  foxflake.internationalisation.keyboard.consoleKeymap = "${keymap}";
+
+  # Locale configuration
+  foxflake.internationalisation.defaultLocale = "${locale}.UTF-8";
+
+  # Timezone configuration
+  foxflake.internationalisation.timezone = "${timezone}";
+
+  # Initially installed version (DO NOT TOUCH)
+  foxflake.stateVersion = "24.11";
+}
+NIXOSCONFIGURATION
+elif [ "${distribution}" == "GLF-OS" ]; then
+	pacman -Syu --noconfirm --needed git
+	git clone -b main https://github.com/Gaming-Linux-FR/GLF-OS.git /tmp/GLF-OS-config
+	cp /tmp/GLF-OS-config/iso-cfg/flake.nix /mnt/etc/nixos/
+	cp -r /tmp/GLF-OS-config/iso-cfg/customConfig /mnt/etc/nixos/
+	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 { pkgs, lib, ... }:
 
 {
@@ -16296,12 +16149,13 @@ glf.nvidia_config.enable = false;
 glf.printing.enable = false;
 glf.standBy.enable = false;
 
+users.users.${useraccount_name} = {
+  isNormalUser = true;
+  extraGroups = [ "wheel" "networkmanager" "scanner" "lp" "disk" ];
+};
+
 boot.kernelParams = [ \${cmdline} ];
 boot.plymouth.enable = true;
-
-hardware.cpu.intel.updateMicrocode = true;
-hardware.cpu.amd.updateMicrocode = true;
-hardware.enableAllFirmware = true;
 
 console.earlySetup = true;
 console.keyMap = "${keymap}";
@@ -16327,13 +16181,14 @@ ${autologin_commands}
 
 ${nixos_nvidia}
 
-services.logrotate.checkConfig = false;
+systemd.services."getty@tty1".enable = false;
+systemd.services."autovt@tty1".enable = false;
 
 system.stateVersion = "24.11"; # DO NOT TOUCH
 }
 NIXOSCONFIGURATION
 else
-cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
+	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 # Edit this configuration file to define what should be installed on
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
@@ -16346,18 +16201,19 @@ imports = [
   ./linuxloops.nix
 ];
 
+boot.kernelPackages = pkgs.linuxPackages;
 boot.kernelParams = [ \${cmdline} ];
 boot.plymouth.enable = true;
+
+users.users.${useraccount_name} = {
+  isNormalUser = true;
+  extraGroups = [ "wheel" "networkmanager" ];
+};
 
 console.earlySetup = true;
 console.keyMap = "${keymap}";
 i18n.defaultLocale = "${locale}.UTF-8";
 time.timeZone = "${timezone}";
-
-boot.kernelPackages = pkgs.linuxPackages;
-hardware.cpu.intel.updateMicrocode = true;
-hardware.cpu.amd.updateMicrocode = true;
-hardware.enableAllFirmware = true;
 
 hardware.bluetooth.enable = true;
 hardware.pulseaudio.enable = false;
@@ -16397,7 +16253,8 @@ nix.gc = {
 nix.settings.auto-optimise-store = true;
 nixpkgs.config.allowUnfree = true;
 
-services.logrotate.checkConfig = false;
+systemd.services."getty@tty1".enable = false;
+systemd.services."autovt@tty1".enable = false;
 
 # This value determines the NixOS release from which the default
 # settings for stateful data, like file locations and database versions
@@ -16443,6 +16300,10 @@ cat >/mnt/etc/nixos/linuxloops.nix <<'NIXOSLINUXLOOPS'
 {
 nixpkgs.overlays = [ (final: prev: { shim-signed = prev.callPackage ./shim-signed.nix {}; }) ];
 environment.systemPackages = with pkgs; [ ntfs3g openssl sbsigntool shim-signed ];
+hardware.cpu.intel.updateMicrocode = true;
+hardware.cpu.amd.updateMicrocode = true;
+hardware.enableAllFirmware = true;
+services.logrotate.checkConfig = false;
 
 $(if [ "${install_type}" == "image" ]; then echo -e "boot.kernelParams = [ \"\\\${linuxloops_args}\" ];\n"; fi)
 boot.loader.efi.canTouchEfiVariables = false;
@@ -16550,7 +16411,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_swap
 
 generate_install_bootloader()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
+if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/install_bootloader <<INSTALLEFI
 #!/bin/bash
 set -e
@@ -16647,6 +16508,7 @@ echo -e 'add_drivers+=" 8250_dw aes amdgpu atkbd btrfs cbc dm-crypt exfat ext4 f
 echo -e 'install_items+=" /etc/vconsole.conf /usr/bin/bash /usr/sbin/blkid /usr/sbin/cryptsetup /usr/bin/cut /usr/sbin/e2fsck /usr/bin/find /usr/bin/grep /usr/sbin/losetup /usr/bin/lsblk /usr/bin/ntfs-3g /usr/bin/ntfsfix /usr/bin/ps /usr/bin/setfont /usr/bin/setsid /usr/lib/systemd/systemd-sysroot-fstab-check "' >> /etc/dracut.conf.d/99-linuxloops.conf
 echo 'hostonly=\"no\"' >> /etc/dracut.conf.d/99-linuxloops.conf
 rpm-ostree initramfs --enable
+curl -L https://raw.githubusercontent.com/ostreedev/ostree/refs/heads/main/src/boot/grub2/grub2-15_ostree -o /etc/grub.d/15_ostree
 if [ "${install_type}" == "image" ]; then
 	sed "s#ostree admin instutil grub2-generate#ostree admin instutil grub2-generate | sed 's|linux16 |linux |g' | sed 's|initrd16 |initrd $(if [ "${root_fstype}" == "btrfs" ]; then echo /@boot; fi)/linuxloops/linuxloops.img |g'$(if [ "${root_fstype}" == "btrfs" ]; then echo " | sed 's| /ostree| /@boot/ostree|g'"; fi)#g" /etc/grub.d/15_ostree > /etc/grub.d/15_ostree_linuxloops
 else
@@ -17009,7 +16871,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_userpw <<INSTALLUSERPW
 set -e
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
-if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then mkdir /mnt/tmp/linuxloops; fi
+if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then mkdir /mnt/tmp/linuxloops; fi
 cat >/mnt/tmp/linuxloops/set_userpw <<'SETUSERPW'
 #!/bin/bash
 set -e
@@ -17028,7 +16890,7 @@ cp -r /.update_rootfs/lib/modules /lib/
 mkinitcpio -P
 BLENDOS_AKSHARA
 fi
-if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
+if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	sed -i '1d' /mnt/tmp/linuxloops/set_userpw
 	sudo -u temp bash << 'NIXOSSETPW'
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
@@ -17238,7 +17100,7 @@ if mountpoint -q "${bootstrapdir}"/atomic/var/swap; then umount "${bootstrapdir}
 if mountpoint -q "${bootstrapdir}"/atomic/root; then umount "${bootstrapdir}"/atomic/root; fi
 if mountpoint -q "${bootstrapdir}"/atomic/home; then umount "${bootstrapdir}"/atomic/home; fi
 if mountpoint -q "${bootstrapdir}"/atomic; then umount "${bootstrapdir}"/atomic; fi
-if ([ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]) && mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
+if ([ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]) && mountpoint -q "${chrootdir}"; then umount "${chrootdir}"; fi
 if mountpoint -q "${bootstrapdir}"/tmp/linuxloops; then umount "${bootstrapdir}"/tmp/linuxloops; fi
 if mountpoint -q "${bootstrapdir}"/isomount/data; then umount "${bootstrapdir}"/isomount/data; fi
 if mountpoint -q "${bootstrapdir}"/isomount/efi; then umount "${bootstrapdir}"/isomount/efi; fi
@@ -17504,7 +17366,7 @@ else
 	if ! mountpoint -q "${bootstrapdir}" || ! mountpoint -q "${homebinddir}" ; then echo "Linuxloops systemd init working directories could not be mounted."; exit 1; fi
 fi
 download_bootstrap ${bootstrap}
-if [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
+if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	mount --bind "${homebinddir}" "${chrootdir}"
 	if ! mountpoint -q "${chrootdir}" ; then echo "NixOS specific working directory could not be mounted."; exit 1; fi
 fi
@@ -17686,7 +17548,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 	initrd (loop,7)/initramfs.img (loop,7)/firmwares.img (loop,7)/modules.img
 }
 "
-elif [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
+elif [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
