@@ -16267,7 +16267,7 @@ NIXOSCONFIGURATION
 fi
 cat >/mnt/etc/nixos/shim-signed.nix <<'NIXOSSHIM'
 { pkgs }:
-pkgs.stdenv.mkDerivation rec {archive
+pkgs.stdenv.mkDerivation rec {
   pname = "shim-signed";
   version = "15.8";
   src = pkgs.fetchurl {
