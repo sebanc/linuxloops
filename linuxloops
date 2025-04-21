@@ -11513,7 +11513,6 @@ rpm --rebuilddb
 zypper --non-interactive update
 zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service NetworkManager.service
-bash
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -13015,15 +13014,15 @@ desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Desktop')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 "
 	;;
 	'Gamescope')
 	default_session="deck-session"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm-wayland qt5-virtualkeyboard plasma-desktop plasma-wayland-session plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 cat >/usr/share/wayland-sessions/deck-session.desktop <<'DECK_SESSION'
 [Desktop Entry]
 Encoding=UTF-8
