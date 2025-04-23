@@ -60,5 +60,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Launch distribution build
         run: |
-          sysctl -w kernel.unprivileged_userns_clone=1
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          sudo sysctl -w kernel.unprivileged_userns_clone=1
           bash linuxloops -dst test.img -t -s 40 -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9)

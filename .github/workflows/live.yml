@@ -20,7 +20,8 @@ jobs:
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk
         run: |
-          sysctl -w kernel.unprivileged_userns_clone=1
+          sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+          sudo sysctl -w kernel.unprivileged_userns_clone=1
           bash linuxloops -distro Debian -env Cinnamon -dst linuxloops_live_${{ env.current_date }}.img -u -a -H "linuxloops"
       - name: Compress Linuxloops Live Disk
         run: 7z a linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img -mx9

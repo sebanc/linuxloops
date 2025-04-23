@@ -130,7 +130,7 @@ case "${distribution}" in
 		default_version="42"
 		;;
 	'FoxFlake')
-		available_versions=( "Stable" "Unstable" "Stable-Test" "Unstable-Test" )
+		available_versions=( "Stable" "Unstable" "Stable-Test" "Unstable-Test" "Dev" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
 		;;
@@ -9276,14 +9276,14 @@ systemctl enable lightdm.service
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9304,14 +9304,14 @@ systemctl enable lightdm.service
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9548,14 +9548,14 @@ systemctl enable lightdm.service
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9576,14 +9576,14 @@ systemctl enable lightdm.service
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9820,14 +9820,14 @@ systemctl enable lightdm.service
 	'Lxde')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Lxde/Full')
 	default_session="LXDE"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde arc-maia-icon-theme kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -9848,14 +9848,14 @@ systemctl enable lightdm.service
 	'Mate')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra arc-maia-icon-theme papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
+pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -15143,7 +15143,7 @@ elif [ "${distribution}" == "PikaOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-libs' | grep -v '\-full' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) \$(apt search nvidia | grep nvidia-driver-libs | tail -1 | grep -o -P '(nvidia-driver-libs-).*' | cut -d' ' -f1 | cut -d '/' -f1):i386 nvidia-vaapi-driver
+DEBIAN_FRONTEND=noninteractive apt install --purge -y pika-nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Pop" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
