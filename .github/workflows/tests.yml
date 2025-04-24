@@ -9,7 +9,7 @@ concurrency:
 jobs:
   prepare-matrix:
     name: Prepare matrix with distributions install parameters
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.distributions.outputs.matrix }}
     steps:
@@ -42,7 +42,7 @@ jobs:
   build-distributions:
     name: Build distribution
     needs: prepare-matrix
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
