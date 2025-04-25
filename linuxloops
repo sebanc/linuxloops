@@ -140,9 +140,9 @@ case "${distribution}" in
 		default_version="23/Openrc"
 		;;
 	'GLF-OS')
-		available_versions=( "Alpha" )
+		available_versions=( "Stable" "Rolling" "Beta" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Alpha"
+		default_version="Stable"
 		;;
 	'Kali')
 		available_versions=( "Rolling" )
@@ -473,12 +473,13 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'GLF-OS')
-		available_environments=( "Gnome" )
+		available_environments=( "Gnome/Mini" "Gnome/Standard" "Gnome/Studio" "Gnome/Studio-Pro" "Plasma/Mini" "Plasma/Standard" "Plasma/Studio" "Plasma/Studio-Pro" )
 		bootloader_id="glfos"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
 		btrfs_supported="Yes"
 		chroot_function="${distribution}"
+		glfos_version="${version}"
 		mirrors_supported=()
 		nixos_version="24.11"
 		nvidia_supported="Yes"
@@ -7986,8 +7987,7 @@ nix-channel --remove nixpkgs
 sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo \$(command -v nix-channel) --update
 sudo \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z)  --no-root-passwd
-/tmp/linuxloops/install_dmconfig
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
@@ -7995,23 +7995,9 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 if [ "${useraccount_autologin}" == "Yes" ]; then
 	autologin_commands="
   # Autologin
-  foxflake.environment.autologin = true;
   foxflake.environment.autologinUser = \"${useraccount_name}\";
 "
 fi
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
-set -e
-if [ "${useraccount_autologin}" == "Yes" ] && [ "\$(echo ${environment} | cut -d'/' -f1)" == "Plasma" ]; then
-	su -- '${useraccount_name}' << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-fi
-NIXOSCHROOT
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
 initramfs_type="nixos_config"
 }
@@ -8495,7 +8481,6 @@ sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${
 sudo \$(command -v nix-channel) --update
 sudo \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd
-/tmp/linuxloops/install_channel
 /tmp/linuxloops/install_flatpak
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
@@ -8506,14 +8491,6 @@ if [ "${useraccount_autologin}" == "Yes" ]; then
   services.displayManager.autoLogin.enable = true;
   services.displayManager.autoLogin.user = \"${useraccount_name}\";"
 fi
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_channel <<INSTALL_CHANNEL
-sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
-set -e
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
-NIXOSCHROOT
-INSTALL_CHANNEL
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_channel
 
 cat >"${bootstrapdir}"/tmp/linuxloops/install_flatpak <<INSTALL_FLATPAK
 sudo \$(command -v nixos-enter) << 'NIXOSCHROOT'
@@ -15075,6 +15052,13 @@ elif [ "${distribution}" == "FoxFlake" ]; then
   foxflake.nvidia.enable = true;
 
 "
+elif [ "${distribution}" == "GLF-OS" ]; then
+	nixos_nvidia="
+  services.xserver.videoDrivers = [ \"nvidia\" ];
+  hardware.nvidia.open = true;
+  hardware.nvidia.powerManagement.enable = true;
+  hardware.nvidia.nvidiaSettings = true;
+"
 elif [ "${distribution}" == "Gentoo" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
@@ -15082,11 +15066,12 @@ set -e
 echo -e 'media-libs/nvidia-vaapi-driver ~amd64' > /etc/portage/package.accept_keywords/linuxloops
 emerge -uN x11-drivers/nvidia-drivers media-libs/nvidia-vaapi-driver
 INSTALLNVIDIA
-elif [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
+elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
-services.xserver.videoDrivers = [ \"nvidia\" \"modesetting\" \"fbdev\" ];
-hardware.nvidia.open = false;
+services.xserver.videoDrivers = [ \"nvidia\" ];
+hardware.nvidia.open = true;
 hardware.nvidia.powerManagement.enable = true;
+hardware.nvidia.nvidiaSettings = true;
 "
 elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -16129,61 +16114,47 @@ ${foxflake_nvidia}
 }
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
-	pacman -Syu --noconfirm --needed git
-	git clone -b main https://github.com/Gaming-Linux-FR/GLF-OS.git /tmp/GLF-OS-config
-	cp /tmp/GLF-OS-config/iso-cfg/flake.nix /mnt/etc/nixos/
-	cp -r /tmp/GLF-OS-config/iso-cfg/customConfig /mnt/etc/nixos/
+	curl -L https://raw.githubusercontent.com/Gaming-Linux-FR/GLF-OS/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix -o /mnt/etc/nixos/flake.nix
+	mkdir /mnt/etc/nixos/customConfig
+	curl -L https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix -o /mnt/etc/nixos/customConfig/default.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 { pkgs, lib, ... }:
 
 {
-nix.settings.experimental-features = [ "nix-command" "flakes" ];
-imports = [
-  ./hardware-configuration.nix
-  ./linuxloops.nix
-  ./customConfig
-];
+  nix.settings.experimental-features = [ "nix-command" "flakes" ];
+  imports = [
+    ./hardware-configuration.nix
+    ./linuxloops.nix
+    ./customConfig
+  ];
 
-glf.nvidia_config.enable = false;
-glf.printing.enable = false;
-glf.standBy.enable = false;
+  glf.nvidia_config.enable = false;
+  glf.standBy.enable = false;
 
-users.users.${useraccount_name} = {
-  isNormalUser = true;
-  extraGroups = [ "wheel" "networkmanager" "scanner" "lp" "disk" ];
-};
+  users.users.${useraccount_name} = {
+    isNormalUser = true;
+    extraGroups = [ "wheel" "networkmanager" "scanner" "lp" "disk" ];
+  };
 
-boot.kernelParams = [ \${cmdline} ];
-boot.plymouth.enable = true;
+  boot.kernelParams = [ \${cmdline} ];
 
-console.earlySetup = true;
-console.keyMap = "${keymap}";
-i18n.defaultLocale = "${locale}.UTF-8";
-time.timeZone = "${timezone}";
+  console.earlySetup = true;
+  console.keyMap = "${keymap}";
+  i18n.defaultLocale = "${locale}.UTF-8";
+  time.timeZone = "${timezone}";
 
-services.xserver = {
-  enable = true;
-  excludePackages = [ pkgs.xterm ];
-  xkb.layout = "${keymap}";
-  xkb.variant = "";
-};
+  services.xserver = {
+    xkb.layout = "${keymap}";
+    xkb.variant = "";
+  };
 
-networking.hostName = "${hostname}";
-networking.networkmanager.enable = true;
-
-hardware.sane.enable = true;
-services.avahi.enable = true;
-services.avahi.nssmdns4 = true;
-services.printing.enable = true;
+  networking.hostName = "${hostname}";
 
 ${autologin_commands}
 
 ${nixos_nvidia}
 
-systemd.services."getty@tty1".enable = false;
-systemd.services."autovt@tty1".enable = false;
-
-system.stateVersion = "24.11"; # DO NOT TOUCH
+  system.stateVersion = "24.11"; # DO NOT TOUCH
 }
 NIXOSCONFIGURATION
 else
@@ -16343,7 +16314,8 @@ GRUBSBAT
   fi
 '';
 boot.loader.grub.fsIdentifier = "uuid";
-boot.loader.grub.splashImage = null;
+boot.loader.grub.splashImage = lib.mkForce null;
+boot.loader.grub.theme = lib.mkForce null;
 boot.loader.grub.timeoutStyle = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo "\"hidden\""; else echo "\"menu\""; fi);
 boot.loader.grub.useOSProber = false;
 boot.loader.timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo 2; else echo 5; fi);
