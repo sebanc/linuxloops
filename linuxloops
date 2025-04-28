@@ -16149,6 +16149,7 @@ elif [ "${distribution}" == "GLF-OS" ]; then
   };
 
   networking.hostName = "${hostname}";
+  networking.networkmanager.enable = true;
 
 ${autologin_commands}
 
