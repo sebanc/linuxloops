@@ -185,9 +185,9 @@ case "${distribution}" in
 		default_version="24.11"
 		;;
 	'Nobara')
-		available_versions=( "41" )
+		available_versions=( "Rolling" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="41"
+		default_version="Rolling"
 		;;
 	'OpenSUSE')
 		available_versions=( "Leap/15.6" "Slowroll" "Tumbleweed" )
@@ -588,10 +588,11 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Nobara')
+	        version="42"
 		available_environments=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 42 default"
+		bootstrap="lxc fedora ${version} default"
 		btrfs_supported="Yes"
 		mirrors_supported=( "Fedora" "Nobara" )
 		nobara_version="${version}"
@@ -8522,10 +8523,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L "https://gitlab.com/kalilinux/packages/kali-archive-keyring/-/raw/kali/master/archive-key-old.asc?ref_type=heads&inline=false" -o /tmp/archive-key.asc
 DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-cat /tmp/archive-key.asc | gpg --dearmor > /usr/share/keyrings/kali-archive-keyring.gpg
-rm /tmp/archive-key.asc
 debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils kali-$(echo ${kali_version} | tr A-Z a-z) /mnt ${mirror_Kali}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
@@ -10776,17 +10774,17 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/nobara.repo -o /etc/yum.repos.d/nobara.repo
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-fedora-$(echo ${nobara_version} | tr A-Z a-z)-primary -o /etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${nobara_version} | tr A-Z a-z)-primary
 curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
 curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)
-dnf install -y --allowerasing nobara-gpg-keys nobara-repos nobara-release-workstation
+curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/baseos/nobara-repos/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1)) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))
+dnf install -y --releasever=$(echo ${nobara_version} | tr A-Z a-z) --allowerasing nobara-gpg-keys nobara-repos
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar tcl8
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -19448,7 +19446,7 @@ if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]
 
 if [[ $EUID -ne 0 ]]; then
 	if [ -f /etc/NIXOS ] && [ ${#} -eq 0 ]; then
-        	exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash -p curl -p gnupg -p sudo -p util-linux -p xz -p python3Packages.pyqt6-webengine --run "bash $0"
+        	exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash curl gnupg1 sudo util-linux xz python3Packages.pyqt6-webengine --run "bash $0"
 	else
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi

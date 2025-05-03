@@ -98,7 +98,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
 |Neon            |User<br>Testing                                               |✓                      |✓                                    |✓                                |                            |
 |NixOS           |24.11<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
-|Nobara          |41                                                            |✓                      |✓                                    |✓                                |                            |
+|Nobara          |Rolling                                                       |✓                      |✓                                    |✓                                |                            |
 |OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
 |PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
