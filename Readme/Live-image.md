@@ -39,7 +39,7 @@ Once the live image has booted, set your keyboard layout (Preferences -> Keyboar
 
 Install 7zip, download the linuxloops live 7z archive in the release section of this Github repository and extract the linuxloops live 7z archive.  
 
-Write the resulting image file to your USB flashdrive using Rufus.  
+Write the resulting image file to your USB flashdrive using [DiskImager][DiskImager link].  
 
 Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
@@ -56,4 +56,7 @@ Once the live image has booted, set your keyboard layout (Preferences -> Keyboar
 [issues-url]: https://github.com/sebanc/linuxloops/issues
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
+
+<!-- Outbound Links -->
+[DiskImager link]: https://diskimager.org
 

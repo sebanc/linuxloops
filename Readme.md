@@ -29,7 +29,7 @@ Linuxloops is a generic / declarative linux distribution installer that also sup
 
 Linuxloops GUI installer can be run from most linux ditributions live images as long as they provide a desktop environment (according to the instructions in the next section), however the available space is often limited in live images and some distros (Bazzite, BlissOS, Brunch, ChromeOS-Flex, Fedora-Atomic, Qubes, Tails) will not be installable due to the lack of storage. As such, it is recommended to use the linuxloops live disk instead.  
 
-* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive (16GB minimum) using an image writer (Gnome Disk Utility / KDE ISO Image Writer for Linux or Rufus for Windows).  
+* Download the linuxloops live 7z archive in the release section of this Github repository, extract it with your archive manager and write it to a USB flashdrive (16GB minimum) using an image writer (Gnome Disk Utility / KDE ISO Image Writer for Linux or [DiskImager][DiskImager link] for Windows).  
 
 * Reboot your computer and select the USB flashdrive from the UEFI boot menu.  
 
@@ -42,7 +42,7 @@ Detailed instructions:
 
 ### Install a linux distro on a USB flashdrive / SD card or in a disk image (from Linux or Windows WSL)
 
-Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using Rufus/Etcher or boot them using [Grub2Win][Grub2Win link].  
+Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using [DiskImager][DiskImager link] or boot them using [Grub2Win][Grub2Win link].  
 
 * Install the below packages depending on your distribution:  
   * Debian / Ubuntu based distributions: `sudo apt install curl fontconfig libasound2t64 libatomic1 libnss3 libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libxkbcommon-x11-0 libxkbfile1 python3-venv xz-utils`  
@@ -269,7 +269,8 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [Declarative configuration examples]: ./Declarative_configuration_examples
 
 <!-- Outbound Links -->
-[Grub2Win link]: https://sourceforge.net/projects/grub2win/
-[linuxcontainers link]: https://linuxcontainers.org/
+[DiskImager link]: https://diskimager.org
+[Grub2Win link]: https://sourceforge.net/projects/grub2win
+[linuxcontainers link]: https://linuxcontainers.org
 [linux-surface link]: https://github.com/linux-surface/linux-surface
 

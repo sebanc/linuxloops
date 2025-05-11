@@ -14968,12 +14968,12 @@ echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/
 apt update
 if [ ! -z "${surface_remove}" ]; then DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}; fi
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libtiff-dev qt6-base-dev qt6-tools-dev-tools libqt6opengl6-dev libinput-dev
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
-dkms add -m v4l2loopback -v 0.13.2
-dkms install -m v4l2loopback -v 0.13.2 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
-git clone -b v0.3.2 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
+curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.14.0.tar.gz | tar xz -C /usr/src
+dkms add -m v4l2loopback -v 0.14.0
+dkms install -m v4l2loopback -v 0.14.0 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
+git clone -b v0.5.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
-sed -i "s@-Wdeprecated-enum-enum-conversion@@g" ./meson.build
+sed -i "/'-Wshadow',/d" ./meson.build
 meson setup build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
 ninja -C build
 ninja -C build install
@@ -14989,12 +14989,12 @@ echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/
 apt update
 DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
-dkms add -m v4l2loopback -v 0.13.2
-dkms install -m v4l2loopback -v 0.13.2 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
-git clone -b v0.3.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
+curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.14.0.tar.gz | tar xz -C /usr/src
+dkms add -m v4l2loopback -v 0.14.0
+dkms install -m v4l2loopback -v 0.14.0 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
+git clone -b v0.5.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
-sed -i "s@-Wdeprecated-enum-enum-conversion@@g" ./meson.build
+sed -i "/'-Wshadow',/d" ./meson.build
 meson build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
 ninja -C build
 ninja -C build install
@@ -16165,6 +16165,8 @@ elif [ "${distribution}" == "GLF-OS" ]; then
   i18n.defaultLocale = "${locale}.UTF-8";
   time.timeZone = "${timezone}";
 
+  services.thermald.enable = true;
+
   services.xserver = {
     xkb.layout = "${keymap}";
     xkb.variant = "";
@@ -16217,6 +16219,7 @@ services.pipewire = {
   pulse.enable = true;
 };
 hardware.sensor.iio.enable = true;
+services.thermald.enable = true;
 
 networking.hostName = "${hostname}";
 networking.networkmanager.enable = true;
@@ -19176,7 +19179,7 @@ else
 	if [ ${return_value} -eq 1 ]; then exit_with_error "Failed to perform the installation of ${distribution} in chroot."; fi
 	grub_config
 	if [ ! -z "${wsl}" ]; then
-		grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.<br><br>********************************************************************************************<br>If you want to boot the image directly using Grub2Win:<br>The grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt<br>You need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".<br><br>Please note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):<br>- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.<br>- Disable fast startup.<br>- Disable hibernation.<br><br>Once done, reboot your computer and select ${distribution} from the Grub2Win menu.<br>********************************************************************************************"
+		grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like DiskImager or boot it directly using Grub2Win.<br><br>********************************************************************************************<br>If you want to boot the image directly using Grub2Win:<br>The grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt<br>You need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\$(echo ${fullpath:7} | sed 's@\/@\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".<br><br>Please note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):<br>- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.<br>- Disable fast startup.<br>- Disable hibernation.<br><br>Once done, reboot your computer and select ${distribution} from the Grub2Win menu.<br>********************************************************************************************"
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	elif [ ! -z "${brunch}" ]; then
 		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><textarea cols=\"80\" rows=\"14\" style=\"font-size: 14px;\">${config}</textarea><br><br>Now copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.<br><br>Once done, press CTRL+X and then ENTER to save, reboot your computer and start ${distribution}"
@@ -19396,7 +19399,7 @@ else
 	start_install || exit_with_error "Failed to install ${distribution} in chroot."
 	grub_config
 	if [ ! -z "${wsl}" ]; then
-		grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like rufus/etcher or boot it directly using Grub2Win.\n\n********************************************************************************************\nIf you want to boot the image directly using Grub2Win:\nThe grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\nYou need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".\nPlease note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu.\n********************************************************************************************"
+		grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like DiskImager or boot it directly using Grub2Win.\n\n********************************************************************************************\nIf you want to boot the image directly using Grub2Win:\nThe grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\nYou need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".\nPlease note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu.\n********************************************************************************************"
 		echo -e "\n${grubinstall}"
 	elif [ ! -z "${brunch}" ]; then
 		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\n****************************************************************************************** \n${config}\n****************************************************************************************** \n\nNow copy the above grub config, run \"sudo edit-brunch-config -g\" and paste it (lines between stars) at the end of the file.\n\nOnce done, press CTRL+X and then ENTER to save, reboot your computer and start ${distribution}"

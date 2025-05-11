@@ -106,7 +106,7 @@ Create your own declarative configuration and run the below command to start the
 
 4. Finalisation (For disk installs)  
 
-Use a software like Rufus or Etcher to write the image located at C:\Users\"username"\Downloads\Arch.img on a drive.  
+Use a software like [DiskImager][DiskImager link] to write the image located at C:\Users\"username"\Downloads\Arch.img on a drive.  
 
 Once install is complete, reboot your computer and choose your drive in the UEFI BIOS boot menu.  
 
@@ -133,4 +133,8 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [discord-shield]: https://img.shields.io/badge/Discord-Join-7289da?style=flat-square&logo=discord&logoColor=%23FFFFFF
 [discord-url]: https://discord.gg/x2EgK2M
 
+<!-- Internal Links -->
 [Declarative configuration examples]: ../Declarative_configuration_examples
+
+<!-- Outbound Links -->
+[DiskImager link]: https://diskimager.org
