@@ -54,7 +54,7 @@ Note: Windows WSL does not allow to write directly to a disk but you can create 
   * NixOS: No packages to install (the necessary packages will be installed by linuxloops for use in nix-shell environment)  
 
 * Download the Linuxloops script:  
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
+`curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -O --create-dirs --output-dir ~/bin`  
 
 * Start linuxloops in GUI mode:  
 `bash ${HOME}/bin/linuxloops`  
@@ -98,7 +98,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
 |Neon            |User<br>Testing                                               |✓                      |✓                                    |✓                                |                            |
 |NixOS           |24.11<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
-|Nobara          |Rolling                                                       |✓                      |✓                                    |✓                                |                            |
+|Nobara          |Rolling                                                       |✓                      |✓                                    |                                 |                            |
 |OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
 |PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
@@ -135,7 +135,7 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 ### CLI mode
 
 Install the `curl` package for your distribution and download the Linuxloops script:  
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
+`curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -O --create-dirs --output-dir ~/bin`  
 
 List of command line flags:  
 ```
@@ -198,7 +198,7 @@ As an example:
 ### Declarative mode
 
 Install the `curl` package for your distribution and download the Linuxloops script:  
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
+`curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -O --create-dirs --output-dir ~/bin`  
 
 Have a look at the declarative configuration examples available here:  
 [Declarative configuration examples][Declarative configuration examples]  

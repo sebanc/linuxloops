@@ -17,7 +17,7 @@
 
 1. Download the Linuxloops script:  
 
-`curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -O --create-dirs --output-dir ~/bin`  
+`curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -O --create-dirs --output-dir ~/bin`  
   
 2. Launch the Linuxloops script  
 

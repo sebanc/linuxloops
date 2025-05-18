@@ -597,7 +597,7 @@ case "${distribution}" in
 		mirrors_supported=( "Fedora" "Nobara" )
 		nobara_version="${version}"
 		nvidia_supported="Yes"
-		surface_supported="Yes"
+		surface_supported="No"
 		;;
 	'OpenSUSE')
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -5178,7 +5178,7 @@ if [ "${surface}" == "Yes" ]; then echo -e "  - 'binder_linux-dkms'" >> /system.
 echo -e "commands:" >> /system.yaml;
 if [ "${surface}" == "Yes" ]; then
 cat >>/system.yaml <<SYSTEMYAML
-  - 'curl -s https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | pacman-key --add -'
+  - 'curl -s https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | pacman-key --add -'
   - 'pacman-key --finger 56C464BAAC421453'
   - 'pacman-key --lsign-key 56C464BAAC421453'
   - 'echo -e "[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/" >> /etc/pacman.conf'
@@ -7615,7 +7615,7 @@ mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade grubby openssl tar
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade akmods grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -7634,7 +7634,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
 dnf upgrade --refresh -y
 CHROOT_INIT
@@ -10808,7 +10808,7 @@ mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core nobara-gpg-keys nobara-repos nobara-release-workstation grubby openssl tar tcl8
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core nobara-gpg-keys nobara-repos nobara-release-workstation akmods grubby openssl tar tcl8
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -10827,7 +10827,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut akmods dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y rpmfusion-free-release rpmfusion-nonfree-release
 dnf config-manager setopt fedora-cisco-openh264.enabled=1
 dnf upgrade --refresh -y
@@ -14963,7 +14963,7 @@ if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] ||
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
-curl https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
+curl https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 if [ ! -z "${surface_remove}" ]; then DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}; fi
@@ -14984,17 +14984,17 @@ elif [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
-curl https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
+curl https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.14.0.tar.gz | tar xz -C /usr/src
-dkms add -m v4l2loopback -v 0.14.0
-dkms install -m v4l2loopback -v 0.14.0 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
-git clone -b v0.5.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
+curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
+dkms add -m v4l2loopback -v 0.13.2
+dkms install -m v4l2loopback -v 0.13.2 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
+git clone -b v0.3.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
 cd /tmp/libcamera
-sed -i "/'-Wshadow',/d" ./meson.build
+sed -i "s@-Wdeprecated-enum-enum-conversion@@g" ./meson.build
 meson build -Dpipelines=uvcvideo,vimc,ipu3 -Dipas=vimc,ipu3 -Dprefix=/usr -Dgstreamer=enabled -Dv4l2=true -Dbuildtype=release
 ninja -C build
 ninja -C build install
@@ -15005,7 +15005,7 @@ elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ 
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEPACMAN
 #!/bin/bash
 set -e
-curl -s https://raw.githubusercontent.com/linux-surface/linux-surface/master/pkg/keys/surface.asc | pacman-key --add -
+curl -s https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | pacman-key --add -
 pacman-key --finger 56C464BAAC421453
 pacman-key --lsign-key 56C464BAAC421453
 echo -e '[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/' >> /etc/pacman.conf
@@ -15014,7 +15014,7 @@ if [ ! -z "${surface_remove}" ]; then pacman -Rsc --noconfirm ${surface_remove};
 pacman -S --noconfirm --needed linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms
 usermod -aG video '${useraccount_name}'
 SURFACEPACMAN
-elif [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Nobara" ]; then
+elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEDNF
 #!/bin/bash
 set -e
@@ -16064,7 +16064,7 @@ fi
 cmdline=\$(echo -n "\"\${cmdline}\"" | sed 's@ @" "@g')
 mkdir -p /mnt/etc/nixos
 if [ "${distribution}" == "FoxFlake" ]; then
-curl -L https://raw.githubusercontent.com/sebanc/foxflake/refs/heads/$(echo ${foxflake_version} | tr A-Z a-z)/installer/target-configuration/flake.nix -o /mnt/etc/nixos/flake.nix
+curl -L https://github.com/sebanc/foxflake/raw/refs/heads/$(echo ${foxflake_version} | tr A-Z a-z)/installer/target-configuration/flake.nix -o /mnt/etc/nixos/flake.nix
 case "$(echo ${environment} | cut -d'/' -f2)" in
 	'Minimal')
 		bundles=' '
@@ -16136,7 +16136,7 @@ ${foxflake_nvidia}
 }
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
-	curl -L https://raw.githubusercontent.com/Gaming-Linux-FR/GLF-OS/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix -o /mnt/etc/nixos/flake.nix
+	curl -L https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix -o /mnt/etc/nixos/flake.nix
 	mkdir /mnt/etc/nixos/customConfig
 	curl -L https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix -o /mnt/etc/nixos/customConfig/default.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
@@ -16505,7 +16505,7 @@ echo -e 'add_drivers+=" 8250_dw aes amdgpu atkbd btrfs cbc dm-crypt exfat ext4 f
 echo -e 'install_items+=" /etc/vconsole.conf /usr/bin/bash /usr/sbin/blkid /usr/sbin/cryptsetup /usr/bin/cut /usr/sbin/e2fsck /usr/bin/find /usr/bin/grep /usr/sbin/losetup /usr/bin/lsblk /usr/bin/ntfs-3g /usr/bin/ntfsfix /usr/bin/ps /usr/bin/setfont /usr/bin/setsid /usr/lib/systemd/systemd-sysroot-fstab-check "' >> /etc/dracut.conf.d/99-linuxloops.conf
 echo 'hostonly=\"no\"' >> /etc/dracut.conf.d/99-linuxloops.conf
 rpm-ostree initramfs --enable
-curl -L https://raw.githubusercontent.com/ostreedev/ostree/refs/heads/main/src/boot/grub2/grub2-15_ostree -o /etc/grub.d/15_ostree
+curl -L https://github.com/ostreedev/ostree/raw/refs/heads/main/src/boot/grub2/grub2-15_ostree -o /etc/grub.d/15_ostree
 if [ "${install_type}" == "image" ]; then
 	sed "s#ostree admin instutil grub2-generate#ostree admin instutil grub2-generate | sed 's|linux16 |linux |g' | sed 's|initrd16 |initrd $(if [ "${root_fstype}" == "btrfs" ]; then echo /@boot; fi)/linuxloops/linuxloops.img |g'$(if [ "${root_fstype}" == "btrfs" ]; then echo " | sed 's| /ostree| /@boot/ostree|g'"; fi)#g" /etc/grub.d/15_ostree > /etc/grub.d/15_ostree_linuxloops
 else
@@ -16697,7 +16697,7 @@ POLKIT
 cat >/usr/bin/linuxloops <<'LIVELAUNCHER'
 #!/bin/bash
 set -e
-sudo curl -L https://raw.githubusercontent.com/sebanc/linuxloops/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n" 2>/dev/null
+sudo curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n" 2>/dev/null
 sudo chmod 0755 /usr/bin/linuxloops.real
 bash /usr/bin/linuxloops.real "\${@}"
 LIVELAUNCHER
