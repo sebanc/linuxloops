@@ -1848,7 +1848,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2130,7 +2130,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2415,7 +2415,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2428,19 +2428,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2633,8 +2633,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -2745,7 +2745,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2758,22 +2758,22 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i -z 's@#\[system-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[system-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[world-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[world-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[galaxy-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[galaxy-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2966,8 +2966,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -3080,7 +3080,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3093,19 +3093,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel runit elogind-runit mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -3275,8 +3275,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -3387,7 +3387,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3400,22 +3400,22 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i -z 's@#\[system-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[system-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[world-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[world-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[galaxy-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[galaxy-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel runit elogind-runit mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -3585,8 +3585,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -3699,7 +3699,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3712,19 +3712,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel s6-base elogind-s6 mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -3887,8 +3887,8 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 s6-db-reload
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -3999,7 +3999,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -4012,22 +4012,22 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i -z 's@#\[system-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[system-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[world-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[world-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[galaxy-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[galaxy-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel s6-base elogind-s6 mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -4190,8 +4190,8 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 s6-db-reload
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -4304,7 +4304,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -4317,19 +4317,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel dinit elogind-dinit mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -4499,8 +4499,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -4611,7 +4611,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -4624,22 +4624,22 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman_artix.conf
 sed -i -z 's@#\[system-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[system-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[world-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[world-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i -z 's@#\[galaxy-gremlins]\n#Include = /etc/pacman.d/mirrorlist@[galaxy-gremlins]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman_artix.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos https://mirrors.rit.edu/artixlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -C /etc/pacman_artix.conf -G /mnt base base-devel dinit elogind-dinit mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -4809,8 +4809,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
-curl -L https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/pipewire.desktop -o /etc/xdg/autostart/pipewire.desktop
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitea.artixlinux.org/packages/pipewire/raw/branch/master/artix-pipewire-launcher -o /usr/bin/artix-pipewire-launcher
 chmod 0755 /usr/bin/artix-pipewire-launcher
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
@@ -4942,7 +4942,7 @@ ostree admin init-fs /mnt
 if [ ! -z "${mirror_Fedora_Atomic}" ]; then
 	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic ${mirror_Fedora_Atomic}
 else
-	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic $(curl -L https://ostree.fedoraproject.org/mirrorlist)
+	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic $(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://ostree.fedoraproject.org/mirrorlist)
 fi
 ostree --repo=/mnt/ostree/repo pull --depth 1 atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(if echo ${environment} | tr A-Z a-z | grep -q gnome; then echo "silverblue"; else echo "kinoite"; fi)
 ostree admin --sysroot=/mnt os-init fedora
@@ -5060,7 +5060,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5262,7 +5262,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5284,10 +5284,10 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_script <<INSTALL_SCRIPT
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
 echo "Downloading BlissOS iso sha256"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g')".sha256/download -o /root/bliss.iso.sha256
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g')".sha256/download -o /root/bliss.iso.sha256
 echo "Downloading BlissOS iso"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1)" -o /root/bliss.iso; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1)" -o /root/bliss.iso; then
 		if [ "\$(sha256sum /root/bliss.iso | cut -d' ' -f1)" == "\$(cat /root/bliss.iso.sha256 | cut -d' ' -f1)" ]; then
 			echo "sha256sum verification succeeded"
 			break
@@ -5419,7 +5419,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5453,7 +5453,7 @@ mount "${partition_path}"1 /isomount/data
 if [ "${brunch_version}" == "Unstable" ]; then brunch_url="https://api.github.com/repos/sebanc/brunch-unstable/releases/latest"; else brunch_url="https://api.github.com/repos/sebanc/brunch/releases/latest"; fi
 echo "Downloading Brunch ${brunch_version}"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
 		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)" ]; then
 			echo "sha256sum verification succeeded"
 			break
@@ -5473,7 +5473,7 @@ else
 fi
 echo "Downloading ChromeOS recovery image"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2) -o /isomount/data/recovery.zip; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  \$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2) -o /isomount/data/recovery.zip; then
 		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)" ]; then
 			echo "sha1sum verification succeeded"
 			break
@@ -5532,7 +5532,7 @@ done
 losetup -d "\${isomount}"
 rm -rf /isomount/data/*
 umount /isomount/data
-if [ "${install_type}" == "image" ]; then mkdir -p /mnt/etc/secureboot_key; curl -L https://github.com/sebanc/brunch/raw/main/brunch.der -o /mnt/etc/secureboot_key/MOK.der; fi
+if [ "${install_type}" == "image" ]; then mkdir -p /mnt/etc/secureboot_key; curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/sebanc/brunch/raw/main/brunch.der -o /mnt/etc/secureboot_key/MOK.der; fi
 INSTALL_SCRIPT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_script
 }
@@ -5543,7 +5543,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5557,17 +5557,17 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 if [ "${cachyos_version}" == "x86-64-v4" ]; then
-	curl -L https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v4.conf -o /etc/pacman_cachyos.conf
-	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
-	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v4-mirrorlist/cachyos-v4-mirrorlist -o /etc/pacman.d/cachyos-v4-mirrorlist
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v4.conf -o /etc/pacman_cachyos.conf
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v4-mirrorlist/cachyos-v4-mirrorlist -o /etc/pacman.d/cachyos-v4-mirrorlist
 
 elif [ "${cachyos_version}" == "x86-64-v3" ]; then
-	curl -L https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v3.conf -o /etc/pacman_cachyos.conf
-	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
-	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v3-mirrorlist/cachyos-v3-mirrorlist -o /etc/pacman.d/cachyos-v3-mirrorlist
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v3.conf -o /etc/pacman_cachyos.conf
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v3-mirrorlist/cachyos-v3-mirrorlist -o /etc/pacman.d/cachyos-v3-mirrorlist
 else
-	curl -L https://github.com/CachyOS/docker/raw/refs/heads/master/pacman.conf -o /etc/pacman_cachyos.conf
-	curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/docker/raw/refs/heads/master/pacman.conf -o /etc/pacman_cachyos.conf
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
 fi
 if [ ! -z "${mirror_CachyOS}" ]; then
 	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch/\$repo' >> /etc/pacman.d/cachyos-mirrorlist; fi
@@ -5579,9 +5579,9 @@ else
 	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v3-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v4-mirrorlist; fi
 fi
-curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos.gpg -o /usr/share/pacman/keyrings/cachyos.gpg
-curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos-trusted -o /usr/share/pacman/keyrings/cachyos-trusted
-curl -L https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos-revoked -o /usr/share/pacman/keyrings/cachyos-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos.gpg -o /usr/share/pacman/keyrings/cachyos.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos-trusted -o /usr/share/pacman/keyrings/cachyos-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos-revoked -o /usr/share/pacman/keyrings/cachyos-revoked
 pacman-key --populate cachyos
 pacstrap -C /etc/pacman_cachyos.conf -G /mnt base base-devel cachyos-keyring cachyos-hooks cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-rate-mirrors cachyos-settings
 cp /etc/pacman_cachyos.conf /mnt/etc/pacman.conf
@@ -5856,7 +5856,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5883,8 +5883,8 @@ mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 echo "Downloading ChromeOS-Flex recovery image"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2) -o /isomount/data/recovery.zip; then
-		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\$(curl -L https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)" ]; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  \$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2) -o /isomount/data/recovery.zip; then
+		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)" ]; then
 			echo "sha1sum verification succeeded"
 			break
 		else
@@ -7833,7 +7833,7 @@ ostree admin init-fs /mnt
 if [ ! -z "${mirror_Fedora_Atomic}" ]; then
 	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic ${mirror_Fedora_Atomic}
 else
-	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic $(curl -L https://ostree.fedoraproject.org/mirrorlist)
+	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic $(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://ostree.fedoraproject.org/mirrorlist)
 fi
 ostree --repo=/mnt/ostree/repo pull --depth 1 atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(echo ${environment} | tr A-Z a-z)
 ostree admin --sysroot=/mnt os-init fedora
@@ -7978,7 +7978,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -8005,7 +8005,7 @@ set -e
 ulimit -n 4096
 sudo mkdir -p /nix
 sudo chown -R temp /nix
-curl -L https://nixos.org/nix/install | sh
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
@@ -8033,7 +8033,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -8046,18 +8046,18 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-stage3="\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)"
+stage3="\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-openrc.txt | grep 'stage3' | cut -d' ' -f1)"
 echo "Downloading Gentoo stage 3"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 echo "Downloading Gentoo stage 3 sha256sum"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".sha256 -o /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 sha256 download failed."; exit 1; }
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".sha256 -o /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 sha256 download failed."; exit 1; }
 echo "Verifying Gentoo stage 3 sha256sum"
 sed -i "s@\$(basename \${stage3})@gentoo-stage3.tar.xz@g" /gentoo-stage3.tar.xz.sha256
 sha256sum -c /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 checksum failed."; exit 1; }
 echo "Importing Gentoo master key"
 gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
 echo "Downloading Gentoo stage 3 signature"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".asc -o /gentoo-stage3.tar.xz.asc || { echo -e "Gentoo stage 3 signature download failed."; exit 1; }
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".asc -o /gentoo-stage3.tar.xz.asc || { echo -e "Gentoo stage 3 signature download failed."; exit 1; }
 echo "Verifying Gentoo stage 3 signature"
 gpg --verify /gentoo-stage3.tar.xz.asc /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 signature verification failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt || { echo -e "Gentoo stage 3 extraction failed."; exit 1; }
@@ -8253,7 +8253,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -8266,18 +8266,18 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-stage3="\$(curl -L https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)"
+stage3="\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/latest-stage3-amd64-systemd.txt | grep 'stage3' | cut -d' ' -f1)"
 echo "Downloading Gentoo stage 3"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}" -o /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 image download failed."; exit 1; }
 echo "Downloading Gentoo stage 3 sha256sum"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".sha256 -o /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 sha256 download failed."; exit 1; }
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".sha256 -o /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 sha256 download failed."; exit 1; }
 echo "Verifying Gentoo stage 3 sha256sum"
 sed -i "s@\$(basename \${stage3})@gentoo-stage3.tar.xz@g" /gentoo-stage3.tar.xz.sha256
 sha256sum -c /gentoo-stage3.tar.xz.sha256 || { echo -e "Gentoo stage 3 checksum failed."; exit 1; }
 echo "Importing Gentoo master key"
 gpg --keyserver hkp://keyserver.ubuntu.com:80 --recv 534E4209AB49EEE1C19D96162C44695DB9F6043D || { echo -e "Gentoo stage 3 master key download failed."; exit 1; }
 echo "Downloading Gentoo stage 3 signature"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".asc -o /gentoo-stage3.tar.xz.asc || { echo -e "Gentoo stage 3 signature download failed."; exit 1; }
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gentoo.osuosl.org/releases/amd64/autobuilds/"\${stage3}".asc -o /gentoo-stage3.tar.xz.asc || { echo -e "Gentoo stage 3 signature download failed."; exit 1; }
 echo "Verifying Gentoo stage 3 signature"
 gpg --verify /gentoo-stage3.tar.xz.asc /gentoo-stage3.tar.xz || { echo -e "Gentoo stage 3 signature verification failed."; exit 1; }
 tar xf /gentoo-stage3.tar.xz -C /mnt || { echo -e "Gentoo stage 3 extraction failed."; exit 1; }
@@ -8471,7 +8471,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -8498,7 +8498,7 @@ set -e
 ulimit -n 4096
 sudo mkdir -p /nix
 sudo chown -R temp /nix
-curl -L https://nixos.org/nix/install | sh
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
@@ -8766,7 +8766,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -8931,7 +8931,7 @@ Pin-Priority: 700
 PRIORITY
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L http://packages.linuxmint.com/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  http://packages.linuxmint.com/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linuxmint-keyring
 rm /tmp/linuxmint-keyring.gpg
@@ -9083,7 +9083,7 @@ Pin-Priority: 700
 PRIORITY
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L http://packages.linuxmint.com/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  http://packages.linuxmint.com/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linuxmint-keyring
 rm /tmp/linuxmint-keyring.gpg
@@ -9171,7 +9171,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -9184,7 +9184,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
@@ -9194,9 +9194,9 @@ else
 	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
 sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
@@ -9442,7 +9442,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -9455,7 +9455,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
@@ -9465,9 +9465,9 @@ else
 	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
 sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
@@ -9714,7 +9714,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -9727,7 +9727,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
@@ -9737,9 +9737,9 @@ else
 	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
-curl -L 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
 sed -i 's@^Server@#Server@g' /mnt/etc/pacman.d/mirrorlist
@@ -10019,7 +10019,7 @@ deb [signed-by=/tmp/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg] $
 SOURCES
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://mxrepo.com/mx/repo/pool/main/m/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring/\$(curl -L https://mxrepo.com/mx/repo/pool/main/m/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring | tr '>' '\n' | grep '<a href=' | grep 'mx$(echo ${mx_version} | tr A-Z a-z)' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring-2023.6.6/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg --strip-components 2
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://mxrepo.com/mx/repo/pool/main/m/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://mxrepo.com/mx/repo/pool/main/m/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring | tr '>' '\n' | grep '<a href=' | grep 'mx$(echo ${mx_version} | tr A-Z a-z)' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring-2023.6.6/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg --strip-components 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring
 rm /tmp/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg
@@ -10293,7 +10293,7 @@ deb http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-sec
 SOURCESLIST
 echo 'deb [signed-by=/tmp/neon-archive-keyring.gpg] ${mirror_Neon}/$(echo ${neon_version} | tr A-Z a-z) $(echo ${ubuntu_version} | tr A-Z a-z) main' > /etc/apt/sources.list.d/neon.list
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring/\$(curl -L https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring | tr '>' '\n' | grep '<a href=' | grep '24.04' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring | tr '>' '\n' | grep '<a href=' | grep '24.04' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y neon-keyring
 DEBIAN_FRONTEND=noninteractive apt install --purge -y --reinstall neon-keyring
@@ -10384,7 +10384,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -10411,7 +10411,7 @@ set -e
 ulimit -n 4096
 sudo mkdir -p /nix
 sudo chown -R temp /nix
-curl -L https://nixos.org/nix/install | sh
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
@@ -10583,7 +10583,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -10610,7 +10610,7 @@ set -e
 ulimit -n 4096
 sudo mkdir -p /nix
 sudo chown -R temp /nix
-curl -L https://nixos.org/nix/install | sh
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
@@ -10797,10 +10797,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/nobara.repo -o /etc/yum.repos.d/nobara.repo
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)
-curl -L https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/baseos/nobara-repos/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1)) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/nobara.repo -o /etc/yum.repos.d/nobara.repo
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/baseos/nobara-repos/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1)) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))
 dnf install -y --releasever=$(echo ${nobara_version} | tr A-Z a-z) --allowerasing nobara-gpg-keys nobara-repos
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
@@ -11776,7 +11776,7 @@ cat >/etc/apt/sources.list <<'SOURCES_LIST'
 deb [signed-by=/tmp/parrot-archive-keyring.gpg] ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
 # deb-src ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
 SOURCES_LIST
-curl -L https://github.com/ParrotSec/parrot-core/raw/refs/heads/master/system_configs/apt/preferences.d/parrot-pinning -o /etc/apt/preferences.d/parrot-pinning
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/ParrotSec/parrot-core/raw/refs/heads/master/system_configs/apt/preferences.d/parrot-pinning -o /etc/apt/preferences.d/parrot-pinning
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 cat >/tmp/parrot-archive-keyring.asc <<'PARROT_KEYRING'
@@ -12097,10 +12097,10 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 rm /etc/apt/sources.list
-curl -L https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/sources.list.d/system.sources -o /etc/apt/sources.list.d/system.sources
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/sources.list.d/system.sources -o /etc/apt/sources.list.d/system.sources
 if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
 sed -i 's@/etc/apt/keyrings/pika-keyring.gpg.key@/etc/apt/trusted.gpg.d/pika-keyring.asc@g' /etc/apt/sources.list.d/system.sources
-curl -L https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/keyrings/pika-keyring.gpg.key -o /etc/apt/trusted.gpg.d/pika-keyring.asc
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/keyrings/pika-keyring.gpg.key -o /etc/apt/trusted.gpg.d/pika-keyring.asc
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 echo -e 'Package: *\nPin: release a=pika\nPin-Priority: 1000' > /etc/apt/preferences.d/downgrade
@@ -12309,7 +12309,7 @@ Pin: release *
 Pin-Priority: -1
 KERNELSTUB
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://github.com/pop-os/keyring/raw/master/usr/share/keyrings/pop-archive-keyring.gpg -o /tmp/pop-archive-keyring.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/pop-os/keyring/raw/master/usr/share/keyrings/pop-archive-keyring.gpg -o /tmp/pop-archive-keyring.gpg
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y pop-keyring
 rm /tmp/pop-archive-keyring.gpg
@@ -12419,7 +12419,7 @@ SOURCESLIST
 echo 'deb [signed-by=/tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg] http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A-Z a-z) pve-no-subscription' > /etc/apt/sources.list.d/pve-enterprise.list
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://enterprise.proxmox.com/debian/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg -o /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://enterprise.proxmox.com/debian/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg -o /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y proxmox-archive-keyring
 rm /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
@@ -12870,7 +12870,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -12902,9 +12902,9 @@ cat >/etc/pacman_steamos.conf <<'PACMAN-STEAMOS'
 #GPGDir      = /etc/pacman.d/gnupg/
 #HookDir     = /etc/pacman.d/hooks/
 HoldPkg     = pacman glibc
-#XferCommand = /usr/bin/curl -L -C - -f -o %o %u
+XferCommand = /usr/bin/curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  %u -o %o
 #XferCommand = /usr/bin/wget --passive-ftp -c -O %o %u
-XferCommand = /usr/bin/aria2c --allow-overwrite=true --continue=true --file-allocation=none --log-level=error --max-tries=10 --max-connection-per-server=2 --max-file-not-found=5 --min-split-size=5M --no-conf -Rtrue --summary-interval=60 --timeout=10 --dir=/ --out %o %u
+#XferCommand = /usr/bin/aria2c --allow-overwrite=true --continue=true --file-allocation=none --log-level=error --max-tries=10 --max-connection-per-server=2 --max-file-not-found=5 --min-split-size=5M --no-conf -Rtrue --summary-interval=60 --timeout=10 --dir=/ --out %o %u
 #CleanMethod = KeepInstalled
 Architecture = auto
  
@@ -12993,7 +12993,7 @@ else
 	# Duplicate the Server line due to a bug in libalpm when using XferCommand
 	echo -e 'Server = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch\nServer = https://steamdeck-packages.steamos.cloud/archlinux-mirror/\$repo/os/\$arch' > /etc/pacman.d/mirrorlist
 fi
-curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/\$(curl -L https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/ | cut -d'>' -f3 | cut -d'"' -f2 | grep '^holo-keyring.*.tar.zst\$' | tail -1) | tar -x --zstd -C / usr/share/pacman/keyrings/holo.gpg usr/share/pacman/keyrings/holo-trusted usr/share/pacman/keyrings/holo-revoked
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/ | cut -d'>' -f3 | cut -d'"' -f2 | grep '^holo-keyring.*.tar.zst\$' | tail -1) | tar -x --zstd -C / usr/share/pacman/keyrings/holo.gpg usr/share/pacman/keyrings/holo-trusted usr/share/pacman/keyrings/holo-revoked
 pacman-key --populate holo
 pacstrap -P -C /etc/pacman_steamos.conf -G /mnt base base-devel holo-keyring aria2
 PREPARE_CHROOT
@@ -13599,7 +13599,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl -Ls https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://archlinux.org/mirrorlist/?ip_version=4 -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -13621,8 +13621,8 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_script <<INSTALL_SCRIPT
 set -e
 echo "Downloading Tails image"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"url"' | head -1 | cut -d '"' -f4) -o /tails.img; then
-		if [ "\$(sha256sum tails.img | cut -d' ' -f1)" == "\$(curl -L https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"sha256"' | head -1 | cut -d '"' -f4)" ]; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  \$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"url"' | head -1 | cut -d '"' -f4) -o /tails.img; then
+		if [ "\$(sha256sum tails.img | cut -d' ' -f1)" == "\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"sha256"' | head -1 | cut -d '"' -f4)" ]; then
 			echo "sha256sum verification succeeded"
 			break
 		else
@@ -13635,7 +13635,7 @@ echo "Downloading Tails signing key"
 curl -L -O https://tails.net/tails-signing.key
 gpg --homedir /tmp --import tails-signing.key
 echo "Downloading Tails signature"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f \$(curl -L https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"url"' | head -1 | cut -d '"' -f4).sig -o /tails.img.sig
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  \$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"url"' | head -1 | cut -d '"' -f4).sig -o /tails.img.sig
 gpg --homedir /tmp --verify tails.img.sig tails.img || { echo -e "Tails image has an invalid signature."; exit 1; }
 dd if=/tails.img of="${destination_device}" bs=1M status=progress
 rm /tails.img
@@ -14475,7 +14475,7 @@ Pin: release o=Zorin OS,l=Zorin OS Patches
 Pin-Priority: 999
 ZORINPRIORITY2
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://ppa.launchpadcontent.net/zorinos/stable/ubuntu/pool/main/z/zorin-os-keyring/\$(curl -L https://ppa.launchpadcontent.net/zorinos/stable/ubuntu/pool/main/z/zorin-os-keyring/ | tr '>' '\n' | grep '<a href=' | grep 'zorin' | grep '\.tar\.gz' | cut -d'"' -f2 | tail -1) | tar -zx -C /tmp zorin-os-keyring/keyrings/zorin-os.gpg --strip-components 2
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://ppa.launchpadcontent.net/zorinos/stable/ubuntu/pool/main/z/zorin-os-keyring/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://ppa.launchpadcontent.net/zorinos/stable/ubuntu/pool/main/z/zorin-os-keyring/ | tr '>' '\n' | grep '<a href=' | grep 'zorin' | grep '\.tar\.gz' | cut -d'"' -f2 | tail -1) | tar -zx -C /tmp zorin-os-keyring/keyrings/zorin-os.gpg --strip-components 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y zorin-os-keyring
 rm /tmp/zorin-os.gpg
@@ -14963,12 +14963,12 @@ if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] ||
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
-curl https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 if [ ! -z "${surface_remove}" ]; then DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}; fi
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev libtiff-dev qt6-base-dev qt6-tools-dev-tools libqt6opengl6-dev libinput-dev
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.14.0.tar.gz | tar xz -C /usr/src
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/umlaeute/v4l2loopback/archive/v0.14.0.tar.gz | tar xz -C /usr/src
 dkms add -m v4l2loopback -v 0.14.0
 dkms install -m v4l2loopback -v 0.14.0 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
 git clone -b v0.5.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
@@ -14984,12 +14984,12 @@ elif [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
-curl https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libwacom-surface surface-control surface-dtx-daemon git build-essential cmake meson ninja-build pkg-config libgnutls28-dev python3-pip python3-yaml python3-ply python3-jinja2 qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5 qttools5-dev-tools libtiff-dev libevent-dev gstreamer1.0-tools libgstreamer1.0-dev libgstreamer-plugins-base1.0-dev
-curl -L https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/umlaeute/v4l2loopback/archive/v0.13.2.tar.gz | tar xz -C /usr/src
 dkms add -m v4l2loopback -v 0.13.2
 dkms install -m v4l2loopback -v 0.13.2 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
 git clone -b v0.3.0 https://git.libcamera.org/libcamera/libcamera.git /tmp/libcamera
@@ -15005,7 +15005,7 @@ elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ 
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEPACMAN
 #!/bin/bash
 set -e
-curl -s https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | pacman-key --add -
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | pacman-key --add -
 pacman-key --finger 56C464BAAC421453
 pacman-key --lsign-key 56C464BAAC421453
 echo -e '[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/' >> /etc/pacman.conf
@@ -16064,7 +16064,7 @@ fi
 cmdline=\$(echo -n "\"\${cmdline}\"" | sed 's@ @" "@g')
 mkdir -p /mnt/etc/nixos
 if [ "${distribution}" == "FoxFlake" ]; then
-curl -L https://github.com/sebanc/foxflake/raw/refs/heads/$(echo ${foxflake_version} | tr A-Z a-z)/installer/target-configuration/flake.nix -o /mnt/etc/nixos/flake.nix
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/sebanc/foxflake/raw/refs/heads/$(echo ${foxflake_version} | tr A-Z a-z)/installer/target-configuration/flake.nix -o /mnt/etc/nixos/flake.nix
 case "$(echo ${environment} | cut -d'/' -f2)" in
 	'Minimal')
 		bundles=' '
@@ -16136,9 +16136,9 @@ ${foxflake_nvidia}
 }
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
-	curl -L https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix -o /mnt/etc/nixos/flake.nix
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix -o /mnt/etc/nixos/flake.nix
 	mkdir /mnt/etc/nixos/customConfig
-	curl -L https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix -o /mnt/etc/nixos/customConfig/default.nix
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix -o /mnt/etc/nixos/customConfig/default.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 { pkgs, lib, ... }:
 
@@ -16505,7 +16505,7 @@ echo -e 'add_drivers+=" 8250_dw aes amdgpu atkbd btrfs cbc dm-crypt exfat ext4 f
 echo -e 'install_items+=" /etc/vconsole.conf /usr/bin/bash /usr/sbin/blkid /usr/sbin/cryptsetup /usr/bin/cut /usr/sbin/e2fsck /usr/bin/find /usr/bin/grep /usr/sbin/losetup /usr/bin/lsblk /usr/bin/ntfs-3g /usr/bin/ntfsfix /usr/bin/ps /usr/bin/setfont /usr/bin/setsid /usr/lib/systemd/systemd-sysroot-fstab-check "' >> /etc/dracut.conf.d/99-linuxloops.conf
 echo 'hostonly=\"no\"' >> /etc/dracut.conf.d/99-linuxloops.conf
 rpm-ostree initramfs --enable
-curl -L https://github.com/ostreedev/ostree/raw/refs/heads/main/src/boot/grub2/grub2-15_ostree -o /etc/grub.d/15_ostree
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/ostreedev/ostree/raw/refs/heads/main/src/boot/grub2/grub2-15_ostree -o /etc/grub.d/15_ostree
 if [ "${install_type}" == "image" ]; then
 	sed "s#ostree admin instutil grub2-generate#ostree admin instutil grub2-generate | sed 's|linux16 |linux |g' | sed 's|initrd16 |initrd $(if [ "${root_fstype}" == "btrfs" ]; then echo /@boot; fi)/linuxloops/linuxloops.img |g'$(if [ "${root_fstype}" == "btrfs" ]; then echo " | sed 's| /ostree| /@boot/ostree|g'"; fi)#g" /etc/grub.d/15_ostree > /etc/grub.d/15_ostree_linuxloops
 else
@@ -16667,7 +16667,7 @@ chmod 0755 /boot/linuxloops/reinstall-bootloader
 # Due to a bug with certain shim binaries, use the Ubuntu shim for initial key registration.
 if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Gentoo" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "PikaOS" ] || [ "${distribution}" == "Proxmox" ]; then
 	mkdir /tmp/ubuntu_shim
-	curl -L http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
 	(cd /tmp/ubuntu_shim && ar p shim.deb data.tar.xz | tar -xJ)
 	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
 	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
@@ -16697,7 +16697,7 @@ POLKIT
 cat >/usr/bin/linuxloops <<'LIVELAUNCHER'
 #!/bin/bash
 set -e
-sudo curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n" 2>/dev/null
+sudo curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -o /usr/bin/linuxloops.real || zenity --height=480 --width=640 --title="LinuxLoops installer" --error --text="Please make sure you have internet connectivity before running this program.\n" 2>/dev/null
 sudo chmod 0755 /usr/bin/linuxloops.real
 bash /usr/bin/linuxloops.real "\${@}"
 LIVELAUNCHER
@@ -17150,8 +17150,8 @@ sudo -u ${SUDO_USER} chmod 0700 "${linuxloopsdir}"/gnupg
 if [ "${1}" == "iso" ]; then
 	echo "Downloading ${distribution} iso image from ${2}"
 	for i in 1 .. 3; do
-		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/cache/"${distribution}".iso; then
-			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_sha256sum} -o "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum
+		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  "${2}" -o "${linuxloopsdir}"/cache/"${distribution}".iso; then
+			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  ${iso_sha256sum} -o "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum
 			sudo -u ${SUDO_USER} sed "s@$(basename ${2})@${linuxloopsdir}/cache/${distribution}.iso@g" "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum > "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum.mod
 			if sha256sum -c "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum.mod; then
 				echo "sha256sum verification succeeded"
@@ -17172,7 +17172,7 @@ if [ "${1}" == "iso" ]; then
 		echo "Importing master key"
 		sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkp://keyserver.ubuntu.com:80 --recv "${master_key}"
 		echo "Downloading iso signature"
-		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${iso_signature} -o "${linuxloopsdir}"/cache/"${distribution}".iso.asc
+		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  ${iso_signature} -o "${linuxloopsdir}"/cache/"${distribution}".iso.asc
 		echo "Verifying iso signature"
 	fi
 	if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${distribution}".iso.asc "${linuxloopsdir}"/cache/"${distribution}".iso; then
@@ -17218,7 +17218,7 @@ elif [ "${1}" == "lxc" ]; then
 		if [ "${build}" == "" ] || [ "${build}" == ".." ] || ! curl -L --output /dev/null --silent --head --fail ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz; then continue; fi
 		echo "Downloading lxc rootfs checksum"
 		rm -f "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
-		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/SHA256SUMS -o "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
+		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/SHA256SUMS -o "${linuxloopsdir}"/cache/"${2}"-SHA256SUMS
 		if [ -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz ] && [ -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc ] && [ "$(sha256sum ${linuxloopsdir}/cache/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/cache/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
 			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ] || [ -z "${master_key}" ]; then skip_gpg=1; fi
 			if ([ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz) && tar xf "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz -C "${bootstrapdir}"; then
@@ -17229,7 +17229,7 @@ elif [ "${1}" == "lxc" ]; then
 		fi
 		rm -f "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz*
 		echo "Downloading lxc rootfs image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz..."
-		if ! sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then if [ "${install_type}" == "image" ]; then losetup -d "${destination_device}"; fi; exit_with_error "Download of ${2} lxc image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; fi
+		if ! sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then if [ "${install_type}" == "image" ]; then losetup -d "${destination_device}"; fi; exit_with_error "Download of ${2} lxc image from ${lxc_mirror}/images/${2}/${3}/amd64/${4}/${build}/rootfs.tar.xz failed."; fi
 		echo "Verifying lxc rootfs checksum"
 		if [ "$(sha256sum ${linuxloopsdir}/cache/${2}-rootfs.tar.xz | cut -d' ' -f1)" == "$(cat ${linuxloopsdir}/cache/${2}-SHA256SUMS | grep rootfs.tar.xz | cut -d' ' -f1)" ]; then
 			if [ -z "$(command -v gpg)" ] || [ -z "$(command -v dirmngr)" ]; then
@@ -17242,7 +17242,7 @@ elif [ "${1}" == "lxc" ]; then
 				echo "Importing lxc master key"
 				sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkp://keyserver.ubuntu.com:80 --recv "${master_key}"
 				echo "Downloading lxc rootfs signature"
-				sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc
+				sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  ${lxc_mirror}/images/"${2}"/"${3}"/amd64/"${4}"/"${build}"/rootfs.tar.xz.asc -o "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc
 				echo "Verifying lxc rootfs signature"
 			fi
 			if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz.asc "${linuxloopsdir}"/cache/"${2}"-rootfs.tar.xz; then
@@ -17264,7 +17264,7 @@ elif [ "${1}" == "lxc" ]; then
 elif [ "${1}" == "rootfs-xz" ]; then
 	echo "Downloading rootfs image checksum"
 	rm -f "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.sha256sum*
-	sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_sha256sum} -o "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.sha256sum
+	sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  ${rootfs_sha256sum} -o "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.sha256sum
 	if [ "${distribution}" == "OpenSUSE" ]; then
 		sudo -u ${SUDO_USER} sed "s@ opensuse.*@${linuxloopsdir}/cache/${distribution}-rootfs.tar.xz@g" "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.sha256sum > "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.sha256sum.mod
 	else
@@ -17281,7 +17281,7 @@ elif [ "${1}" == "rootfs-xz" ]; then
 	rm -f "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz{,.asc}
 	echo "Downloading ${distribution} rootfs image from ${2}"
 	for i in 1 .. 3; do
-		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f "${2}" -o "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz; then
+		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  "${2}" -o "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz; then
 			if sha256sum -c "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.sha256sum.mod; then
 				echo "sha256sum verification succeeded"
 				break
@@ -17301,7 +17301,7 @@ elif [ "${1}" == "rootfs-xz" ]; then
 		echo "Importing master key"
 		sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --keyserver hkp://keyserver.ubuntu.com:80 --recv "${master_key}"
 		echo "Downloading rootfs signature"
-		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -C - -f ${rootfs_signature} -o "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.asc
+		sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  ${rootfs_signature} -o "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.asc
 		echo "Verifying rootfs signature"
 	fi
 	if [ ${skip_gpg} -eq 1 ] || sudo -u ${SUDO_USER} gpg --homedir "${linuxloopsdir}"/gnupg --verify "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.asc "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz"${gpg_check_extension}"; then
@@ -17594,7 +17594,7 @@ if [ ! -z "${chromeos}" ]; then
 	mount "${source}" /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
 	rm -rf /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot
 	mkdir -p /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot
-	curl -L https://github.com/sebanc/brunch-unstable/raw/continuous-integration/efi-partition/efi/boot/grubx64.efi -o /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/bootx64.efi
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/sebanc/brunch-unstable/raw/continuous-integration/efi-partition/efi/boot/grubx64.efi -o /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/bootx64.efi
 	echo -e "set timeout=5\n"> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
 	echo -e "${config}" >> /mnt/stateful_partition/unencrypted/linuxloops_config/tmp/efi/boot/grub.cfg
 	umount /mnt/stateful_partition/unencrypted/linuxloops_config/tmp
@@ -19478,6 +19478,7 @@ if [[ $EUID -ne 0 ]]; then
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
 fi
+export XDG_DATA_DIRS=/usr/share
 set +H
 set_base_parameters
 if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
@@ -19492,7 +19493,7 @@ if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] &
 	if ! python3 -c "import venv" 2>/dev/null; then echo "Please install python3-venv package."; exit 1; fi
 	gui=1
 	check_dependencies
-	if ! curl -L https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
+	if ! curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
 	gui_installer
 else
 	while [ ${#} -gt 0 ]; do
@@ -19720,6 +19721,6 @@ else
 		shift
 	done
 	check_dependencies
-	if ! curl -L https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
+	if ! curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f  https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
 	cli_installer
 fi
