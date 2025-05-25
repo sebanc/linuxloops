@@ -97,7 +97,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
 |Neon            |User<br>Testing                                               |✓                      |✓                                    |✓                                |                            |
-|NixOS           |24.11<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
+|NixOS           |25.05<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
 |Nobara          |Rolling                                                       |✓                      |✓                                    |                                 |                            |
 |OpenSUSE        |Leap/15.6<br>Slowroll<br>Tumbleweed                           |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
