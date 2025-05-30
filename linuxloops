@@ -16779,9 +16779,9 @@ rm -rf /lib/firmware/bnx2x /lib/firmware/dpaa2 /lib/firmware/liquidio /lib/firmw
 if [ "${distribution}" == "Linuxmint" ]; then
 	rm -r /usr/share/icons/Bibata-Original*
 	rm -r /usr/share/icons/Mint-X*
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils evince file-roller firefox gedit gparted language-selector-gnome qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) broadcom-sta-dkms firmware-b43-installer curl python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1 xz-utils evince file-roller firefox gedit gparted language-selector-gnome qemu-guest-agent spice-vdagent
 else
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils evince file-roller firefox-esr gedit gparted qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vulkan-icd broadcom-sta-dkms firmware-b43-installer curl python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1 xz-utils evince file-roller firefox-esr gedit gparted qemu-guest-agent spice-vdagent
 fi
 apt clean
 sudo -u '${useraccount_name}' bash << 'INSTALLERICONS'
