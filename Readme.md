@@ -45,12 +45,12 @@ Detailed instructions:
 Note: Windows WSL does not allow to write directly to a disk but you can create disk images and write them to a USB flashdrive / SD card using [DiskImager][DiskImager link] or boot them using [Grub2Win][Grub2Win link].  
 
 * Install the below packages depending on your distribution:  
-  * Debian / Ubuntu based distributions: `sudo apt install curl fontconfig libasound2t64 libatomic1 libnss3 libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libxkbcommon-x11-0 libxkbfile1 python3-venv xz-utils`  
-  * Arch based distributions: `sudo pacman -Syu curl fontconfig libxkbcommon-x11 nss python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
-  * RHEL based distributions: `sudo dnf install curl fontconfig libatomic libxkbcommon-x11 nss python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
-  * Gentoo: `sudo emerge app-arch/xz-utils dev-lang/python dev-libs/nss media-libs/fontconfig net-misc/curl x11-libs/libxkbcommon x11-libs/xcb-util-cursor x11-libs/xcb-util-keysyms x11-libs/xcb-util-wm`  
-  * OpenSUSE: `sudo zypper in curl fontconfig libatomic1 libgthread-2_0-0 libxcb-cursor0 libxcb-ewmh2 libxcb-keysyms1 libxcb-icccm4 libxcb-shape0 libxkbcommon-x11-0 libxkbfile1 mozilla-nss python3-virtualenv xz`  
-  * Void: `sudo xbps-install curl fontconfig libxkbcommon nss xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * Debian / Ubuntu based distributions: `sudo apt install curl xz-utils python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1`  
+  * Arch based distributions: `sudo pacman -Syu --needed curl gnupg xz python-gobject gtk3 webkit2gtk-4.1`  
+  * RHEL based distributions: `sudo dnf install curl gnupg xz python3-gobject gtk3 webkit2gtk4.1`  
+  * OpenSUSE: `sudo zypper in  curl gnupg xz python3-gobject gtk3 typelib-1_0-WebKit2-4_1`  
+  * Void: `sudo xbps-install -Syu curl xz python3-gobject gtk+3 webkit2gtk`  
+  * Gentoo: `sudo emerge app-arch/xz-utils net-misc/curl dev-lang/python net-libs/webkit-gtk:4.1`  
   * NixOS: No packages to install (the necessary packages will be installed by linuxloops for use in nix-shell environment)  
 
 * Download the Linuxloops script:  
@@ -134,7 +134,9 @@ For security purpose, Linuxloops will not install packages/binaries that are not
 
 ### CLI mode
 
-Install the `curl` package for your distribution and download the Linuxloops script:  
+Make sure that `curl` and `xz` programs are installed.  
+
+Download the Linuxloops script:  
 `curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -O --create-dirs --output-dir ~/bin`  
 
 List of command line flags:  
@@ -197,7 +199,9 @@ As an example:
 
 ### Declarative mode
 
-Install the `curl` package for your distribution and download the Linuxloops script:  
+Make sure that `curl` and `xz` programs are installed.  
+
+Download the Linuxloops script:  
 `curl -L https://github.com/sebanc/linuxloops/raw/refs/heads/main/linuxloops -O --create-dirs --output-dir ~/bin`  
 
 Have a look at the declarative configuration examples available here:  

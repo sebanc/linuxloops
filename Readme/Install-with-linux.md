@@ -22,18 +22,22 @@
 2. Launch the Linuxloops script  
 
 - To use the GUI installer, install the below packages depending on your distribution:  
-  * Debian / Ubuntu based distributions: `sudo apt install curl libxcb-cursor0 libxcb-ewmh2 libxcb-icccm4 libxcb-keysyms1 libxkbcommon-x11-0 python3-venv xz-utils`  
-  * Arch based distributions: `sudo pacman -Syu curl libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
-  * RHEL based distributions: `sudo dnf install curl libatomic libxkbcommon-x11 python-virtualenv xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
-  * Gentoo: `sudo emerge app-arch/xz-utils dev-lang/python net-misc/curl x11-libs/libxkbcommon x11-libs/xcb-util-cursor x11-libs/xcb-util-keysyms x11-libs/xcb-util-wm`  
-  * OpenSUSE: `sudo zypper in curl libatomic1 libgthread-2_0-0 libxcb-cursor0 libxcb-keysyms1 libxcb-ewmh2 libxcb-icccm4 libxkbcommon-x11-0 python3-virtualenv xz`  
-  * Void: `sudo xbps-install curl libxkbcommon xcb-util-cursor xcb-util-keysyms xcb-util-wm xz`  
+  * Debian / Ubuntu based distributions: `sudo apt install curl xz-utils python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1`  
+  * Arch based distributions: `sudo pacman -Syu --needed curl gnupg xz python-gobject gtk3 webkit2gtk-4.1`  
+  * RHEL based distributions: `sudo dnf install curl gnupg xz python3-gobject gtk3 webkit2gtk4.1`  
+  * OpenSUSE: `sudo zypper in  curl gnupg xz python3-gobject gtk3 typelib-1_0-WebKit2-4_1`  
+  * Void: `sudo xbps-install -Syu curl xz python3-gobject gtk+3 webkit2gtk`  
+  * Gentoo: `sudo emerge app-arch/xz-utils net-misc/curl dev-lang/python net-libs/webkit-gtk:4.1`  
   * NixOS: No packages to install (the necessary packages will be installed by linuxloops for use in nix-shell environment)  
 
 Start linuxloops in GUI mode:  
 `bash ${HOME}/bin/linuxloops`  
 
 - To use the CLI installer:  
+
+Make sure that `curl` and `xz` programs are installed.  
+
+List of command line flags:  
 ```
 Usage: bash ${HOME}/bin/linuxloops -distro <distribution name> -ver <distribution version> -env <environment name> -dst <disk name or disk image path>
 -distro, --distribution <distribution name>		(Distribution to install)

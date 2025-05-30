@@ -1975,7 +1975,7 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -2259,7 +2259,7 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -2598,7 +2598,7 @@ rc-update add lightdm default
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -2931,7 +2931,7 @@ rc-update add lightdm default
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -3244,7 +3244,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3554,7 +3554,7 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon  breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon  breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
@@ -3855,7 +3855,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
@@ -4158,7 +4158,7 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
@@ -4468,7 +4468,7 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
@@ -4778,7 +4778,7 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
@@ -5137,7 +5137,7 @@ echo \"track: 'mate'\" >> /system.yaml
 		install_desktop="
 echo \"track: 'plasma'\" >> /system.yaml
 "
-		custom_packages="dolphin konsole breeze-gtk breeze-icons xdg-desktop-portal-kde ${custom_packages}"
+		custom_packages="dolphin konsole kscreen kde-gtk-config xsettingsd breeze-gtk breeze-icons xdg-desktop-portal-kde ${custom_packages}"
 		;;
 		'Xfce')
 		default_session="xfce"
@@ -5700,7 +5700,7 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 cachyos-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 cachyos-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -7712,7 +7712,7 @@ dnf install -y ${desktop_base} lightdm slick-greeter @mate-desktop-environment n
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet breeze-gtk breeze-icon-theme xdg-desktop-portal-kde
+dnf install -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd breeze-gtk breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
@@ -9318,7 +9318,7 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -9590,7 +9590,7 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -9862,7 +9862,7 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -10853,7 +10853,7 @@ dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop network-manager
 	'Nobara')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers breeze-gtk breeze-icon-theme xdg-desktop-portal-kde
+dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd kde-nobara kde-nobara-extras-wallpapers breeze-gtk breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Nobara/Full')
@@ -10865,7 +10865,7 @@ dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm @kde-desktop 
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet xdg-desktop-portal-kde
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
@@ -10877,7 +10877,7 @@ dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop plas
 	'SteamDeck')
 	default_session="gamescope-session-steam"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-steamdeck-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck xdg-desktop-portal-kde
+dnf install --allowerasing -y ${desktop_base} sddm kde-steamdeck-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck xdg-desktop-portal-kde
 "
 	;;
 	'SteamDeck/Full')
@@ -13019,13 +13019,13 @@ case "${environment}" in
 	'Desktop')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 "
 	;;
 	'Gamescope')
 	default_session="deck-session"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 cat >/usr/share/wayland-sessions/deck-session.desktop <<'DECK_SESSION'
 [Desktop Entry]
 Encoding=UTF-8
@@ -14916,7 +14916,7 @@ mkdir -p /etc/modprobe.d
 echo 'blacklist pcspkr' > /etc/modprobe.d/pcspkr.conf
 # Disable desktop icons for CLI programs
 mkdir -p /etc/skel/.local/share/applications
-for i in avahi-discover bssh bvnc gcr-prompter gcr-viewer mpv qv4l2 qvidcap; do echo -e '[Desktop Entry]\nType=Application\nVersion=1.0\nName=HideFromAppMenu\nNoDisplay=true' > /etc/skel/.local/share/applications/\$i.desktop; done
+for i in assistant assistant6-qttools-6 avahi-discover bssh bvnc cups designer gcr-prompter gcr-viewer linguist linguist6-qttools-6 mpv nm-connection-editor qdbusviewer qdbusviewer6-qttools-6 qv4l2 qvidcap; do echo -e '[Desktop Entry]\nType=Application\nVersion=1.0\nName=HideFromAppMenu\nNoDisplay=true' > /etc/skel/.local/share/applications/\$i.desktop; done
 APPLYSETTINGS
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_settings
 }
@@ -15142,7 +15142,7 @@ Xks0dFlInjDFyMgAwsOaVDTWwjBfAaklUysV+CxhhEvSnuGx9h8Mi88K6g8heA==
 NVIDIAREPOKEY
 rpm --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-db27fd5a-62589a51.asc
 zypper --non-interactive install openSUSE-repos-$(echo ${opensuse_version} | cut -d '/' -f1)-NVIDIA
-zypper --non-interactive install --auto-agree-with-licenses nvidia-gl-G06 nvidia-video-G06
+zypper --non-interactive install --auto-agree-with-licenses --force-resolution nvidia-gl-G06 nvidia-video-G06
 INSTALLNVIDIA
 elif [ "${distribution}" == "Parrot" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -17990,7 +17990,6 @@ html = """
 <head lang="en">
 <meta charset="UTF-8">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css" integrity="sha384-X38yfunGUhNzHpBaEBsWLO+A0HDYOQi8ufWDkZ0k9e0eXz/tH3II7uKZ9msv++Ls" crossorigin="anonymous">
-<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
 <style>
 body {
     background: #ffffff;
@@ -18928,28 +18927,28 @@ if __name__ == '__main__':
     api = linuxloops()
     if args.menu == "confirmation":
         window = webview.create_window('Linuxloops - ' + args.title, hidden=True, width=800, height=600)
-        webview.start(linuxloops.open_confirmation_dialog, window, gui='qt')
+        webview.start(linuxloops.open_confirmation_dialog, window, gui='gtk')
     elif args.menu == "file-select":
         window = webview.create_window('Linuxloops - ' + args.title, hidden=True, width=800, height=600)
-        webview.start(linuxloops.save_file_dialog, window, gui='qt')
+        webview.start(linuxloops.save_file_dialog, window, gui='gtk')
     elif args.menu == "jsalert":
         window = webview.create_window('Linuxloops - ' + args.title, html='<html><body><script>alert("' + args.title + ': ' + args.question + '"); window.addEventListener("pywebviewready", function() { pywebview.api.destroy() });</script></body></html>', hidden=True, width=0, height=0)
-        webview.start(gui='qt')
+        webview.start(gui='gtk')
     elif args.menu == "messagebox":
         window = webview.create_window('Linuxloops - ' + args.title, html=html, js_api=api, resizable=False, width=600, height=150)
-        webview.start(gui='qt')
+        webview.start(gui='gtk')
     elif args.menu == "file-open":
         window = webview.create_window('Linuxloops - ' + args.title, hidden=True, width=800, height=600)
-        webview.start(linuxloops.open_file_dialog, window, gui='qt')
+        webview.start(linuxloops.open_file_dialog, window, gui='gtk')
     else:
         window = webview.create_window('Linuxloops - ' + args.title, html=html, js_api=api, resizable=False, width=800, height=600)
-        webview.start(gui='qt')
+        webview.start(gui='gtk')
 LINUXLOOPS_GUI
 chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"/gui/linuxloops_gui.py
 fi) &&
 	sudo -u ${SUDO_USER} bash<<PYTHONBUILD
-python3 -m venv "${linuxloopsdir}"/gui &&
-(cd "${linuxloopsdir}"/gui && source ./bin/activate && pip install --upgrade pip pyside6 pywebview qtpy > /dev/null) &&
+python3 -m venv --system-site-packages "${linuxloopsdir}"/gui &&
+(cd "${linuxloopsdir}"/gui && source ./bin/activate && pip install --upgrade pip pywebview) &&
 echo "$(sha256sum ${0} | cut -d' ' -f1)" > "${linuxloopsdir}"/gui/linuxloops.sha256sum
 PYTHONBUILD
 fi
@@ -18957,7 +18956,7 @@ fi
 
 gui_launch()
 {
-(cd "${linuxloopsdir}"/gui && source ./bin/activate && QTWEBENGINE_DISABLE_SANDBOX=1 python3 linuxloops_gui.py "${@}" 2>/tmp/linuxloops_gui.log)
+(cd "${linuxloopsdir}"/gui && source ./bin/activate && QTWEBENGINE_DISABLE_SANDBOX=1 WEBKIT_FORCE_SANDBOX=0 WEBKIT_DISABLE_COMPOSITING_MODE=1 python3 linuxloops_gui.py "${@}" 2>/tmp/linuxloops_gui.log)
 }
 
 gui_installer()
@@ -19194,7 +19193,7 @@ else
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	else
 		if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
-		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)</textarea><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>Otherwise, add the grub config manually to another grub bootloader.<br><br>You can then reboot your computer and start ${distribution}."
+		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)</textarea><br><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>Otherwise, add the grub config manually to another grub bootloader.<br><br>You can then reboot your computer and start ${distribution}."
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	fi
 fi
@@ -19476,15 +19475,18 @@ if [ -d /home/runner/work ]; then github=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
+set +H
 if [[ $EUID -ne 0 ]]; then
 	if [ -f /etc/NIXOS ] && [ ${#} -eq 0 ]; then
-        	exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR nix-shell -p bash curl gnupg1 sudo util-linux xz python3Packages.pyqt6-webengine --run "bash $0"
+        	exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix-instantiate --eval-only --raw --expr '(import <nixos> {}).glib-networking.outPath')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS bash $0"
 	else
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
 fi
-export XDG_DATA_DIRS=/usr/share
-set +H
+if [ -f /etc/NIXOS ]; then
+	unset GDK_PIXBUF_MODULE_FILE PYTHONPATH TEMP TEMPDIR TMP TMPDIR
+	export XDG_DATA_DIRS=${XDG_DATA_DIRS}:/usr/share
+fi
 set_base_parameters
 if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
 	if ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
