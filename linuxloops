@@ -140,7 +140,7 @@ case "${distribution}" in
 		default_version="23/Openrc"
 		;;
 	'GLF-OS')
-		available_versions=( "Stable" "Rolling" "Beta" )
+		available_versions=( "Stable" "Rolling" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
 		;;
@@ -456,7 +456,7 @@ case "${distribution}" in
 		chroot_function="${distribution}"
 		foxflake_version="${version}"
 		mirrors_supported=()
-		nixos_version="24.11"
+		nixos_version="25.05"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -481,7 +481,7 @@ case "${distribution}" in
 		chroot_function="${distribution}"
 		glfos_version="${version}"
 		mirrors_supported=()
-		nixos_version="24.11"
+		nixos_version="25.05"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -14594,6 +14594,10 @@ generate_bootstrap_init()
 cat >"${bootstrapdir}"/tmp/linuxloops/bootstrap_init <<INITCHROOT
 #!/bin/bash
 set -e
+if [ ! -z "${nixos}" ]; then
+	unset GDK_PIXBUF_MODULE_FILE PYTHONPATH TEMP TEMPDIR TMP TMPDIR
+	export XDG_DATA_DIRS=${XDG_DATA_DIRS}:/usr/share
+fi
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
 if [ -x /tmp/linuxloops/prepare_bootstrap ]; then /tmp/linuxloops/prepare_bootstrap; fi
@@ -14770,7 +14774,7 @@ SETUPFILESYSTEMS
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/mount_efi
 }
 
-generare_enter_chroot()
+generate_enter_chroot()
 {
 if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/enter_chroot <<ENTERCHROOT
@@ -16136,7 +16140,7 @@ ${foxflake_nvidia}
   foxflake.internationalisation.timezone = "${timezone}";
 
   # Initially installed version (DO NOT TOUCH)
-  foxflake.stateVersion = "24.11";
+  foxflake.stateVersion = "25.05";
 }
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
@@ -16154,6 +16158,8 @@ elif [ "${distribution}" == "GLF-OS" ]; then
     ./customConfig
   ];
 
+  glf.environment.type = "$(echo ${environment} | cut -d'/' -f1 | tr A-Z a-z)";
+  glf.environment.edition = "$(echo ${environment} | cut -d'/' -f2 | tr A-Z a-z)";
   glf.nvidia_config.enable = false;
   glf.standBy.enable = false;
 
@@ -16183,7 +16189,7 @@ ${autologin_commands}
 
 ${nixos_nvidia}
 
-  system.stateVersion = "24.11"; # DO NOT TOUCH
+  system.stateVersion = "25.05"; # DO NOT TOUCH
 }
 NIXOSCONFIGURATION
 else
@@ -16262,7 +16268,7 @@ systemd.services."autovt@tty1".enable = false;
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-system.stateVersion = "24.11"; # Did you read the comment?
+system.stateVersion = "25.05"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 fi
@@ -17405,7 +17411,7 @@ generate_bootstrap_init
 generate_partition_script
 generate_setup_and_mount_rootfs
 generate_mount_efi
-generare_enter_chroot
+generate_enter_chroot
 generate_install_settings
 generate_install_secureboot
 generate_install_surface
@@ -18948,7 +18954,8 @@ chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}"/gui/linuxloops_gui.py
 fi) &&
 	sudo -u ${SUDO_USER} bash<<PYTHONBUILD
 python3 -m venv --system-site-packages "${linuxloopsdir}"/gui &&
-(cd "${linuxloopsdir}"/gui && source ./bin/activate && pip install --upgrade pip pywebview) &&
+source "${linuxloopsdir}"/gui/bin/activate &&
+"${linuxloopsdir}"/gui/bin/pip install --upgrade pip pywebview &&
 echo "$(sha256sum ${0} | cut -d' ' -f1)" > "${linuxloopsdir}"/gui/linuxloops.sha256sum
 PYTHONBUILD
 fi
@@ -18956,7 +18963,7 @@ fi
 
 gui_launch()
 {
-(cd "${linuxloopsdir}"/gui && source ./bin/activate && QTWEBENGINE_DISABLE_SANDBOX=1 WEBKIT_FORCE_SANDBOX=0 WEBKIT_DISABLE_COMPOSITING_MODE=1 python3 linuxloops_gui.py "${@}" 2>/tmp/linuxloops_gui.log)
+source "${linuxloopsdir}"/gui/bin/activate && QTWEBENGINE_DISABLE_SANDBOX=1 WEBKIT_FORCE_SANDBOX=0 WEBKIT_DISABLE_COMPOSITING_MODE=1 "${linuxloopsdir}"/gui/bin/python "${linuxloopsdir}"/gui/linuxloops_gui.py "${@}" 2>/tmp/linuxloops_gui.log
 }
 
 gui_installer()
@@ -19460,34 +19467,36 @@ if [ -z "$(command -v xz)" ]; then echo "\"xz\" binary needs to be installed fir
 if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; exit 1; fi
 }
 
-set_base_parameters()
+create_cache_directory()
 {
-if [ -z ${SUDO_UID} ]; then
-	SUDO_USER=${USER}
-	SUDO_UID=$(id -g ${USER})
-fi
 linuxloopsdir="$(eval echo ~${SUDO_USER})"/.cache/linuxloops
 mkdir -p "${linuxloopsdir}"/tmp
 chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}" "${linuxloopsdir}/tmp"
 chmod 0755 "${linuxloopsdir}" "${linuxloopsdir}/tmp"
-if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
+}
+
+set_base_parameters()
+{
 if [ -d /home/runner/work ]; then github=1; fi
+if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
+if [ -z "${wsl}" ] && [ -f /etc/NIXOS ]; then nixos=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
 set +H
+set_base_parameters
 if [[ $EUID -ne 0 ]]; then
-	if [ -f /etc/NIXOS ] && [ ${#} -eq 0 ]; then
-        	exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix-instantiate --eval-only --raw --expr '(import <nixos> {}).glib-networking.outPath')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS bash $0"
+	if [ ! -z "${nixos}" ] && [ ${#} -eq 0 ]; then
+        	exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix eval -f '<nixpkgs>' --raw 'glib-networking')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS bash $0"
 	else
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
 fi
-if [ -f /etc/NIXOS ]; then
-	unset GDK_PIXBUF_MODULE_FILE PYTHONPATH TEMP TEMPDIR TMP TMPDIR
-	export XDG_DATA_DIRS=${XDG_DATA_DIRS}:/usr/share
+if [ -z ${SUDO_UID} ]; then
+	SUDO_USER=${USER}
+	SUDO_UID=$(id -g ${USER})
 fi
-set_base_parameters
+create_cache_directory
 if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
 	if ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
 		if [ -z "${2}" ]; then echo -e "Please provide a path for the generated config."; exit 1; fi
