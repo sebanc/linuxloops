@@ -473,7 +473,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'GLF-OS')
-		available_environments=( "Gnome/Mini" "Gnome/Standard" "Gnome/Studio" "Gnome/Studio-Pro" "Plasma/Mini" "Plasma/Standard" "Plasma/Studio" "Plasma/Studio-Pro" )
+		available_environments=( "Gnome/Mini" "Gnome/Standard" "Plasma/Mini" "Plasma/Standard" )
 		bootloader_id="glfos"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
