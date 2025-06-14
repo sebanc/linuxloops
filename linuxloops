@@ -456,7 +456,11 @@ case "${distribution}" in
 		chroot_function="${distribution}"
 		foxflake_version="${version}"
 		mirrors_supported=()
-		nixos_version="25.05"
+		if [ "${version}" == "Stable" ] || [ "${version}" == "Stable-Test" ]; then
+			nixos_version="25.05"
+		else
+			nixos_version="Unstable"
+		fi
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -481,7 +485,11 @@ case "${distribution}" in
 		chroot_function="${distribution}"
 		glfos_version="${version}"
 		mirrors_supported=()
-		nixos_version="25.05"
+		if [ "${version}" == "Stable" ]; then
+			nixos_version="25.05"
+		else
+			nixos_version="Unstable"
+		fi
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -8007,6 +8015,8 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
@@ -8500,6 +8510,8 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
@@ -10414,6 +10426,8 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
@@ -10613,6 +10627,8 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
+nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
@@ -15204,9 +15220,9 @@ INSTALLNVIDIA
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_nvidia
 fi
 if [ ! -z "${kernel_parameters}" ]; then
-	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 nvidia.NVreg_EnableGpuFirmware=0 ibt=off ${kernel_parameters}"
+	kernel_parameters="module_blacklist=nouveau,nova_core nvidia-drm.modeset=1 ${kernel_parameters}"
 else
-	kernel_parameters="module_blacklist=nouveau nvidia-drm.modeset=1 nvidia.NVreg_EnableGpuFirmware=0 ibt=off"
+	kernel_parameters="module_blacklist=nouveau,nova_core nvidia-drm.modeset=1"
 fi
 }
 
@@ -16512,7 +16528,7 @@ if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" 
 	for i in \$(echo \${cmdline_root} \${cmdline} \${cmdline_extra} | sed -e 's@ @\n@g'); do kargs="\${kargs} --append-if-missing=\${i}"; done
 	cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 rpm-ostree kargs \${kargs}
-echo -e 'add_drivers+=" 8250_dw aes amdgpu atkbd btrfs cbc dm-crypt exfat ext4 fuse i8042 i915 intel_lpss intel_lpss_pci loop nouveau nvme quota_v1 quota_v2 serio sha256 surface_aggregator surface_aggregator_registry surface_hid surface_hid_core usbhid xhci_pci "' > /etc/dracut.conf.d/99-linuxloops.conf
+echo -e 'add_drivers+=" 8250_dw aes atkbd btrfs cbc dm-crypt exfat ext4 fuse i8042 intel_lpss intel_lpss_pci loop nvme quota_v1 quota_v2 serio sha256 surface_aggregator surface_aggregator_registry surface_hid surface_hid_core usbhid xhci_pci "' > /etc/dracut.conf.d/99-linuxloops.conf
 echo -e 'install_items+=" /etc/vconsole.conf /usr/bin/bash /usr/sbin/blkid /usr/sbin/cryptsetup /usr/bin/cut /usr/sbin/e2fsck /usr/bin/find /usr/bin/grep /usr/sbin/losetup /usr/bin/lsblk /usr/bin/ntfs-3g /usr/bin/ntfsfix /usr/bin/ps /usr/bin/setfont /usr/bin/setsid /usr/lib/systemd/systemd-sysroot-fstab-check "' >> /etc/dracut.conf.d/99-linuxloops.conf
 echo 'hostonly=\"no\"' >> /etc/dracut.conf.d/99-linuxloops.conf
 rpm-ostree initramfs --enable
@@ -16771,7 +16787,7 @@ sed 's@"\\\${OS}"@"\${OS} (with additional wifi drivers)"@g' /etc/grub.d/10_linu
 sed -i 's@\\\${GRUB_CMDLINE_LINUX}@\${GRUB_CMDLINE_LINUX} variant_wifi@g' /etc/grub.d/10_linux_wifi
 chmod 0755 /etc/grub.d/10_linux_wifi
 sed 's@"\\\${OS}"@"\${OS} (with nvidia proprietary gpu drivers)"@g' /etc/grub.d/10_linux > /etc/grub.d/10_linux_nvidia
-sed -i 's@\\\${GRUB_CMDLINE_LINUX}@\${GRUB_CMDLINE_LINUX} module_blacklist=nouveau nvidia-drm.modeset=1 ibt=off variant_nvidia@g' /etc/grub.d/10_linux_nvidia
+sed -i 's@\\\${GRUB_CMDLINE_LINUX}@\${GRUB_CMDLINE_LINUX} module_blacklist=nouveau,nova_core nvidia-drm.modeset=1 variant_nvidia@g' /etc/grub.d/10_linux_nvidia
 chmod 0755 /etc/grub.d/10_linux_nvidia
 mkdir -p /etc/systemd/system-shutdown
 cat >/etc/systemd/system-shutdown/nvidia.shutdown <<'NVIDIA_SHUTDOWNFIX'
