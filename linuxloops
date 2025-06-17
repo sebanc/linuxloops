@@ -539,6 +539,7 @@ case "${distribution}" in
 		btrfs_supported="Yes"
 		debian_version="Bookworm"
 		grub_disable_recordfail="Yes"
+		linuxmint_version="${version}"
 		lmde_version="${version}"
 		mirrors_supported=( "Debian" "Linuxmint" )
 		nvidia_supported="Yes"
@@ -698,10 +699,10 @@ case "${distribution}" in
 		available_environments=( "Full" )
 		bootloader_id="qubes"
 		bootloader_name="grubx64.efi"
-		bootstrap="iso https://ftp.qubes-os.org/iso/Qubes-R${version}-x86_64.iso /images/install.img /LiveOS/rootfs.img"
+		bootstrap="iso https://mirrors.edge.kernel.org/qubes/iso/Qubes-R${version}-x86_64.iso /images/install.img /LiveOS/rootfs.img"
 		btrfs_supported="Yes"
-		iso_sha256sum="https://ftp.qubes-os.org/iso/Qubes-R${version}-x86_64.iso.DIGESTS"
-		iso_signature="https://ftp.qubes-os.org/iso/Qubes-R${version}-x86_64.iso.asc"
+		iso_sha256sum="https://mirrors.edge.kernel.org/qubes/iso/Qubes-R${version}-x86_64.iso.DIGESTS"
+		iso_signature="https://mirrors.edge.kernel.org/qubes/iso/Qubes-R${version}-x86_64.iso.asc"
 		master_key="9C884DF3F81064A569A4A9FAE022E58F8E34D89F"
 		mirrors_supported=( "Fedora" "Qubes" )
 		nvidia_supported="No"
@@ -8897,7 +8898,7 @@ fi
 
 chroot_Linuxmint()
 {
-if [ -z "${mirror_Linuxmint}" ]; then mirror_Linuxmint="http://packages.linuxmint.com"; fi
+if [ -z "${mirror_Linuxmint}" ]; then mirror_Linuxmint="https://fastly.linuxmint.io"; fi
 if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
@@ -8944,7 +8945,7 @@ Pin-Priority: 700
 PRIORITY
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f http://packages.linuxmint.com/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f ${mirror_Linuxmint}/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linuxmint-keyring
 rm /tmp/linuxmint-keyring.gpg
@@ -9055,7 +9056,7 @@ fi
 chroot_LMDE()
 {
 if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
-if [ -z "${mirror_Linuxmint}" ]; then mirror_Linuxmint="http://packages.linuxmint.com"; fi
+if [ -z "${mirror_Linuxmint}" ]; then mirror_Linuxmint="https://fastly.linuxmint.io"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -9096,7 +9097,7 @@ Pin-Priority: 700
 PRIORITY
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f http://packages.linuxmint.com/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://fastly.linuxmint.io/pool/main/l/linuxmint-keyring/linuxmint-keyring_2022.06.21.tar.gz | tar -zx -C /tmp linuxmint-keyring-2016.05.26ubuntu1/etc/apt/trusted.gpg.d/linuxmint-keyring.gpg --strip-components 4
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linuxmint-keyring
 rm /tmp/linuxmint-keyring.gpg
@@ -14991,10 +14992,10 @@ curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https:
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 if [ ! -z "${surface_remove}" ]; then DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}; fi
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libcamera-ipa libcamera-tools gstreamer1.0-libcamera pipewire-libcamera
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/umlaeute/v4l2loopback/archive/v0.14.0.tar.gz | tar xz -C /usr/src
-dkms add -m v4l2loopback -v 0.14.0
-dkms install -m v4l2loopback -v 0.14.0 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libcamera-ipa libcamera-tools gstreamer1.0-libcamera pipewire-libcamera build-essential
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/umlaeute/v4l2loopback/archive/v0.15.0.tar.gz | tar xz -C /usr/src
+dkms add -m v4l2loopback -v 0.15.0
+dkms install -m v4l2loopback -v 0.15.0 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
 elif [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Zorin" ]; then
@@ -17703,7 +17704,7 @@ case "${1}" in
 		mirror_Void="${2}"
 	;;
 	*)
-		exit_with_error "\"${1}\" mirror is not supported for this distribution, supported mirrors are: \"${mirrors_supported[@]}\"."
+		exit_with_error "\"${1}\" mirror is not supported for this distribution, supported mirrors are: \"$(echo ${mirrors_supported[@]} | sed 's@ @|@g')\"."
 	;;
 esac
 }
