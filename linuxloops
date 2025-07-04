@@ -2023,8 +2023,6 @@ picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.cinnamon.desktop.interface]
@@ -2307,8 +2305,6 @@ picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/archlinux/small.png"
 [org.cinnamon.desktop.interface]
@@ -2652,8 +2648,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -2985,8 +2979,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -3294,8 +3286,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -3604,8 +3594,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -3906,8 +3894,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -4209,8 +4195,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -4518,8 +4502,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -4828,8 +4810,6 @@ picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/Artix_dna_spiral_dark.jpg"
 [org.cinnamon.desktop.interface]
@@ -5748,8 +5728,6 @@ picture-uri="file:///usr/share/wallpapers/cachyos-wallpapers/Dracula.png"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/wallpapers/cachyos-wallpapers/Dracula.png"
 [org.cinnamon.desktop.interface]
@@ -6369,8 +6347,6 @@ picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
@@ -6632,8 +6608,6 @@ picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
@@ -6892,8 +6866,6 @@ picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
 [org.cinnamon.desktop.interface]
@@ -7154,8 +7126,6 @@ picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.s
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.svg"
 [org.cinnamon.desktop.interface]
@@ -7402,8 +7372,6 @@ picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.s
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.svg"
 [org.cinnamon.desktop.interface]
@@ -8686,8 +8654,6 @@ picture-uri="file:///usr/share/backgrounds/kali/login.svg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/kali/login.svg"
 [org.cinnamon.desktop.interface]
@@ -10177,8 +10143,6 @@ picture-uri="file:///usr/share/backgrounds/default23.png"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/default23.png"
 [org.cinnamon.desktop.interface]
@@ -12003,8 +11967,6 @@ picture-uri="file:///usr/share/backgrounds/default.jpg"
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.background]
 picture-uri="file:///usr/share/backgrounds/default.jpg"
 [org.cinnamon.desktop.interface]
@@ -12577,8 +12539,6 @@ cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.gnome.desktop.interface:Budgie]
 gtk-theme="Arc"
 icon-theme="Papirus"
-[org.nemo.desktop:Budgie]
-ignored-desktop-handlers="['budgie-helper']"
 [org.cinnamon.desktop.interface]
 gtk-theme="Adwaita"
 icon-theme="Papirus"
@@ -13017,6 +12977,7 @@ fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://steamdeck-packages.steamos.cloud/archlinux-mirror/holo-$(echo ${steamos_version} | tr A-Z a-z)/os/x86_64/ | cut -d'>' -f3 | cut -d'"' -f2 | grep '^holo-keyring.*.tar.zst\$' | tail -1) | tar -x --zstd -C / usr/share/pacman/keyrings/holo.gpg usr/share/pacman/keyrings/holo-trusted usr/share/pacman/keyrings/holo-revoked
 pacman-key --populate holo
 pacstrap -P -C /etc/pacman_steamos.conf -G /mnt base base-devel holo-keyring wget
+chmod 0644 /mnt/etc/pacman.conf
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -13030,19 +12991,19 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups dbus-broker ffmpeg flatpak gamescope gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio lib32-pipewire lib32-fontconfig mangohud nss-mdns openssh pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse steam-im-modules steam-jupiter-stable steam_notif_daemon sof-firmware system-config-printer ttf-dejavu ttf-liberation ttf-roboto udisks2 vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio weston wireplumber wqy-zenhei xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf archlinux-wallpaper at-spi2-core avahi cups dbus-broker ffmpeg flatpak gamescope gvfs iio-sensor-proxy intel-media-driver jq kscreen libva-mesa-driver lib32-vulkan-intel lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio lib32-pipewire lib32-fontconfig mangohud nss-mdns openssh pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse steam-im-modules steam-jupiter-stable steam_notif_daemon sof-firmware system-config-printer ttf-dejavu ttf-liberation ttf-roboto udisks2 vulkan-intel vulkan-radeon vulkan-swrast vulkan-virtio weston wireplumber wqy-zenhei xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Desktop')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam kde-gtk-config xsettingsd xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 "
 	;;
 	'Gamescope')
 	default_session="deck-session"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam kde-gtk-config xsettingsd xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
 cat >/usr/share/wayland-sessions/deck-session.desktop <<'DECK_SESSION'
 [Desktop Entry]
 Encoding=UTF-8
@@ -13072,7 +13033,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-systemctl enable ${desktop_services} dbus-broker.service sddm.service
+systemctl enable ${desktop_services} sddm.service
 /tmp/linuxloops/install_steamos_configs
 # Temporary XDG desktop portal fix
 cat >/etc/xdg/autostart/xdg-desktop-portal-fix.desktop <<'PORTAL_FIX_AUTOSTART'
@@ -13114,29 +13075,61 @@ cat >/usr/bin/deck-session <<'DECKSESSION'
 
 set -e
 
+tmpdir="\$([[ -n \${XDG_RUNTIME_DIR+x} ]] && mktemp -p "\$XDG_RUNTIME_DIR" -d -t gamescope.XXXXXXX)"
+
 ##
 ## Session globals
 ##
+export ENABLE_GAMESCOPE_WSI=1
+export GAMESCOPE_DISABLE_ASYNC_FLIPS=1
+export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
+export GAMESCOPE_NV12_COLORSPACE=k_EStreamColorspace_BT601
+export GTK_IM_MODULE=Steam
+export INTEL_DEBUG=noccs
+export MANGOHUD_CONFIGFILE="\${tmpdir:+\$tmpdir/mangohud.config}"
+export QT_IM_MODULE=steam
+export QT_QPA_PLATFORM_THEME=kde
+export R600_DEBUG=nodcc
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
-export WINE_CPU_TOPOLOGY=8:0,1,2,3,4,5,6,7
-export STEAM_ENABLE_VOLUME_HANDLER=1
 export SRT_URLOPEN_PREFER_STEAM=1
 export STEAM_DISABLE_AUDIO_DEVICE_SWITCHING=1
+export STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
+export STEAM_DISPLAY_REFRESH_LIMITS=30,60,120,144,240
+export STEAM_ENABLE_VOLUME_HANDLER=1
 export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
+export STEAM_GAMESCOPE_FANCY_SCALING_SUPPORT=1
+export STEAM_GAMESCOPE_HDR_SUPPORTED=1
+export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
+export STEAM_MANGOAPP_PRESETS_SUPPORTED=1
+export STEAM_MULTIPLE_XWAYLANDS=1
+export STEAM_USE_MANGOAPP=1
 export vk_xwayland_wait_ready=false
-export QT_IM_MODULE=steam
-export GTK_IM_MODULE=Steam
-export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
+export VKD3D_DISABLE_EXTENSIONS=VK_KHR_present_wait
+export VKD3D_SWAPCHAIN_LATENCY_FRAMES=3
+export WINE_CPU_TOPOLOGY=8:0,1,2,3,4,5,6,7
 export XCURSOR_THEME="breeze_cursors"
-export INTEL_DEBUG=noccs
-export R600_DEBUG=nodcc
+
+mkdir -p "\$(dirname "\$MANGOHUD_CONFIGFILE")"
+echo "no_display" > "\$MANGOHUD_CONFIGFILE"
 
 pkill -9 gamescope || true
 pkill -9 steam || true
 
 ulimit -n 524288
 
-gamescope --fade-out-duration 200 --generate-drm-mode fixed --hide-cursor-delay 3000 -b -e -f -h 720 -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui
+nvidia=0
+for gpu in /sys/class/drm/card?; do
+        if [ -d "\$gpu" ]; then
+                for display in \$gpu/card*-*/enabled; do
+                        if [ "\$(cat \$gpu/device/vendor)" == "10de" ] && [ "\$(cat \$display)" == "enabled" ]; then
+                                nvidia=1
+                        fi
+                done
+        fi
+done
+if [ \$nvidia -eq 1 ]; then vulkan_mode="NVIDIA_only"; else vulkan_mode="non_NVIDIA_only"; fi
+
+__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=\$vulkan_mode gamescope --adaptive-sync --force-composition --force-grab-cursor --generate-drm-mode fixed --hdr-enabled --mangoapp --xwayland-count 2 -b -e -f -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui -cef-force-gpu
 DECKSESSION
 chmod 0755 /usr/bin/deck-session
 cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
@@ -13144,13 +13137,13 @@ cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
 
 echo -e '[Autologin]\nSession=deck-session' > /tmp/zz-steamos.conf
 
-qdbus org.kde.Shutdown /Shutdown org.kde.Shutdown.logout
+qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout
 RUNGAMINGSESSION
 chmod 0755 /usr/bin/return-deck-session
 cat >/usr/bin/steamos-session-select <<'SESSIONSELECT'
 #!/bin/bash
 
-echo -e '[Autologin]\nSession=plasmawayland' > /tmp/zz-steamos.conf
+echo -e '[Autologin]\nSession=plasma' > /tmp/zz-steamos.conf
 
 pkill -9 steam
 pkill -9 gamescope
