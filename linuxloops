@@ -225,9 +225,9 @@ case "${distribution}" in
 		default_version="9"
 		;;
 	'SteamOS')
-		available_versions=( "3.7" )
+		available_versions=( "Main" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="3.7"
+		default_version="Main"
 		;;
 	'Tails')
 		available_versions=( "Stable" )
@@ -1881,7 +1881,7 @@ pacman-key --init
 pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -2163,7 +2163,7 @@ pacman-key --init
 pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -5185,9 +5185,9 @@ cat >>/system.yaml <<SYSTEMYAML
 $(cat /tmp/linuxloops/install_custom_script 2>/dev/null)
 SYSTEMYAML
 if [ "${nvidia}" == "Yes" ]; then
-	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-hibernate.service ]; then systemctl enable nvidia-hibernate.service; fi'" >> /system.yaml
-	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-resume.service ]; then systemctl enable nvidia-resume.service; fi'" >> /system.yaml
 	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-suspend.service ]; then systemctl enable nvidia-suspend.service; fi'" >> /system.yaml
+	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-resume.service ]; then systemctl enable nvidia-resume.service; fi'" >> /system.yaml
+	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-hibernate.service ]; then systemctl enable nvidia-hibernate.service; fi'" >> /system.yaml
 fi
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
@@ -5472,7 +5472,7 @@ for i in 1 .. 3; do
 	fi
 	if [ "\${i}" -eq 3 ]; then echo "Download of ChromeOS recovery image failed"; exit 1; fi
 done
-bsdtar -xvf /isomount/data/recovery.zip -C /root
+unzip /isomount/data/recovery.zip -d /root
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
 for (( i=1; i<=12; i++ )); do
@@ -5586,7 +5586,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm --needed linux-cachyos linux-cachyos-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -5880,7 +5880,7 @@ for i in 1 .. 3; do
 	fi
 	if [ "\${i}" -eq 3 ]; then echo "Download of ChromeOS-Flex recovery image failed"; exit 1; fi
 done
-bsdtar -xvf /isomount/data/recovery.zip -C /root || { echo -e "Failed to extract the recovery image."; return 1; }
+unzip /isomount/data/recovery.zip -d /root
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
 for (( i=1; i<=12; i++ )); do
@@ -8780,7 +8780,7 @@ pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@#DisableSandbox@#DisableSandbox\nDisableDownloadTimeout@g' /etc/pacman.conf
 pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -9194,7 +9194,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -9466,7 +9466,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -9738,7 +9738,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -12987,7 +12987,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -13001,15 +13001,15 @@ pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-d
 "
 	;;
 	'Gamescope')
-	default_session="deck-session"
+	default_session="gamescope-session"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop plasma-nm plasma-pa kwin ark dolphin konsole bluedevil powerdevil systemsettings kscreen discover kwallet-pam kde-gtk-config xsettingsd xdg-desktop-portal-kde steamdeck-kde-presets breeze-gtk breeze-icons
-cat >/usr/share/wayland-sessions/deck-session.desktop <<'DECK_SESSION'
+cat >/usr/share/wayland-sessions/gamescope-session.desktop <<'DECK_SESSION'
 [Desktop Entry]
 Encoding=UTF-8
 Name=SteamOS (gamescope)
 Comment=SteamOS Big Picture session
-Exec=deck-session
+Exec=gamescope-session
 Icon=steamicon.png
 Type=Application
 DesktopNames=gamescope
@@ -13018,7 +13018,7 @@ mkdir -p /etc/skel/Desktop
 cat >/etc/skel/Desktop/Return.desktop <<'RETURN_TO_GAMESCOPE'
 [Desktop Entry]
 Name=Return to Gaming Mode
-Exec=return-deck-session
+Exec=return-gamescope-session
 Icon=steamdeck-gaming-return
 Terminal=false
 Type=Application
@@ -13040,16 +13040,16 @@ cat >/etc/xdg/autostart/xdg-desktop-portal-fix.desktop <<'PORTAL_FIX_AUTOSTART'
 [Desktop Entry]
 Type=Application
 Name=XDG desktop portal fix
-Exec=/usr/lib/xdg-desktop-portal-fix
+Exec=/usr/bin/xdg-desktop-portal-fix
 OnlyShowIn=KDE;
 NoDisplay=true
 X-KDE-autostart-phase=1
 PORTAL_FIX_AUTOSTART
-cat >/usr/lib/xdg-desktop-portal-fix <<'PORTAL_FIX'
+cat >/usr/bin/xdg-desktop-portal-fix <<'PORTAL_FIX'
 #!/bin/sh
 systemctl --user restart xdg-desktop-portal
 PORTAL_FIX
-chmod 0755 /usr/lib/xdg-desktop-portal-fix
+chmod 0755 /usr/bin/xdg-desktop-portal-fix
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
 
@@ -13059,10 +13059,10 @@ set -e
 echo -e 'net.ipv4.tcp_fin_timeout=5\nnet.ipv4.tcp_mtu_probing=1\nnet.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv6=1\nvm.compaction_proactiveness=0\nvm.max_map_count=1048576\nvm.swappiness=1' > /etc/sysctl.d/99-steam.conf
 mkdir -p /etc/skel/.cache/thumbnails
 mkdir -p /etc/skel/.local/share/applications
-cat >/etc/skel/.local/share/applications/deck-session.desktop <<'DECKSESSIONICON'
+cat >/etc/skel/.local/share/applications/gamescope-session.desktop <<'DECKSESSIONICON'
 [Desktop Entry]
 Name=SteamDeck Session
-Exec=deck-session
+Exec=gamescope-session
 Icon=steamdeck-gaming-return
 Terminal=false
 Type=Application
@@ -13070,17 +13070,57 @@ Categories=Game;
 PrefersNonDefaultGPU=true
 X-KDE-RunOnDiscreteGpu=true
 DECKSESSIONICON
-cat >/usr/bin/deck-session <<'DECKSESSION'
+cat >/usr/bin/gamescope-session <<'DECKSESSION'
 #!/bin/bash
 
 set -e
 
-tmpdir="\$([[ -n \${XDG_RUNTIME_DIR+x} ]] && mktemp -p "\$XDG_RUNTIME_DIR" -d -t gamescope.XXXXXXX)"
+##
+## Script to detect the gpu / display to use with gamescope
+##
+
+if [ ! -z "\${GAMESCOPE_SESSION_DISPLAY}" ]; then
+        custom_gpu=\$(ls /sys/bus/*/devices/*/drm/card*/card*-* | grep "\-\${GAMESCOPE_SESSION_DISPLAY}:\$" | cut -d'/' -f8)
+        if [ ! -z "\${custom_gpu}" ]; then
+                GAMESCOPE_SESSION_GPU=\$(cat /sys/class/drm/\${custom_gpu}/device/vendor | sed 's@0x@@g'):\$(cat /sys/class/drm/\${custom_gpu}/device/device | sed 's@0x@@g')
+        else
+                unset GAMESCOPE_SESSION_DISPLAY
+                echo "# Falling back to display autodetection as GAMESCOPE_SESSION_DISPLAY is incorrect."
+        fi
+fi
+
+if [ -z "\${GAMESCOPE_SESSION_DISPLAY}" ]; then
+        preferred_gpu=\$(grep 'enabled' /sys/bus/*/devices/*/drm/card*/card*-*/enabled | cut -d'/' -f8 | sort -r | uniq | head -1)
+        GAMESCOPE_SESSION_GPU=\$(cat /sys/class/drm/\${preferred_gpu}/device/vendor | sed 's@0x@@g'):\$(cat /sys/class/drm/\${preferred_gpu}/device/device | sed 's@0x@@g')
+        active_displays=\$(grep 'enabled' /sys/class/drm/\${preferred_gpu}/\${preferred_gpu}-*/enabled | cut -d':' -f1 | cut -d'/' -f-6)
+        default_display=\$(echo "\$active_displays" | head -1)
+        for display in \${active_displays}; do if [ -z \${GAMESCOPE_SESSION_DISPLAY} ] && [ "\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2)" == "HDMI" ]; then GAMESCOPE_SESSION_DISPLAY="\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2-)"; fi; done
+        for display in \${active_displays}; do if [ -z \${GAMESCOPE_SESSION_DISPLAY} ] && [ "\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2)" == "DP" ]; then GAMESCOPE_SESSION_DISPLAY="\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2-)"; fi; done
+        for display in \${active_displays}; do if [ -z \${GAMESCOPE_SESSION_DISPLAY} ] && [ "\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2)" == "DVI" ]; then GAMESCOPE_SESSION_DISPLAY="\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2-)"; fi; done
+        for display in \${active_displays}; do if [ -z \${GAMESCOPE_SESSION_DISPLAY} ] && [ "\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2)" == "VGA" ]; then GAMESCOPE_SESSION_DISPLAY="\$(echo \${display} | cut -d'/' -f6 | cut -d'-' -f2-)"; fi; done
+        if [ -z \${GAMESCOPE_SESSION_DISPLAY} ]; then GAMESCOPE_SESSION_DISPLAY="\$(echo \${default_display} | cut -d'/' -f6 | cut -d'-' -f2-)"; fi
+fi
+
+if [ ! -z "\${GAMESCOPE_SESSION_RESOLUTION}" ]; then
+        GAMESCOPE_SESSION_WIDTH=\$(echo \${GAMESCOPE_SESSION_RESOLUTION} | cut -d'x' -f1)
+        GAMESCOPE_SESSION_HEIGHT=\$(echo \${GAMESCOPE_SESSION_RESOLUTION} | cut -d'x' -f2)
+        GAMESCOPE_SESSION_RERESH_RATE=\$(echo \${GAMESCOPE_SESSION_RESOLUTION} | cut -d'x' -f3)
+fi
+
+if [ ! -z \${GAMESCOPE_SESSION_GPU} ] && [ ! -z \${GAMESCOPE_SESSION_DISPLAY} ]; then
+        GAMESCOPE_FLAGS="\${GAMESCOPE_FLAGS} --prefer-vk-device \${GAMESCOPE_SESSION_GPU} -O \${GAMESCOPE_SESSION_DISPLAY},'*'"
+fi
+
+if [ ! -z \${GAMESCOPE_SESSION_WIDTH} ] && [ ! -z \${GAMESCOPE_SESSION_HEIGHT} ] && [ ! -z \${GAMESCOPE_SESSION_RERESH_RATE} ]; then
+        GAMESCOPE_FLAGS="\${GAMESCOPE_FLAGS} -w \${GAMESCOPE_SESSION_WIDTH} -h \${GAMESCOPE_SESSION_HEIGHT} -r \${GAMESCOPE_SESSION_RERESH_RATE}"
+fi
 
 ##
-## Session globals
+## SteamOS session globals
 ##
-export ENABLE_GAMESCOPE_WSI=1
+
+tmpdir="\$([[ -n \${XDG_RUNTIME_DIR+x} ]] && mktemp -p "\$XDG_RUNTIME_DIR" -d -t gamescope.XXXXXXX)"
+
 export GAMESCOPE_DISABLE_ASYNC_FLIPS=1
 export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
 export GAMESCOPE_NV12_COLORSPACE=k_EStreamColorspace_BT601
@@ -13093,21 +13133,18 @@ export R600_DEBUG=nodcc
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export SRT_URLOPEN_PREFER_STEAM=1
 export STEAM_DISABLE_AUDIO_DEVICE_SWITCHING=1
-export STEAM_DISABLE_MANGOAPP_ATOM_WORKAROUND=1
-export STEAM_DISPLAY_REFRESH_LIMITS=30,60,120,144,240
 export STEAM_ENABLE_VOLUME_HANDLER=1
 export STEAM_GAMESCOPE_DYNAMIC_FPSLIMITER=1
 export STEAM_GAMESCOPE_FANCY_SCALING_SUPPORT=1
 export STEAM_GAMESCOPE_HDR_SUPPORTED=1
 export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
 export STEAM_MANGOAPP_PRESETS_SUPPORTED=1
-export STEAM_MULTIPLE_XWAYLANDS=1
 export STEAM_USE_MANGOAPP=1
+export SteamDeck=0
 export vk_xwayland_wait_ready=false
-export VKD3D_DISABLE_EXTENSIONS=VK_KHR_present_wait
 export VKD3D_SWAPCHAIN_LATENCY_FRAMES=3
 export WINE_CPU_TOPOLOGY=8:0,1,2,3,4,5,6,7
-export XCURSOR_THEME="breeze_cursors"
+export XCURSOR_THEME="Breeze"
 
 mkdir -p "\$(dirname "\$MANGOHUD_CONFIGFILE")"
 echo "no_display" > "\$MANGOHUD_CONFIGFILE"
@@ -13117,29 +13154,17 @@ pkill -9 steam || true
 
 ulimit -n 524288
 
-nvidia=0
-for gpu in /sys/class/drm/card?; do
-        if [ -d "\$gpu" ]; then
-                for display in \$gpu/card*-*/enabled; do
-                        if [ "\$(cat \$gpu/device/vendor)" == "10de" ] && [ "\$(cat \$display)" == "enabled" ]; then
-                                nvidia=1
-                        fi
-                done
-        fi
-done
-if [ \$nvidia -eq 1 ]; then vulkan_mode="NVIDIA_only"; else vulkan_mode="non_NVIDIA_only"; fi
-
-__NV_PRIME_RENDER_OFFLOAD=1 __VK_LAYER_NV_optimus=\$vulkan_mode gamescope --adaptive-sync --force-composition --force-grab-cursor --generate-drm-mode fixed --hdr-enabled --mangoapp --xwayland-count 2 -b -e -f -O '*',eDP-1 -- steam -steamos3 -steampal -steamdeck -gamepadui -cef-force-gpu
+gamescope \${GAMESCOPE_FLAGS} --force-composition --force-grab-cursor --generate-drm-mode fixed --hdr-enabled --mangoapp -b -e -f -- env DXVK_HDR=1 steam -steamos3 -gamepadui -system-composer -cef-force-gpu
 DECKSESSION
-chmod 0755 /usr/bin/deck-session
-cat >/usr/bin/return-deck-session <<'RUNGAMINGSESSION'
+chmod 0755 /usr/bin/gamescope-session
+cat >/usr/bin/return-gamescope-session <<'RUNGAMINGSESSION'
 #!/bin/bash
 
-echo -e '[Autologin]\nSession=deck-session' > /tmp/zz-steamos.conf
+echo -e '[Autologin]\nSession=gamescope-session' > /tmp/zz-steamos.conf
 
 qdbus6 org.kde.Shutdown /Shutdown org.kde.Shutdown.logout
 RUNGAMINGSESSION
-chmod 0755 /usr/bin/return-deck-session
+chmod 0755 /usr/bin/return-gamescope-session
 cat >/usr/bin/steamos-session-select <<'SESSIONSELECT'
 #!/bin/bash
 
@@ -13522,21 +13547,6 @@ cat >/usr/bin/steamos-polkit-helpers/jupiter-dock-updater <<'FAKEDOCKUPDATE'
 exit 7
 FAKEDOCKUPDATE
 chmod 0755 /usr/bin/steamos-polkit-helpers/jupiter-dock-updater
-cat >/usr/bin/gamescope-wayland-teardown-workaround <<'GAMESCOPETEARDOWN'
-#!/bin/bash
-
-set -eu
-
-TARGETS=('/bin/bash /usr/bin/deck-session'
-         '/usr/bin/kwin_x11')
-
-for target in "\${TARGETS[@]}"; do
-  for processtree in \$(pgrep -xf "\$target" || true); do
-    kill -- "-\$processtree"
-  done
-done
-GAMESCOPETEARDOWN
-chmod 0755 /usr/bin/gamescope-wayland-teardown-workaround
 INSTALL_STEAMOS_CONFIGS
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_steamos_configs
 
@@ -13581,11 +13591,6 @@ DisplayServer=wayland
 Relogin=true
 Session=${default_session}
 User=${useraccount_name}
-
-[X11]
-# Janky workaround for wayland sessions not stopping in sddm, kills
-# all active sddm-helper sessions on teardown
-DisplayStopCommand=/usr/bin/gamescope-wayland-teardown-workaround
 SDDM
 	sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
 mkdir -p \$HOME/.config
@@ -15163,7 +15168,7 @@ elif [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-pacman -S --noconfirm --needed nvidia-open-dkms lib32-nvidia-utils libva-nvidia-driver
+pacman -S --noconfirm --needed nvidia-dkms lib32-nvidia-utils libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Void" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -15181,9 +15186,9 @@ fi
 if [ -f "${bootstrapdir}"/tmp/linuxloops/install_nvidia ]; then
 	cat >>"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 if [ -x /usr/lib/systemd/systemd ]; then
-	if [ -f /usr/lib/systemd/system/nvidia-hibernate.service ]; then systemctl enable nvidia-hibernate.service; fi
-	if [ -f /usr/lib/systemd/system/nvidia-resume.service ]; then systemctl enable nvidia-resume.service; fi
 	if [ -f /usr/lib/systemd/system/nvidia-suspend.service ]; then systemctl enable nvidia-suspend.service; fi
+	if [ -f /usr/lib/systemd/system/nvidia-resume.service ]; then systemctl enable nvidia-resume.service; fi
+	if [ -f /usr/lib/systemd/system/nvidia-hibernate.service ]; then systemctl enable nvidia-hibernate.service; fi
 	mkdir -p /etc/systemd/system-shutdown
 	cat >/etc/systemd/system-shutdown/nvidia.shutdown <<'SHUTDOWNFIX'
 #!/bin/sh

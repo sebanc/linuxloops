@@ -106,7 +106,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
 |Qubes           |4.2.4                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
 |RockyLinux      |9                                                             |✓                      |                                     |                                 |                            |
-|SteamOS         |3.7                                                           |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
+|SteamOS         |Main                                                          |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
 |Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |
 |Ubuntu          |24.04<br>25.04                                                |✓                      |✓                                    |✓                                |                            |
 |Void            |Current                                                       |                       |✓                                    |                                 |                            |
