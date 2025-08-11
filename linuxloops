@@ -105,9 +105,9 @@ case "${distribution}" in
 		default_version="Stable"
 		;;
 	'Debian')
-		available_versions=( "Bookworm" "Testing" "Unstable" )
-		available_versions_longname=( "Bookworm_(Stable)" "Testing" "Unstable" )
-		default_version="Bookworm"
+		available_versions=( "Trixie" "Testing" "Unstable" )
+		available_versions_longname=( "Trixie_(Stable)" "Testing" "Unstable" )
+		default_version="Trixie"
 		;;
 	'Devuan')
 		available_versions=( "Daedalus" "Testing" )
@@ -210,9 +210,9 @@ case "${distribution}" in
 		default_version="22.04"
 		;;
 	'Proxmox')
-		available_versions=( "VE8" )
+		available_versions=( "VE9" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="VE8"
+		default_version="VE9"
 		;;
 	'Qubes')
 		available_versions=( "4.2.4" )
@@ -372,7 +372,7 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc debian bookworm default"
+		bootstrap="lxc debian trixie default"
 		btrfs_supported="Yes"
 		debian_version="${version}"
 		grub_disable_recordfail="Yes"
@@ -380,7 +380,7 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		case "${version}" in
-			'Bookworm')
+			'Trixie')
 				chroot_function="${distribution}-Stable"
 				;;
 			'Testing')
@@ -497,9 +497,8 @@ case "${distribution}" in
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="grubx64.efi"
-		bootstrap="lxc debian bookworm default"
+		bootstrap="lxc debian trixie default"
 		btrfs_supported="Yes"
-		debian_version="Bookworm"
 		grub_disable_recordfail="Yes"
 		kali_version="${version}"
 		mirrors_supported=( "Kali" )
@@ -639,9 +638,9 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="grubx64.efi"
-		bootstrap="lxc debian bookworm default"
+		bootstrap="lxc debian trixie default"
 		btrfs_supported="Yes"
-		debian_version="Bookworm"
+		debian_version="Trixie"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Parrot" )
 		nvidia_supported="Yes"
@@ -652,7 +651,7 @@ case "${distribution}" in
 		available_environments=( "None" "Cosmic" "Cosmic/Full" "Gnome" "Gnome/Full" "Hyprland" "Hyprland/Full" "Plasma" "Plasma/Full" )
 		bootloader_id="debian"
 		bootloader_name="grubx64.efi"
-		bootstrap="lxc debian bookworm default"
+		bootstrap="lxc debian trixie default"
 		btrfs_supported="Yes"
 		debian_version="Sid"
 		grub_disable_recordfail="Yes"
@@ -686,9 +685,9 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc debian bookworm default"
+		bootstrap="lxc debian trixie default"
 		btrfs_supported="Yes"
-		debian_version="Bookworm"
+		debian_version="Trixie"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Debian" "Proxmox" )
 		nvidia_supported="Yes"

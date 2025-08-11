@@ -82,7 +82,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Brunch          |Stable<br>Unstable                                            |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
 |CachyOS         |x86-64<br>x86-64-v3<br>x86-64-v4                              |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
 |ChromeOS-Flex   |Stable                                                        |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
-|Debian          |Bookworm<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
+|Debian          |Trixie<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing                                           |✓                      |✓                                    |                                 |                            |
 |Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
 |Fedora          |42                                                            |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
