@@ -103,7 +103,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
 |PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
-|Proxmox         |VE8                                                           |✓                      |✓                                    |✓                                |                            |
+|Proxmox         |VE9                                                           |✓                      |✓                                    |✓                                |                            |
 |Qubes           |4.2.4                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
 |RockyLinux      |9                                                             |✓                      |                                     |                                 |                            |
 |SteamOS         |Main                                                          |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
