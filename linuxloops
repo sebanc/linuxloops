@@ -10780,9 +10780,9 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 set -e
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/nobara.repo -o /etc/yum.repos.d/nobara.repo
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/baseos/nobara-repos/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1)) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))
-dnf install -y --releasever=$(echo ${nobara_version} | tr A-Z a-z) --allowerasing nobara-gpg-keys nobara-repos
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
@@ -16775,9 +16775,9 @@ rm -rf /lib/firmware/bnx2x /lib/firmware/dpaa2 /lib/firmware/liquidio /lib/firmw
 if [ "${distribution}" == "Linuxmint" ]; then
 	rm -r /usr/share/icons/Bibata-Original*
 	rm -r /usr/share/icons/Mint-X*
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y broadcom-sta-dkms firmware-b43-installer curl python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1 xz-utils evince file-roller firefox gedit gparted language-selector-gnome qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y systemd-repart broadcom-sta-dkms firmware-b43-installer curl python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1 xz-utils evince file-roller firefox gedit gparted language-selector-gnome qemu-guest-agent spice-vdagent
 else
-	DEBIAN_FRONTEND=noninteractive apt install --purge -y broadcom-sta-dkms firmware-b43-installer curl python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1 xz-utils evince file-roller firefox-esr gedit gparted qemu-guest-agent spice-vdagent
+	DEBIAN_FRONTEND=noninteractive apt install --purge -y systemd-repart broadcom-sta-dkms firmware-b43-installer curl python3-venv python3-gi gir1.2-gtk-3.0 gir1.2-webkit2-4.1 xz-utils evince file-roller firefox-esr gedit gparted qemu-guest-agent spice-vdagent
 fi
 apt clean
 sudo -u '${useraccount_name}' bash << 'INSTALLERICONS'
