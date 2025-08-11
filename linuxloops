@@ -16535,13 +16535,14 @@ chmod 0644 /etc/grub.d/15_ostree
 chmod 0755 /etc/grub.d/15_ostree_linuxloops
 mkdir /boot/grub2
 ln -s ../loader/grub.cfg /boot/grub2/grub.cfg
-bootupctl backend install /
+mkdir -p /boot/efi/EFI/fedora
 cat >/boot/efi/EFI/fedora/grub.cfg <<'EFI_GRUB_CFG'
 search --no-floppy --root-dev-only --fs-uuid --set=dev \$(blkid -s UUID -o value ${boot_partition})
 set prefix=(\\\$dev)$(if [ "${root_fstype}" == "btrfs" ]; then echo /@boot; fi)/grub2
 export \\\$prefix
 configfile \\\$prefix/grub.cfg
 EFI_GRUB_CFG
+bootupctl backend install /
 REINSTALLBOOTLOADER
 	chmod 0755 /boot/linuxloops/reinstall-bootloader
 	/boot/linuxloops/reinstall-bootloader
