@@ -225,7 +225,7 @@ case "${distribution}" in
 		default_version="9"
 		;;
 	'SteamOS')
-		available_versions=( "Main" )
+		available_versions=( "Main" "Staging" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Main"
 		;;
@@ -8803,7 +8803,7 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 systemctl enable ${desktop_services}
-git clone -b master https://invent.kde.org/kde-linux/kde-linux.git /tmp/kde-linux
+git clone --depth=1 -b master https://invent.kde.org/kde-linux/kde-linux.git /tmp/kde-linux
 cp -r /tmp/kde-linux/mkosi.extra/usr/share/plymouth/themes/breeze-bgrt /usr/share/plymouth/themes/
 plymouth-set-default-theme breeze-bgrt
 INSTALL_DESKTOP
@@ -13088,7 +13088,7 @@ cat >/usr/bin/gamescope-session <<'DECKSESSION'
 set -e
 
 ##
-## Script to detect the gpu / display to use with gamescope
+## Script to detect the display / GPU to use with gamescope
 ##
 
 if [ ! -z "\${GAMESCOPE_SESSION_DISPLAY}" ]; then
@@ -13160,12 +13160,9 @@ export XCURSOR_THEME="Breeze"
 mkdir -p "\$(dirname "\$MANGOHUD_CONFIGFILE")"
 echo "no_display" > "\$MANGOHUD_CONFIGFILE"
 
-pkill -9 gamescope || true
-pkill -9 steam || true
-
 ulimit -n 524288
 
-gamescope \${GAMESCOPE_FLAGS} --force-composition --force-grab-cursor --generate-drm-mode fixed --hdr-enabled --mangoapp -b -e -f -- env DXVK_HDR=1 steam -steamos3 -gamepadui -system-composer -cef-force-gpu
+__NV_PRIME_RENDER_OFFLOAD=1 gamescope \${GAMESCOPE_FLAGS} --adaptive-sync --force-composition --force-grab-cursor --generate-drm-mode fixed --hdr-enabled --immediate-flips --mangoapp -b -e -f -- env DXVK_HDR=1 steam -steamos3 -gamepadui -system-composer -cef-force-gpu
 DECKSESSION
 chmod 0755 /usr/bin/gamescope-session
 cat >/usr/bin/return-gamescope-session <<'RUNGAMINGSESSION'
@@ -13215,6 +13212,17 @@ cat >/usr/share/polkit-1/actions/org.valve.steamos.policy <<'POLKIT'
       <allow_active>yes</allow_active>
     </defaults>
     <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-select-branch</annotate>
+  </action>
+
+  <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-update">
+    <description>Run the steamos update helper</description>
+    <icon_name>package-x-generic</icon_name> 
+    <defaults>
+      <allow_any>yes</allow_any>
+      <allow_inactive>yes</allow_inactive>
+      <allow_active>yes</allow_active>
+    </defaults>
+    <annotate key="org.freedesktop.policykit.exec.path">/usr/bin/steamos-polkit-helpers/steamos-update</annotate>
   </action>
 
   <action id="org.valve.policykit.steamos.pkexec.run-steamos-polkit-helpers-steamos-set-hostname">
@@ -13439,6 +13447,27 @@ fi
 echo "Usage: steamos-select-branch <-c|-l|rel|rc|beta|bc|main>" 1>&2
 SELECTBRANCHSCRIPT
 chmod 0755 /usr/bin/steamos-select-branch
+cat >/usr/bin/steamos-polkit-helpers/steamos-update <<'FAKESTEAMOSUPDATE'
+#!/bin/bash
+
+set -e
+
+if [[ \$EUID -ne 0 ]];
+then
+    exec pkexec --disable-internal-agent "\$0" "\$@"
+fi
+
+exit 7
+
+if [ "\$(pacman -Qu)" == "" ]; then exit 7; fi
+
+if pacman -Syu --noconfirm 2>&1 > /tmp/system_update.log; then
+    exit 8
+else
+    exit 1
+fi
+FAKESTEAMOSUPDATE
+chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-update
 cat >/usr/bin/steamos-polkit-helpers/steamos-set-hostname <<'SETHOSTNAME'
 #!/bin/bash
 
@@ -13540,12 +13569,6 @@ fi
 exec systemctl enable --now sshd
 ENABLESSHD
 chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-enable-sshd
-cat >/usr/bin/steamos-polkit-helpers/steamos-update <<'FAKESTEAMOSUPDATE'
-#!/bin/bash
-
-exit 7
-FAKESTEAMOSUPDATE
-chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-update
 cat >/usr/bin/steamos-polkit-helpers/jupiter-biosupdate <<'FAKEBIOSUPDATE'
 #!/bin/bash
 
@@ -16608,7 +16631,7 @@ REINSTALLBOOTLOADER
 	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 pacman -Syu --noconfirm --needed git fakeroot
-git clone https://aur.archlinux.org/shim-signed.git /tmp/shim-signed
+git clone --depth=1 -b shim-signed https://github.com/archlinux/aur.git /tmp/shim-signed
 chown -R 'nobody':'nobody' /tmp/shim-signed
 sudo -u nobody bin/bash -c "cd /tmp/shim-signed && makepkg -s"
 pacman -U --noconfirm /tmp/shim-signed/*.pkg.tar.*
