@@ -190,8 +190,8 @@ case "${distribution}" in
 		default_version="Rolling"
 		;;
 	'OpenSUSE')
-		available_versions=( "Leap/15.6" "Slowroll" "Tumbleweed" )
-		available_versions_longname=( "Leap/15.6" "Slowroll" "Tumbleweed" )
+		available_versions=( "Leap/15.6" "Tumbleweed" )
+		available_versions_longname=( "Leap/15.6" "Tumbleweed" )
 		default_version="Leap/15.6"
 		;;
 	'Parrot')
@@ -5474,18 +5474,17 @@ done
 unzip /isomount/data/recovery.zip -d /root
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
+sleep 5
 for (( i=1; i<=12; i++ )); do
 	case \${i} in
 		1)
 			continue
 		;;
 		2)
-			dd if="\${isomount}"p4 of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress
-			continue
+			part_source=4
 		;;
 		5)
-			dd if="\${isomount}"p3 of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress
-			continue
+			part_source=3
 		;;
 		7)
 			mount /isomount/data/brunch/rootc.img /isomount/tmp
@@ -5515,7 +5514,7 @@ for (( i=1; i<=12; i++ )); do
 			part_source="\${i}"
 		;;
 	esac
-	dd if="\${isomount}"p"\${part_source}" of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress
+	dd if="\${isomount}"p"\${part_source}" of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress || { echo -e "Failed to copy partition \${part_source}."; losetup -d "\${isomount}"; exit 1; }
 done
 losetup -d "\${isomount}"
 rm -rf /isomount/data/*
@@ -5882,6 +5881,7 @@ done
 unzip /isomount/data/recovery.zip -d /root
 rm -f /isomount/data/recovery.zip
 isomount="\$(losetup --show -fP \$(ls /root/chromeos_*.bin))"
+sleep 5
 for (( i=1; i<=12; i++ )); do
 	(echo "x"; echo "u"; echo "\${i}"; echo "\$(blkid -o value -s PARTUUID "\${isomount}"p"\${i}")"; echo "r"; sleep 5; echo "w") | fdisk "${destination_device}" || { echo -e "Partition UUID update failed. Exiting.\n"; exit 1; }
 	case \${i} in
@@ -5917,7 +5917,7 @@ for (( i=1; i<=12; i++ )); do
 			part_source="\${i}"
 		;;
 	esac
-	dd if="\${isomount}"p"\${part_source}" of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress
+	dd if="\${isomount}"p"\${part_source}" of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress || { echo -e "Failed to copy partition \${part_source}."; losetup -d "\${isomount}"; exit 1; }
 done
 printf '\000' | dd of="\${isomount}"p3 seek=\$((0x464 + 3)) conv=notrunc count=1 bs=1 status=none
 mount "\${isomount}"p3 /mnt
@@ -11078,272 +11078,6 @@ zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} sddm-branding-openSUSE patterns-kde-kde plasma5-session-wayland konsole webenginepart bluedevil5 plasma-nm5 kwalletmanager5 pam_kwallet dolphin discover discover-backend-packagekit plasma5-workspace-wallpapers plasma5-pa plasma5-addons breeze5-wallpapers xdg-desktop-portal-kde
-"
-	;;
-	'Xfce')
-	default_session="xfce"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce/Full')
-	default_session="xfce"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-xfce-xfce adwaita-xfce-icon-theme libxfce4ui-branding-openSUSE xfce4-settings-branding-openSUSE xfce4-power-manager-plugin xfce4-power-manager-branding-openSUSE xfce4-pulseaudio-plugin xfce4-terminal thunar NetworkManager-applet gnome-keyring gnome-keyring-pam blueman papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-esac
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-${install_desktop}
-mkdir -p /usr/share/glib-2.0/schemas
-cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.cinnamon.desktop.interface]
-gtk-theme="Adwaita"
-icon-theme="Papirus"
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-echo -e "Defaults secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"\nroot ALL=(ALL) ALL\n@includedir /etc/sudoers.d" > /etc/sudoers
-echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
-cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
-polkit.addAdminRule(function(action, subject) {
-    return ["unix-group:wheel"];
-});
-POLKIT
-cat >/etc/polkit-1/rules.d/50-org.freedesktop.NetworkManager.rules <<'NETWORKMANAGER'
-polkit.addRule(function(action, subject) {
-    if (action.id.indexOf("org.freedesktop.NetworkManager.") == 0 && subject.isInGroup("wheel")) {
-        return polkit.Result.YES;
-    }
-});
-NETWORKMANAGER
-cat >/etc/polkit-1/rules.d/51-blueman.rules <<'BLUEMAN'
-polkit.addRule(function(action, subject) {
-    if ((action.id == "org.blueman.network.setup" ||
-         action.id == "org.blueman.dhcp.client" ||
-         action.id == "org.blueman.rfkill.setstate" ||
-         action.id == "org.blueman.pppd.pppconnect") &&
-        subject.isInGroup("wheel")) {
-
-        return polkit.Result.YES;
-    }
-});
-BLUEMAN
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			sed -i 's@DISPLAYMANAGER_AUTOLOGIN=\"\"@DISPLAYMANAGER_AUTOLOGIN="${useraccount_name}"@g' /etc/sysconfig/displaymanager
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			sed -i 's@DISPLAYMANAGER_AUTOLOGIN=\"\"@DISPLAYMANAGER_AUTOLOGIN="${useraccount_name}"@g' /etc/sysconfig/displaymanager
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		mkdir -p /etc/lightdm/lightdm.conf.d
-		echo -e '[LightDM]\nlogind-check-graphical=true\n\n' > /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			sed -i 's@DISPLAYMANAGER_AUTOLOGIN=\"\"@DISPLAYMANAGER_AUTOLOGIN="${useraccount_name}"@g' /etc/sysconfig/displaymanager
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			echo -e '[Seat:*]\nautologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-initramfs_type="dracut"
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-		custom_packages="${custom_packages} libvulkan1-32bit libvulkan_intel-32bit libvulkan_radeon-32bit liberation-fonts"
-		if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-gl-G06-32bit"; fi
-		echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	fi
-	echo -e "#!/bin/bash\nset -e\nzypper --non-interactive install ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
-chroot_OpenSUSE-Slowroll()
-{
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@http://download.opensuse.org@${mirror_OpenSUSE}@g' /etc/zypp/repos.d/*.repo
-zypper --non-interactive refresh
-zypper --non-interactive install bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr glibc-gconv-modules-extra gzip lsof nano openssl sudo strace tar util-linux xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-zypper --root /mnt addrepo ${mirror_OpenSUSE}/$(echo ${opensuse_version} | tr A-Z a-z)/repo/oss/ repo-oss
-rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-62b07e22.asc
-zypper --root /mnt refresh
-zypper --root /mnt --non-interactive install patterns-openSUSE-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper openSUSE-repos-${opensuse_version}
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
-rpm --rebuilddb
-zypper --non-interactive update
-zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service NetworkManager.service
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-desktop_base="adobe-sourcecodepro-fonts alsa-utils alsa-firmware at-spi2-core avahi cantarell-fonts cups cups-filters dbus-1-x11 dejavu-fonts ffmpeg google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver Mesa-libva nss-mdns patterns-base-x11 pipewire pipewire-pulseaudio plymouth-branding-openSUSE plymouth-dracut sof-firmware system-config-printer udisks2 wallpaper-branding-openSUSE wireplumber xdg-user-dirs-gtk"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Budgie/Full')
-	default_session="budgie-desktop"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon/Full')
-	default_session="cinnamon"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman xdg-desktop-portal-gtk
-systemctl enable connman.service
-"
-	;;
-	'Enlightenment/Full')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman xdg-desktop-portal-gtk
-systemctl enable connman.service
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE i3 dmenu i3lock i3status rxvt-unicode NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="lxde"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="lxde"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt')
-	default_session="lxqt"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt/Full')
-	default_session="lxqt"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxqt-lxqt openbox qterminal pcmanfm-qt NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-mate-mate mate-panel-branding-openSUSE mate-themes mate-terminal mate-media mate-power-manager mate-menus caja NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-mate-mate mate-panel-branding-openSUSE mate-themes mate-terminal mate-media mate-power-manager mate-menus caja NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Plasma')
-	default_session="plasmawayland"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} sddm patterns-kde-kde konsole bluedevil6 plasma6-nm plasma6-pa kwalletmanager pam_kwallet dolphin discover discover-backend-packagekit kdeplasma6-addons plasma6-branding-openSUSE breeze6 breeze6-wallpapers plasma6-workspace-wallpapers xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasmawayland"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} sddm patterns-kde-kde konsole bluedevil6 plasma6-nm plasma6-pa kwalletmanager pam_kwallet dolphin discover discover-backend-packagekit kdeplasma6-addons plasma6-branding-openSUSE breeze6 breeze6-wallpapers plasma6-workspace-wallpapers xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
