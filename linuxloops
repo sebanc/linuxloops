@@ -692,7 +692,7 @@ case "${distribution}" in
 		mirrors_supported=( "Debian" "Proxmox" )
 		nvidia_supported="Yes"
 		proxmox_version="${version}"
-		surface_supported="Yes"
+		surface_supported="No"
 		;;
 	'Qubes')
 		available_environments=( "Full" )
@@ -5903,12 +5903,6 @@ for (( i=1; i<=12; i++ )); do
 			mkfs.fat -n 'EFI' "${partition_path}""\${i}"
 			mount "${partition_path}""\${i}" /isomount/efi
 			cp -r /isomount/tmp/* /isomount/efi/
-			if [ "${install_type}" == "image" ]; then
-				mkdir -p /mnt/etc/secureboot_key
-				sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /isomount/efi/syslinux/vmlinuz.A
-				openssl pkcs7 -print_certs -inform der -in /mnt/etc/secureboot_key/MOK.tmp -out /mnt/etc/secureboot_key/MOK.pem
-				openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
-			fi
 			umount /isomount/efi
 			umount /isomount/tmp
 			continue
@@ -5919,26 +5913,13 @@ for (( i=1; i<=12; i++ )); do
 	esac
 	dd if="\${isomount}"p"\${part_source}" of="${partition_path}""\${i}" bs=1M conv=notrunc status=progress || { echo -e "Failed to copy partition \${part_source}."; losetup -d "\${isomount}"; exit 1; }
 done
-printf '\000' | dd of="\${isomount}"p3 seek=\$((0x464 + 3)) conv=notrunc count=1 bs=1 status=none
-mount "\${isomount}"p3 /mnt
-mount --bind /proc /mnt/proc
-mount --make-slave /mnt/proc
-mount --bind /sys /mnt/sys
-mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
-chroot /mnt /bin/bash <<'GPT_PRIORITY'
-cgpt add -i 2 -S 0 -T 15 -P 15 "${destination_device}"
-cgpt add -i 4 -S 0 -T 15 -P 0 "${destination_device}"
-cgpt add -i 6 -S 0 -T 15 -P 0 "${destination_device}"
-GPT_PRIORITY
-umount /mnt/sys
-umount /mnt/proc
-umount /mnt/dev
-umount /mnt
 losetup -d "\${isomount}"
 rm -rf /isomount/data/*
 umount /isomount/data
+mount -o ro "${partition_path}"3 /isomount/roota
+LD_LIBRARY_PATH=/isomount/roota/lib64:/isomount/roota/usr/lib64 /isomount/roota/lib64/ld-linux-x86-64.so.2 /isomount/roota/usr/bin/cgpt add -i 2 -S 0 -T 15 -P 15 "${destination_device}"
+LD_LIBRARY_PATH=/isomount/roota/lib64:/isomount/roota/usr/lib64 /isomount/roota/lib64/ld-linux-x86-64.so.2 /isomount/roota/usr/bin/cgpt add -i 4 -S 0 -T 15 -P 0 "${destination_device}"
+LD_LIBRARY_PATH=/isomount/roota/lib64:/isomount/roota/usr/lib64 /isomount/roota/lib64/ld-linux-x86-64.so.2 /isomount/roota/usr/bin/cgpt add -i 6 -S 0 -T 15 -P 0 "${destination_device}"
 if [ "${install_type}" == "image" ]; then
 	mount "${partition_path}"7 /isomount/rootc
 	mkdir -p /isomount/rootc/initramfs
@@ -6135,8 +6116,12 @@ if [ "\$EUID" -eq 0 ] && [ "\${1}" == "." ] && [ "\${2}" == "/usr/bin/cros_insta
 	find ./lib/firmware | bsdcpio -o -H newc > /mnt/stateful_partition/rootc/firmwares.img
 	find ./lib/modules | bsdcpio -o -H newc > /mnt/stateful_partition/rootc/modules.img
 	if [ "\$(rootdev)" == "\$rootpath"3 ]; then
+		rm -f /mnt/stateful_partition/rootc/vmlinuz.B
+		futility vbutil_kernel --get-vmlinuz "\$rootpath"4 --vmlinuz-out /mnt/stateful_partition/rootc/vmlinuz.B
 		echo "bootimage=B" > /mnt/stateful_partition/rootc/bootimage.cfg
 	else
+		rm -f /mnt/stateful_partition/rootc/vmlinuz.A
+		futility vbutil_kernel --get-vmlinuz "\$rootpath"2 --vmlinuz-out /mnt/stateful_partition/rootc/vmlinuz.A
 		echo "bootimage=A" > /mnt/stateful_partition/rootc/bootimage.cfg
 	fi
 	umount /mnt/stateful_partition/rootc
@@ -6167,14 +6152,14 @@ exec switch_root /chromeosroot /sbin/init "\$@"
 INITSCRIPT
 	chmod 0755 ./init
 	find . | cpio -o -H newc > /isomount/rootc/initramfs.img
-	mount -o ro "${partition_path}"3 /isomount/roota
+	LD_LIBRARY_PATH=/isomount/roota/lib64:/isomount/roota/usr/lib64 /isomount/roota/lib64/ld-linux-x86-64.so.2 /isomount/roota/usr/bin/futility vbutil_kernel --get-vmlinuz "${partition_path}"2 --vmlinuz-out /isomount/rootc/vmlinuz.A
 	(cd /isomount/roota; find ./lib/firmware | cpio -o -H newc > /isomount/rootc/firmwares.img)
 	(cd /isomount/roota; find ./lib/modules | cpio -o -H newc > /isomount/rootc/modules.img)
-	umount /isomount/roota
 	cd ../../..
 	rm -r /isomount/rootc/initramfs
 	umount /isomount/rootc
 fi
+umount /isomount/roota
 INSTALL_SCRIPT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_script
 }
@@ -6308,16 +6293,16 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
@@ -12249,16 +12234,16 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 "
 	;;
 	'Plasma')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
-	default_session="plasmawayland"
+	default_session="plasma"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
@@ -12360,7 +12345,6 @@ esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 
-surface_remove="pve-kernel-*"
 initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
 	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
@@ -14750,7 +14734,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Proxmox" ] || [ "${distribution}" == "Ubuntu" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -17300,7 +17284,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 	search --no-floppy --set=root --file \${img_path}
 	loopback loop \${img_path}
 	if [ -f (loop,7)/bootimage.cfg ]; then source (loop,7)/bootimage.cfg; else bootimage=A; fi
-	linux (loop,12)/syslinux/vmlinuz.\${bootimage} img_uuid=\${img_uuid} img_path=\${img_path} bootimage=\${bootimage} loop.max_part=16 ro quiet splash boot=local noresume noswap loglevel=7 console= cros_efi kvm-intel.vmentry_l1d_flush=always loadpin.enabled=0 loadpin.enforce=0 rootfstype=ramfs ${dev_mode}
+	linux (loop,7)/vmlinuz.\${bootimage} img_uuid=\${img_uuid} img_path=\${img_path} bootimage=\${bootimage} loop.max_part=16 ro quiet splash boot=local noresume noswap loglevel=7 console= cros_efi kvm-intel.vmentry_l1d_flush=always loadpin.enabled=0 loadpin.enforce=0 rootfstype=ramfs ${dev_mode}
 	initrd (loop,7)/initramfs.img (loop,7)/firmwares.img (loop,7)/modules.img
 }
 "

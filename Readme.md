@@ -81,8 +81,8 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |BlissOS         |15<br>16                                                      |                       |                                     |                                 |                            |
 |Brunch          |Stable<br>Unstable                                            |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
 |CachyOS         |x86-64<br>x86-64-v3<br>x86-64-v4                              |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
-|ChromeOS-Flex   |Stable                                                        |✓                      |                                     |                                 |[notes][ChromeOS-Flex-notes]|
-|Debian          |Trixie<br>Testing<br>Unstable                               |✓                      |✓                                    |✓                                |                            |
+|ChromeOS-Flex   |Stable                                                        |not for disk images    |                                     |                                 |[notes][ChromeOS-Flex-notes]|
+|Debian          |Trixie<br>Testing<br>Unstable                                 |✓                      |✓                                    |✓                                |                            |
 |Devuan          |Daedalus<br>Testing                                           |✓                      |✓                                    |                                 |                            |
 |Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
 |Fedora          |42                                                            |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
@@ -103,7 +103,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
 |PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
-|Proxmox         |VE9                                                           |✓                      |✓                                    |✓                                |                            |
+|Proxmox         |VE9                                                           |✓                      |✓                                    |                                 |                            |
 |Qubes           |4.2.4                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
 |RockyLinux      |9                                                             |✓                      |                                     |                                 |                            |
 |SteamOS         |Main<br>Staging                                               |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
