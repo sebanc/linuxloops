@@ -89,10 +89,10 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Fedora-Atomic   |42                                                            |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
 |FoxFlake        |Stable<br>Unstable                                            |✓                      |✓                                    |                                 |[notes][FoxFlake-notes]     |
 |Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
-|GLF-OS          |Stable<br>Rolling                                             |✓                      |✓                                    |                                 |                            |
+|GLF-OS          |Omnislash<br>Testing                                          |✓                      |✓                                    |                                 |                            |
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
 |KDE             |Rolling                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][KDE-notes]          |
-|Linuxmint       |Xia                                                           |✓                      |✓                                    |✓                                |                            |
+|Linuxmint       |Zara                                                          |✓                      |✓                                    |✓                                |                            |
 |LMDE            |Faye                                                          |✓                      |✓                                    |✓                                |                            |
 |Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |

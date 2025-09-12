@@ -140,9 +140,9 @@ case "${distribution}" in
 		default_version="23/Openrc"
 		;;
 	'GLF-OS')
-		available_versions=( "Stable" "Rolling" )
+		available_versions=( "Omnislash" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Stable"
+		default_version="Omnislash"
 		;;
 	'Kali')
 		available_versions=( "Rolling" )
@@ -155,9 +155,9 @@ case "${distribution}" in
 		default_version="Rolling"
 		;;
 	'Linuxmint')
-		available_versions=( "Xia" )
+		available_versions=( "Zara" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Xia"
+		default_version="Zara"
 		;;
 	'LMDE')
 		available_versions=( "Faye" )
@@ -483,9 +483,13 @@ case "${distribution}" in
 		bootstrap="lxc archlinux current default"
 		btrfs_supported="Yes"
 		chroot_function="${distribution}"
-		glfos_version="${version}"
+		if [ "${version}" == "Omnislash" ]; then
+			glfos_version="Main"
+		else
+			glfos_version="${version}"
+		fi
 		mirrors_supported=()
-		if [ "${version}" == "Stable" ]; then
+		if [ "${version}" == "Omnislash" ]; then
 			nixos_version="25.05"
 		else
 			nixos_version="Unstable"
@@ -7970,11 +7974,11 @@ curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 -
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
-sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
-sudo \$(command -v nix-channel) --update
-sudo \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd
 NIXOSINSTALL
 NIXOS_PREPARE_CHROOT
@@ -8465,11 +8469,11 @@ curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 -
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
-sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
-sudo \$(command -v nix-channel) --update
-sudo \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd
 /tmp/linuxloops/install_flatpak
 NIXOSINSTALL
@@ -10377,10 +10381,10 @@ curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 -
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
-sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
-sudo \$(command -v nix-channel) --update
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
 /tmp/linuxloops/install_channel
 /tmp/linuxloops/install_dmconfig
@@ -10578,10 +10582,10 @@ curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 -
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
 nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
-sudo \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
-sudo \$(command -v nix-channel) --update
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
+sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
 /tmp/linuxloops/install_channel
 /tmp/linuxloops/install_dmconfig
@@ -11854,15 +11858,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-gnome
 	'Hyprland')
 	default_session="pika-hyprland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-hyprland-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-hyprland-desktop gdm3 network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Hyprland/Full')
 	default_session="pika-hyprland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y gdm3 kitty
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-hyprland-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-hyprland-desktop gdm3 network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
 "
 	;;
 	'Plasma')
@@ -15894,9 +15897,9 @@ ${foxflake_nvidia}
 }
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix -o /mnt/etc/nixos/flake.nix
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/flake.nix
 	mkdir /mnt/etc/nixos/customConfig
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Gaming-Linux-FR/GLF-OS/raw/refs/heads/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix -o /mnt/etc/nixos/customConfig/default.nix
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/customConfig/default.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 { pkgs, lib, ... }:
 
