@@ -2444,7 +2444,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -2775,7 +2775,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3105,7 +3105,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3413,7 +3413,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -3720,7 +3720,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4021,7 +4021,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4321,7 +4321,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -4629,7 +4629,7 @@ sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; for i in https://ftp.sh.cvut.cz/artix-linux https://ftp.crifo.org/artix/repos; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/world/os/x86_64/world.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	sed -i "s@#Server = https://ftp.sh.cvut.cz/artix-linux@Server = https://ftp.sh.cvut.cz/artix-linux@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
@@ -9292,7 +9292,7 @@ systemctl enable sddm.service
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt6 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -9564,7 +9564,7 @@ systemctl enable sddm.service
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt6 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -9836,7 +9836,7 @@ systemctl enable sddm.service
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt5 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt6 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
