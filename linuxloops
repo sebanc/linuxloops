@@ -6193,21 +6193,21 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-Types: deb
-URIs: ${mirror_Debian}
-Suites: http://deb.debian.org/debian-security
+Types: deb deb-src
+URIs: https://security.debian.org/debian-security
+Suites: $(echo ${debian_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
@@ -6467,15 +6467,15 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-Types: deb
-URIs: ${mirror_Debian}
-Suites: http://deb.debian.org/debian-security
+Types: deb deb-src
+URIs: https://security.debian.org/debian-security
+Suites: $(echo ${debian_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
@@ -6735,7 +6735,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
@@ -6997,19 +6997,19 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/devuan.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Devuan}/merged
 Suites: $(echo ${devuan_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Devuan}/merged
 Suites: $(echo ${devuan_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: http://deb.devuan.org/merged
 Suites: $(echo ${devuan_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
@@ -7260,13 +7260,13 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/devuan.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Devuan}/merged
 Suites: $(echo ${devuan_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: http://deb.devuan.org/merged
 Suites: $(echo ${devuan_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
@@ -7519,19 +7519,19 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y software-properties-common
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: http://security.ubuntu.com/ubuntu
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
 Components: main restricted universe multiverse
@@ -8582,7 +8582,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/kali.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Kali}
 Suites: kali-$(echo ${kali_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
@@ -10034,21 +10034,21 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-Types: deb
-URIs: ${mirror_Debian}
-Suites: http://deb.debian.org/debian-security
+Types: deb deb-src
+URIs: https://security.debian.org/debian-security
+Suites: $(echo ${debian_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
@@ -10320,19 +10320,19 @@ DISTRIB_DESCRIPTION="KDE neon ${neon_version}"
 LSB_RELEASE
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: http://security.ubuntu.com/ubuntu
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
 Components: main restricted universe multiverse
@@ -12062,7 +12062,7 @@ SYSTEM_SOURCES
 cat >/etc/apt/sources.list.d/pop-os-apps.sources <<'POP_OS_APPS_SOURCES'
 X-Repolib-Name: Pop_OS Applications
 Enabled: yes
-Types: deb
+Types: deb deb-src
 URIs: http://apt.pop-os.org/proprietary
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
 Components: main
@@ -12190,26 +12190,26 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-Types: deb
-URIs: ${mirror_Debian}
-Suites: http://deb.debian.org/debian-security
+Types: deb deb-src
+URIs: https://security.debian.org/debian-security
+Suites: $(echo ${debian_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 cat >/etc/apt/sources.list.d/pve-enterprise.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: http://download.proxmox.com/debian/pve
 Suites: trixie
 Components: pve-no-subscription
@@ -12228,7 +12228,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo 'deb http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A-Z a-z) pve-no-subscription' > /etc/apt/sources.list.d/pve-enterprise.list
 cat >/etc/apt/sources.list.d/pve-enterprise.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: http://download.proxmox.com/debian/pve
 Suites: trixie
 Components: pve-no-subscription
@@ -13566,19 +13566,19 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: http://security.ubuntu.com/ubuntu
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
 Components: main restricted universe multiverse
@@ -13849,19 +13849,19 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: ${mirror_Ubuntu}
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-Types: deb
+Types: deb deb-src
 URIs: http://security.ubuntu.com/ubuntu
 Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
 Components: main restricted universe multiverse
