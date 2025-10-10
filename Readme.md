@@ -73,7 +73,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 
 |**Distribution**|**Versions**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
 |----------------|:------------------------------------------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
-|AlmaLinux       |9                                                             |✓                      |                                     |                                 |                            |
+|AlmaLinux       |10                                                            |✓                      |                                     |                                 |                            |
 |Arch            |Stable<br>Testing                                             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
 |Artix           |Openrc<br>Runit<br>S6<br>Dinit<br>(Stable<br>or<br>Testing)   |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
 |Bazzite         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Bazzite-notes]      |
@@ -99,16 +99,16 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Neon            |User<br>Testing                                               |✓                      |✓                                    |✓                                |                            |
 |NixOS           |25.05<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
 |Nobara          |Rolling                                                       |✓                      |✓                                    |                                 |                            |
-|OpenSUSE        |Leap/15.6<br>Tumbleweed                                       |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
+|OpenSUSE        |Leap/16.0<br>Tumbleweed                                       |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
 |Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
 |PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
 |Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
 |Proxmox         |VE9                                                           |✓                      |✓                                    |                                 |                            |
 |Qubes           |4.2.4                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
-|RockyLinux      |9                                                             |✓                      |                                     |                                 |                            |
+|RockyLinux      |10                                                            |✓                      |                                     |                                 |                            |
 |SteamOS         |Main<br>Staging                                               |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
 |Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |
-|Ubuntu          |24.04<br>25.04                                                |✓                      |✓                                    |✓                                |                            |
+|Ubuntu          |24.04<br>25.10                                                |✓                      |✓                                    |✓                                |                            |
 |Void            |Current                                                       |                       |✓                                    |                                 |                            |
 |Zorin           |17                                                            |✓                      |✓                                    |✓                                |                            |
 

@@ -60,9 +60,9 @@ distribution_parameters()
 {
 case "${distribution}" in
 	'AlmaLinux')
-		available_versions=( "9" )
+		available_versions=( "10" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="9"
+		default_version="10"
 		;;
 	'Arch')
 		available_versions=( "Stable" "Testing" )
@@ -190,9 +190,9 @@ case "${distribution}" in
 		default_version="Rolling"
 		;;
 	'OpenSUSE')
-		available_versions=( "Leap/15.6" "Tumbleweed" )
-		available_versions_longname=( "Leap/15.6" "Tumbleweed" )
-		default_version="Leap/15.6"
+		available_versions=( "Leap/16.0" "Tumbleweed" )
+		available_versions_longname=( "Leap/16.0" "Tumbleweed" )
+		default_version="Leap/16.0"
 		;;
 	'Parrot')
 		available_versions=( "Lory" )
@@ -220,9 +220,9 @@ case "${distribution}" in
 		default_version="4.2.4"
 		;;
 	'RockyLinux')
-		available_versions=( "9" )
+		available_versions=( "10" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="9"
+		default_version="10"
 		;;
 	'SteamOS')
 		available_versions=( "Main" "Staging" )
@@ -235,8 +235,8 @@ case "${distribution}" in
 		default_version="Stable"
 		;;
 	'Ubuntu')
-		available_versions=( "24.04" "25.04" )
-		available_versions_longname=( "24.04_(LTS)" "25.04_(Interim)" )
+		available_versions=( "24.04" "25.10" )
+		available_versions_longname=( "24.04_(LTS)" "25.10_(Interim)" )
 		default_version="24.04"
 		;;
 	'Void')
@@ -761,8 +761,8 @@ case "${distribution}" in
 			'24.04')
 				ubuntu_version="Noble"
 				;;
-			'25.04')
-				ubuntu_version="Plucky"
+			'25.10')
+				ubuntu_version="Questing"
 				;;
 		esac
 		;;
@@ -1799,7 +1799,7 @@ set -e
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
 dnf --enablerepo=crb install -y almalinux-sb-certs
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -1883,7 +1883,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -2165,7 +2165,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -2462,7 +2462,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
 rc-update add NetworkManager default
@@ -2793,7 +2793,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
 rc-update add NetworkManager default
@@ -3123,7 +3123,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -3431,7 +3431,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -3738,7 +3738,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -4039,7 +4039,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -4339,7 +4339,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -4647,7 +4647,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n[extra-testing]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -5587,7 +5587,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-cachyos linux-cachyos-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux-cachyos linux-cachyos-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -6191,21 +6191,31 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-deb http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
+Types: deb
+URIs: ${mirror_Debian}
+Suites: http://deb.debian.org/debian-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -6455,18 +6465,25 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-deb http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
+Types: deb
+URIs: ${mirror_Debian}
+Suites: http://deb.debian.org/debian-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -6716,15 +6733,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -6974,17 +6995,31 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-deb http://deb.devuan.org/merged $(echo ${devuan_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-#deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/devuan.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Devuan}/merged
+Suites: $(echo ${devuan_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
+
+Types: deb
+URIs: ${mirror_Devuan}/merged
+Suites: $(echo ${devuan_version} | tr A-Z a-z)-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
+
+Types: deb
+URIs: http://deb.devuan.org/merged
+Suites: $(echo ${devuan_version} | tr A-Z a-z)-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
 SOURCESLIST
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -7223,14 +7258,25 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Devuan}/merged $(echo ${devuan_version} | tr A-Z a-z) main contrib non-free non-free-firmware
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/devuan.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Devuan}/merged
+Suites: $(echo ${devuan_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
+
+Types: deb
+URIs: http://deb.devuan.org/merged
+Suites: $(echo ${devuan_version} | tr A-Z a-z)-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
 SOURCESLIST
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -7471,15 +7517,25 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y software-properties-common
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
-# deb-src http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
+Types: deb
+URIs: http://security.ubuntu.com/ubuntu
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 SOURCESLIST
 echo -e 'Package: *\nPin: release o=LP-PPA-elementary-os-*\nPin-Priority: 1000' > /etc/apt/preferences.d/elementary.pref
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -7491,13 +7547,13 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
 case "${environment}" in
 	'Full')
-	default_session="pantheon"
+	default_session="pantheon-wayland"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y pantheon pantheon-shell elementary-desktop elementary-artwork
 "
@@ -7599,7 +7655,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
 dnf upgrade --refresh -y
 CHROOT_INIT
@@ -8064,7 +8120,7 @@ if [ "${environment}" == "None" ]; then
 else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops; fi
-	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/docutils -truetype' > /etc/portage/package.use/dep_cycle_fix
+	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
@@ -8286,7 +8342,7 @@ else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops; fi
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
-	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/docutils -truetype' > /etc/portage/package.use/dep_cycle_fix
+	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
@@ -8524,12 +8580,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-echo 'deb ${mirror_Kali} kali-$(echo ${kali_version} | tr A-Z a-z) main contrib non-free non-free-firmware' > /etc/apt/sources.list
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/kali.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Kali}
+Suites: kali-$(echo ${kali_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/kali-archive-keyring.gpg
+SOURCESLIST
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release kali-themes sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap kali-linux-core
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release kali-themes sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap kali-linux-core
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -8767,7 +8830,7 @@ pacman-key --init
 pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@#DisableSandbox@#DisableSandbox\nDisableDownloadTimeout@g' /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -8910,7 +8973,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -9062,7 +9125,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed bind9-host dns-root-data amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -9181,7 +9244,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9452,7 +9515,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9723,7 +9786,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9969,15 +10032,25 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-deb http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
+Types: deb
+URIs: ${mirror_Debian}
+Suites: http://deb.debian.org/debian-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 cat >/etc/apt/sources.list.d/mx.list <<'SOURCES'
 deb [signed-by=/tmp/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg] ${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) main non-free
@@ -9998,7 +10071,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -10245,15 +10318,25 @@ DISTRIB_RELEASE=${ubuntu_release}
 DISTRIB_CODENAME=$(echo ${ubuntu_version} | tr A-Z a-z)
 DISTRIB_DESCRIPTION="KDE neon ${neon_version}"
 LSB_RELEASE
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
-# deb-src http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
+Types: deb
+URIs: http://security.ubuntu.com/ubuntu
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 SOURCESLIST
 echo 'deb [signed-by=/tmp/neon-archive-keyring.gpg] ${mirror_Neon}/$(echo ${neon_version} | tr A-Z a-z) $(echo ${ubuntu_version} | tr A-Z a-z) main' > /etc/apt/sources.list.d/neon.list
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -10269,7 +10352,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -10478,7 +10561,7 @@ xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 xdg.portal.xdgOpenUsePortal = true;"
 	;;
 	'Pantheon/Full')
-	default_session="pantheon"
+	default_session="pantheon-wayland"
 	nixos_desktop="
 ${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
@@ -10679,7 +10762,7 @@ xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
 xdg.portal.xdgOpenUsePortal = true;"
 	;;
 	'Pantheon/Full')
-	default_session="pantheon"
+	default_session="pantheon-wayland"
 	nixos_desktop="
 ${autologin_commands}
 services.displayManager.defaultSession = \"${default_session}\";
@@ -10795,7 +10878,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/nobara-pikaos-additional.repo
 dnf install -y rpmfusion-free-release rpmfusion-nonfree-release
 dnf upgrade --refresh -y
@@ -10917,7 +11000,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_OpenSUSE-Leap-15.6()
+chroot_OpenSUSE-Leap-16.0()
 {
 if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
@@ -10935,7 +11018,7 @@ set -e
 zypper --root /mnt addrepo ${mirror_OpenSUSE}/distribution/$(echo ${opensuse_version} | tr A-Z a-z)/repo/oss/ repo-oss
 rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-62b07e22.asc
 zypper --root /mnt refresh
-zypper --root /mnt --non-interactive install patterns-openSUSE-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper openSUSE-repos-Leap
+zypper --root /mnt --non-interactive install patterns-base-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper openSUSE-repos-Leap
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -10945,7 +11028,7 @@ set -e
 sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
 rpm --rebuilddb
 zypper --non-interactive update
-zypper --non-interactive install kernel-default-optional kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
+zypper --non-interactive install kernel-default-optional kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
 systemctl disable wicked.service
 systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
@@ -11202,7 +11285,7 @@ set -e
 zypper --root /mnt addrepo ${mirror_OpenSUSE}/$(echo ${opensuse_version} | tr A-Z a-z)/repo/oss/ repo-oss
 rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-62b07e22.asc
 zypper --root /mnt refresh
-zypper --root /mnt --non-interactive install patterns-openSUSE-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper openSUSE-repos-${opensuse_version}
+zypper --root /mnt --non-interactive install patterns-base-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper openSUSE-repos-${opensuse_version}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -11212,7 +11295,7 @@ set -e
 sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
 rpm --rebuilddb
 zypper --non-interactive update
-zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools usb_modeswitch upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
+zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -11562,7 +11645,7 @@ deb https://deb.parrot.sh/direct/parrot $(echo ${parrot_version} | tr A-Z a-z)-s
 SOURCESLIST
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -11818,7 +11901,7 @@ BOOSTER
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 dpkg --add-architecture i386
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y kernel-pika initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y kernel-pika initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 # PikaOS packages have missing dependencies on desktop-file-utils, libdrm, glib and mesa.
 DEBIAN_FRONTEND=noninteractive apt install --purge -y desktop-file-utils libdrm2-amdgpu libdrm-amdgpu-common libglib2.0-bin mesa-hybrid
 CHROOT_INIT
@@ -11964,7 +12047,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-echo '' > /etc/apt/sources.list
+rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/system.sources <<'SYSTEM_SOURCES'
 X-Repolib-Name: Pop_OS System Sources
 Enabled: yes
@@ -12019,7 +12102,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 echo 'autoinstall_all_kernels="y"' >> /etc/dkms/framework.conf
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -12105,15 +12188,25 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z) main contrib non-free non-free-firmware
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-deb ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-# deb-src ${mirror_Debian} $(echo ${debian_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
+Types: deb
+URIs: ${mirror_Debian}
+Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
-deb http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-# deb-src http://deb.debian.org/debian-security $(echo ${debian_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
+Types: deb
+URIs: ${mirror_Debian}
+Suites: http://deb.debian.org/debian-security
+Components: main contrib non-free non-free-firmware
+Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 cat >/etc/apt/sources.list.d/pve-enterprise.sources <<'SOURCESLIST'
 Types: deb
@@ -12143,7 +12236,7 @@ Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 SOURCESLIST
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y initramfs-tools dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+DEBIAN_FRONTEND=noninteractive apt install --purge -y initramfs-tools dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -12518,7 +12611,7 @@ set -e
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
 dnf --enablerepo=crb install -y rocky-sb-certs
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -12717,7 +12810,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools usb_modeswitch upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -13471,21 +13564,31 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
-# deb-src http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
+Types: deb
+URIs: http://security.ubuntu.com/ubuntu
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 SOURCESLIST
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -13721,7 +13824,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_Ubuntu-25.04()
+chroot_Ubuntu-25.10()
 {
 if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
@@ -13744,21 +13847,31 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCESLIST'
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z) main restricted universe multiverse
+rm /etc/apt/sources.list
+cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
-# deb-src ${mirror_Ubuntu} $(echo ${ubuntu_version} | tr A-Z a-z)-updates main restricted universe multiverse
+Types: deb
+URIs: ${mirror_Ubuntu}
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
-deb http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
-# deb-src http://security.ubuntu.com/ubuntu $(echo ${ubuntu_version} | tr A-Z a-z)-security main restricted universe multiverse
+Types: deb
+URIs: http://security.ubuntu.com/ubuntu
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-security
+Components: main restricted universe multiverse
+Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 SOURCESLIST
 apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -14019,7 +14132,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 set -e
 echo 'repository=${mirror_Void}/$(echo ${void_version} | tr A-Z a-z)' > /usr/share/xbps.d/00-repository-main.conf
 xbps-install -Syu
-xbps-install -y linux linux-headers dracut dkms linux-firmware wireless-regdb bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools usb-modeswitch upower efibootmgr grub-x86_64-efi os-prober sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
+xbps-install -y linux linux-headers dracut dkms linux-firmware wireless-regdb bash sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patch net-tools upower efibootmgr grub-x86_64-efi os-prober sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
 ln -s /etc/sv/bluetoothd /etc/sv/dbus /etc/sv/dhcpcd /etc/sv/elogind /etc/sv/NetworkManager /etc/sv/polkitd /etc/sv/uuidd /etc/runit/runsvdir/default/
 cat >>/etc/rc.conf <<SETTINGS
 KEYMAP="${keymap}"
@@ -14258,7 +14371,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools usb-modeswitch upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
