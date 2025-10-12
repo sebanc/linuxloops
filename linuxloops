@@ -612,7 +612,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'OpenSUSE')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
 		bootloader_name="shim.efi"
 		btrfs_supported="Yes"
@@ -11092,12 +11092,6 @@ sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/
 zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE i3 dmenu i3lock i3status rxvt-unicode NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
 	'Lxde')
 	default_session="lxde"
 	install_desktop="
@@ -11356,12 +11350,6 @@ zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE i3 dmenu i3lock i3status rxvt-unicode NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
 "
 	;;
 	'Lxde')
@@ -12047,7 +12035,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-rm /etc/apt/sources.list
+echo '' > /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/system.sources <<'SYSTEM_SOURCES'
 X-Repolib-Name: Pop_OS System Sources
 Enabled: yes
