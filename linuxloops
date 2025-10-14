@@ -8120,7 +8120,7 @@ if [ "${environment}" == "None" ]; then
 else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops; fi
-	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype' > /etc/portage/package.use/dep_cycle_fix
+	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype\ndev-libs/glib -sysprof' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
@@ -8342,7 +8342,7 @@ else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops; fi
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
-	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype' > /etc/portage/package.use/dep_cycle_fix
+	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype\ndev-libs/glib -sysprof' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
