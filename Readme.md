@@ -93,7 +93,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
 |KDE             |Rolling                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][KDE-notes]          |
 |Linuxmint       |Zara                                                          |✓                      |✓                                    |✓                                |                            |
-|LMDE            |Faye                                                          |✓                      |✓                                    |✓                                |                            |
+|LMDE            |Gigi                                                          |✓                      |✓                                    |✓                                |                            |
 |Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
 |MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
 |Neon            |User<br>Testing                                               |✓                      |✓                                    |✓                                |                            |
@@ -110,7 +110,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |
 |Ubuntu          |24.04<br>25.10                                                |✓                      |✓                                    |✓                                |                            |
 |Void            |Current                                                       |                       |✓                                    |                                 |                            |
-|Zorin           |17                                                            |✓                      |✓                                    |✓                                |                            |
+|Zorin           |18                                                            |✓                      |✓                                    |✓                                |                            |
 
 
 ## About this project

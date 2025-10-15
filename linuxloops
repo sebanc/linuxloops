@@ -160,9 +160,9 @@ case "${distribution}" in
 		default_version="Zara"
 		;;
 	'LMDE')
-		available_versions=( "Faye" )
+		available_versions=( "Gigi" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Faye"
+		default_version="Gigi"
 		;;
 	'Manjaro')
 		available_versions=( "Stable" "Testing" "Unstable" )
@@ -245,9 +245,9 @@ case "${distribution}" in
 		default_version="Current"
 		;;
 	'Zorin')
-		available_versions=( "17" )
+		available_versions=( "18" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="17"
+		default_version="18"
 		;;
 	*)
 		echo "Distribution ${distribution} is not supported."
@@ -538,9 +538,9 @@ case "${distribution}" in
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc debian bookworm default"
+		bootstrap="lxc debian trixie default"
 		btrfs_supported="Yes"
-		debian_version="Bookworm"
+		debian_version="Trixie"
 		grub_disable_recordfail="Yes"
 		linuxmint_version="${version}"
 		lmde_version="${version}"
@@ -781,14 +781,14 @@ case "${distribution}" in
 		available_environments=( "None" "Core" "Core/Windows_apps_support" "Education" "Education/Windows_apps_support" )
 		bootloader_id="ubuntu"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc ubuntu jammy default"
+		bootstrap="lxc ubuntu noble default"
 		btrfs_supported="Yes"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Ubuntu" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
-		ubuntu_version="Jammy"
+		ubuntu_version="Noble"
 		zorin_version="${version}"
 		;;
 	*)
@@ -8102,23 +8102,24 @@ getuto
 rm /tmp/linuxloops/install_secureboot
 mkdir /etc/portage/package.license
 echo -e "*/* *" >> /etc/portage/package.license/custom
+echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
+echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
+emerge media-libs/harfbuzz
 if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
 	echo 'ABI_X86="32 64"' >> /etc/portage/make.conf
 else
 	echo 'ABI_X86="64"' >> /etc/portage/make.conf
 fi
-echo -e "\nMAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
-echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
-echo -e "\nGRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
+echo -e "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
 echo -e "SECUREBOOT_SIGN_KEY=\"/etc/secureboot_key/MOK.key\"" >> /etc/portage/make.conf
 echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/make.conf
-echo -e "\nVIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
+echo -e "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
 	echo -e "USE=\"bluetooth cryptsetup dbus dracut elogind policykit mount pam -systemd truetype X\"" >> /etc/portage/make.conf
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops; fi
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype\ndev-libs/glib -sysprof' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
@@ -8322,24 +8323,25 @@ getuto
 rm /tmp/linuxloops/install_secureboot
 mkdir /etc/portage/package.license
 echo -e "*/* *" >> /etc/portage/package.license/custom
+echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
+echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
+emerge media-libs/harfbuzz
 if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
 	echo 'ABI_X86="32 64"' >> /etc/portage/make.conf
 else
 	echo 'ABI_X86="64"' >> /etc/portage/make.conf
 fi
-echo -e "\nMAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
-echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
-echo -e "\nGRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
+echo -e "GRUB_PLATFORMS=\"efi-64\"" >> /etc/portage/make.conf
 echo -e "SECUREBOOT_SIGN_KEY=\"/etc/secureboot_key/MOK.key\"" >> /etc/portage/make.conf
 echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/make.conf
-echo -e "\nVIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
+echo -e "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
 	echo -e "USE=\"bluetooth cryptsetup dbus dracut -elogind policykit mount pam systemd truetype X\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops; fi
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype\ndev-libs/glib -sysprof' > /etc/portage/package.use/dep_cycle_fix
@@ -14836,7 +14838,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -14850,7 +14852,7 @@ dkms add -m v4l2loopback -v 0.15.1
 dkms install -m v4l2loopback -v 0.15.1 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
-elif [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Zorin" ]; then
+elif [ "${distribution}" == "Pop" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -14910,7 +14912,7 @@ elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [
 set -e
 DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
-elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ]; then
+elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -15029,12 +15031,6 @@ elif [ "${distribution}" == "Void" ]; then
 #!/bin/bash
 set -e
 xbps-install -y nvidia nvidia-vaapi-driver
-INSTALLNVIDIA
-elif [ "${distribution}" == "Zorin" ]; then
-	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1)
 INSTALLNVIDIA
 fi
 if [ -f "${bootstrapdir}"/tmp/linuxloops/install_nvidia ]; then
@@ -16285,7 +16281,7 @@ elif [ "${initramfs_type}" == "dracut" ] || [ "${distribution}" == "Bazzite" ] |
 fi
 if [ ! -z "${swap_size}" ] && [ "${swap_size}" -ne 0 ]; then
 	if [ "${root_fstype}" == "btrfs" ]; then
-		if [ "${distribution}" != "Pop" ] && [ "${distribution}" != "Zorin" ]; then
+		if [ "${distribution}" != "Pop" ]; then
 			if [ "${root_encryption}" == "Yes" ]; then
 				if [ ! -z "\${cmdline}" ]; then cmdline="\${cmdline} resume=UUID=\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value ${root_partition})) resume_offset=\$(btrfs inspect-internal map-swapfile -r /var/swap/swapfile)"; else cmdline="resume=UUID=\$(blkid -s UUID -o value /dev/mapper/luks-\$(blkid -s UUID -o value ${root_partition})) resume_offset=\$(btrfs inspect-internal map-swapfile -r /var/swap/swapfile)"; fi
 			else
