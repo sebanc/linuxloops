@@ -274,7 +274,7 @@ case "${distribution}" in
 		;;
 	'Arch')
 		arch_version="${version}"
-		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="arch"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -287,9 +287,9 @@ case "${distribution}" in
 	'Artix')
 		artix_version="${version}"
 		if [ "${version}" == "Stable/S6" ] || [ "${version}" == "Testing/S6" ]; then
-			available_environments=( "None" "Budgie" "Cinnamon" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+			available_environments=( "None" "Budgie" "Cinnamon" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		else
-			available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+			available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		fi
 		bootloader_id="artix"
 		bootloader_name="shimx64.efi"
@@ -347,7 +347,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'CachyOS')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="cachyos"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -369,7 +369,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Debian')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -392,7 +392,7 @@ case "${distribution}" in
 		esac
 		;;
 	'Devuan')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc devuan daedalus default"
@@ -425,7 +425,7 @@ case "${distribution}" in
 		ubuntu_version="Noble"
 		;;
 	'Fedora')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc fedora 42 default"
@@ -498,7 +498,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Kali')
-		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="grubx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -549,7 +549,7 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'Manjaro')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="manjaro"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -561,7 +561,7 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'MX')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc debian bookworm default"
@@ -612,7 +612,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'OpenSUSE')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
 		bootloader_name="shim.efi"
 		btrfs_supported="Yes"
@@ -639,7 +639,7 @@ case "${distribution}" in
 		esac
 		;;
 	'Parrot')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Lxde" "Lxde/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="grubx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -686,7 +686,7 @@ case "${distribution}" in
 		esac
 		;;
 	'Proxmox')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -746,7 +746,7 @@ case "${distribution}" in
 		tails_version="${version}"
 		;;
 	'Ubuntu')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxde/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="ubuntu"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc ubuntu noble default"
@@ -767,7 +767,7 @@ case "${distribution}" in
 		esac
 		;;
 	'Void')
-		available_environments=( "None" "Cinnamon" "Gnome" "Gnome/Full" "i3" "Lxde" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
+		available_environments=( "None" "Cinnamon" "Gnome" "Gnome/Full" "i3" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
 		bootloader_id="voidlinux"
 		bootloader_name="grubx64.efi"
 		bootstrap="lxc voidlinux current default"
@@ -1942,20 +1942,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-
 systemctl enable lightdm.service
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -2221,20 +2207,6 @@ systemctl enable gdm.service
 	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -2555,22 +2527,6 @@ ${desktop_services}
 rc-update add lightdm default
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-${desktop_services}
-rc-update add lightdm default
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-${desktop_services}
-rc-update add lightdm default
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -2886,22 +2842,6 @@ ${desktop_services}
 rc-update add lightdm default
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-${desktop_services}
-rc-update add lightdm default
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-${desktop_services}
-rc-update add lightdm default
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -3203,20 +3143,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lig
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -3511,20 +3437,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lig
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -3807,20 +3719,6 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4108,20 +4006,6 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -4419,20 +4303,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lig
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -4724,20 +4594,6 @@ ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -5504,7 +5360,7 @@ for (( i=1; i<=12; i++ )); do
 		;;
 		12)
 			mount /isomount/data/brunch/efi_secure.img /isomount/tmp
-			mkfs.fat -n 'EFI' "${partition_path}""\${i}"
+			mkfs.fat -F 16 -S 4096 -n 'EFI' "${partition_path}""\${i}"
 			mount "${partition_path}""\${i}" /isomount/efi
 			cp -r /isomount/tmp/* /isomount/efi/
 			umount /isomount/efi
@@ -5643,20 +5499,6 @@ systemctl enable gdm.service
 	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman cachyos-i3wm-settings xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox pcmanfm network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -5904,7 +5746,7 @@ for (( i=1; i<=12; i++ )); do
 		;;
 		12)
 			mount "\${isomount}"p12 /isomount/tmp
-			mkfs.fat -n 'EFI' "${partition_path}""\${i}"
+			mkfs.fat -F 16 -S 4096 -n 'EFI' "${partition_path}""\${i}"
 			mount "${partition_path}""\${i}" /isomount/efi
 			cp -r /isomount/tmp/* /isomount/efi/
 			umount /isomount/efi
@@ -6267,19 +6109,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde-core lxappearance lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -6535,19 +6364,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde-core lxterminal pcmanfm lxappearance lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -6795,19 +6611,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-
 	default_session="i3"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde-core lxappearance lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -7071,19 +6874,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde-core lxappearance lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -7326,19 +7116,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-
 	default_session="i3"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde-core lxappearance lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -7704,12 +7481,6 @@ dnf install -y ${desktop_base} gdm @gnome-desktop network-manager-applet gnome-k
 	default_session="i3"
 	install_desktop="
 dnf install -y ${desktop_base} lightdm slick-greeter @i3 volumeicon network-manager-applet gnome-keyring gnome-keyring-pam blueman dnfdragora-updater xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @lxde-desktop-environment network-manager-applet gnome-keyring gnome-keyring-pam lxde-icon-theme blueman dnfdragora-updater xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -8116,7 +7887,7 @@ echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/m
 echo -e "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
-	echo -e "USE=\"bluetooth cryptsetup dbus dracut elogind policykit mount pam -systemd truetype X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth cryptsetup dbus -debug dracut elogind harfbuzz mount pam policykit -systemd -test truetype X\"" >> /etc/portage/make.conf
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
 	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus -debug dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd -test text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
@@ -8341,7 +8112,7 @@ echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/m
 echo -e "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
-	echo -e "USE=\"bluetooth cryptsetup dbus dracut -elogind policykit mount pam systemd truetype X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth cryptsetup dbus -debug dracut -elogind harfbuzz mount pam policykit systemd -test truetype X\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
@@ -8648,19 +8419,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit kali-linux-default xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-lxde network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-lxde network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
 "
 	;;
 	'Mate')
@@ -9313,20 +9071,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-
 systemctl enable lightdm.service
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -9584,20 +9328,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-
 systemctl enable lightdm.service
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -9852,20 +9582,6 @@ systemctl enable gdm.service
 	default_session="i3"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-manjaro i3-wm i3lock i3status dmenu rxvt-unicode manjaro-i3-settings volumeicon network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde-common lxde-icon-theme lxappearance lxpanel lxsession lxterminal openbox kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxde kvantum-manjaro lxterminal pcmanfm network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
 systemctl enable lightdm.service
 "
 	;;
@@ -10133,23 +9849,10 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde-core lxappearance lxinput lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian lxde-icon-theme mutter lxqt-powermanagement lxqt-themes oxygen-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxqt-core qterminal pcmanfm-qt lxqt-theme-debian mutter lxqt-powermanagement lxqt-themes oxygen-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt/Full')
@@ -11102,19 +10805,6 @@ sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/
 zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
-	'Lxde')
-	default_session="lxde"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="lxde"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -11360,19 +11050,6 @@ zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
-"
-	;;
-	'Lxde')
-	default_session="lxde"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring gnome-keyring-pam blueman xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="lxde"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-lxde-lxde lxsession lxappearance nuoveXT2-icon-theme lxterminal lxde-common lxpanel pcmanfm NetworkManager-applet gnome-keyring xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -11700,19 +11377,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter parrot-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk nim anonsurf-gtk metasploit-framework nmap
 "
 	;;
 	'Mate')
@@ -12284,19 +11948,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-
 	default_session="i3"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde-core lxappearance lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxde-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -13647,19 +13298,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde openbox lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde openbox network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
 	'Lxqt')
 	default_session="Lubuntu"
 	install_desktop="
@@ -13930,19 +13568,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde openbox lxterminal pcmanfm lxde-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxde/Full')
-	default_session="LXDE"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxde openbox network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxpolkit xdg-desktop-portal-gtk
-"
-	;;
 	'Lxqt')
 	default_session="Lubuntu"
 	install_desktop="
@@ -14139,7 +13764,7 @@ SETTINGS
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-elogind-x11 dejavu-fonts-ttf ffmpeg font-adobe-source-code-pro fonts-roboto-ttf gvfs iio-sensor-proxy intel-media-driver mesa-vaapi mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon nss-mdns pulseaudio pipewire sof-firmware system-config-printer udisks2 xdg-user-dirs-gtk xorg"
+desktop_base="adwaita-fonts alsa-utils alsa-ucm-conf at-spi2-core avahi-discover cups cups-browsed cups-filters dbus-elogind-x11 dejavu-fonts-ttf ffmpeg font-adobe-source-code-pro fonts-roboto-ttf gvfs iio-sensor-proxy intel-media-driver mesa-vaapi mesa-vulkan-intel mesa-vulkan-lavapipe mesa-vulkan-radeon nss-mdns pipewire pulseaudio sof-firmware system-config-printer udisks2 xdg-user-dirs-gtk xorg"
 desktop_services="/etc/sv/avahi-daemon /etc/sv/cupsd /etc/sv/cups-browsed"
 case "${environment}" in
 	'Cinnamon')
@@ -14167,13 +13792,6 @@ ln -s /etc/sv/gdm /etc/runit/runsvdir/default/
 	default_session="i3"
 	install_desktop="
 xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter i3 i3status i3lock dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
-	'Lxde')
-	default_session="LXDE"
-	install_desktop="
-xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter lxde network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
@@ -15540,6 +15158,12 @@ if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 	fstype=$(blkid -s TYPE -o value /dev/disk/by-partuuid/"$img_uuid")
 	if [ "$fstype" = "ntfs" ]; then
 		ntfs-3g /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
+	elif [ "$fstype" = "btrfs" ]; then
+		mount -n -t "$fstype" /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
+		if [ ! -f /linuxloops_root/"$img_path" ]; then
+			# If the image file is not found on the boot partition, assume that the default btrfs subvolid is not 5
+			mount -o remount,subvolid=5 /linuxloops_root || { echo "linuxloops: Image file not found on default subvolume, nor on subvolid 5." > /dev/kmsg; recovery_shell; }
+		fi
 	else
 		mount -n -t "$fstype" /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
 	fi
@@ -17435,6 +17059,12 @@ config="menuentry '${label}' --class '${class}' {${remove_tpm}
 }
 "
 fi
+if [ ! -z "${nixos}" ]; then
+	config="boot.loader.grub.extraEntries = ''
+"$(echo "${config}" | sed "s@\\\$@''\\\$@g")"
+'';
+"
+fi
 echo -e "${config}" > "${fullpath}".grub.txt
 chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".grub.txt
 if [ ! -z "${chromeos}" ]; then
@@ -19038,7 +18668,11 @@ else
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	else
 		if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
-		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)</textarea><br><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>Otherwise, add the grub config manually to another grub bootloader.<br><br>You can then reboot your computer and start ${distribution}."
+		if [ ! -z "${nixos}" ]; then
+			grubinstall="The nixos config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have grub as bootloader, add this configuration to your /etc/nixos/configuration.nix and run the below command to update grub:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo nixos-rebuild boot</textarea><br><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>You can then reboot your computer and start ${distribution}."
+		else
+			grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)</textarea><br><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>Otherwise, add the grub config manually to another grub bootloader.<br><br>You can then reboot your computer and start ${distribution}."
+		fi
 		gui_launch -m finished -t "Grub configuration" -q "${grubinstall}"
 	fi
 fi
@@ -19258,7 +18892,11 @@ else
 		echo -e "\n${grubinstall}"
 	else
 		if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
-		grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:\n********************************************************************************************\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n********************************************************************************************\n\nOtherwise, add the below grub config manually to another grub bootloader:\n********************************************************************************************\n${config}*******************************************************************************************\n\nYou can then reboot your computer and start ${distribution}."
+		if [ ! -z "${nixos}" ]; then
+			grubinstall="The nixos config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have grub as bootloader, add this configuration to your /etc/nixos/configuration.nix and run the below command to update grub:\n********************************************************************************************\nsudo nixos-rebuild boot\n********************************************************************************************\n\nYou can then reboot your computer and start ${distribution}."
+		else
+			grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:\n********************************************************************************************\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n********************************************************************************************\n\nOtherwise, add the below grub config manually to another grub bootloader:\n********************************************************************************************\n${config}*******************************************************************************************\n\nYou can then reboot your computer and start ${distribution}."
+		fi
 		echo -e "\n${grubinstall}"
 	fi
 fi
