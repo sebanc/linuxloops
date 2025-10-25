@@ -15162,7 +15162,8 @@ if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 		mount -n -t "$fstype" /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
 		if [ ! -f /linuxloops_root/"$img_path" ]; then
 			# If the image file is not found on the boot partition, assume that the default btrfs subvolid is not 5
-			(umount /linuxloops_root && mount -t "$fstype" -o subvolid=5 /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root) || { echo "linuxloops: Image file not found on default subvolume, nor on subvolid 5." > /dev/kmsg; recovery_shell; }
+			umount /linuxloops_root
+			mount -n -t "$fstype" -o subvolid=5 /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: Image file not found on default subvolume, nor on subvolid 5." > /dev/kmsg; recovery_shell; }
 		fi
 	else
 		mount -n -t "$fstype" /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
