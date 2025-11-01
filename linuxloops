@@ -12880,39 +12880,43 @@ cat >/usr/bin/steamos-select-branch <<'SELECTBRANCHSCRIPT'
 #!/bin/bash
 set -e
 
-BRANCH_PATH="/var/lib/steamos-branch"
+##
+## This script must match the API the temporary Steam UI updater wants of us, including this file
+## Please note that this script is now deprecated! The Steam client is migrating to the new
+## atomic update D-Bus API, and developers are encouraged to use `atomupd-manager`.
+##
 
-if [[ "\$#" = 1 ]]; then
+if [[ \$# -eq 1 ]]; then
   case "\$1" in
     "-c")
-      branch=\$(cat "\$BRANCH_PATH" 2> /dev/null || echo "rel")
-      case "\$branch" in
-        "rel" | "rc" | "beta" | "bc" | "main")
-          echo "\$branch"
-          exit 0
-          ;;
-        *)
-          echo "unknown branch name in \$BRANCH_PATH: \$branch" 1>&2
-          exit 1
-          ;;
-      esac
-      ;;
-    "-l")
-      echo rel
-      echo rc
-      echo beta
-      echo bc
-      echo main
+      branch=\$(atomupd-manager tracked-branch)
+      if [[ "\$branch" == "stable" ]]; then
+        echo rel
+      else
+        echo "\$branch"
+      fi
       exit 0
       ;;
-    "rel" | "rc" | "beta" | "bc" | "main")
-      echo "\$1" > "\$BRANCH_PATH"
+    "-l")
+      branches=\$(atomupd-manager list-branches)
+      branches=\${branches/stable/rel}
+      echo "\$branches"
+      exit 0
+      ;;
+    "rel")
+      # The legacy stable variant was called "rel", convert it to "stable" before
+      # calling atomupd-manager
+      atomupd-manager switch-branch stable
+      exit 0
+      ;;
+    "stable" | "rc" | "beta" | "bc" | "preview" | "pc" | "main" | "staging")
+      atomupd-manager switch-branch "\$1"
       exit 0
       ;;
   esac
 fi
 
-echo "Usage: steamos-select-branch <-c|-l|rel|rc|beta|bc|main>" 1>&2
+echo "Usage: steamos-select-branch <-c|-l|rel|rc|beta|bc|preview|pc|main>" 1>&2
 SELECTBRANCHSCRIPT
 chmod 0755 /usr/bin/steamos-select-branch
 cat >/usr/bin/steamos-polkit-helpers/steamos-update <<'FAKESTEAMOSUPDATE'
@@ -12924,8 +12928,6 @@ if [[ \$EUID -ne 0 ]];
 then
     exec pkexec --disable-internal-agent "\$0" "\$@"
 fi
-
-exit 7
 
 if [ "\$(pacman -Qu)" == "" ]; then exit 7; fi
 
