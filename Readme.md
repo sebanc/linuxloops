@@ -73,44 +73,45 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 
 |**Distribution**|**Versions**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
 |----------------|:------------------------------------------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
-|AlmaLinux       |10                                                            |✓                      |                                     |                                 |                            |
-|Arch            |Stable<br>Testing                                             |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Arch-notes]         |
-|Artix           |Openrc<br>Runit<br>S6<br>Dinit<br>(Stable<br>or<br>Testing)   |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Artix-notes]        |
-|Bazzite         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][Bazzite-notes]      |
-|BlendOS         |v4                                                            |✓ (shim-signed AUR)    |✓                                    |                                 |[notes][BlendOS-notes]      |
-|BlissOS         |15<br>16                                                      |                       |                                     |                                 |                            |
-|Brunch          |Stable<br>Unstable                                            |✓                      |                                     |✓                                |[notes][Brunch-notes]       |
-|CachyOS         |x86-64<br>x86-64-v3<br>x86-64-v4                              |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][CachyOS-notes]      |
-|ChromeOS-Flex   |Stable                                                        |not for disk images    |                                     |                                 |[notes][ChromeOS-Flex-notes]|
-|Debian          |Trixie<br>Testing<br>Unstable                                 |✓                      |✓                                    |✓                                |                            |
-|Devuan          |Daedalus<br>Testing                                           |✓                      |✓                                    |                                 |                            |
-|Elementary      |8                                                             |✓                      |✓                                    |✓                                |                            |
-|Fedora          |42                                                            |✓                      |✓                                    |✓                                |[notes][Fedora-notes]       |
-|Fedora-Atomic   |42                                                            |✓                      |✓                                    |                                 |[notes][Fedora-Atomic-notes]|
-|FoxFlake        |Stable<br>Unstable                                            |✓                      |✓                                    |                                 |[notes][FoxFlake-notes]     |
-|Gentoo          |23/Openrc<br>23/Systemd                                       |✓                      |✓                                    |                                 |                            |
-|GLF-OS          |Omnislash<br>Testing                                          |✓                      |✓                                    |                                 |                            |
-|Kali            |Rolling                                                       |disk images only       |✓                                    |✓                                |[notes][Kali-notes]         |
-|KDE             |Rolling                                                       |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][KDE-notes]          |
-|Linuxmint       |Zara                                                          |✓                      |✓                                    |✓                                |                            |
-|LMDE            |Gigi                                                          |✓                      |✓                                    |✓                                |                            |
-|Manjaro         |Stable<br>Testing<br>Unstable                                 |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][Manjaro-notes]      |
-|MX              |23                                                            |✓                      |✓                                    |✓                                |                            |
-|Neon            |User<br>Testing                                               |✓                      |✓                                    |✓                                |                            |
-|NixOS           |25.05<br>Unstable                                             |✓                      |✓                                    |                                 |                            |
-|Nobara          |Rolling                                                       |✓                      |✓                                    |                                 |                            |
-|OpenSUSE        |Leap/16.0<br>Tumbleweed                                       |✓                      |✓                                    |                                 |[notes][OpenSUSE-notes]     |
-|Parrot          |Lory                                                          |disk images only       |✓                                    |                                 |[notes][Parrot-notes]       |
-|PikaOS          |Nest                                                          |✓                      |✓                                    |                                 |                            |
-|Pop             |22.04<br>24.04                                                |✓                      |✓                                    |✓                                |                            |
-|Proxmox         |VE9                                                           |✓                      |✓                                    |                                 |                            |
-|Qubes           |4.2.4                                                         |                       |                                     |                                 |[notes][Qubes-notes]        |
-|RockyLinux      |10                                                            |✓                      |                                     |                                 |                            |
-|SteamOS         |Main<br>Staging                                               |✓ (shim-signed AUR)    |✓                                    |✓                                |[notes][SteamOS-notes]      |
-|Tails           |Stable                                                        |✓                      |                                     |                                 |[notes][Tails-notes]        |
-|Ubuntu          |24.04<br>25.10                                                |✓                      |✓                                    |✓                                |                            |
-|Void            |Current                                                       |                       |✓                                    |                                 |                            |
-|Zorin           |18                                                            |✓                      |✓                                    |✓                                |                            |
+|AlmaLinux|10|✓||||
+|Arch|Stable<br>Testing|✓ (shim-signed AUR)|✓|✓|[notes][Arch-notes]|
+|Artix|Openrc<br>Runit<br>S6<br>Dinit<br>(Stable<br>or<br>Testing)|✓ (shim-signed AUR)|✓||[notes][Artix-notes]|
+|Bazzite|Stable<br>Testing<br>Unstable|✓ (shim-signed AUR)|✓||[notes][Bazzite-notes]|
+|BlendOS|v4|✓ (shim-signed AUR)|✓||[notes][BlendOS-notes]|
+|BlissOS|15<br>16|||||
+|Brunch|Stable<br>Unstable|✓||✓|[notes][Brunch-notes]|
+|CachyOS|x86-64<br>x86-64-v3<br>x86-64-v4|✓ (shim-signed AUR)|✓|✓|[notes][CachyOS-notes]|
+|ChromeOS-Flex|Stable|not for disk images|||[notes][ChromeOS-Flex-notes]|
+|Debian|Trixie<br>Testing<br>Unstable|✓|✓|✓||
+|Devuan|Excalibur<br>Testing|✓|✓|||
+|Elementary|8|✓|✓|✓||
+|Fedora|43|✓|✓|✓|[notes][Fedora-notes]|
+|Fedora-Atomic|43|✓|✓||[notes][Fedora-Atomic-notes]|
+|FoxFlake|Stable<br>Unstable|✓|✓||[notes][FoxFlake-notes]|
+|Gentoo|23/Openrc<br>23/Systemd|✓|✓|||
+|GLF-OS|Omnislash<br>Testing|✓|✓|||
+|Kali|Rolling|disk images only||✓|[notes][Kali-notes]|
+|KDE|Rolling|✓ (shim-signed AUR)|✓|✓|[notes][KDE-notes]|
+|Linuxmint|Zara|✓|✓|✓||
+|LMDE|Gigi|✓|✓|✓||
+|Manjaro|Stable<br>Testing<br>Unstable|✓ (shim-signed AUR)|✓|✓|[notes][Manjaro-notes]|
+|MX|23|✓|✓|✓||
+|Neon|User<br>Testing|✓|✓|✓||
+|NixOS|25.05<br>Unstable|✓|✓|||
+|Nobara|Rolling|✓|✓|||
+|Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
+|OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
+|Parrot|Lory|disk images only|✓||[notes][Parrot-notes]|
+|PikaOS|Nest|✓|✓|||
+|Pop|22.04<br>24.04|✓|✓|✓||
+|Proxmox|VE9|✓|✓|||
+|Qubes|4.2.4||||[notes][Qubes-notes]|
+|RockyLinux|10|✓||||
+|SteamOS|Main<br>Staging|✓ (shim-signed AUR)|✓|✓|[notes][SteamOS-notes]|
+|Tails|Stable|✓|||[notes][Tails-notes]|
+|Ubuntu|24.04<br>25.10|✓|✓|✓||
+|Void|Current||✓|||
+|Zorin|18|✓|✓|✓||
 
 
 ## About this project
@@ -257,6 +258,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
 [KDE-notes]: ./Readme/Distro-notes.md#KDE
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
+[Omarchy-notes]: ./Readme/Distro-notes.md#Omarchy
 [OpenSUSE-notes]: ./Readme/Distro-notes.md#OpenSUSE
 [Parrot-notes]: ./Readme/Distro-notes.md#Parrot
 [Qubes-notes]: ./Readme/Distro-notes.md#Qubes

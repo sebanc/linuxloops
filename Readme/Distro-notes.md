@@ -92,6 +92,11 @@ KDE Linux is based on Arch that does not have secure boot support through its of
 Manjaro does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
+## Omarchy
+
+Omarchy does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
+
+
 ## OpenSUSE
 
 ### Specific note for OpenSUSE installation in a disk image with secure boot enabled

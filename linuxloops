@@ -54,7 +54,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "OpenSUSE" "Parrot" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "Omarchy" "OpenSUSE" "Parrot" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
 
 distribution_parameters()
 {
@@ -110,9 +110,9 @@ case "${distribution}" in
 		default_version="Trixie"
 		;;
 	'Devuan')
-		available_versions=( "Daedalus" "Testing" )
-		available_versions_longname=( "Daedalus_(Stable)" "Testing" )
-		default_version="Daedalus"
+		available_versions=( "Excalibur" "Testing" )
+		available_versions_longname=( "Excalibur_(Stable)" "Testing" )
+		default_version="Excalibur"
 		;;
 	'Elementary')
 		available_versions=( "8" )
@@ -120,14 +120,14 @@ case "${distribution}" in
 		default_version="8"
 		;;
 	'Fedora')
-		available_versions=( "42" )
+		available_versions=( "43" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="42"
+		default_version="43"
 		;;
 	'Fedora-Atomic')
-		available_versions=( "42" )
+		available_versions=( "43" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="42"
+		default_version="43"
 		;;
 	'FoxFlake')
 		available_versions=( "Stable" "Unstable" "Stable-Test" "Unstable-Test" "Dev" )
@@ -188,6 +188,11 @@ case "${distribution}" in
 		available_versions=( "Rolling" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Rolling"
+		;;
+	'Omarchy')
+		available_versions=( "Master" )
+		available_versions_longname=( "${available_versions[@]}" )
+		default_version="Master"
 		;;
 	'OpenSUSE')
 		available_versions=( "Leap/16.0" "Tumbleweed" )
@@ -287,9 +292,9 @@ case "${distribution}" in
 	'Artix')
 		artix_version="${version}"
 		if [ "${version}" == "Stable/S6" ] || [ "${version}" == "Testing/S6" ]; then
-			available_environments=( "None" "Budgie" "Cinnamon" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+			available_environments=( "None" "Budgie" "Cinnamon" "Enlightenment" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		else
-			available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+			available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		fi
 		bootloader_id="artix"
 		bootloader_name="shimx64.efi"
@@ -305,9 +310,9 @@ case "${distribution}" in
 		bazzite_version="${version}"
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 42 default"
+		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
-		fedora_version="42"
+		fedora_version="43"
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="No"
 		surface_supported="No"
@@ -377,17 +382,19 @@ case "${distribution}" in
 		debian_version="${version}"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Debian" )
-		nvidia_supported="Yes"
 		surface_supported="Yes"
 		case "${version}" in
 			'Trixie')
 				chroot_function="${distribution}-Stable"
+				nvidia_supported="Yes"
 				;;
 			'Testing')
 				chroot_function="${distribution}-Testing"
+				nvidia_supported="Yes"
 				;;
 			'Unstable')
 				chroot_function="${distribution}-Unstable"
+				nvidia_supported="No"
 				;;
 		esac
 		;;
@@ -403,7 +410,7 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="No"
 		case "${version}" in
-			'Daedalus')
+			'Excalibur')
 				chroot_function="${distribution}-Stable"
 				;;
 			'Testing')
@@ -428,7 +435,7 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 42 default"
+		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=( "Fedora" )
@@ -436,10 +443,10 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'Fedora-Atomic')
-		available_environments=( "Kinoite" "Onyx" "Sericea" "Silverblue" )
+		available_environments=( "Cosmic" "Kinoite" "Onyx" "Sericea" "Silverblue" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 42 default"
+		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=( "Fedora-Atomic" )
@@ -600,16 +607,27 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Nobara')
-	        version="42"
 		available_environments=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora ${version} default"
+		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
 		mirrors_supported=( "Fedora" "Nobara" )
-		nobara_version="${version}"
 		nvidia_supported="Yes"
 		surface_supported="No"
+		;;
+	'Omarchy')
+		arch_version="Stable"
+		available_environments=( "Omarchy" )
+		bootloader_id="arch"
+		bootloader_name="shimx64.efi"
+		bootstrap="lxc archlinux current default"
+		btrfs_supported="Yes"
+		chroot_function="${distribution}"
+		mirrors_supported=( "Arch" )
+		omarchy_version="${version}"
+		nvidia_supported="Yes"
+		surface_supported="Yes"
 		;;
 	'OpenSUSE')
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -1782,7 +1800,8 @@ mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --releasever $(echo ${almalinux_version} | tr A-Z a-z) -y @core openssl tar
+dnf install --installroot=/mnt --releasever $(echo ${almalinux_version} | tr A-Z a-z) -y filesystem
+dnf install --setopt=tsflags=noscripts --installroot=/mnt --releasever $(echo ${almalinux_version} | tr A-Z a-z) -y @core ca-certificates openssl tar
 if [ ! -z "${mirror_AlmaLinux}" ]; then
 	sed -i 's@^# baseurl=https://repo.almalinux.org/vault\|^# baseurl=https://repo.almalinux.org/almalinux@baseurl=${mirror_AlmaLinux}@g' /mnt/etc/yum.repos.d/almalinux-*.repo
 	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/almalinux-*.repo
@@ -1796,10 +1815,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+update-ca-trust
+authselect select local with-silent-lastlog with-mdns4 --force
+authselect apply-changes
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
+systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service thermald.service
+systemctl --global enable dbus.socket dbus-broker.service
 dnf --enablerepo=crb install -y almalinux-sb-certs
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -1818,6 +1842,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
+systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
 dnf remove -y setroubleshoot-plugins
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
@@ -2503,22 +2528,6 @@ rc-update add lightdm default
 rc-update add connmand default
 "
 	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-${desktop_services}
-rc-update add gdm default
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-${desktop_services}
-rc-update add gdm default
-"
-	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
@@ -2818,22 +2827,6 @@ rc-update add lightdm default
 rc-update add connmand default
 "
 	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-${desktop_services}
-rc-update add gdm default
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-openrc gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-${desktop_services}
-rc-update add gdm default
-"
-	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
@@ -3122,20 +3115,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lig
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runit/runsvdir/default/
 "
 	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
-"
-	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
@@ -3416,20 +3395,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lig
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runit/runsvdir/default/
 "
 	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-runit gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-ln -s ${desktop_services} /etc/runit/sv/gdm /etc/runit/runsvdir/default/
-"
-	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
@@ -3699,20 +3664,6 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 rm /etc/s6/adminsv/default/contents.d/NetworkManager
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 enlightenment terminology connman connman-s6 xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm /etc/s6/adminsv/default/contents.d/connmand
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
 	'i3')
@@ -3986,20 +3937,6 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 rm /etc/s6/adminsv/default/contents.d/NetworkManager
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 enlightenment terminology connman connman-s6 xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm /etc/s6/adminsv/default/contents.d/connmand
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-s6 gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/gdm
 "
 	;;
 	'i3')
@@ -4282,20 +4219,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lig
 ln -s ${desktop_services} ../lightdm ../connmand /etc/dinit.d/boot.d/
 "
 	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
-"
-	;;
 	'i3')
 	default_session="i3"
 	install_desktop="
@@ -4574,20 +4497,6 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 rm /etc/dinit.d/boot.d/NetworkManager
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit enlightenment terminology connman connman-dinit xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm ../connmand /etc/dinit.d/boot.d/
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
-ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gdm-dinit gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
-ln -s ${desktop_services} ../gdm /etc/dinit.d/boot.d/
 "
 	;;
 	'i3')
@@ -5021,7 +4930,7 @@ if [ ! -z "${custom_packages}" ]; then
 	for i in \${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done
 fi
 if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
-echo -e "aur-packages:\n  - 'aur/python-gbinder'\n  - 'shim-signed'" >> /system.yaml
+echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml
 if [ "${surface}" == "Yes" ]; then echo -e "  - 'binder_linux-dkms'" >> /system.yaml; fi
 echo -e "commands:" >> /system.yaml;
 if [ "${surface}" == "Yes" ]; then
@@ -5132,10 +5041,10 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_script <<INSTALL_SCRIPT
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
 echo "Downloading BlissOS iso sha256"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g')".sha256/download -o /root/bliss.iso.sha256
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g')".sha256/download?use_mirror=sourceforge -o /root/bliss.iso.sha256
 echo "Downloading BlissOS iso"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1)" -o /root/bliss.iso; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1)?use_mirror=sourceforge" -o /root/bliss.iso; then
 		if [ "\$(sha256sum /root/bliss.iso | cut -d' ' -f1)" == "\$(cat /root/bliss.iso.sha256 | cut -d' ' -f1)" ]; then
 			echo "sha256sum verification succeeded"
 			break
@@ -6044,13 +5953,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
+Suites: $(echo ${debian_version} | tr A-Z a-z) $(echo ${debian_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
@@ -6306,12 +6209,6 @@ cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Debian}
 Suites: $(echo ${debian_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: https://security.debian.org/debian-security
-Suites: $(echo ${debian_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
@@ -6791,6 +6688,9 @@ set -e
 sed -i 's@http://deb.devuan.org/merged @${mirror_Devuan}/merged @g' /etc/apt/sources.list
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
+curl -L https://pkgmaster.devuan.org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2025.08.09_all.deb -o /tmp/devuan-keyring.deb
+dpkg -i /tmp/devuan-keyring.deb
+rm /tmp/devuan-keyring.deb
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
@@ -6809,13 +6709,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/devuan.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Devuan}/merged
-Suites: $(echo ${devuan_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Devuan}/merged
-Suites: $(echo ${devuan_version} | tr A-Z a-z)-updates
+Suites: $(echo ${devuan_version} | tr A-Z a-z) $(echo ${devuan_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
 
@@ -7041,6 +6935,9 @@ set -e
 sed -i 's@http://deb.devuan.org/merged @${mirror_Devuan}/merged @g' /etc/apt/sources.list
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
+curl -L https://pkgmaster.devuan.org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2025.08.09_all.deb -o /tmp/devuan-keyring.deb
+dpkg -i /tmp/devuan-keyring.deb
+rm /tmp/devuan-keyring.deb
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
@@ -7060,12 +6957,6 @@ cat >/etc/apt/sources.list.d/devuan.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Devuan}/merged
 Suites: $(echo ${devuan_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: http://deb.devuan.org/merged
-Suites: $(echo ${devuan_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
 SOURCESLIST
@@ -7305,13 +7196,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
-Components: main restricted universe multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z) $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
@@ -7420,7 +7305,8 @@ mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade akmods grubby openssl tar
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y filesystem
+dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade akmods ca-certificates grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -7438,8 +7324,13 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+update-ca-trust
+authselect select local with-silent-lastlog with-mdns4 --force
+authselect apply-changes
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
+systemctl --global enable dbus.socket dbus-broker.service
 dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
 dnf upgrade --refresh -y
 CHROOT_INIT
@@ -7540,6 +7431,7 @@ if [ "${environment}" == "None" ]; then exit 0; fi
 dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
 ${install_desktop}
 systemctl enable ${desktop_services}
+systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
 cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -7609,6 +7501,8 @@ fi
 
 chroot_Fedora-Atomic()
 {
+if [ "${environment}" == "Cosmic" ]; then environment="Cosmic-Atomic"; fi
+
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -7676,6 +7570,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
 # Add firefox as flatpak, the rest of the flatpak list is sourced from https://pagure.io/pungi-fedora/blob/main/f/fedora.conf
 case "${environment}" in
+	'Cosmic-Atomic')
+	default_session="cosmic"
+	flatpaks="app/org.mozilla.firefox"
+	;;
 	'Kinoite')
 	default_session="plasma"
 	flatpaks="app/org.mozilla.firefox app/org.kde.elisa/x86_64/stable app/org.kde.gwenview/x86_64/stable app/org.kde.kcalc/x86_64/stable app/org.kde.kmahjongg/x86_64/stable app/org.kde.kmines/x86_64/stable app/org.kde.kolourpaint/x86_64/stable app/org.kde.krdc/x86_64/stable app/org.kde.okular/x86_64/stable app/org.kde.skanpage/x86_64/stable"
@@ -7745,6 +7643,11 @@ case "${environment}" in
 mkdir -p \$HOME/.config
 echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
 DISABLE_KWALLET
+		fi
+	;;
+	'Cosmic-Atomic')
+		if [ "${useraccount_autologin}" == "Yes" ]; then
+			echo -e '\n[initial_session]\ncommand = "cosmic-session"\nuser = "${useraccount_name}"' >> /etc/greetd/cosmic-greeter.toml
 		fi
 	;;
 	*)
@@ -7894,10 +7797,10 @@ echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/m
 echo -e "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
-	echo -e "USE=\"bluetooth cryptsetup dbus -debug dracut elogind harfbuzz mount pam policykit -systemd -test truetype X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth cryptsetup dbus dracut elogind harfbuzz mount pam policykit -systemd truetype X\"" >> /etc/portage/make.conf
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus -debug dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd -test text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
@@ -8119,11 +8022,11 @@ echo -e "SECUREBOOT_SIGN_CERT=\"/etc/secureboot_key/MOK.crt\"" >> /etc/portage/m
 echo -e "VIDEO_CARDS=\"amdgpu dummy fbdev intel nouveau qxl radeon radeonsi vesa virtualbox\"" >> /etc/portage/make.conf
 echo -e "INPUT_DEVICES=\"libinput\"" >> /etc/portage/make.conf
 if [ "${environment}" == "None" ]; then
-	echo -e "USE=\"bluetooth cryptsetup dbus -debug dracut -elogind harfbuzz mount pam policykit systemd -test truetype X\"" >> /etc/portage/make.conf
+	echo -e "USE=\"bluetooth cryptsetup dbus dracut -elogind harfbuzz mount pam policykit systemd truetype X\"" >> /etc/portage/make.conf
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus -debug dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd -test text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
@@ -9769,13 +9672,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
+Suites: $(echo ${debian_version} | tr A-Z a-z) $(echo ${debian_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
@@ -10032,7 +9929,7 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat > /etc/lsb-release <<'LSB_RELEASE'
+cat >/etc/lsb-release <<'LSB_RELEASE'
 DISTRIB_ID=neon
 DISTRIB_RELEASE=${ubuntu_release}
 DISTRIB_CODENAME=$(echo ${ubuntu_version} | tr A-Z a-z)
@@ -10042,13 +9939,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
-Components: main restricted universe multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z) $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
@@ -10561,25 +10452,26 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
 fi
 dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/nobara.repo -o /etc/yum.repos.d/nobara.repo
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(echo ${nobara_version} | tr A-Z a-z)/baseos/nobara-repos/$(echo ${nobara_version} | tr A-Z a-z)/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(echo ${nobara_version} | tr A-Z a-z)
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/baseos/nobara-repos/$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1)) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( $(echo ${nobara_version} | tr A-Z a-z) - 1))
+nobara_version=\$(git ls-remote --symref https://github.com/Nobara-Project/rpm-sources.git origin HEAD | head -1 | cut -f1 | cut -d'/' -f3)
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-\${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\${nobara_version}
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\$(( \${nobara_version} - 1 ))/baseos/nobara-repos/\$(( \${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( \${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( \${nobara_version} - 1 ))
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core fedora-repos fedora-gpg-keys nobara-repos nobara-gpg-keys nobara-release-workstation akmods grubby openssl tar tcl8
+dnf install --installroot=/mnt --use-host-config --releasever \${nobara_version} -y @core fedora-repos fedora-gpg-keys nobara-repos nobara-gpg-keys nobara-release-workstation akmods ca-certificates grubby openssl tar tcl8
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -10597,8 +10489,13 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+update-ca-trust
+authselect select local with-silent-lastlog with-mdns4 --force
+authselect apply-changes
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
+systemctl --global enable dbus.socket dbus-broker.service
 sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/nobara-pikaos-additional.repo
 dnf install -y rpmfusion-free-release rpmfusion-nonfree-release
 dnf upgrade --refresh -y
@@ -10664,6 +10561,7 @@ if [ "${environment}" == "None" ]; then exit 0; fi
 dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data pipewire-codec-aptx mozilla-openh264.x86_64 x264-libs.x86_64 x265-libs.x86_64 libavcodec-freeworld.x86_64 libavcodec-free.x86_64 openh264.x86_64 mesa-va-drivers-freeworld.x86_64 mesa-vdpau-drivers-freeworld.x86_64 mesa-libgallium-freeworld.x86_64 gstreamer1-plugins-bad-free-extras.x86_64 libheif-freeworld.x86_64 libheif.x86_64 x264-libs.i686 x265-libs.i686 libavcodec-freeworld.i686 libavcodec-free.i686 openh264.i686 mesa-va-drivers-freeworld.i686 mesa-vdpau-drivers-freeworld.i686 mesa-libgallium-freeworld.i686 gstreamer1-plugins-bad-free-extras.i686 libheif-freeworld.i686 libheif.i686
 ${install_desktop}
 systemctl enable ${desktop_services}
+systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
 
@@ -10712,6 +10610,101 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
 initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\ndnf install -y ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+fi
+if [ ! -z "${custom_script}" ]; then
+	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
+	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
+fi
+}
+
+chroot_Omarchy()
+{
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
+#!/bin/bash
+set -e
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+if [ ! -z "${mirror_Arch}" ]; then
+	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+else
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+fi
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+PREPARE_BOOTSTRAP
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
+
+cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
+#!/bin/bash
+set -e
+pacstrap -G /mnt base base-devel
+PREPARE_CHROOT
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
+
+cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
+#!/bin/bash
+set -e
+pacman-key --init
+pacman-key --populate
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap pipewire-pulse
+systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
+CHROOT_INIT
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
+
+cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
+#!/bin/bash
+set -e
+useradd -s /bin/bash -m '${useraccount_name}'
+usermod -aG wheel '${useraccount_name}'
+echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
+cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
+polkit.addAdminRule(function(action, subject) {
+    return ["unix-group:wheel"];
+});
+POLKIT
+INSTALL_USER
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
+
+cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
+#!/bin/bash
+set -e
+pacman -Syu --noconfirm --needed git
+echo '${useraccount_name} ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/99_temp
+echo -e '#!/bin/bash\nexit 0' > /usr/local/bin/gum
+chmod 0755 /usr/local/bin/gum
+sudo -u '${useraccount_name}' bash << 'OMARCHY_INSTALL'
+git clone -b \$(echo ${omarchy_version} | tr A-Z a-z) "https://github.com/basecamp/omarchy.git" \${HOME}/.local/share/omarchy
+echo -e '#!/bin/bash\necho "Nvidia ignored"' > \${HOME}/.local/share/omarchy/install/config/hardware/nvidia.sh
+echo -e '#!/bin/bash\necho "Presentation ignored"' > \${HOME}/.local/share/omarchy/install/helpers/presentation.sh
+echo -e '#!/bin/bash\necho "Guards ignored"' > \${HOME}/.local/share/omarchy/install/preflight/guard.sh
+export LOGO_WIDTH=512
+export OMARCHY_ONLINE_INSTALL=1
+export OMARCHY_CHROOT_INSTALL=1
+clear_logo() { :; }
+source \${HOME}/.local/share/omarchy/install.sh
+OMARCHY_INSTALL
+rm /etc/sudoers.d/99_temp /usr/local/bin/gum
+cat >/etc/NetworkManager/conf.d/wifi_backend.conf <<'IWD_CONFIGURATION'
+[device]
+wifi.backend=iwd
+IWD_CONFIGURATION
+INSTALL_DMCONFIG
+chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
+
+surface_remove="linux linux-headers"
+initramfs_type="initcpio"
+if [ ! -z "${custom_packages}" ]; then
+	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
+		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
+			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
+			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
+			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		fi
+		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+		echo "pacman -Sy" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
+	fi
+	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -11861,13 +11854,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)-updates
+Suites: $(echo ${debian_version} | tr A-Z a-z) $(echo ${debian_version} | tr A-Z a-z)-updates
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 
@@ -11880,7 +11867,7 @@ SOURCESLIST
 cat >/etc/apt/sources.list.d/pve-enterprise.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: http://download.proxmox.com/debian/pve
-Suites: trixie
+Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: pve-no-subscription
 Signed-By: /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
 SOURCESLIST
@@ -11899,7 +11886,7 @@ echo 'deb http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A
 cat >/etc/apt/sources.list.d/pve-enterprise.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: http://download.proxmox.com/debian/pve
-Suites: trixie
+Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: pve-no-subscription
 Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 SOURCESLIST
@@ -12250,7 +12237,8 @@ mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --releasever $(echo ${rockylinux_version} | tr A-Z a-z) -y @core openssl tar
+dnf install --installroot=/mnt --releasever $(echo ${rockylinux_version} | tr A-Z a-z) -y filesystem
+dnf install --setopt=tsflags=noscripts --installroot=/mnt --releasever $(echo ${rockylinux_version} | tr A-Z a-z) -y @core ca-certificates openssl tar
 if [ ! -z "${mirror_RockyLinux}" ]; then
 	sed -i 's@^#baseurl=http://dl.rockylinux.org/\$contentdir@baseurl=${mirror_RockyLinux}@g' /mnt/etc/yum.repos.d/rocky*.repo
 	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/rocky*.repo
@@ -12264,10 +12252,15 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+update-ca-trust
+authselect select local with-silent-lastlog with-mdns4 --force
+authselect apply-changes
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwl100-firmware iwl1000-firmware iwl105-firmware iwl135-firmware iwl2000-firmware iwl2030-firmware iwl3160-firmware iwl5000-firmware iwl5150-firmware iwl6000g2a-firmware iwl6000g2b-firmware iwl6050-firmware iwl7260-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl mokutil dosfstools cpio bubblewrap langpacks-${packages_locale}
+systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service thermald.service
+systemctl --global enable dbus.socket dbus-broker.service
 dnf --enablerepo=crb install -y rocky-sb-certs
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -12286,6 +12279,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
+systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
 dnf remove -y setroubleshoot-plugins
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
@@ -13224,13 +13218,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
-Components: main restricted universe multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z) $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
@@ -13494,13 +13482,7 @@ rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
 Types: deb deb-src
 URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)
-Components: main restricted universe multiverse
-Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
-
-Types: deb deb-src
-URIs: ${mirror_Ubuntu}
-Suites: $(echo ${ubuntu_version} | tr A-Z a-z)-updates
+Suites: $(echo ${ubuntu_version} | tr A-Z a-z) $(echo ${ubuntu_version} | tr A-Z a-z)-updates
 Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 
@@ -14284,18 +14266,20 @@ if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ 
 cat >"${bootstrapdir}"/tmp/linuxloops/enter_chroot <<ENTERCHROOT
 #!/bin/bash
 set -e
-if [ -d /mnt/etc/tmpfiles.d ]; then
-	ln -s /dev/null /mnt/etc/tmpfiles.d/static-nodes-permissions.conf
-	ln -s /dev/null /mnt/etc/tmpfiles.d/tpm-udev.conf
-fi
-if [ -d /mnt/etc/udev/rules.d ]; then
-	ln -s /dev/null /mnt/etc/udev/rules.d/50-udev-default.rules
-fi
-if [ -d /mnt/etc/systemd/system ]; then
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service
-	ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service
+if [ "${systemd_init}" == "Yes" ]; then
+	if [ -d /mnt/etc/tmpfiles.d ]; then
+		ln -s /dev/null /mnt/etc/tmpfiles.d/static-nodes-permissions.conf
+		ln -s /dev/null /mnt/etc/tmpfiles.d/tpm-udev.conf
+	fi
+	if [ -d /mnt/etc/udev/rules.d ]; then
+		ln -s /dev/null /mnt/etc/udev/rules.d/50-udev-default.rules
+	fi
+	if [ -d /mnt/etc/systemd/system ]; then
+		ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
+		ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
+		ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service
+		ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service
+	fi
 fi
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
@@ -14357,14 +14341,16 @@ if [ -f /tmp/linuxloops/install_initramfs ]; then \${chroot_cmd} /tmp/linuxloops
 if [ -f /tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linuxloops/install_bootloader; fi
 if [ -f /tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
-if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
-if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
-if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
-if [ -L /mnt/etc/systemd/system/systemd-resolved.service ]; then rm /mnt/etc/systemd/system/systemd-resolved.service; fi
-if [ -L /mnt/etc/systemd/system/systemd-binfmt.service ]; then rm /mnt/etc/systemd/system/systemd-binfmt.service; fi
-if [ -L /mnt/etc/udev/rules.d/50-udev-default.rules ]; then rm /mnt/etc/udev/rules.d/50-udev-default.rules; fi
-if [ -L /mnt/etc/tmpfiles.d/tpm-udev.conf ]; then rm /mnt/etc/tmpfiles.d/tpm-udev.conf; fi
-if [ -L /mnt/etc/tmpfiles.d/static-nodes-permissions.conf ]; then rm /mnt/etc/tmpfiles.d/static-nodes-permissions.conf; fi
+if [ "${systemd_init}" == "Yes" ]; then
+	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
+	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
+	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
+	if [ -L /mnt/etc/systemd/system/systemd-resolved.service ]; then rm /mnt/etc/systemd/system/systemd-resolved.service; fi
+	if [ -L /mnt/etc/systemd/system/systemd-binfmt.service ]; then rm /mnt/etc/systemd/system/systemd-binfmt.service; fi
+	if [ -L /mnt/etc/udev/rules.d/50-udev-default.rules ]; then rm /mnt/etc/udev/rules.d/50-udev-default.rules; fi
+	if [ -L /mnt/etc/tmpfiles.d/tpm-udev.conf ]; then rm /mnt/etc/tmpfiles.d/tpm-udev.conf; fi
+	if [ -L /mnt/etc/tmpfiles.d/static-nodes-permissions.conf ]; then rm /mnt/etc/tmpfiles.d/static-nodes-permissions.conf; fi
+fi
 ENTERCHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/enter_chroot
 }
@@ -14496,7 +14482,7 @@ DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
-elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
+elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ] || [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_surface <<SURFACEPACMAN
 #!/bin/bash
 set -e
@@ -14533,7 +14519,7 @@ fi
 generate_install_nvidia()
 {
 if [ ! "${nvidia}" == "Yes" ] || [ "${distribution}" == "Bazzite" ]; then return; fi
-if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ]; then
+if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -15813,7 +15799,6 @@ sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
 grub,3,Free Software Foundation,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
 grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
 GRUBSBAT
-  \${pkgs.coreutils}/bin/rm -rf /boot/efi/EFI/BOOT /boot/efi/EFI/${bootloader_id}
   \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
   \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
   if [ -f \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest ] && [ -f \${pkgs.shim-signed}/share/shim/mmx64.efi ]; then
@@ -16083,7 +16068,7 @@ GRUBINSTALL
 chmod 0755 /usr/sbin/grub-install
 grub-install --target=x86_64-efi --efi-directory=/boot/efi
 REINSTALLBOOTLOADER
-	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
+	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ] || [ "${distribution}" == "SteamOS" ]; then
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 pacman -Syu --noconfirm --needed git fakeroot
 git clone --depth=1 -b shim-signed https://github.com/archlinux/aur.git /tmp/shim-signed
@@ -19143,7 +19128,7 @@ else
 				exit 0
 			;;
 			-lb | --list-btrfs)
-				if [ -z "${distribution}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
+				if [ -z "${distribution}" ] || [ -z "${version}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
 				if [[ ! " ${available_distributions[*]} " =~ " ${distribution} " ]]; then echo -e "Please select a distribution from the below list:"; list_array "available_distributions"; exit 1; fi
 				distribution_parameters
 				if [[ ! " ${available_versions[*]} " =~ " ${version} " ]]; then echo -e "Please select a version from the below list:"; list_array "available_versions"; exit 1; fi
@@ -19156,7 +19141,7 @@ else
 				exit 0
 			;;
 			-le | --list-environments)
-				if [ -z "${distribution}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
+				if [ -z "${distribution}" ] || [ -z "${version}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
 				if [[ ! " ${available_distributions[*]} " =~ " ${distribution} " ]]; then echo -e "Please select a distribution from the below list:"; list_array "available_distributions"; exit 1; fi
 				distribution_parameters
 				if [[ ! " ${available_versions[*]} " =~ " ${version} " ]]; then echo -e "Please select a version from the below list:"; list_array "available_versions"; exit 1; fi
@@ -19173,7 +19158,7 @@ else
 				exit 0
 			;;
 			-ln | --list-nvidia)
-				if [ -z "${distribution}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
+				if [ -z "${distribution}" ] || [ -z "${version}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
 				if [[ ! " ${available_distributions[*]} " =~ " ${distribution} " ]]; then echo -e "Please select a distribution from the below list:"; list_array "available_distributions"; exit 1; fi
 				distribution_parameters
 				if [[ ! " ${available_versions[*]} " =~ " ${version} " ]]; then echo -e "Please select a version from the below list:"; list_array "available_versions"; exit 1; fi
@@ -19182,7 +19167,7 @@ else
 				exit 0
 			;;
 			-ls | --list-surface)
-				if [ -z "${distribution}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
+				if [ -z "${distribution}" ] || [ -z "${version}" ]; then echo "Distribution and version parameters need to be provided."; exit 1; fi
 				if [[ ! " ${available_distributions[*]} " =~ " ${distribution} " ]]; then echo -e "Please select a distribution from the below list:"; list_array "available_distributions"; exit 1; fi
 				distribution_parameters
 				if [[ ! " ${available_versions[*]} " =~ " ${version} " ]]; then echo -e "Please select a version from the below list:"; list_array "available_versions"; exit 1; fi
