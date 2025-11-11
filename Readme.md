@@ -95,7 +95,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Linuxmint|Zara|✓|✓|✓||
 |LMDE|Gigi|✓|✓|✓||
 |Manjaro|Stable<br>Testing<br>Unstable|✓ (shim-signed AUR)|✓|✓|[notes][Manjaro-notes]|
-|MX|23|✓|✓|✓||
+|MX|25|✓|✓|✓||
 |Neon|User<br>Testing|✓|✓|✓||
 |NixOS|25.05<br>Unstable|✓|✓|||
 |Nobara|Rolling|✓|✓|||

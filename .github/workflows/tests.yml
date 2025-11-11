@@ -43,6 +43,8 @@ jobs:
     name: Build distribution
     needs: prepare-matrix
     runs-on: ubuntu-latest
+    env:
+      TERM: xterm-256color
     strategy:
       fail-fast: false
       matrix:

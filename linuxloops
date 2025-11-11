@@ -170,9 +170,9 @@ case "${distribution}" in
 		default_version="Stable"
 		;;
 	'MX')
-		available_versions=( "23" )
+		available_versions=( "25" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="23"
+		default_version="25"
 		;;
 	'Neon')
 		available_versions=( "User" "Testing" )
@@ -571,9 +571,9 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc debian bookworm default"
+		bootstrap="lxc debian trixie default"
 		btrfs_supported="Yes"
-		debian_version="Bookworm"
+		debian_version="Trixie"
 		grub_disable_recordfail="Yes"
 		mx_version="${version}"
 		mirrors_supported=( "Debian" "MX" )
@@ -1816,6 +1816,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 update-ca-trust
+update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
 dnf install -y epel-release
@@ -5041,10 +5042,10 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_script <<INSTALL_SCRIPT
 set -e
 mkdir -p /isomount/initramfs /isomount/iso
 echo "Downloading BlissOS iso sha256"
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g')".sha256/download?use_mirror=sourceforge -o /root/bliss.iso.sha256
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "http://download.sourceforge.net/sourceforge/blissos-x86/\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g' | cut -d'/' -f11)".sha256 -o /root/bliss.iso.sha256
 echo "Downloading BlissOS iso"
 for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1)?use_mirror=sourceforge" -o /root/bliss.iso; then
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "http://download.sourceforge.net/sourceforge/blissos-x86/\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g' | cut -d'/' -f11)" -o /root/bliss.iso; then
 		if [ "\$(sha256sum /root/bliss.iso | cut -d' ' -f1)" == "\$(cat /root/bliss.iso.sha256 | cut -d' ' -f1)" ]; then
 			echo "sha256sum verification succeeded"
 			break
@@ -6804,14 +6805,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Plasma')
 	default_session="plasmawayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
 	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
@@ -7325,6 +7326,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 update-ca-trust
+update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
 dnf upgrade --refresh -y
@@ -9661,7 +9663,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,kbd,keyboard-configuration,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
+debootstrap --arch=amd64 --include=ca-certificates,console-setup,curl,file,gnupg,gpgv,kbd,keyboard-configuration,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
@@ -9683,21 +9685,19 @@ Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 cat >/etc/apt/sources.list.d/mx.list <<'SOURCES'
-deb [signed-by=/tmp/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg] ${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) main non-free
+deb ${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) main non-free
 #deb ${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) ahs
 SOURCES
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://mxrepo.com/mx/repo/pool/main/m/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://mxrepo.com/mx/repo/pool/main/m/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring | tr '>' '\n' | grep '<a href=' | grep 'mx$(echo ${mx_version} | tr A-Z a-z)' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring-2023.6.6/mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg --strip-components 2
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y mx$(echo ${mx_version} | tr A-Z a-z)-archive-keyring
-rm /tmp/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg
-sed -i 's@ \[signed-by=/tmp/mx-$(echo ${mx_version} | tr A-Z a-z)-archive-keyring.gpg]@@g' /etc/apt/sources.list.d/mx.list
+curl -L https://mxrepo.com/mx/repo/pool/main/m/mx25-archive-keyring/mx25-archive-keyring_2025.03_all.deb -o /tmp/mx-archive-keyring.deb
+dpkg -i /tmp/mx-archive-keyring.deb
+rm /tmp/mx-archive-keyring.deb
 echo "firmware-ipw2x00 firmware-ipw2x00/license/accepted boolean true" | debconf-set-selections
 echo "firmware-ivtv firmware-ivtv/license/accepted boolean true" | debconf-set-selections
 apt clean
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') initramfs-tools mx-system
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') dkms initramfs-tools mx-system
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
@@ -9783,14 +9783,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	'Plasma')
 	default_session="plasmawayland"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop plasma-workspace-wayland kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings plasma-look-and-feel-theme-mx desktop-defaults-mx-kde polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings plasma-look-and-feel-theme-mx desktop-defaults-mx-kde polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
 "
 	;;
 	'Plasma/Full')
 	default_session="plasmawayland"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-workspace-wayland plasma-look-and-feel-theme-mx desktop-defaults-mx-kde breeze-gtk-theme breeze-icon-theme polkit-kde-agent-1 xdg-desktop-portal-kde
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop plasma-look-and-feel-theme-mx desktop-defaults-mx-kde breeze-gtk-theme breeze-icon-theme polkit-kde-agent-1 xdg-desktop-portal-kde
 "
 	;;
 	'Xfce')
@@ -10460,18 +10460,20 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 nobara_version=\$(git ls-remote --symref https://github.com/Nobara-Project/rpm-sources.git origin HEAD | head -1 | cut -f1 | cut -d'/' -f3)
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-\${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\${nobara_version}
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\$(( \${nobara_version} - 1 ))/baseos/nobara-repos/\$(( \${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( \${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( \${nobara_version} - 1 ))
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever \${nobara_version} -y @core fedora-repos fedora-gpg-keys nobara-repos nobara-gpg-keys nobara-release-workstation akmods ca-certificates grubby openssl tar tcl8
+dnf install --installroot=/mnt --use-host-config --releasever \${nobara_version} -y filesystem
+dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever \${nobara_version} -y @core dnf-plugin-system-upgrade akmods ca-certificates grubby openssl tar
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\${nobara_version}/baseos/nobara-repos/\${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-\${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\${nobara_version}
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\$(( \${nobara_version} - 1 ))/baseos/nobara-repos/\$(( \${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( \${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( \${nobara_version} - 1 ))
+dnf swap --allowerasing --installroot=/mnt --use-host-config --releasever \${nobara_version} -y fedora-release-identity-basic nobara-release-identity-basic
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -10490,6 +10492,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 update-ca-trust
+update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
 dnf upgrade --refresh -y
@@ -10672,8 +10675,11 @@ set -e
 pacman -Syu --noconfirm --needed git
 echo '${useraccount_name} ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/99_temp
 echo -e '#!/bin/bash\nexit 0' > /usr/local/bin/gum
-chmod 0755 /usr/local/bin/gum
+echo -e '#!/bin/bash\nexit 0' > /usr/local/bin/tte
+chmod 0755 /usr/local/bin/gum /usr/local/bin/tte
 sudo -u '${useraccount_name}' bash << 'OMARCHY_INSTALL'
+export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+hash -r
 git clone -b \$(echo ${omarchy_version} | tr A-Z a-z) "https://github.com/basecamp/omarchy.git" \${HOME}/.local/share/omarchy
 echo -e '#!/bin/bash\necho "Nvidia ignored"' > \${HOME}/.local/share/omarchy/install/config/hardware/nvidia.sh
 echo -e '#!/bin/bash\necho "Presentation ignored"' > \${HOME}/.local/share/omarchy/install/helpers/presentation.sh
@@ -10684,7 +10690,7 @@ export OMARCHY_CHROOT_INSTALL=1
 clear_logo() { :; }
 source \${HOME}/.local/share/omarchy/install.sh
 OMARCHY_INSTALL
-rm /etc/sudoers.d/99_temp /usr/local/bin/gum
+rm /etc/sudoers.d/99_temp /usr/local/bin/gum /usr/local/bin/tte
 cat >/etc/NetworkManager/conf.d/wifi_backend.conf <<'IWD_CONFIGURATION'
 [device]
 wifi.backend=iwd
@@ -11232,73 +11238,6 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/apt/sources.list <<'SOURCES_LIST'
-deb [signed-by=/tmp/parrot-archive-keyring.gpg] ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-# deb-src ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-SOURCES_LIST
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/ParrotSec/parrot-core/raw/refs/heads/master/system_configs/apt/preferences.d/parrot-pinning -o /etc/apt/preferences.d/parrot-pinning
-echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
-echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-cat >/tmp/parrot-archive-keyring.asc <<'PARROT_KEYRING'
------BEGIN PGP PUBLIC KEY BLOCK-----
-
-mQINBGco52cBEACWy0u0muKLZPH9OygsbRasVbQTNtUDLqdjd7MO8BGQfctdaQ81
-msJYuBFcL8vyc5AbcpRyeBaZS2UlcWRsB4qu8xLgpvaaw5W/dE9mGQGBJV7Auyso
-XOI83RnHup0+6T2h0DP7l3/ZQZjVt+Py0wIji9RiAAyYiW9rSFbedBsIWlD/h6xn
-mXbMfVfD3uPiECpjERWQlo18T/gCNFe/p69oLCzIpLGtUCq+AIsgo9LL0vNV4zAt
-+YCLlAlvtvNQo8DdAGOp11tIIDt7KFxXv4qfBXSi8WyZCyYD1vdtux7UKnx81NKC
-7Fp441NL4dq3d5f1UQlceYWGj4F0yK6VCcE1jl1LekSp+j8I8rQgDP4CGmILCAAM
-iYIsYfsF/WxSLKD4i7l3bYUrY8pzh8H/tDhW9/6pECTL01sD63CsccCllf4e7t15
-mKj5zyTReAC5SqGJY7eCSSncMvclOtao2OrSpQNf1AD8x2i0TS2mtn6KrqsKrLv/
-DBqfa9Lh6TxBe2csEkbSsupn6ECuL0UpUmD9oSELpqmhzL9i2oUNPIfUtEatCt5L
-TGlWonG+xZu5CQGN1z3YkBAb6ZHxpTm0qks113ahzVlhfdbZvqeOO2csrQ7W6Vjb
-FvxVSqEHU4QEd2O+oXsREvHxajDzm8WKfK+t3JIHkIeGWiExpzfhhcSL8wARAQAB
-tC9QYXJyb3QgUHJvamVjdCAoMjAyNC0yMDI2KSA8dGVhbUBwYXJyb3RzZWMub3Jn
-PokCVAQTAQoAPhYhBLcRgiNGVS5NktoC33qChq8Oge5KBQJnKOdnAhsDBQkHhM4A
-BQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEHqChq8Oge5KCzIP/3UakIwwcdDA
-3nsGuZgh5sVhEwRYyvKuN8r+YNYV8c08CMGt1V+eikJ96ZeT0IHvbgXAiwyukmTz
-xYUO75Bbq+g0FE7ZLqrD62j2t+BzJNX4HBb9TTu5U5PXyXN0lpv5GHxTCrh6OsNv
-lfZ1zyFYg7CB/gXF/7L5hDCqCKKLgFM82OnqVLTrZ9IpgWzsfPiLmRR3bPLuTX9O
-RTqp9eaNcNCWy+WUvRm4oaod0JS76Xq2NT+fqwcAF5x4ziXAuH2rrF3DXwHvbKhF
-p0v6BIph1U7iKQmRWaBrGE8EWvaUMaXaBThdOe3u+gU5DBX6c+XP5YY5ZlstNCUx
-JN7m5BBDaQs8uQf8FveWAFh4PxyR7cCCaVrQArEV81UFAEyna86BVfzeSsafk5Ki
-rGKeU4VRIGPn8XkMv2Nm4NDw8fCmy/6Lc3JryDsneNuPxTEMK9d0IlCQCrV5O0Kz
-bMEB0QS2MFNA2KDPVO7IC/S/I9CA3Sr86CYZ7Ruv5b44IP8jfdfSmp+X37S9jOD1
-rwlpmsV9isMA87lcSEdSEuOKXgaBdyuoeRREQATbPmQLyQMFUtqdIuO9cuvum5W7
-56Ro4+GoCkXsYLVDFn/+9jodGE1ZOuEReF4tfCzedH1gQ9ex0FfdqwL6ZmfrOaLB
-/stJyPk233PA9h03mutQza4yPT4GwAZ3iQIzBBABCgAdFiEEs1BQWTwvdlZA5t3b
-l8qhKfTGuaQFAmco750ACgkQl8qhKfTGuaTI5RAAodRPbnDxZOqzfoy6ftpjWuF5
-gRzB17n5Qvq3p5QANxXnewqm39NsZ3nbPTNPnGMfw48GwqWzUPtFVP/5QBuzuOud
-0q5Wq53XangOI6+QGQlUNJrZ7CuRSVOCfwVL/kvH6yVLYvg6IeXn6zMQ0CJ8g2vb
-jbZ3xWBzgLA9zaxdpoH398G6PwpA1mSIxPouSgk1ER2hFGV5CAU6mGmMSPlr69zV
-HZI2UhWQG8RNbMKuqE8sn00SYtb2R4niNHhvcwue3RTOHYlpvn+M947RsELF4YZY
-ECraZ4yy1w+J49MhQoF0IiC0m0eIMCtkzR6OKL8+EA7Gje2SeZ/9Uz0CaH9pGznl
-hKLXQeNvizOtRhI6djv+kOSKSaRPPwSCqIOCeE1aYXdNx1PFFxfXtnVrBQd47qoF
-E3K4rB7E37nQs31xymRuVq9Wp6m0YxcRWgiTeOSz+4V5rlo3HRns/1SDaM/I3jAc
-XVYZyz8mEcR/tFVSY8o53nD+cB9mBdW2MzZG6+MCLJ5LjGgVi9F/RsLzuWb8W4T1
-QPMDO7xz0qyw3gPJ38B+PMduEg9pfo0ql6N1szuRgyTKF6ssBrkEKGSaIzqFIJyi
-QMUkp2PQIe+qLrQFA9h4ydN3Eexr/3HvSgYm+HPrc8HbRd4Y0YwGenTSY74aWjXi
-gZ6BjtuoDAqfBem1mJ+JAjMEEAEKAB0WIQSLQGDKaalzVrLc9VGCO/B861xGmwUC
-ZyjvswAKCRCCO/B861xGm64sD/9fkRfttbNWtOXvm8DDHKyrKsJYxZejEnLTgswH
-Pk+g0lnPG8fBd4TGfDZZfBWun6uP4qO1ege0kQcOhZSJQZEapG12cOQeR5NE5K+w
-J4QnB5vc2PQpbfs1kzXvQgDBGwvNZx3321SsDD9dGyDYv/Na9tKhxvxb7pPl27h5
-cKfDWupjDOyWf/aYu2rJ6mnAT1gf7Pr2khoXHhr2fjTodXICeOPx0SVJyeZ+ukTC
-BGHNerTylJ0WMGZFAm+oDJzwXLo/nc+YHu0lIJlLiEsAJBHblk3PERA3DogfUkLb
-HqfobdDCwLgy0uSN/fPxVzIuWqlh2ijTZc8NEW+hhMi2UkiPa7nKghEkCOYx0DFi
-rSf2e9uVUf2vHrktmGHx1AF2+LqI4IKm95fxI5v4ojArRVInW6WRZEM7Y2URgGiP
-W47ME8Aioqq4Ny5UzQV5baTAyz40+JblxmMVIu49XKdS49r9NGBMNCT5wUVnTHS1
-W+E/I1i7YjeVk+RPJOj+chnJHyEudxkNBGqApEDEKU72TExSFC1jZwkGVLajXWmY
-OqyyLqcFC88BBlQdw1pj+FxJ7U5rsyzWcCFDqCivZ+lig9hSJ8vEbA3ckfXP7pOo
-k50AjoJ0rWm1rYJ1ICMI+SD4ou/YF+vSqpBwe4cxaP7dEulvo/jWB4rbneK2qbH4
-O/H1dQ==
-=CVel
------END PGP PUBLIC KEY BLOCK-----
-PARROT_KEYRING
-cat /tmp/parrot-archive-keyring.asc | gpg --dearmor > /tmp/parrot-archive-keyring.gpg
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y parrot-archive-keyring libcurl4-
-rm /tmp/parrot-archive-keyring.gpg
-sed -i 's@ \[signed-by=/tmp/parrot-archive-keyring.gpg]@@g' /etc/apt/sources.list
 echo '' > /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/parrot.list <<'SOURCESLIST'
 deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
@@ -11307,7 +11246,12 @@ deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-backports main contr
 
 deb https://deb.parrot.sh/direct/parrot $(echo ${parrot_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
 SOURCESLIST
-apt clean
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/ParrotSec/parrot-core/raw/refs/heads/master/system_configs/apt/preferences.d/parrot-pinning -o /etc/apt/preferences.d/parrot-pinning
+curl -L https://deb.parrot.sh/parrot/pool/main/p/parrot-archive-keyring/parrot-archive-keyring_2024.12_all.deb -o /tmp/parrot-archive-keyring.deb
+dpkg -i /tmp/parrot-archive-keyring.deb
+rm /tmp/parrot-archive-keyring.deb
+echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
+echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') parrot-core parrot-apps-basics
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
@@ -12253,6 +12197,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 update-ca-trust
+update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
 dnf install -y epel-release
@@ -13721,7 +13666,7 @@ fi
 
 chroot_Void()
 {
-if [ -z "${mirror_Void}" ]; then mirror_Void="https://mirrors.servercentral.com/voidlinux"; fi
+if [ -z "${mirror_Void}" ]; then mirror_Void="https://repo-fastly.voidlinux.org"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
