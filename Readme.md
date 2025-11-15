@@ -75,7 +75,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |----------------|:------------------------------------------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
 |AlmaLinux|10|✓||||
 |Arch|Stable<br>Testing|✓ (shim-signed AUR)|✓|✓|[notes][Arch-notes]|
-|Artix|Openrc<br>Runit<br>S6<br>Dinit<br>(Stable<br>or<br>Testing)|✓ (shim-signed AUR)|✓||[notes][Artix-notes]|
+|Artix|Openrc<br>Runit<br>S6<br>Dinit|✓ (shim-signed AUR)|✓||[notes][Artix-notes]|
 |Bazzite|Stable<br>Testing<br>Unstable|✓ (shim-signed AUR)|✓||[notes][Bazzite-notes]|
 |BlendOS|v4|✓ (shim-signed AUR)|✓||[notes][BlendOS-notes]|
 |BlissOS|15<br>16|||||
