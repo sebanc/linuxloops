@@ -302,7 +302,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Bazzite')
-		available_environments=( "Bazzite" "Bazzite/Nvidia" "Bazzite/Nvidia/Open" "Bazzite/Gnome" "Bazzite/Gnome/Nvidia" "Bazzite/Gnome/Nvidia/Open" "Bazzite/Deck" "Bazzite/Deck/Gnome" )
+		available_environments=( "Bazzite" "Bazzite/Nvidia" "Bazzite/Gnome" "Bazzite/Gnome/Nvidia" "Bazzite/Deck" "Bazzite/Deck/Gnome" "Bazzite/Deck/Nvidia" "Bazzite/Deck/Nvidia/Gnome" )
 		bazzite_version="${version}"
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
@@ -439,13 +439,13 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'Fedora-Atomic')
-		available_environments=( "Cosmic" "Kinoite" "Onyx" "Sericea" "Silverblue" )
+		available_environments=( "Silverblue" "Kinoite" "Sway-Atomic" "Budgie-Atomic" "Cosmic-Atomic" "Xfce-Atomic" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
-		mirrors_supported=( "Fedora-Atomic" )
+		mirrors_supported=()
 		nvidia_supported="Yes"
 		surface_supported="No"
 		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
@@ -2043,7 +2043,7 @@ icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -2311,7 +2311,7 @@ icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -2613,7 +2613,7 @@ icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -2882,7 +2882,7 @@ icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -3152,7 +3152,7 @@ icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -3421,7 +3421,7 @@ icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -3521,28 +3521,55 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
 fi
 dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl ostree sbsigntools strace sudo tar util-linux xz zstd
+dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl rpm-ostree sbsigntools strace sudo tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+mkdir -p /etc/pki/containers
+curl -L https://github.com/ublue-os/bazzite/raw/refs/heads/main/cosign.pub -o /etc/pki/containers/ublue-os.pub
+cat >/etc/containers/policy.json <<'CONTAINERPOLICY'
+{
+    "default": [
+        {
+            "type": "reject"
+        }
+    ],
+    "transports": {
+        "docker": {
+            "ghcr.io/ublue-os": [
+                {
+                    "type": "sigstoreSigned",
+                    "keyPath": "/etc/pki/containers/ublue-os.pub",
+                    "signedIdentity": {
+                        "type": "matchRepository"
+                    }
+                }
+            ],
+            "": [{"type": "insecureAcceptAnything"}]
+	},
+        "docker-daemon": {
+	        "": [{"type": "insecureAcceptAnything"}]
+	    }
+    }
+}
+CONTAINERPOLICY
+cat >/etc/containers/registries.d/ublue-os.yaml <<'CONTAINERREGISTRY'
+docker:
+  ghcr.io/ublue-os:
+    use-sigstore-attachments: true
+CONTAINERREGISTRY
 ostree admin init-fs /mnt
-if [ ! -z "${mirror_Fedora_Atomic}" ]; then
-	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic ${mirror_Fedora_Atomic}
-else
-	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic $(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://ostree.fedoraproject.org/mirrorlist)
-fi
-ostree --repo=/mnt/ostree/repo pull --depth 1 atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(if echo ${environment} | tr A-Z a-z | grep -q gnome; then echo "silverblue"; else echo "kinoite"; fi)
-ostree admin --sysroot=/mnt os-init fedora
-ostree admin --sysroot=/mnt deploy --os=fedora atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(if echo ${environment} | tr A-Z a-z | grep -q gnome; then echo "silverblue"; else echo "kinoite"; fi)
+ostree admin os-init atomic --sysroot=/mnt
+ostree container image deploy --sysroot=/mnt --stateroot=atomic --imgref=ostree-image-signed:docker://ghcr.io/ublue-os/$(echo ${environment} | tr A-Z a-z | sed 's@/@-@g')$(if [ "${nvidia}" == "Yes" ]; then echo "-nvidia"; fi):$(echo ${bazzite_version} | tr A-Z a-z)
 mkdir /atomic
 mount --move /mnt /atomic
-ostreedir=\$(find /atomic/ostree/deploy/fedora/deploy/ -maxdepth 1 | grep "\.0$")
+ostreedir=\$(find /atomic/ostree/deploy/atomic/deploy/ -maxdepth 1 | grep "\.0$")
 mount --bind \${ostreedir} /mnt
 mount --bind /atomic /mnt/sysroot
-mount --bind /mnt/sysroot/ostree/deploy/fedora/var /mnt/var
+mount --bind /mnt/sysroot/ostree/deploy/atomic/var /mnt/var
 mount --move /atomic/boot /mnt/boot
 mkdir -p "\$(realpath /mnt/home)" "\$(realpath /mnt/root)"
 chmod 0750 "\$(realpath /mnt/root)"
@@ -3585,15 +3612,8 @@ else
 fi
 /usr/lib/ostree/ostree-remount
 rpm-ostree start-daemon
-rpm-ostree rebase ostree-unverified-registry:ghcr.io/ublue-os/$(echo ${environment} | tr A-Z a-z | sed 's@/@-@g')$(if [ "${nvidia}" == "Yes" ]; then echo "-nvidia"; fi):$(echo ${bazzite_version} | tr A-Z a-z)
-if echo ${environment} | tr A-Z a-z | grep -q gnome; then
-	flatpaks="app/org.mozilla.firefox app/org.gnome.baobab/x86_64/stable app/org.gnome.Calculator/x86_64/stable app/org.gnome.Calendar/x86_64/stable app/org.gnome.Characters/x86_64/stable app/org.gnome.Snapshot/x86_64/stable app/org.gnome.clocks/x86_64/stable app/org.gnome.Connections/x86_64/stable app/org.gnome.Contacts/x86_64/stable app/org.gnome.Evince/x86_64/stable app/org.gnome.Extensions/x86_64/stable app/org.gnome.font-viewer/x86_64/stable app/org.gnome.TextEditor/x86_64/stable app/org.gnome.Loupe/x86_64/stable app/org.gnome.Logs/x86_64/stable app/org.gnome.Maps/x86_64/stable app/org.fedoraproject.MediaWriter/x86_64/stable app/org.gnome.NautilusPreviewer/x86_64/stable app/org.gnome.Weather/x86_64/stable"
-else
-	flatpaks="app/org.kde.elisa/x86_64/stable app/org.kde.gwenview/x86_64/stable app/org.kde.kcalc/x86_64/stable app/org.kde.kmahjongg/x86_64/stable app/org.kde.kmines/x86_64/stable app/org.kde.kolourpaint/x86_64/stable app/org.kde.krdc/x86_64/stable app/org.kde.okular/x86_64/stable app/org.kde.skanpage/x86_64/stable"
-fi
-flatpak remote-add --if-not-exists --system flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 chmod u+s /usr/bin/bwrap
-flatpak install --noninteractive --assumeyes \${flatpaks} \$(cat /ostree/deploy/fedora/deploy/\$(ostree admin status | grep '(staged)' | cut -d' ' -f4)/usr/share/ublue-os/bazzite/flatpak/install | sed -z 's@\n@ @g')
+ujust _install-system-flatpaks
 chmod u-s /usr/bin/bwrap
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -3611,13 +3631,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
 #!/bin/bash
 set -e
 case "${environment}" in
-	'Bazzite/Gnome'|'Bazzite/Gnome/Nvidia'|'Bazzite/Gnome/Nvidia/Open')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=gnome-wayland' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	'Bazzite'|'Bazzite/Nvidia'|'Bazzite/Nvidia/Open')
+	'Bazzite'|'Bazzite/Nvidia')
 		if [ "${useraccount_autologin}" == "Yes" ]; then
 			mkdir -p /etc/sddm.conf.d
 			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=plasma' >> /etc/sddm.conf.d/zz_linuxloops.conf
@@ -3627,11 +3641,15 @@ echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
 DISABLE_KWALLET
 		fi
 	;;
+	'Bazzite/Gnome'|'Bazzite/Gnome/Nvidia')
+		if [ "${useraccount_autologin}" == "Yes" ]; then
+			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
+			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=gnome-wayland' >> /etc/\${gdm_folder}/custom.conf
+		fi
+	;;
 esac
 INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-kernel_parameters="bluetooth.disable_ertm=1 preempt=full"
 
 initramfs_type="iso_init"
 if [ ! -z "${custom_packages}" ]; then
@@ -4322,7 +4340,7 @@ icon-theme="Papirus"
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -4928,7 +4946,7 @@ gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -5177,7 +5195,7 @@ gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -5426,7 +5444,7 @@ gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -6267,7 +6285,7 @@ ${install_desktop}
 systemctl enable ${desktop_services}
 systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -6335,8 +6353,6 @@ fi
 
 chroot_Fedora-Atomic()
 {
-if [ "${environment}" == "Cosmic" ]; then environment="Cosmic-Atomic"; fi
-
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -6349,28 +6365,55 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
 fi
 dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl ostree sbsigntools strace sudo tar util-linux xz zstd
+dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl rpm-ostree sbsigntools strace sudo tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+mkdir -p /etc/pki/containers
+curl -L https://gitlab.com/fedora/ostree/ci-test/-/raw/main/quay.io-fedora-ostree-desktops.pub?ref_type=heads\&inline=false -o /etc/pki/containers/quay.io-fedora-ostree-desktops.pub
+cat >/etc/containers/policy.json <<'CONTAINERPOLICY'
+{
+    "default": [
+        {
+            "type": "reject"
+        }
+    ],
+    "transports": {
+        "docker": {
+            "quay.io/fedora-ostree-desktops": [
+                {
+                    "type": "sigstoreSigned",
+                    "keyPath": "/etc/pki/containers/quay.io-fedora-ostree-desktops.pub",
+                    "signedIdentity": {
+                        "type": "matchRepository"
+                    }
+                }
+            ],
+            "": [{"type": "insecureAcceptAnything"}]
+	},
+        "docker-daemon": {
+	        "": [{"type": "insecureAcceptAnything"}]
+	    }
+    }
+}
+CONTAINERPOLICY
+cat >/etc/containers/registries.d/quay.io-fedora-ostree-desktops.yaml <<'CONTAINERREGISTRY'
+docker:
+  quay.io/fedora-ostree-desktops:
+    use-sigstore-attachments: true
+CONTAINERREGISTRY
 ostree admin init-fs /mnt
-if [ ! -z "${mirror_Fedora_Atomic}" ]; then
-	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic ${mirror_Fedora_Atomic}
-else
-	ostree --repo=/mnt/ostree/repo remote add --if-not-exists --set=gpgkeypath=/etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-$(echo ${fedora_version} | tr A-Z a-z)-primary atomic $(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://ostree.fedoraproject.org/mirrorlist)
-fi
-ostree --repo=/mnt/ostree/repo pull --depth 1 atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(echo ${environment} | tr A-Z a-z)
-ostree admin --sysroot=/mnt os-init fedora
-ostree admin --sysroot=/mnt deploy --os=fedora atomic:fedora/$(echo ${fedora_version} | tr A-Z a-z)/$(uname -m)/$(echo ${environment} | tr A-Z a-z)
+ostree admin os-init atomic --sysroot=/mnt
+ostree container image deploy --sysroot=/mnt --stateroot=atomic --imgref=ostree-image-signed:docker://quay.io/fedora-ostree-desktops/$(echo ${environment} | tr A-Z a-z):$(echo ${fedora_version} | tr A-Z a-z)
 mkdir /atomic
 mount --move /mnt /atomic
-ostreedir=\$(find /atomic/ostree/deploy/fedora/deploy/ -maxdepth 1 | grep "\.0$")
+ostreedir=\$(find /atomic/ostree/deploy/atomic/deploy/ -maxdepth 1 | grep "\.0$")
 mount --bind \${ostreedir} /mnt
 mount --bind /atomic /mnt/sysroot
-mount --bind /mnt/sysroot/ostree/deploy/fedora/var /mnt/var
+mount --bind /mnt/sysroot/ostree/deploy/atomic/var /mnt/var
 mount --move /atomic/boot /mnt/boot
 mkdir -p "\$(realpath /mnt/home)" "\$(realpath /mnt/root)"
 chmod 0750 "\$(realpath /mnt/root)"
@@ -6404,6 +6447,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 
 # Add firefox as flatpak, the rest of the flatpak list is sourced from https://pagure.io/pungi-fedora/blob/main/f/fedora.conf
 case "${environment}" in
+	'Budgie-Atomic')
+	default_session="budgie-desktop"
+	flatpaks="app/org.mozilla.firefox"
+	;;
 	'Cosmic-Atomic')
 	default_session="cosmic"
 	flatpaks="app/org.mozilla.firefox"
@@ -6412,23 +6459,56 @@ case "${environment}" in
 	default_session="plasma"
 	flatpaks="app/org.mozilla.firefox app/org.kde.elisa/x86_64/stable app/org.kde.gwenview/x86_64/stable app/org.kde.kcalc/x86_64/stable app/org.kde.kmahjongg/x86_64/stable app/org.kde.kmines/x86_64/stable app/org.kde.kolourpaint/x86_64/stable app/org.kde.krdc/x86_64/stable app/org.kde.okular/x86_64/stable app/org.kde.skanpage/x86_64/stable"
 	;;
-	'Onyx')
-	default_session="budgie-desktop"
-	flatpaks="app/org.mozilla.firefox"
-	;;
-	'Sericea')
-	default_session="sway"
-	flatpaks="app/org.mozilla.firefox"
-	;;
 	'Silverblue')
 	default_session="gnome-wayland"
 	flatpaks="app/org.mozilla.firefox app/org.gnome.baobab/x86_64/stable app/org.gnome.Calculator/x86_64/stable app/org.gnome.Calendar/x86_64/stable app/org.gnome.Characters/x86_64/stable app/org.gnome.Snapshot/x86_64/stable app/org.gnome.clocks/x86_64/stable app/org.gnome.Connections/x86_64/stable app/org.gnome.Contacts/x86_64/stable app/org.gnome.Evince/x86_64/stable app/org.gnome.Extensions/x86_64/stable app/org.gnome.font-viewer/x86_64/stable app/org.gnome.TextEditor/x86_64/stable app/org.gnome.Loupe/x86_64/stable app/org.gnome.Logs/x86_64/stable app/org.gnome.Maps/x86_64/stable app/org.fedoraproject.MediaWriter/x86_64/stable app/org.gnome.NautilusPreviewer/x86_64/stable app/org.gnome.Weather/x86_64/stable"
+	;;
+	'Sway-Atomic')
+	default_session="sway"
+	flatpaks="app/org.mozilla.firefox"
+	;;
+	'Xfce-Atomic')
+	default_session="xfce"
+	flatpaks="app/org.mozilla.firefox"
 	;;
 esac
 
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+mkdir -p /etc/pki/containers
+curl -L https://gitlab.com/fedora/ostree/ci-test/-/raw/main/quay.io-fedora-ostree-desktops.pub?ref_type=heads\&inline=false -o /etc/pki/containers/quay.io-fedora-ostree-desktops.pub
+cat >/etc/containers/policy.json <<'CONTAINERPOLICY'
+{
+    "default": [
+        {
+            "type": "reject"
+        }
+    ],
+    "transports": {
+        "docker": {
+            "quay.io/fedora-ostree-desktops": [
+                {
+                    "type": "sigstoreSigned",
+                    "keyPath": "/etc/pki/containers/quay.io-fedora-ostree-desktops.pub",
+                    "signedIdentity": {
+                        "type": "matchRepository"
+                    }
+                }
+            ],
+            "": [{"type": "insecureAcceptAnything"}]
+	},
+        "docker-daemon": {
+	        "": [{"type": "insecureAcceptAnything"}]
+	    }
+    }
+}
+CONTAINERPOLICY
+cat >/etc/containers/registries.d/quay.io-fedora-ostree-desktops.yaml <<'CONTAINERREGISTRY'
+docker:
+  quay.io/fedora-ostree-desktops:
+    use-sigstore-attachments: true
+CONTAINERREGISTRY
 mkdir /boot/linuxloops
 if [ "${install_type}" == "image" ]; then
 	mv /tmp/linuxloops/install_initramfs /boot/linuxloops/linuxloops
@@ -6469,7 +6549,7 @@ case "${environment}" in
 			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
 		fi
 	;;
-	'Kinoite'|'Sericea')
+	'Kinoite'|'Sway-Atomic')
 		if [ "${useraccount_autologin}" == "Yes" ]; then
 			mkdir -p /etc/sddm.conf.d
 			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
@@ -6634,7 +6714,7 @@ if [ "${environment}" == "None" ]; then
 	echo -e "USE=\"bluetooth cryptsetup dbus dracut elogind harfbuzz mount pam policykit -systemd truetype X\"" >> /etc/portage/make.conf
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
@@ -6860,7 +6940,7 @@ if [ "${environment}" == "None" ]; then
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
@@ -7732,10 +7812,9 @@ sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors2.manjaro.org/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirrors.manjaro.org/repo https://mirrors2.manjaro.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
@@ -7982,10 +8061,9 @@ sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors2.manjaro.org/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirrors.manjaro.org/repo https://mirrors2.manjaro.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
@@ -8232,10 +8310,9 @@ sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors2.manjaro.org/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirrors.manjaro.org/repo https://mirrors2.manjaro.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
@@ -10075,13 +10152,7 @@ echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debc
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') parrot-core parrot-apps-basics
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
-cat >/etc/apt/sources.list.d/parrot.list <<'SOURCESLIST'
-deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z) main contrib non-free non-free-firmware
-deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-updates main contrib non-free non-free-firmware
-deb ${mirror_Parrot} $(echo ${parrot_version} | tr A-Z a-z)-backports main contrib non-free non-free-firmware
-
-deb https://deb.parrot.sh/direct/parrot $(echo ${parrot_version} | tr A-Z a-z)-security main contrib non-free non-free-firmware
-SOURCESLIST
+sed -i 's@https://deb.parrot.sh/parrot@${mirror_Parrot}@g' /etc/apt/sources.list.d/parrot.list
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-bin os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap
@@ -10267,7 +10338,7 @@ initramfs_type="initramfstools"
 if [ ! -z "${custom_packages}" ]; then
 	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
 		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			if [ "${nvidia}" == "Yes" ]; then echo "DEBIAN_FRONTEND=noninteractive apt install --purge -y -t $(echo ${parrot_version} | tr A-Z a-z)-backports nvidia-driver-libs:i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages; fi
+			if [ "${nvidia}" == "Yes" ]; then echo "DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver-libs:i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages; fi
 			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 		fi
 		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
@@ -10780,7 +10851,7 @@ gtk-theme='Adwaita'
 DCONF
 if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
 mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat > '/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml' <<'XFCETHEME'
+cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
 <?xml version="1.0" encoding="UTF-8"?>
 <channel name="xsettings" version="1.0">
   <property name="Net" type="empty">
@@ -13041,7 +13112,10 @@ if [ "${systemd_init}" == "Yes" ]; then
 	fi
 	if [ -d /mnt/etc/systemd/system ]; then
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
+		ln -s /dev/null /mnt/etc/systemd/system/systemd-reboot.service
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
+		ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved-monitor.socket
+		ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved-varlink.socket
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service
 	fi
@@ -13110,7 +13184,10 @@ if [ "${systemd_init}" == "Yes" ]; then
 	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
+	if [ -L /mnt/etc/systemd/system/systemd-resolved-varlink.socket ]; then rm /mnt/etc/systemd/system/systemd-resolved-varlink.socket; fi
+	if [ -L /mnt/etc/systemd/system/systemd-resolved-monitor.socket ]; then rm /mnt/etc/systemd/system/systemd-resolved-monitor.socket; fi
 	if [ -L /mnt/etc/systemd/system/systemd-resolved.service ]; then rm /mnt/etc/systemd/system/systemd-resolved.service; fi
+	if [ -L /mnt/etc/systemd/system/systemd-reboot.service ]; then rm /mnt/etc/systemd/system/systemd-reboot.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-binfmt.service ]; then rm /mnt/etc/systemd/system/systemd-binfmt.service; fi
 	if [ -L /mnt/etc/udev/rules.d/50-udev-default.rules ]; then rm /mnt/etc/udev/rules.d/50-udev-default.rules; fi
 	if [ -L /mnt/etc/tmpfiles.d/tpm-udev.conf ]; then rm /mnt/etc/tmpfiles.d/tpm-udev.conf; fi
@@ -13290,7 +13367,7 @@ if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${d
 set -e
 pacman -S --noconfirm --needed nvidia-dkms libva-nvidia-driver
 INSTALLNVIDIA
-elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] ||  [ "${distribution}" == "Proxmox" ]; then
+elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Parrot" ] ||  [ "${distribution}" == "Proxmox" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -13385,12 +13462,6 @@ NVIDIAREPOKEY
 rpm --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-db27fd5a-62589a51.asc
 zypper --non-interactive install openSUSE-repos-$(echo ${opensuse_version} | cut -d '/' -f1)-NVIDIA
 zypper --non-interactive install --auto-agree-with-licenses --force-resolution nvidia-gl-G06 nvidia-video-G06
-INSTALLNVIDIA
-elif [ "${distribution}" == "Parrot" ]; then
-	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y -t $(echo ${parrot_version} | tr A-Z a-z)-backports nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "PikaOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -14747,22 +14818,54 @@ if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" 
 		fi
 	fi
 	for i in \$(echo \${cmdline_root} \${cmdline} \${cmdline_extra} | sed -e 's@ @\n@g'); do kargs="\${kargs} --append-if-missing=\${i}"; done
-	cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+	cat >/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+#!/bin/bash
+set -e
 rpm-ostree kargs \${kargs}
 echo -e 'add_drivers+=" 8250_dw aes atkbd btrfs cbc dm-crypt exfat ext4 fuse i8042 intel_lpss intel_lpss_pci loop nvme quota_v1 quota_v2 serio sha256 surface_aggregator surface_aggregator_registry surface_hid surface_hid_core usbhid xhci_pci "' > /etc/dracut.conf.d/99-linuxloops.conf
 echo -e 'install_items+=" /etc/vconsole.conf /usr/bin/bash /usr/sbin/blkid /usr/sbin/cryptsetup /usr/bin/cut /usr/sbin/e2fsck /usr/bin/find /usr/bin/grep /usr/sbin/losetup /usr/bin/lsblk /usr/bin/ntfs-3g /usr/bin/ntfsfix /usr/bin/ps /usr/bin/setfont /usr/bin/setsid /usr/lib/systemd/systemd-sysroot-fstab-check "' >> /etc/dracut.conf.d/99-linuxloops.conf
 echo 'hostonly=\"no\"' >> /etc/dracut.conf.d/99-linuxloops.conf
 rpm-ostree initramfs --enable
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/ostreedev/ostree/raw/refs/heads/main/src/boot/grub2/grub2-15_ostree -o /etc/grub.d/15_ostree
-if [ "${install_type}" == "image" ]; then
-	sed "s#ostree admin instutil grub2-generate#ostree admin instutil grub2-generate | sed 's|linux16 |linux |g' | sed 's|initrd16 |initrd $(if [ "${root_fstype}" == "btrfs" ]; then echo /@boot; fi)/linuxloops/linuxloops.img |g'$(if [ "${root_fstype}" == "btrfs" ]; then echo " | sed 's| /ostree| /@boot/ostree|g'"; fi)#g" /etc/grub.d/15_ostree > /etc/grub.d/15_ostree_linuxloops
-else
-	sed "s#ostree admin instutil grub2-generate#ostree admin instutil grub2-generate | sed 's|linux16 |linux |g' | sed 's|initrd16 |initrd |g'$(if [ "${root_fstype}" == "btrfs" ]; then echo " | sed 's| /ostree| /@boot/ostree|g'"; fi)#g" /etc/grub.d/15_ostree > /etc/grub.d/15_ostree_linuxloops
-fi
-chmod 0644 /etc/grub.d/15_ostree
-chmod 0755 /etc/grub.d/15_ostree_linuxloops
-mkdir /boot/grub2
-ln -s ../loader/grub.cfg /boot/grub2/grub.cfg
+mkdir -p /boot/grub2
+cat >/boot/linuxloops/blsconvert <<'BLSCONVERT'
+#!/bin/bash
+
+for blsconfig in \\\$(echo "\\\$(for i in \\\$(ls /boot/loader/entries/ostree-*.conf); do i=\\\$(basename \\\${i}); echo -n \\\${i} ; echo -n ' '; grep -Eoh 'ostree:.?' /boot/loader/entries/\\\${i} | cut -d':' -f2; done)" | sort -k2 -n | cut -d' ' -f1); do
+
+cat <<GRUBCONFIG
+menuentry '\\\$(cat /boot/loader/entries/\\\${blsconfig} | grep '^title ' | cut -d' ' -f2-)' {
+set gfxpayload=keep
+insmod gzio
+insmod part_gpt
+insmod btrfs
+search --no-floppy --fs-uuid --set=root \\\$(blkid -o value -s UUID \\\$(findmnt -n -o SOURCE --target /boot | cut -d'[' -f1))
+linux $(if [ "${root_fstype}" == "btrfs" ]; then echo "/@boot"; fi)\\\$(cat /boot/loader/entries/\\\${blsconfig} | grep '^linux ' | cut -d' ' -f2-) \\\$(cat /boot/loader/entries/\\\${blsconfig} | grep '^options ' | cut -d' ' -f2-)
+initrd $(if [ "${root_fstype}" == "btrfs" ]; then echo "/@boot"; fi)/linuxloops/linuxloops.img $(if [ "${root_fstype}" == "btrfs" ]; then echo "/@boot"; fi)\\\$(cat /boot/loader/entries/\\\${blsconfig} | grep '^initrd ' | cut -d' ' -f2-)
+}
+GRUBCONFIG
+
+done
+BLSCONVERT
+chmod 0755 /boot/linuxloops/blsconvert
+cat >/etc/systemd/system/grub-update.service <<'GRUBUPDATESERVICE'
+[Unit]
+Description=Generate GRUB configuration
+DefaultDependencies=no
+RequiresMountsFor=/boot
+After=local-fs.target
+Before=final.target ostree-finalize-staged.service
+Conflicts=final.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/true
+ExecStop=/usr/bin/bash -c '/boot/linuxloops/blsconvert > /boot/grub2/grub.cfg'
+
+[Install]
+WantedBy=basic.target
+GRUBUPDATESERVICE
+systemctl enable grub-update.service
 mkdir -p /boot/efi/EFI/fedora
 cat >/boot/efi/EFI/fedora/grub.cfg <<'EFI_GRUB_CFG'
 search --no-floppy --root-dev-only --fs-uuid --set=dev \$(blkid -s UUID -o value ${boot_partition})
@@ -15056,7 +15159,8 @@ elif [ ! -z "\$(command -v emerge)" ]; then
 	eselect news read new
 elif [ ! -z "\$(command -v rpm-ostree)" ]; then
 	echo "Cleaning up"
-	rpm-ostree cleanup --base
+	rpm-ostree cleanup -bm
+	rpm-ostree reset
 elif [ ! -z "\$(command -v zypper)" ]; then
 	sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 fi
@@ -15149,12 +15253,13 @@ mkdir -p /var/lib/bluetooth /var/lib/NetworkManager
 chmod 0700 /var/lib/bluetooth /var/lib/NetworkManager
 if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" ]; then
 	ostree admin finalize-staged
-	sed -i "/(ostree:1)/,/}/d" /boot/loader/grub.cfg
+	/boot/linuxloops/blsconvert > /boot/grub2/grub.cfg
+	sed -i "/(ostree:1)/,/}/d" /boot/grub2/grub.cfg
 	echo "Applying selinux labels..."
 	echo '/var/swap(/.*)?       system_u:object_r:swapfile_t:s0' >> /etc/selinux/targeted/contexts/files/file_contexts.local
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /boot
-	for i in \$(ls /ostree/deploy/fedora/deploy | grep -v '\.origin'); do
-		setfiles -r /ostree/deploy/fedora/deploy/\${i} -c /ostree/deploy/fedora/deploy/\${i}/etc/selinux/targeted/policy/policy.* /ostree/deploy/fedora/deploy/\${i}/etc/selinux/targeted/contexts/files/file_contexts /ostree/deploy/fedora/deploy/\${i}
+	for i in \$(ls /ostree/deploy/atomic/deploy | grep -v '\.origin'); do
+		setfiles -r /ostree/deploy/atomic/deploy/\${i} -c /ostree/deploy/atomic/deploy/\${i}/etc/selinux/targeted/policy/policy.* /ostree/deploy/atomic/deploy/\${i}/etc/selinux/targeted/contexts/files/file_contexts /ostree/deploy/atomic/deploy/\${i}
 	done
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /etc
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /var
@@ -15871,10 +15976,6 @@ case "${1}" in
 	"Fedora")
 		if ! curl -sfLo/dev/null -r0-0 "${2}/updates/$(echo ${fedora_version} | tr A-Z a-z)/Everything/x86_64/repodata/repomd.xml"; then return 1; fi
 		mirror_Fedora="${2}"
-	;;
-	"Fedora-Atomic")
-		if ! curl -sfLo/dev/null -r0-0 "${2}/config"; then return 1; fi
-		mirror_Fedora_Atomic="${2}"
 	;;
 	"Gentoo")
 		if ! curl -sfLo/dev/null -r0-0 "${2}/releases/amd64/binpackages/23.0/x86-64/Packages"; then return 1; fi
