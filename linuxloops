@@ -15821,7 +15821,7 @@ return "${return_value}"
 grub_config()
 {
 if [ ! -z "${wsl}" ]; then
-	img_uuid=$(sudo -u ${SUDO_USER} /mnt/c/Windows/System32/mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1)
+	img_uuid=$(sudo -u ${SUDO_USER} /mnt/${wsl_windows_drive}/Windows/System32/mountvol.exe $(echo ${fullpath:5:1} | tr a-z A-Z): /L | cut -d'{' -f2 | cut -d'}' -f1)
 else
 	img_uuid=$(blkid -s PARTUUID -o value "$(df "${fullpath}" --output=source | sed 1d)")
 fi
@@ -17354,7 +17354,7 @@ until false; do
 					else
 						local path
 						if [ ! -z "${wsl}" ]; then
-							destination=$(gui_launch -m image -t "Image file creation" -q "Please select the image file path:" -p "/mnt/c/Users/$(echo $(/mnt/c/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/${distribution}.img")
+							destination=$(gui_launch -m image -t "Image file creation" -q "Please select the image file path:" -p "/mnt/${wsl_windows_drive}/Users/$(echo $(/mnt/${wsl_windows_drive}/Windows/System32/cmd.exe /c echo %username% 2> /dev/null) | sed 's/[^a-zA-Z0-9]//g')/${distribution}.img")
 						elif [ ! -z "${chromeos}" ] || [ ! -z "${brunch}" ]; then
 							destination=$(gui_launch -m image -t "Image file creation" -q "Please select the image file path:" -p "/mnt/stateful_partition/unencrypted/${distribution}.img")
 						else
@@ -17824,6 +17824,19 @@ if [[ $EUID -ne 0 ]]; then
         	exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix eval -f '<nixpkgs>' --raw 'glib-networking')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS bash $0"
 	else
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
+	fi
+fi
+if [ ! -z "${wsl}" ]; then
+	if [ ! -e /dev/loop-control ]; then echo "WSL1 is not supported, please enable WSL2 to use this installer."; exit 1; fi
+	for wsl_drive in {a..z}; do
+		if [ -d "/mnt/${wsl_drive}/Windows" ] && [ -d "/mnt/${wsl_drive}/Users" ]; then
+			wsl_windows_drive="${wsl_drive}"
+			break
+		fi
+	done
+	if [ -z ${wsl_windows_drive} ]; then
+		echo "Windows drive not found at standard path. Exiting."
+		exit 1
 	fi
 fi
 if [ -z ${SUDO_UID} ]; then
