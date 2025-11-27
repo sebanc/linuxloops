@@ -609,7 +609,7 @@ case "${distribution}" in
 		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
 		mirrors_supported=( "Fedora" "Nobara" )
-		nobara_version="42"
+		nobara_version="43"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -5583,7 +5583,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop budgie-desktop-view arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -5824,7 +5824,7 @@ case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment budgie-desktop-view arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Cinnamon')
@@ -6714,7 +6714,7 @@ if [ "${environment}" == "None" ]; then
 	echo -e "USE=\"bluetooth cryptsetup dbus dracut elogind harfbuzz mount pam policykit -systemd truetype X\"" >> /etc/portage/make.conf
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
@@ -6940,7 +6940,7 @@ if [ "${environment}" == "None" ]; then
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
-	echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr chromium client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vaapi vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+	echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
@@ -7812,9 +7812,10 @@ sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirrors2.manjaro.org/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	cur_speed=0; for i in https://mirrors.manjaro.org/repo https://mirrors2.manjaro.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
@@ -8061,9 +8062,10 @@ sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirrors2.manjaro.org/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	cur_speed=0; for i in https://mirrors.manjaro.org/repo https://mirrors2.manjaro.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
@@ -8310,9 +8312,10 @@ sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirrors2.manjaro.org/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	cur_speed=0; for i in https://mirrors.manjaro.org/repo https://mirrors2.manjaro.org; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
@@ -9340,7 +9343,7 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
 fi
 dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
+dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz yum-utils zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
@@ -9353,14 +9356,14 @@ mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever ${nobara_version} -y filesystem
-dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever ${nobara_version} -y @core dnf-plugin-system-upgrade akmods ca-certificates grubby openssl tar
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version}
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\$(( ${nobara_version} - 1 ))/baseos/nobara-repos/\$(( ${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 1 ))
-dnf swap --allowerasing --installroot=/mnt --use-host-config --releasever ${nobara_version} -y fedora-release-identity-basic nobara-release-identity-basic
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\$(( ${nobara_version} - 2 ))/baseos/nobara-repos/\$(( ${nobara_version} - 2 ))/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 2 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 2 ))
+rpm -Uvh --root=/mnt --nodeps \$(repoquery --location group) \$(repoquery --location setup) \$(repoquery --location filesystem) \$(repoquery --location mailcap)
+dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core fedora-repos fedora-gpg-keys nobara-repos nobara-gpg-keys nobara-release-workstation akmods grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -9383,7 +9386,7 @@ update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap apparmor langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
 systemctl --global enable dbus.socket dbus-broker.service
 sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/nobara-pikaos-additional.repo
@@ -9392,7 +9395,7 @@ dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vdpau-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme protonplus-next steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
+desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
@@ -9448,7 +9451,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data pipewire-codec-aptx mozilla-openh264.x86_64 x264-libs.x86_64 x265-libs.x86_64 libavcodec-freeworld.x86_64 libavcodec-free.x86_64 openh264.x86_64 mesa-va-drivers-freeworld.x86_64 mesa-vdpau-drivers-freeworld.x86_64 mesa-libgallium-freeworld.x86_64 gstreamer1-plugins-bad-free-extras.x86_64 libheif-freeworld.x86_64 libheif.x86_64 x264-libs.i686 x265-libs.i686 libavcodec-freeworld.i686 libavcodec-free.i686 openh264.i686 mesa-va-drivers-freeworld.i686 mesa-vdpau-drivers-freeworld.i686 mesa-libgallium-freeworld.i686 gstreamer1-plugins-bad-free-extras.i686 libheif-freeworld.i686 libheif.i686
+dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data pipewire-codec-aptx mozilla-openh264.x86_64 x264-libs.x86_64 x265-libs.x86_64 libavcodec-freeworld.x86_64 libavcodec-free.x86_64 openh264.x86_64 mesa-va-drivers-freeworld.x86_64 mesa-libgallium-freeworld.x86_64 gstreamer1-plugins-bad-free-extras.x86_64 libheif-freeworld.x86_64 libheif.x86_64 x264-libs.i686 x265-libs.i686 libavcodec-freeworld.i686 libavcodec-free.i686 openh264.i686 mesa-va-drivers-freeworld.i686 mesa-libgallium-freeworld.i686 gstreamer1-plugins-bad-free-extras.i686 libheif-freeworld.i686 libheif.i686
 ${install_desktop}
 systemctl enable ${desktop_services}
 systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
@@ -13409,7 +13412,7 @@ elif [ "${distribution}" == "Gentoo" ]; then
 #!/bin/bash
 set -e
 echo -e 'media-libs/nvidia-vaapi-driver ~amd64' > /etc/portage/package.accept_keywords/linuxloops
-emerge -uN x11-drivers/nvidia-drivers media-libs/nvidia-vaapi-driver
+emerge -uN x11-drivers/nvidia-drivers
 INSTALLNVIDIA
 elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
@@ -15151,6 +15154,9 @@ if [ ! -z "\$(command -v apt)" ]; then
 elif [ ! -z "\$(command -v dnf)" ]; then
 	if [ "${distribution}" == "Qubes" ]; then
 		dnf --setopt=reposdir=/etc/yum.repos.d/ autoremove -y
+	elif [ "${distribution}" == "Nobara" ]; then
+		rm -f /var/lib/rpm/.rpm.lock
+		dnf autoremove -y
 	else
 		dnf autoremove -y
 	fi
