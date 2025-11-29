@@ -85,7 +85,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Debian|Trixie<br>Testing<br>Unstable|✓|✓|✓||
 |Devuan|Excalibur<br>Testing|✓|✓|||
 |Elementary|8|✓|✓|✓||
-|Fedora|43|✓|✓|✓|[notes][Fedora-notes]|
+|Fedora|43|✓|✓||[notes][Fedora-notes]|
 |Fedora-Atomic|43|✓|✓||[notes][Fedora-Atomic-notes]|
 |FoxFlake|Stable<br>Unstable|✓|✓||[notes][FoxFlake-notes]|
 |Gentoo|23/Openrc<br>23/Systemd|✓|✓|||
@@ -101,7 +101,6 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Nobara|Rolling|✓|✓|||
 |Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
-|Parrot|Lory|disk images only|✓||[notes][Parrot-notes]|
 |PikaOS|Nest|✓|✓|||
 |Pop|22.04<br>24.04|✓|✓|✓||
 |Proxmox|VE9|✓|✓|||

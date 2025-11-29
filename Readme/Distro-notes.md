@@ -109,11 +109,6 @@ sudo mokutil --import /etc/secureboot_keys/MOK.der
 Reboot, enroll the key in shim and re-enable secureboot.  
 
 
-## Parrot
-
-parrot does not have secure boot support in full disk install.  
-
-
 ## Qubes
 
 On the first boot you will be prompted to configure qubes, if you experience a crash after the first boot with the default qubes settings you should disable usb qubes in the configuration menu.  
