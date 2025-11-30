@@ -1798,6 +1798,7 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
@@ -6135,6 +6136,7 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
@@ -9341,6 +9343,7 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap apparmor langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
@@ -10784,6 +10787,7 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
@@ -13048,7 +13052,7 @@ if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${d
 set -e
 pacman -S --noconfirm --needed nvidia-dkms libva-nvidia-driver
 INSTALLNVIDIA
-elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] ||  [ "${distribution}" == "Proxmox" ]; then
+elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Proxmox" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -14151,7 +14155,6 @@ elif [ "${distribution}" == "GLF-OS" ]; then
   glf.environment.type = "$(echo ${environment} | cut -d'/' -f1 | tr A-Z a-z)";
   glf.environment.edition = "$(echo ${environment} | cut -d'/' -f2 | tr A-Z a-z)";
   glf.nvidia_config.enable = false;
-  glf.standBy.enable = false;
 
   users.users.${useraccount_name} = {
     isNormalUser = true;
