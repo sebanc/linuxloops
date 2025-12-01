@@ -71,7 +71,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 
 ## Overview of supported distributions and features
 
-|**Distribution**|**Versions**|**Secure Boot support**|**Nvidia proprietary driver support**|**Linux-surface patches support**|**Notes**|
+|**Distribution**|**Versions**|**Secure Boot support**|**Nvidia driver support (open)**|**Linux-surface patches support**|**Notes**|
 |----------------|:------------------------------------------------------------:|:---------------------:|:-----------------------------------:|:-------------------------------:|----------------------------|
 |AlmaLinux|10|✓||||
 |Arch|Stable<br>Testing|✓ (shim-signed AUR)|✓|✓|[notes][Arch-notes]|
@@ -97,7 +97,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Manjaro|Stable<br>Testing<br>Unstable|✓ (shim-signed AUR)|✓|✓|[notes][Manjaro-notes]|
 |MX|25|✓|✓|✓||
 |Neon|User<br>Testing|✓|✓|✓||
-|NixOS|25.05<br>Unstable|✓|✓|||
+|NixOS|25.11<br>Unstable|✓|✓|||
 |Nobara|Rolling|✓|✓|||
 |Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
@@ -109,14 +109,14 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |SteamOS|Main<br>Staging|✓ (shim-signed AUR)|✓|✓|[notes][SteamOS-notes]|
 |Tails|Stable|✓|||[notes][Tails-notes]|
 |Ubuntu|24.04<br>25.10|✓|✓|✓||
-|Void|Current||✓|||
+|Void|Current|||||
 |Zorin|18|✓|✓|✓||
 
 
 ## About this project
 
 Why create a linux distribution installer ?  
-Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows minimal Linux installs with more DE options, to directly add custom packages, Secure Boot support, nvidia proprietary drivers or Linux-surface patches.  
+Linux is very modular thanks to package management systems, however most distribution installers are either completely manual or focus on a specific DE and bring lots of packages that are not necessarily needed. Linuxloops allows minimal Linux installs with more DE options, to directly add custom packages, Secure Boot support, nvidia drivers (open) or Linux-surface patches.  
 
 
 ## How does it work ?
@@ -183,7 +183,7 @@ Usage: bash ${HOME}/bin/linuxloops -distro <distribution name> -ver <distributio
 -le, --list-environments				(List available environments for chosen distribution/version)
 -ll, --list-locales					(List available locales)
 -lk, --list-keymaps					(List available keymaps)
--ln, --list-nvidia					(Confirms if nvidia proprietary driver is supported for chosen distribution/version)
+-ln, --list-nvidia					(Confirms if nvidia open driver is supported for chosen distribution/version)
 -ls, --list-surface					(Confirms if Surface devices patches are supported for chosen distribution/version)
 -lt, --list-timezones					(List available timezones)
 -lv, --list-versions					(List available versions for chosen distribution)

@@ -46,7 +46,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 -le, --list-environments				(List available environments for chosen distribution/version)
 -ll, --list-locales					(List available locales)
 -lk, --list-keymaps					(List available keymaps)
--ln, --list-nvidia					(Confirms if nvidia proprietary driver is supported for chosen distribution/version)
+-ln, --list-nvidia					(Confirms if nvidia open driver is supported for chosen distribution/version)
 -ls, --list-surface					(Confirms if Surface devices patches are supported for chosen distribution/version)
 -lt, --list-timezones					(List available timezones)
 -lv, --list-versions					(List available versions for chosen distribution)
@@ -180,9 +180,9 @@ case "${distribution}" in
 		default_version="User"
 		;;
 	'NixOS')
-		available_versions=( "25.05" "Unstable" )
-		available_versions_longname=( "25.05_(Stable)" "Unstable" )
-		default_version="25.05"
+		available_versions=( "25.11" "Unstable" )
+		available_versions_longname=( "25.11_(Stable)" "Unstable" )
+		default_version="25.11"
 		;;
 	'Nobara')
 		available_versions=( "Rolling" )
@@ -393,7 +393,7 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc devuan daedalus default"
+		bootstrap="lxc devuan excalibur default"
 		btrfs_supported="Yes"
 		devuan_version="${version}"
 		grub_disable_recordfail="Yes"
@@ -455,7 +455,7 @@ case "${distribution}" in
 		foxflake_version="${version}"
 		mirrors_supported=()
 		if [ "${version}" == "Stable" ] || [ "${version}" == "Stable-Test" ]; then
-			nixos_version="25.05"
+			nixos_version="25.11"
 		else
 			nixos_version="Unstable"
 		fi
@@ -770,7 +770,7 @@ case "${distribution}" in
 		bootstrap="lxc voidlinux current default"
 		btrfs_supported="Yes"
 		mirrors_supported=( "Void" )
-		nvidia_supported="Yes"
+		nvidia_supported="No"
 		surface_supported="No"
 		void_version="${version}"
 		;;
@@ -8885,7 +8885,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_NixOS-25.05()
+chroot_NixOS-25.11()
 {
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
@@ -8969,9 +8969,9 @@ xdg.portal.xdgOpenUsePortal = true;"
 	default_session="gnome"
 	nixos_desktop="
 ${autologin_commands}
+services.desktopManager.gnome.enable = true;
 services.displayManager.defaultSession = \"${default_session}\";
-services.xserver.desktopManager.gnome.enable = true;
-services.xserver.displayManager.gdm.enable = true;
+services.displayManager.gdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";
 xdg.portal.enable = true;
@@ -9170,9 +9170,9 @@ xdg.portal.xdgOpenUsePortal = true;"
 	default_session="gnome"
 	nixos_desktop="
 ${autologin_commands}
+services.desktopManager.gnome.enable = true;
 services.displayManager.defaultSession = \"${default_session}\";
-services.xserver.desktopManager.gnome.enable = true;
-services.xserver.displayManager.gdm.enable = true;
+services.displayManager.gdm.enable = true;
 services.xserver.enable = true;
 services.xserver.xkb.layout = \"${keymap}\";
 xdg.portal.enable = true;
@@ -13050,49 +13050,45 @@ if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${d
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-pacman -S --noconfirm --needed nvidia-dkms libva-nvidia-driver
+pacman -S --noconfirm --needed nvidia-open-dkms libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Proxmox" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vaapi-driver
+DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-open-kernel-dkms nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-open' | grep -v '\-server' | tail -1 | grep -o -P '(nvidia-driver-).*' | cut -d' ' -f1 | cut -d '/' -f1) nvidia-vaapi-driver
+DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-server' | grep '\-open' | tail -1 | grep -o -P '(nvidia-driver-).*-open' | cut -d' ' -f1 | cut -d '/' -f1) nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf install -y akmod-nvidia xorg-x11-drv-nvidia libva-nvidia-driver
+dnf install -y akmod-nvidia-open xorg-x11-drv-nvidia libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora-Atomic" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-rpm-ostree -y install akmod-nvidia xorg-x11-drv-nvidia libva-nvidia-driver
+rpm-ostree -y install akmod-nvidia-open xorg-x11-drv-nvidia libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "FoxFlake" ]; then
 	foxflake_nvidia="
-  # Nvidia open source driver support
   foxflake.nvidia.enable = true;
-
 "
 elif [ "${distribution}" == "GLF-OS" ]; then
 	nixos_nvidia="
-  services.xserver.videoDrivers = [ \"nvidia\" ];
-  hardware.nvidia.open = true;
-  hardware.nvidia.powerManagement.enable = true;
-  hardware.nvidia.nvidiaSettings = true;
+  glf.nvidia_config.enable = true;
 "
 elif [ "${distribution}" == "Gentoo" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
+echo -e 'x11-drivers/nvidia-drivers kernel-open' > /etc/portage/package.use/nvidia
 echo -e 'media-libs/nvidia-vaapi-driver ~amd64' > /etc/portage/package.accept_keywords/linuxloops
 emerge -uN x11-drivers/nvidia-drivers
 INSTALLNVIDIA
@@ -13102,6 +13098,15 @@ services.xserver.videoDrivers = [ \"nvidia\" ];
 hardware.nvidia.open = true;
 hardware.nvidia.powerManagement.enable = true;
 hardware.nvidia.nvidiaSettings = true;
+systemd.services.nvidia-suspend.enable = true;
+systemd.services.nvidia-resume.enable = true;
+systemd.services.nvidia-hibernate.enable = true;
+systemd.shutdown.\"nvidia.shutdown\" = pkgs.writeScript \"nvidia.shutdown\" ''
+  #!/bin/sh
+  for MODULE in nvidia_drm nvidia_modeset nvidia_uvm nvidia; do
+    if lsmod | grep \"''\\\${MODULE}\" &> /dev/null; then rmmod ''\\\${MODULE}; fi
+  done
+'';
 "
 elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -13146,7 +13151,7 @@ Xks0dFlInjDFyMgAwsOaVDTWwjBfAaklUysV+CxhhEvSnuGx9h8Mi88K6g8heA==
 NVIDIAREPOKEY
 rpm --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-db27fd5a-62589a51.asc
 zypper --non-interactive install openSUSE-repos-$(echo ${opensuse_version} | cut -d '/' -f1)-NVIDIA
-zypper --non-interactive install --auto-agree-with-licenses --force-resolution nvidia-gl-G06 nvidia-video-G06
+zypper --non-interactive install --auto-agree-with-licenses --force-resolution nvidia-open-driver-G06 nvidia-gl-G06 nvidia-video-G06
 INSTALLNVIDIA
 elif [ "${distribution}" == "PikaOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
@@ -13164,13 +13169,7 @@ elif [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-pacman -S --noconfirm --needed nvidia-dkms lib32-nvidia-utils libva-nvidia-driver
-INSTALLNVIDIA
-elif [ "${distribution}" == "Void" ]; then
-	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
-#!/bin/bash
-set -e
-xbps-install -y nvidia nvidia-vaapi-driver
+pacman -S --noconfirm --needed nvidia-open-dkms lib32-nvidia-utils libva-nvidia-driver
 INSTALLNVIDIA
 fi
 if [ -f "${bootstrapdir}"/tmp/linuxloops/install_nvidia ]; then
@@ -13183,7 +13182,7 @@ if [ -x /usr/lib/systemd/systemd ]; then
 	cat >/etc/systemd/system-shutdown/nvidia.shutdown <<'SHUTDOWNFIX'
 #!/bin/sh
 for MODULE in nvidia_drm nvidia_modeset nvidia_uvm nvidia; do
-	if lsmod | grep "\$MODULE" &> /dev/null; then rmmod \$MODULE; fi
+	if lsmod | grep "\${MODULE}" &> /dev/null; then rmmod \${MODULE}; fi
 done
 SHUTDOWNFIX
 	chmod 0755 /etc/systemd/system-shutdown/nvidia.shutdown
@@ -14134,7 +14133,7 @@ ${foxflake_nvidia}
   foxflake.internationalisation.timezone = "${timezone}";
 
   # Initially installed version (DO NOT TOUCH)
-  foxflake.stateVersion = "25.05";
+  foxflake.stateVersion = "25.11";
 }
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
@@ -14154,7 +14153,7 @@ elif [ "${distribution}" == "GLF-OS" ]; then
 
   glf.environment.type = "$(echo ${environment} | cut -d'/' -f1 | tr A-Z a-z)";
   glf.environment.edition = "$(echo ${environment} | cut -d'/' -f2 | tr A-Z a-z)";
-  glf.nvidia_config.enable = false;
+${nixos_nvidia}
 
   users.users.${useraccount_name} = {
     isNormalUser = true;
@@ -14179,8 +14178,6 @@ elif [ "${distribution}" == "GLF-OS" ]; then
   networking.networkmanager.enable = true;
 
 ${autologin_commands}
-
-${nixos_nvidia}
 
   system.stateVersion = "25.05"; # DO NOT TOUCH
 }
@@ -14252,16 +14249,13 @@ nix.gc = {
 nix.settings.auto-optimise-store = true;
 nixpkgs.config.allowUnfree = true;
 
-systemd.services."getty@tty1".enable = false;
-systemd.services."autovt@tty1".enable = false;
-
 # This value determines the NixOS release from which the default
 # settings for stateful data, like file locations and database versions
 # on your system were taken. It‘s perfectly fine and recommended to leave
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-system.stateVersion = "25.05"; # Did you read the comment?
+system.stateVersion = "25.11"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 fi
@@ -15739,7 +15733,7 @@ if [ "${1}" == "all" ]; then
 				echo -en "${environment} "
 			done
 			echo -en "\n\t\tInstall on btrfs filesystem possible: ${btrfs_supported}"
-			echo -en "\n\t\tNvidia proprietary driver installation possible: ${nvidia_supported}"
+			echo -en "\n\t\tNvidia open driver installation possible: ${nvidia_supported}"
 			echo -en "\n\t\tSurface patches installation possible: ${surface_supported}"
 			echo -en "\n\t\tCustom mirrors supported: ${mirrors_supported[@]}"
 		done
@@ -16880,7 +16874,7 @@ class linuxloops:
         if listargs[1] != '':
             innerhtml += '<tr><td style="width: 250px; height: 30px;"><label for="hide_grub">Hide GRUB Bootloader</td><td style="width: 400px; height: 30px;"></label><input type="checkbox" id="hide_grub" style="width: 390px;"></td></tr>'
         if listargs[2] != '':
-            innerhtml += '<tr><td style="width: 250px; height: 30px;"><label for="nvidia">Install Nvidia proprietary drivers</td><td style="width: 400px; height: 30px;"></label><input type="checkbox" id="nvidia" style="width: 390px;"></td></tr>'
+            innerhtml += '<tr><td style="width: 250px; height: 30px;"><label for="nvidia">Install Nvidia open drivers</td><td style="width: 400px; height: 30px;"></label><input type="checkbox" id="nvidia" style="width: 390px;"></td></tr>'
         if listargs[3] != '':
             innerhtml += '<tr><td style="width: 250px; height: 30px;"><label for="surface">Install Microsoft Surface patches</label></td><td style="width: 400px; height: 30px;"><input type="checkbox" id="surface" style="width: 390px;"></td></tr>'
         if listargs[4] != '':
@@ -17355,7 +17349,7 @@ if [ ! $(list_array "available_keymaps" | grep -w "${keymap}") ]; then echo "Key
 if [ ! $(list_array "available_timezones" | grep -w "${timezone}") ]; then echo "Timezone ${timezone} is not available, supported timezones are:"; echo $(list_array "available_timezones" | sed -e 's@\n@ @g'); exit 1; fi
 if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ ! -z "${hostname}" ] && ! echo "${hostname}" | grep -Pq '^(([a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9])\.)*([A-Za-z0-9]|[A-Za-z0-9][A-Za-z0-9\-]*[A-Za-z0-9])$'; then echo "Provided hostname contains invalid characters."; exit 1; fi
 if [ "${root_fstype}" == "btrfs" ] && [ ! "${btrfs_supported}" == "Yes" ]; then echo "Filesystem type btrfs is not available for this distribution version."; exit 1; fi
-if [ "${nvidia}" == "Yes" ] && [ ! "${nvidia_supported}" == "Yes" ]; then echo "nvidia proprietary driver is not available for this distribution version."; exit 1; fi
+if [ "${nvidia}" == "Yes" ] && [ ! "${nvidia_supported}" == "Yes" ]; then echo "nvidia open driver is not available for this distribution version."; exit 1; fi
 if [ "${surface}" == "Yes" ] && [ ! "${surface_supported}" == "Yes" ]; then echo "Surface patches are not available for this distribution version."; exit 1; fi
 if [ "${live}" == "Yes" ] && ([ ! "${distribution}" == "Debian" ] && [ ! "${distribution}" == "Linuxmint" ]); then echo "Linuxloops live can only be created with Debian or Linuxmint distributions."; exit 1; fi
 if [ ! -z "${custom_script}" ] && [ ! -f "${custom_script}" ]; then echo "Custom script ${1} could not be found."; exit 1; fi
