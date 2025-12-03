@@ -98,7 +98,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |MX|25|✓|✓|✓||
 |Neon|User<br>Testing|✓|✓|✓||
 |NixOS|25.11<br>Unstable|✓|✓|||
-|Nobara|Rolling|✓|✓|||
+|Nobara|42|✓|✓|||
 |Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
 |PikaOS|Nest|✓|✓|||

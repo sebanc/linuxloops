@@ -598,13 +598,13 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Nobara')
-		available_environments=( "None" "Gnome" "Nobara" "Plasma" "SteamDeck" )
+		available_environments=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 43 default"
+		bootstrap="lxc fedora 42 default"
 		btrfs_supported="Yes"
 		mirrors_supported=( "Fedora" "Nobara" )
-		nobara_version="43"
+		nobara_version="42"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -1798,7 +1798,6 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
-systemd-machine-id-setup
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
@@ -2419,6 +2418,7 @@ sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
+sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -6136,7 +6136,6 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
-systemd-machine-id-setup
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
@@ -9308,18 +9307,19 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/nobara.repo -o /etc/yum.repos.d/nobara.repo || "No new repo file."
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version}
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} - 1 ))/baseos/nobara-repos/$(( ${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 ))
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) || echo "No new repo keys."
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version}
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\$(( ${nobara_version} - 1 ))/baseos/nobara-repos/\$(( ${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 1 ))
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/\$(( ${nobara_version} - 2 ))/baseos/nobara-repos/\$(( ${nobara_version} - 2 ))/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 2 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-\$(( ${nobara_version} - 2 ))
 rpm -Uvh --root=/mnt --nodeps \$(repoquery --location group) \$(repoquery --location setup) \$(repoquery --location filesystem) \$(repoquery --location mailcap)
 dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core fedora-repos fedora-gpg-keys nobara-repos nobara-gpg-keys nobara-release-workstation akmods grubby openssl tar
 if [ ! -z "${mirror_Fedora}" ]; then
@@ -9340,12 +9340,10 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 update-ca-trust
-update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
-systemd-machine-id-setup
 dnf upgrade --refresh -y
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap apparmor langpacks-${packages_locale}
+dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
 systemctl --global enable dbus.socket dbus-broker.service
 sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/nobara-pikaos-additional.repo
@@ -9354,31 +9352,55 @@ dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
+desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme qt5-qttools steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} gdm gnome-shell network-manager-applet gnome-keyring gnome-keyring-pam gnome-backgrounds gnome-icon-theme nautilus gnome-terminal gnome-extensions-app gnome-software gnome-shell-extension-appindicator xdg-desktop-portal-gnome
+dnf install --allowerasing -y ${desktop_base} gdm gnome-shell network-manager-applet gnome-keyring gnome-keyring-pam gnome-backgrounds gnome-icon-theme nautilus gnome-terminal gnome-extensions-app gnome-software gnome-shell-extension-appindicator xdg-desktop-portal-gnome file-roller
+"
+	;;
+	'Gnome/Full')
+	default_session="gnome-wayland"
+	install_desktop="
+dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop network-manager-applet gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator xdg-desktop-portal-gnome file-roller
 "
 	;;
 	'Nobara')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd kde-nobara kde-nobara-extras-wallpapers breeze-gtk breeze-icon-theme xdg-desktop-portal-kde
+dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd kde-nobara kde-nobara-extras-wallpapers breeze-gtk breeze-icon-theme xdg-desktop-portal-kde ark
+"
+	;;
+	'Nobara/Full')
+	default_session="plasma"
+	install_desktop="
+dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm @kde-desktop plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers breeze-gtk breeze-icon-theme xdg-desktop-portal-kde ark
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde ark
+"
+	;;
+	'Plasma/Full')
+	default_session="plasma"
+	install_desktop="
+dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet xdg-desktop-portal-kde ark
 "
 	;;
 	'SteamDeck')
 	default_session="gamescope-session-steam"
 	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-steamdeck-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck xdg-desktop-portal-kde
+dnf install --allowerasing -y ${desktop_base} sddm kde-steamdeck-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck xdg-desktop-portal-kde ark
+"
+	;;
+	'SteamDeck/Full')
+	default_session="gamescope-session-steam"
+	install_desktop="
+dnf install --allowerasing -y ${desktop_base} sddm kde-steamdeck-sddm @kde-desktop plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck xdg-desktop-portal-kde ark
 "
 	;;
 esac
@@ -10787,7 +10809,6 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
-systemd-machine-id-setup
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
@@ -12619,6 +12640,7 @@ if [ ! -z "${nixos}" ]; then
 fi
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
+unset LD_LIBRARY_PATH
 if [ -x /tmp/linuxloops/prepare_bootstrap ]; then /tmp/linuxloops/prepare_bootstrap; fi
 if [ -x /tmp/linuxloops/partition_script ]; then /tmp/linuxloops/partition_script; fi
 if [ -x /tmp/linuxloops/setup_and_mount_rootfs ]; then /tmp/linuxloops/setup_and_mount_rootfs; fi
@@ -13068,13 +13090,15 @@ elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dnf install -y akmod-nvidia-open xorg-x11-drv-nvidia libva-nvidia-driver
+echo "%_with_kmod_nvidia_open 1" > /etc/rpm/macros.nvidia-kmod
+dnf install -y akmod-nvidia xorg-x11-drv-nvidia libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora-Atomic" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-rpm-ostree -y install akmod-nvidia-open xorg-x11-drv-nvidia libva-nvidia-driver
+echo "%_with_kmod_nvidia_open 1" > /etc/rpm/macros.nvidia-kmod
+rpm-ostree -y install akmod-nvidia xorg-x11-drv-nvidia libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "FoxFlake" ]; then
 	foxflake_nvidia="
@@ -13112,6 +13136,7 @@ elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
+echo "%_with_kmod_nvidia_open 1" > /etc/rpm/macros.nvidia-kmod
 dnf install -y nvidia-driver libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "OpenSUSE" ]; then
@@ -14822,6 +14847,7 @@ generate_cleanup()
 cat >"${bootstrapdir}"/tmp/linuxloops/cleanup <<CLEANUP
 #!/bin/bash
 set -e
+sleep 5
 if [ ! -z "\$(command -v apt)" ]; then
 	if [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(check-language-support -l ${packages_locale}); fi
 	rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -14829,9 +14855,6 @@ if [ ! -z "\$(command -v apt)" ]; then
 elif [ ! -z "\$(command -v dnf)" ]; then
 	if [ "${distribution}" == "Qubes" ]; then
 		dnf --setopt=reposdir=/etc/yum.repos.d/ autoremove -y
-	elif [ "${distribution}" == "Nobara" ]; then
-		rm -f /var/lib/rpm/.rpm.lock
-		dnf autoremove -y
 	else
 		dnf autoremove -y
 	fi
