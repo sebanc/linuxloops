@@ -12640,7 +12640,6 @@ if [ ! -z "${nixos}" ]; then
 fi
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 export LD_LIBRARY_PATH=/usr/local/lib64:/usr/local/lib/x86_64-linux-gnu:/usr/local/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib:/lib64:/lib/x86_64-linux-gnu:/lib
-unset LD_LIBRARY_PATH
 if [ -x /tmp/linuxloops/prepare_bootstrap ]; then /tmp/linuxloops/prepare_bootstrap; fi
 if [ -x /tmp/linuxloops/partition_script ]; then /tmp/linuxloops/partition_script; fi
 if [ -x /tmp/linuxloops/setup_and_mount_rootfs ]; then /tmp/linuxloops/setup_and_mount_rootfs; fi
