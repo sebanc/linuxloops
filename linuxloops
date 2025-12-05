@@ -140,7 +140,7 @@ case "${distribution}" in
 		default_version="23/Openrc"
 		;;
 	'GLF-OS')
-		available_versions=( "Omnislash" "Testing" )
+		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Omnislash"
 		;;
@@ -481,7 +481,7 @@ case "${distribution}" in
 		bootstrap="lxc archlinux current default"
 		btrfs_supported="Yes"
 		chroot_function="${distribution}"
-		if [ "${version}" == "Omnislash" ]; then
+		if [ "${version}" == "Stable" ]; then
 			glfos_version="Main"
 		else
 			glfos_version="${version}"
@@ -601,10 +601,10 @@ case "${distribution}" in
 		available_environments=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 42 default"
+		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
 		mirrors_supported=( "Fedora" "Nobara" )
-		nobara_version="42"
+		nobara_version="43"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -1798,6 +1798,8 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
+rpm --rebuilddb
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
@@ -2706,6 +2708,7 @@ sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
+sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2975,6 +2978,7 @@ sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
+sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3245,6 +3249,7 @@ sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman_artix.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
+sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -6136,6 +6141,8 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
+rpm --rebuilddb
 dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
@@ -9300,28 +9307,21 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
 fi
 dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz yum-utils zstd
+dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/nobara.repo -o /etc/yum.repos.d/nobara.repo || "No new repo file."
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version}
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} - 1 ))/baseos/nobara-repos/$(( ${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 ))
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) || echo "No new repo keys."
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
 mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
-rpm -Uvh --root=/mnt --nodeps \$(repoquery --location group) \$(repoquery --location setup) \$(repoquery --location filesystem) \$(repoquery --location mailcap)
-dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core fedora-repos fedora-gpg-keys nobara-repos nobara-gpg-keys nobara-release-workstation akmods grubby openssl tar
+dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y filesystem
+dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade akmods ca-certificates grubby openssl tar yum-utils kernel
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -9342,17 +9342,29 @@ set -e
 update-ca-trust
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
+rpm --rebuilddb
 dnf upgrade --refresh -y
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
+curl --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/nobara.repo -o /etc/yum.repos.d/nobara.repo || echo "No new repo file."
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version}
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} - 1 ))/baseos/nobara-repos/$(( ${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 ))
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} - 2 ))/baseos/nobara-repos/$(( ${nobara_version} - 2 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 2 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 2 ))
+curl --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) || echo "No new repo keys."
+rpm -e --nodeps \$(rpm -q fedora-release-identity-basic) \$(rpm -q fedora-release-common) \$(rpm -q fedora-release)
+dnf install --allowerasing -y --releasever $(echo ${nobara_version} | tr A-Z a-z) nobara-repos nobara-gpg-keys nobara-release nobara-release-common nobara-release-workstation nobara-updater
+nobara-sync cli
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
 systemctl --global enable dbus.socket dbus-broker.service
 sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/nobara-pikaos-additional.repo
-dnf install -y rpmfusion-free-release rpmfusion-nonfree-release
 dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme qt5-qttools steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers yumex"
+desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme qt5-qttools steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Gnome')
@@ -9528,6 +9540,7 @@ sudo -u '${useraccount_name}' bash << 'OMARCHY_INSTALL'
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 hash -r
 git clone -b \$(echo ${omarchy_version} | tr A-Z a-z) "https://github.com/basecamp/omarchy.git" \${HOME}/.local/share/omarchy
+sed -i 's@Server = https://stable-mirror.omarchy.org@Server = https://mirror.omarchy.org@g' \${HOME}/.local/share/omarchy/default/pacman/mirrorlist-stable
 echo -e '#!/bin/bash\necho "Nvidia ignored"' > \${HOME}/.local/share/omarchy/install/config/hardware/nvidia.sh
 echo -e '#!/bin/bash\necho "Presentation ignored"' > \${HOME}/.local/share/omarchy/install/helpers/presentation.sh
 echo -e '#!/bin/bash\necho "Guards ignored"' > \${HOME}/.local/share/omarchy/install/preflight/guard.sh
@@ -9602,10 +9615,10 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
+systemd-machine-id-setup
 rpm --rebuilddb
 zypper --non-interactive update
 zypper --non-interactive install kernel-default-optional kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
-systemctl disable wicked.service
 systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
@@ -9850,6 +9863,7 @@ cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
+systemd-machine-id-setup
 rpm --rebuilddb
 zypper --non-interactive update
 zypper --non-interactive install kernel-default kernel-default-devel dracut dkms kernel-firmware-all wireless-regdb nano ntfs-3g sudo ModemManager NetworkManager wpa_supplicant bluez cryptsetup nano e2fsprogs ntfsprogs device-mapper acpid curl thermald bash-completion gpg2 polkit xdg-user-dirs zstd fwupd-efi patchutils net-tools upower efibootmgr grub2-x86_64-efi grub2-branding-openSUSE os-prober shim ucode-amd ucode-intel sbsigntools dosfstools btrfs-progs cpio bubblewrap
@@ -10809,6 +10823,8 @@ update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
+systemd-machine-id-setup
+rpm --rebuilddb
 dnf install -y epel-release
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL*
 dnf upgrade --refresh -y
@@ -13135,7 +13151,6 @@ elif [ "${distribution}" == "Nobara" ]; then
 	cat >"${bootstrapdir}"/tmp/linuxloops/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-echo "%_with_kmod_nvidia_open 1" > /etc/rpm/macros.nvidia-kmod
 dnf install -y nvidia-driver libva-nvidia-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "OpenSUSE" ]; then
@@ -14846,7 +14861,7 @@ generate_cleanup()
 cat >"${bootstrapdir}"/tmp/linuxloops/cleanup <<CLEANUP
 #!/bin/bash
 set -e
-sleep 5
+#sleep 5
 if [ ! -z "\$(command -v apt)" ]; then
 	if [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(check-language-support -l ${packages_locale}); fi
 	rm -f /etc/apt/apt.conf.d/99linuxloops

@@ -89,7 +89,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Fedora-Atomic|43|✓|✓||[notes][Fedora-Atomic-notes]|
 |FoxFlake|Stable<br>Unstable|✓|✓||[notes][FoxFlake-notes]|
 |Gentoo|23/Openrc<br>23/Systemd|✓|✓|||
-|GLF-OS|Omnislash<br>Testing|✓|✓|||
+|GLF-OS|Stable<br>Testing|✓|✓|||
 |Kali|Rolling|disk images only||✓|[notes][Kali-notes]|
 |KDE|Rolling|✓ (shim-signed AUR)|✓|✓|[notes][KDE-notes]|
 |Linuxmint|Zara|✓|✓|✓||
@@ -98,7 +98,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |MX|25|✓|✓|✓||
 |Neon|User<br>Testing|✓|✓|✓||
 |NixOS|25.11<br>Unstable|✓|✓|||
-|Nobara|42|✓|✓|||
+|Nobara|Rolling|✓|✓|||
 |Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
 |PikaOS|Nest|✓|✓|||
