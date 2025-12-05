@@ -9321,7 +9321,7 @@ mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
 dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y filesystem
-dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade akmods ca-certificates grubby openssl tar yum-utils kernel
+dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade akmods ca-certificates grubby openssl tar kernel
 if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
@@ -14861,7 +14861,6 @@ generate_cleanup()
 cat >"${bootstrapdir}"/tmp/linuxloops/cleanup <<CLEANUP
 #!/bin/bash
 set -e
-#sleep 5
 if [ ! -z "\$(command -v apt)" ]; then
 	if [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(check-language-support -l ${packages_locale}); fi
 	rm -f /etc/apt/apt.conf.d/99linuxloops
