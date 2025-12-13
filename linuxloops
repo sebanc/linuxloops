@@ -1794,6 +1794,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+cat >/etc/selinux/config <<SELINUXCONFIG
+SELINUX=enforcing
+SELINUXTYPE=targeted
+SELINUXCONFIG
 update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
@@ -6025,6 +6029,7 @@ add-apt-repository ppa:elementary-os/stable -y
 add-apt-repository ppa:elementary-os/os-patches -y
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') elementary-standard
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -6137,6 +6142,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+cat >/etc/selinux/config <<SELINUXCONFIG
+SELINUX=enforcing
+SELINUXTYPE=targeted
+SELINUXCONFIG
 update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
@@ -7525,6 +7534,7 @@ rm /tmp/linuxmint-keyring.gpg
 sed -i 's@ \[signed-by=/tmp/linuxmint-keyring.gpg]@@g' /etc/apt/sources.list.d/official-package-repositories.list
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') mintsources
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -7677,6 +7687,7 @@ rm /tmp/linuxmint-keyring.gpg
 sed -i 's@ \[signed-by=/tmp/linuxmint-keyring.gpg]@@g' /etc/apt/sources.list.d/official-package-repositories.list
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') mintsources
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -8552,6 +8563,7 @@ echo "firmware-ipw2x00 firmware-ipw2x00/license/accepted boolean true" | debconf
 echo "firmware-ivtv firmware-ivtv/license/accepted boolean true" | debconf-set-selections
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') dkms initramfs-tools mx-system
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -8814,6 +8826,7 @@ rm /tmp/neon-archive-keyring.gpg
 sed -i 's@ \[signed-by=/tmp/neon-archive-keyring.gpg]@@g' /etc/apt/sources.list.d/neon.list
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') neon-settings
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -9339,6 +9352,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+cat >/etc/selinux/config <<SELINUXCONFIG
+SELINUX=enforcing
+SELINUXTYPE=targeted
+SELINUXCONFIG
 update-ca-trust
 authselect select local with-silent-lastlog with-mdns4 --force
 authselect apply-changes
@@ -10118,6 +10135,7 @@ echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debc
 echo -e 'Package: *\nPin: release a=pika\nPin-Priority: 1000' > /etc/apt/preferences.d/downgrade
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') pika-sources
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 rm /etc/apt/preferences.d/downgrade /etc/apt/trusted.gpg.d/pika-keyring.asc
@@ -10327,6 +10345,7 @@ rm /tmp/pop-archive-keyring.gpg
 sed -i '/^Signed-By/d' /etc/apt/sources.list.d/*
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') pop-default-settings
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -10447,6 +10466,7 @@ rm /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
 apt clean
 apt update
 apt purge -y ifupdown
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') proxmox-ve postfix open-iscsi ifenslave
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo 'deb http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A-Z a-z) pve-no-subscription' > /etc/apt/sources.list.d/pve-enterprise.list
@@ -10819,6 +10839,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
 cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
+cat >/etc/selinux/config <<SELINUXCONFIG
+SELINUX=enforcing
+SELINUXTYPE=targeted
+SELINUXCONFIG
 update-ca-trust
 update-crypto-policies --set DEFAULT
 authselect select local with-silent-lastlog with-mdns4 --force
@@ -12542,6 +12566,7 @@ rm /tmp/zorin-os.gpg
 sed -i 's@ \[signed-by=/tmp/zorin-os.gpg]@@g' /etc/apt/sources.list.d/zorin.list
 apt clean
 apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') zorin-os-overlay
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
@@ -14613,6 +14638,8 @@ mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 REINSTALLBOOTLOADER
 	else
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
+# Delay the execution as the previous transaction might not be fully settled in some cases
+sleep 5
 dnf reinstall -y shim-* grub2-efi-* grub2-common
 cp /boot/efi/EFI/"${bootloader_id}"/grubx64.efi /boot/efi/EFI/BOOT/grubx64.efi
 cp /boot/efi/EFI/"${bootloader_id}"/grub.cfg /boot/efi/EFI/BOOT/grub.cfg
