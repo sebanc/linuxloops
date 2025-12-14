@@ -52,7 +52,6 @@ CachyOS does not have secure boot support through its official repository. Linux
 
 ## ChromeOS-Flex
 
-Devmode is only available when installing ChromeOS-Flex in a disk image.  
 Disk images cannot be booted from a btrfs partition due to the absence of btrfs support in the ChromeOS-Flex kernel config.  
 
 

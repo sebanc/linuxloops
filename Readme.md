@@ -81,7 +81,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |BlissOS|15<br>16|||||
 |Brunch|Stable<br>Unstable|✓||✓|[notes][Brunch-notes]|
 |CachyOS|x86-64<br>x86-64-v3<br>x86-64-v4|✓ (shim-signed AUR)|✓|✓|[notes][CachyOS-notes]|
-|ChromeOS-Flex|Stable|not for disk images|||[notes][ChromeOS-Flex-notes]|
+|ChromeOS-Flex|Stable|not for disk images / devmode|||[notes][ChromeOS-Flex-notes]|
 |Debian|Trixie<br>Testing<br>Unstable|✓|✓|✓||
 |Devuan|Excalibur<br>Testing|✓|✓|||
 |Elementary|8|✓|✓|✓||
@@ -102,7 +102,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
 |PikaOS|Nest|✓|✓|||
-|Pop|22.04<br>24.04|✓|✓|✓||
+|Pop|24.04|✓|✓|✓||
 |Proxmox|VE9|✓|✓|||
 |Qubes|4.2.4||||[notes][Qubes-notes]|
 |RockyLinux|10|✓||||
