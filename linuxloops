@@ -2415,10 +2415,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | tar --zstd -xf - etc/pacman.conf
+curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | unzstd | tar -xf - etc/pacman.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | tar --zstd -xf - etc/pacman.d/mirrorlist
+curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | unzstd | tar -xf - etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2426,7 +2426,7 @@ if [ ! -z "${mirror_Artix}" ]; then
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | tar --zstd -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | unzstd | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2700,10 +2700,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | tar --zstd -xf - etc/pacman.conf
+curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | unzstd | tar -xf - etc/pacman.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | tar --zstd -xf - etc/pacman.d/mirrorlist
+curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | unzstd | tar -xf - etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2711,7 +2711,7 @@ if [ ! -z "${mirror_Artix}" ]; then
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | tar --zstd -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | unzstd | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2967,10 +2967,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | tar --zstd -xf - etc/pacman.conf
+curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | unzstd | tar -xf - etc/pacman.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | tar --zstd -xf - etc/pacman.d/mirrorlist
+curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | unzstd | tar -xf - etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2978,7 +2978,7 @@ if [ ! -z "${mirror_Artix}" ]; then
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | tar --zstd -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | unzstd | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -3235,10 +3235,10 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | tar --zstd -xf - etc/pacman.conf
+curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | unzstd | tar -xf - etc/pacman.conf
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | tar --zstd -xf - etc/pacman.d/mirrorlist
+curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | unzstd | tar -xf - etc/pacman.d/mirrorlist
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -3246,7 +3246,7 @@ if [ ! -z "${mirror_Artix}" ]; then
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | tar --zstd -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | unzstd | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -8551,7 +8551,6 @@ fi
 chroot_MX()
 {
 if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
-if [ -z "${mirror_MX}" ]; then mirror_MX="http://mxrepo.com"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -8585,13 +8584,18 @@ Suites: $(echo ${debian_version} | tr A-Z a-z)-security
 Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
-cat >/etc/apt/sources.list.d/mx.list <<'SOURCES'
-deb ${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) main non-free
-#deb ${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) ahs
+if [ ! -z "${mirror_MX}" ]; then
+	mirror_MX="${mirror_MX}"
+else
+	cur_speed=0; for i in https://mxrepo.com https://mirrors.rit.edu/mxlinux/mx-packages https://mirror.datamossa.io/mxlinux; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; mirror_MX=\${i}; fi; done; echo Using mirror \${mirror_MX}
+fi
+cat >/etc/apt/sources.list.d/mx.list <<SOURCES
+deb \${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) main non-free
+#deb \${mirror_MX}/mx/repo $(echo ${debian_version} | tr A-Z a-z) ahs
 SOURCES
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl -L https://mxrepo.com/mx/repo/pool/main/m/mx25-archive-keyring/mx25-archive-keyring_2025.03_all.deb -o /tmp/mx-archive-keyring.deb
+curl -L \${mirror_MX}/mx/repo/pool/main/m/mx25-archive-keyring/mx25-archive-keyring_2025.03_all.deb -o /tmp/mx-archive-keyring.deb
 dpkg -i /tmp/mx-archive-keyring.deb
 rm /tmp/mx-archive-keyring.deb
 echo "firmware-ipw2x00 firmware-ipw2x00/license/accepted boolean true" | debconf-set-selections
