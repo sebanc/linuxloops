@@ -2416,13 +2416,15 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-unzstd -c /tmp/pacman.tar.zst | tar -xf - etc/pacman.conf
-rm /tmp/pacman.tar.zst
+unzstd -d /tmp/pacman.tar.zst
+tar -xf /tmp/pacman.tar etc/pacman.conf
+rm /tmp/pacman.tar
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-unzstd -c /tmp/artix-mirrorlist.tar.zst | tar -xf - etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
+unzstd -d /tmp/artix-mirrorlist.tar.zst
+tar -xf /tmp/artix-mirrorlist.tar etc/pacman.d/mirrorlist
+rm /tmp/artix-mirrorlist.tar
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2431,8 +2433,9 @@ else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
 curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-unzstd -c /tmp/artix-keyring.tar.zst | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
+unzstd -d /tmp/artix-keyring.tar.zst
+tar -xf /tmp/artix-keyring.tar usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+rm /tmp/artix-keyring.tar
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2707,13 +2710,15 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-unzstd -c /tmp/pacman.tar.zst | tar -xf - etc/pacman.conf
-rm /tmp/pacman.tar.zst
+unzstd -d /tmp/pacman.tar.zst
+tar -xf /tmp/pacman.tar etc/pacman.conf
+rm /tmp/pacman.tar
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-unzstd -c /tmp/artix-mirrorlist.tar.zst | tar -xf - etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
+unzstd -d /tmp/artix-mirrorlist.tar.zst
+tar -xf /tmp/artix-mirrorlist.tar etc/pacman.d/mirrorlist
+rm /tmp/artix-mirrorlist.tar
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2722,8 +2727,9 @@ else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
 curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-unzstd -c /tmp/artix-keyring.tar.zst | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
+unzstd -d /tmp/artix-keyring.tar.zst
+tar -xf /tmp/artix-keyring.tar usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+rm /tmp/artix-keyring.tar
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2980,13 +2986,15 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-unzstd -c /tmp/pacman.tar.zst | tar -xf - etc/pacman.conf
-rm /tmp/pacman.tar.zst
+unzstd -d /tmp/pacman.tar.zst
+tar -xf /tmp/pacman.tar etc/pacman.conf
+rm /tmp/pacman.tar
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-unzstd -c /tmp/artix-mirrorlist.tar.zst | tar -xf - etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
+unzstd -d /tmp/artix-mirrorlist.tar.zst
+tar -xf /tmp/artix-mirrorlist.tar etc/pacman.d/mirrorlist
+rm /tmp/artix-mirrorlist.tar
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2995,8 +3003,9 @@ else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
 curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-unzstd -c /tmp/artix-keyring.tar.zst | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
+unzstd -d /tmp/artix-keyring.tar.zst
+tar -xf /tmp/artix-keyring.tar usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+rm /tmp/artix-keyring.tar
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -3254,13 +3263,15 @@ cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-unzstd -c /tmp/pacman.tar.zst | tar -xf - etc/pacman.conf
-rm /tmp/pacman.tar.zst
+unzstd -d /tmp/pacman.tar.zst
+tar -xf /tmp/pacman.tar etc/pacman.conf
+rm /tmp/pacman.tar
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-unzstd -c /tmp/artix-mirrorlist.tar.zst | tar -xf - etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
+unzstd -d /tmp/artix-mirrorlist.tar.zst
+tar -xf /tmp/artix-mirrorlist.tar etc/pacman.d/mirrorlist
+rm /tmp/artix-mirrorlist.tar
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -3269,8 +3280,9 @@ else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
 curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-unzstd -c /tmp/artix-keyring.tar.zst | tar -xf - usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
+unzstd -d /tmp/artix-keyring.tar.zst
+tar -xf /tmp/artix-keyring.tar usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
+rm /tmp/artix-keyring.tar
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
