@@ -105,13 +105,13 @@ case "${distribution}" in
 		default_version="Stable"
 		;;
 	'Debian')
-		available_versions=( "Trixie" "Testing" "Unstable" )
-		available_versions_longname=( "Trixie_(Stable)" "Testing" "Unstable" )
+		available_versions=( "Trixie" )
+		available_versions_longname=( "Trixie" )
 		default_version="Trixie"
 		;;
 	'Devuan')
-		available_versions=( "Excalibur" "Testing" )
-		available_versions_longname=( "Excalibur_(Stable)" "Testing" )
+		available_versions=( "Excalibur" )
+		available_versions_longname=( "Excalibur" )
 		default_version="Excalibur"
 		;;
 	'Elementary')
@@ -373,21 +373,8 @@ case "${distribution}" in
 		debian_version="${version}"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Debian" )
+		nvidia_supported="Yes"
 		surface_supported="Yes"
-		case "${version}" in
-			'Trixie')
-				chroot_function="${distribution}-Stable"
-				nvidia_supported="Yes"
-				;;
-			'Testing')
-				chroot_function="${distribution}-Testing"
-				nvidia_supported="Yes"
-				;;
-			'Unstable')
-				chroot_function="${distribution}-Unstable"
-				nvidia_supported="No"
-				;;
-		esac
 		;;
 	'Devuan')
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -400,14 +387,6 @@ case "${distribution}" in
 		mirrors_supported=( "Devuan" )
 		nvidia_supported="Yes"
 		surface_supported="No"
-		case "${version}" in
-			'Excalibur')
-				chroot_function="${distribution}-Stable"
-				;;
-			'Testing')
-				chroot_function="${distribution}-Testing"
-				;;
-		esac
 		;;
 	'Elementary')
 		available_environments=( "None" "Full" )
@@ -2415,24 +2394,21 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-tar --use-compress-program=zstd -xf /tmp/pacman.tar.zst etc/pacman.conf
-rm /tmp/pacman.tar.zst
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
+pacman -Rdd --noconfirm pacman-mirrorlist
+echo '' > /etc/pacman.d/mirrorlist
+sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-mirrorlist.tar.zst etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
-sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-keyring.tar.zst usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2706,24 +2682,21 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-tar --use-compress-program=zstd -xf /tmp/pacman.tar.zst etc/pacman.conf
-rm /tmp/pacman.tar.zst
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
+pacman -Rdd --noconfirm pacman-mirrorlist
+echo '' > /etc/pacman.d/mirrorlist
+sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-mirrorlist.tar.zst etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
-sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-keyring.tar.zst usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -2979,24 +2952,21 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-tar --use-compress-program=zstd -xf /tmp/pacman.tar.zst etc/pacman.conf
-rm /tmp/pacman.tar.zst
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
+pacman -Rdd --noconfirm pacman-mirrorlist
+echo '' > /etc/pacman.d/mirrorlist
+sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-mirrorlist.tar.zst etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
-sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-keyring.tar.zst usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -3253,24 +3223,21 @@ chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl -L https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ -o /tmp/pacman.tar.zst
-tar --use-compress-program=zstd -xf /tmp/pacman.tar.zst etc/pacman.conf
-rm /tmp/pacman.tar.zst
+cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
+pacman -Rdd --noconfirm pacman-mirrorlist
+echo '' > /etc/pacman.d/mirrorlist
+sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-mv /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ -o /tmp/artix-mirrorlist.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-mirrorlist.tar.zst etc/pacman.d/mirrorlist
-rm /tmp/artix-mirrorlist.tar.zst
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
-sed -i '$ d' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
 	echo 'Server = ${mirror_Artix}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
 	echo 'Server = https://mirror1.artixlinux.org/repos/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 fi
-curl -L https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ -o /tmp/artix-keyring.tar.zst
-tar --use-compress-program=zstd -xf /tmp/artix-keyring.tar.zst usr/share/pacman/keyrings/artix.gpg usr/share/pacman/keyrings/artix-trusted usr/share/pacman/keyrings/artix-revoked
-rm /tmp/artix-keyring.tar.zst
 pacman-key --populate artix
 pacstrap -G -P /mnt base base-devel openrc elogind-openrc mkinitcpio rsync nano lsb-release esysusers etmpfiles artix-branding-base artix-archlinux-support
 cp /etc/pacman.d/mirrorlist-arch /mnt/etc/pacman.d/mirrorlist-arch
@@ -4828,7 +4795,7 @@ INSTALL_SCRIPT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_script
 }
 
-chroot_Debian-Stable()
+chroot_Debian()
 {
 if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
@@ -5083,505 +5050,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_Debian-Testing()
-{
-if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@http://deb.debian.org/debian @${mirror_Debian} @g' /etc/apt/sources.list
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,curl,file,gnupg,gpgv,linux-sysctl-defaults,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-rm /etc/apt/sources.list
-cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
-Types: deb deb-src
-URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-SOURCESLIST
-apt update
-DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
-echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
-echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap console-setup kbd keyboard-configuration
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Cinnamon/Full')
-	default_session="cinnamon"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-control-center gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt')
-	default_session="lxqt"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxqt-core openbox lxqt-powermanagement lxqt-themes qterminal pcmanfm-qt lxqt-theme-debian network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt/Full')
-	default_session="lxqt"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxqt-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-media mate-power-manager mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-mate-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Xfce')
-	default_session="xfce"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce/Full')
-	default_session="xfce"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-esac
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-${install_desktop}
-mkdir -p /usr/share/glib-2.0/schemas
-cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.gnome.desktop.background:Budgie]
-picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
-[org.gnome.desktop.interface:Budgie]
-gtk-theme="Arc"
-icon-theme="Papirus"
-[org.cinnamon.desktop.background]
-picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
-[org.cinnamon.desktop.interface]
-gtk-theme="Adwaita"
-icon-theme="Papirus"
-[org.mate.interface]
-icon-theme='Papirus'
-gtk-theme='Adwaita'
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
-<?xml version="1.0" encoding="UTF-8"?>
-<channel name="xsettings" version="1.0">
-  <property name="Net" type="empty">
-    <property name="IconThemeName" type="string" value="Papirus"/>
-  </property>
-</channel>
-XFCETHEME
-mkdir -p /etc/xdg/autostart
-cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
-[Desktop Entry]
-Type=Application
-Name=Nemo
-Comment=Start Nemo desktop at log in
-Exec=nemo-desktop
-OnlyShowIn=Budgie;
-AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
-X-GNOME-AutoRestart=true
-NoDisplay=true
-NEMODESKTOP
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG sudo '${useraccount_name}'
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/daemon.conf
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		mkdir -p /etc/lightdm/lightdm.conf.d
-		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			echo -e 'autologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-surface_remove="linux-headers-* linux-image-*"
-initramfs_type="initramfstools"
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
-		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
-			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		fi
-		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		echo "apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	fi
-	echo -e "#!/bin/bash\nset -e\nDEBIAN_FRONTEND=noninteractive apt install --purge -y ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
-chroot_Debian-Unstable()
-{
-if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@http://deb.debian.org/debian @${mirror_Debian} @g' /etc/apt/sources.list
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,curl,file,gnupg,gpgv,linux-sysctl-defaults,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-rm /etc/apt/sources.list
-cat >/etc/apt/sources.list.d/debian.sources <<'SOURCESLIST'
-Types: deb deb-src
-URIs: ${mirror_Debian}
-Suites: $(echo ${debian_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
-SOURCESLIST
-apt update
-DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
-echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
-echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap console-setup kbd keyboard-configuration
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-user-session dbus-x11 desktop-base ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-alsa pipewire-audio pipewire-jack pipewire-pulse plymouth-themes system-config-printer udisks2 wireplumber xdg-user-dirs-gtk xserver-xorg"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop-environment arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon cinnamon-core gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Cinnamon/Full')
-	default_session="cinnamon"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-shell gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus gnome-icon-theme xdg-desktop-portal-gnome
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt')
-	default_session="lxqt"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxqt-core openbox lxqt-powermanagement lxqt-themes qterminal pcmanfm-qt lxqt-theme-debian network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt/Full')
-	default_session="lxqt"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxqt-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-media mate-power-manager mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-mate-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Xfce')
-	default_session="xfce"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce/Full')
-	default_session="xfce"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-esac
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-${install_desktop}
-mkdir -p /usr/share/glib-2.0/schemas
-cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.gnome.desktop.background:Budgie]
-picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
-[org.gnome.desktop.interface:Budgie]
-gtk-theme="Arc"
-icon-theme="Papirus"
-[org.cinnamon.desktop.background]
-picture-uri="file:///usr/share/images/desktop-base/login-background.svg"
-[org.cinnamon.desktop.interface]
-gtk-theme="Adwaita"
-icon-theme="Papirus"
-[org.mate.interface]
-icon-theme='Papirus'
-gtk-theme='Adwaita'
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-mkdir -p /etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml
-cat >/etc/skel/.config/xfce4/xfconf/xfce-perchannel-xml/xsettings.xml <<'XFCETHEME'
-<?xml version="1.0" encoding="UTF-8"?>
-<channel name="xsettings" version="1.0">
-  <property name="Net" type="empty">
-    <property name="IconThemeName" type="string" value="Papirus"/>
-  </property>
-</channel>
-XFCETHEME
-mkdir -p /etc/xdg/autostart
-cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
-[Desktop Entry]
-Type=Application
-Name=Nemo
-Comment=Start Nemo desktop at log in
-Exec=nemo-desktop
-OnlyShowIn=Budgie;
-AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
-X-GNOME-AutoRestart=true
-NoDisplay=true
-NEMODESKTOP
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG sudo '${useraccount_name}'
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/daemon.conf
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		mkdir -p /etc/lightdm/lightdm.conf.d
-		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			echo -e 'autologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-surface_remove="linux-headers-* linux-image-*"
-initramfs_type="initramfstools"
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
-		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
-			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		fi
-		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		echo "apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	fi
-	echo -e "#!/bin/bash\nset -e\nDEBIAN_FRONTEND=noninteractive apt install --purge -y ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
-chroot_Devuan-Stable()
+chroot_Devuan()
 {
 if [ -z "${mirror_Devuan}" ]; then mirror_Devuan="http://deb.devuan.org"; fi
 cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
@@ -5626,234 +5095,6 @@ DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-iwlwifi firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap console-setup kbd keyboard-configuration
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-desktop_base="alsa-topology-conf alsa-ucm-conf alsa-utils at-spi2-core avahi-discover cups cups-browsed dbus-x11 desktop-base devuan-baseconf ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver libnss-mdns mesa-va-drivers mesa-vulkan-drivers pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse udisks2 wireplumber system-config-printer xdg-user-dirs-gtk xserver-xorg"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter budgie-desktop arc-theme nemo network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal paper-icon-theme mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon gnome-terminal nemo network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Cinnamon/Full')
-	default_session="cinnamon"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt')
-	default_session="lxqt"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter lxqt-core openbox lxqt-powermanagement lxqt-themes qterminal pcmanfm-qt lxqt-theme-debian network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
-"
-	;;
-	'Lxqt/Full')
-	default_session="lxqt"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-lxqt-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman lxqt-policykit xdg-desktop-portal-gtk
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter mate-desktop mate-session-manager marco mate-control-center mate-media mate-power-manager mate-notification-daemon mate-applets mate-indicator-applet mate-applet-brisk-menu mate-themes mate-icon-theme mate-terminal caja network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-mate-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze kde-plasma-desktop kwin-wayland dolphin plasma-discover konsole plasma-nm plasma-pa bluedevil libpam-kwallet5 powerdevil plasma-widgets-addons systemsettings polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm sddm-theme-breeze task-kde-desktop polkit-kde-agent-1 breeze-gtk-theme breeze-icon-theme xdg-desktop-portal-kde
-"
-	;;
-	'Xfce')
-	default_session="xfce"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter xfce4 xfce4-whiskermenu-plugin xfce4-power-manager-plugins xfce4-terminal thunar xfce4-notifyd network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Xfce/Full')
-	default_session="xfce"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-xfce-desktop xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt purge -y slim
-"
-	;;
-esac
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-${install_desktop}
-cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
-[org.gnome.desktop.background:Budgie]
-picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.svg"
-[org.gnome.desktop.interface:Budgie]
-gtk-theme="Arc"
-icon-theme="Papirus"
-[org.cinnamon.desktop.background]
-picture-uri="file:///usr/share/images/desktop-base/your-way_deepsea-wide-large.svg"
-[org.cinnamon.desktop.interface]
-gtk-theme="Adwaita"
-icon-theme="Papirus"
-DCONF
-if [ ! -z "\$(command -v glib-compile-schemas)" ]; then glib-compile-schemas /usr/share/glib-2.0/schemas/; fi
-mkdir -p /etc/xdg/autostart
-cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
-[Desktop Entry]
-Type=Application
-Name=Nemo
-Comment=Start Nemo desktop at log in
-Exec=nemo-desktop
-OnlyShowIn=Budgie;
-AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
-X-GNOME-AutoRestart=true
-NoDisplay=true
-NEMODESKTOP
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG sudo '${useraccount_name}'
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/daemon.conf
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		mkdir -p /etc/sddm.conf.d
-		echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/zz_linuxloops.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			echo -e '\n[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		mkdir -p /etc/lightdm/lightdm.conf.d
-		echo -e '[Seat:*]\ngreeter-hide-users=false\n' > /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		echo -e '[Greeter]\nbackground = /usr/share/images/desktop-base/your-way_deepsea-wide-large.svg\ndraw-user-backgrounds = true' > /etc/lightdm/slick-greeter.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			echo -e 'autologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-initramfs_type="initramfstools"
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
-		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} nvidia-driver-libs:i386"; fi
-			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		fi
-		echo "dpkg --add-architecture i386" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-		echo "apt update" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	fi
-	echo -e "#!/bin/bash\nset -e\nDEBIAN_FRONTEND=noninteractive apt install --purge -y ${custom_packages}" >> "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
-chroot_Devuan-Testing()
-{
-if [ -z "${mirror_Devuan}" ]; then mirror_Devuan="http://deb.devuan.org"; fi
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@http://deb.devuan.org/merged @${mirror_Devuan}/merged @g' /etc/apt/sources.list
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-curl -L https://pkgmaster.devuan.org/devuan/pool/main/d/devuan-keyring/devuan-keyring_2025.08.09_all.deb -o /tmp/devuan-keyring.deb
-dpkg -i /tmp/devuan-keyring.deb
-rm /tmp/devuan-keyring.deb
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,curl,file,gnupg,gpgv,locales,xz-utils $(echo ${devuan_version} | tr A-Z a-z) /mnt ${mirror_Devuan}/merged
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-rm /etc/apt/sources.list
-cat >/etc/apt/sources.list.d/devuan.sources <<'SOURCESLIST'
-Types: deb deb-src
-URIs: ${mirror_Devuan}/merged
-Suites: $(echo ${devuan_version} | tr A-Z a-z)
-Components: main contrib non-free non-free-firmware
-Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
-SOURCESLIST
-apt update
-DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
-echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
-echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-amd64 linux-headers-amd64 initramfs-tools dkms firmware-linux firmware-amd-graphics firmware-atheros firmware-intel-graphics firmware-iwlwifi firmware-mediatek firmware-nvidia-graphics firmware-realtek wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed patchutils net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap console-setup kbd keyboard-configuration
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
@@ -9703,7 +8944,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-sourcecodepro-fonts alsa-utils alsa-firmware at-spi2-core avahi cantarell-fonts cups cups-filters dbus-1-x11 dejavu-fonts ffmpeg google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver Mesa-libva nss-mdns patterns-base-x11 pipewire pipewire-pulseaudio plymouth-branding-openSUSE plymouth-dracut sof-firmware system-config-printer udisks2 wallpaper-branding-openSUSE wireplumber xdg-user-dirs-gtk"
+desktop_base="adobe-sourcecodepro-fonts alsa-utils alsa-firmware at-spi2-core avahi cantarell-fonts cups cups-filters dejavu-fonts ffmpeg google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver Mesa-libva nss-mdns patterns-base-x11 pipewire pipewire-pulseaudio plymouth-branding-openSUSE plymouth-dracut sof-firmware system-config-printer udisks2 wallpaper-branding-openSUSE wireplumber xdg-user-dirs-gtk"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
@@ -9951,7 +9192,7 @@ systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
 
-desktop_base="adobe-sourcecodepro-fonts alsa-utils alsa-firmware at-spi2-core avahi cantarell-fonts cups cups-filters dbus-1-x11 dejavu-fonts ffmpeg google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver Mesa-libva nss-mdns patterns-base-x11 pipewire pipewire-pulseaudio plymouth-branding-openSUSE plymouth-dracut sof-firmware system-config-printer udisks2 wallpaper-branding-openSUSE wireplumber xdg-user-dirs-gtk"
+desktop_base="adobe-sourcecodepro-fonts alsa-utils alsa-firmware at-spi2-core avahi cantarell-fonts cups cups-filters dejavu-fonts ffmpeg google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver Mesa-libva nss-mdns patterns-base-x11 pipewire pipewire-pulseaudio plymouth-branding-openSUSE plymouth-dracut sof-firmware system-config-printer udisks2 wallpaper-branding-openSUSE wireplumber xdg-user-dirs-gtk"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
