@@ -54,7 +54,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlendOS" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "Omarchy" "OpenSUSE" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "Omarchy" "OpenSUSE" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
 
 distribution_parameters()
 {
@@ -78,11 +78,6 @@ case "${distribution}" in
 		available_versions=( "Stable" "Testing" "Unstable" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
-	'BlendOS')
-		available_versions=( "v4" )
-		available_versions_longname=( "${available_versions[@]}" )
-		default_version="v4"
 		;;
 	'BlissOS')
 		available_versions=( "15" "16" )
@@ -308,17 +303,6 @@ case "${distribution}" in
 		nvidia_supported="No"
 		surface_supported="No"
 		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
-		;;
-	'BlendOS')
-		available_environments=( "None" "Cinnamon" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
-		blendos_version="${version}"
-		bootloader_id="blendos"
-		bootloader_name="shimx64.efi"
-		bootstrap="lxc archlinux current default"
-		btrfs_supported="Yes"
-		mirrors_supported=( "BlendOS" )
-		nvidia_supported="Yes"
-		surface_supported="Yes"
 		;;
 	'BlissOS')
 		available_environments=( "Gapps/Generic" "Gapps/Go" "Gapps/Surface" "FOSS/Generic" "FOSS/Go" "FOSS/Surface" )
@@ -2398,10 +2382,10 @@ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 pacman -Rdd --noconfirm pacman-mirrorlist
 echo '' > /etc/pacman.d/mirrorlist
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
 sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2686,10 +2670,10 @@ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 pacman -Rdd --noconfirm pacman-mirrorlist
 echo '' > /etc/pacman.d/mirrorlist
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
 sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2956,10 +2940,10 @@ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 pacman -Rdd --noconfirm pacman-mirrorlist
 echo '' > /etc/pacman.d/mirrorlist
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
 sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -3227,10 +3211,10 @@ cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
 pacman -Rdd --noconfirm pacman-mirrorlist
 echo '' > /etc/pacman.d/mirrorlist
 sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-keyring/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
 sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/any/artix-mirrorlist/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
-pacman -U --noconfirm "https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(basename \$(curl -s -I https://packages.artixlinux.org/packages/system/x86_64/pacman/download/ | sed -z 's@\r@@g' | grep location: | cut -d' ' -f2))"
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
+pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -3623,208 +3607,6 @@ if [ ! -z "${custom_packages}" ]; then
 	echo -e "#!/bin/bash\nset -e\nrpm-ostree -y install ${custom_packages}" > "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_packages
 fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
-fi
-}
-
-chroot_BlendOS()
-{
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
-if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
-else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
-fi
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_bootstrap
-
-cat >"${bootstrapdir}"/tmp/linuxloops/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-pacstrap -G /mnt base base-devel btrfs-progs cpio grub mkinitcpio ntfs-3g sbsigntools
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/prepare_chroot
-
-cat >"${bootstrapdir}"/tmp/linuxloops/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-/tmp/linuxloops/install_settings
-rm /tmp/linuxloops/install_settings
-pacman-key --init
-pacman-key --populate
-mkdir -p /boot/grub
-grub-mkconfig -o /boot/grub/grub.cfg
-if [ ! -z "${mirror_BlendOS}" ]; then
-	echo -e '[breakfast]\nServer = ${mirror_BlendOS}\nSigLevel = Never' >> /etc/pacman.conf
-else
-	echo -e '[breakfast]\nServer = https://pkg-repo.blendos.co\nSigLevel = Never' >> /etc/pacman.conf
-fi
-pacman -Syu --noconfirm --needed --ask 4 filesystem-blend akshara
-ln -sf /run/NetworkManager/resolv.conf /etc/resolv.conf
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/chroot_init
-
-if [ "${environment}" == "None" ]; then
-	install_desktop="
-echo \"track: 'blendos-base'\" >> /system.yaml
-"
-else
-	custom_packages="accountsservice adobe-source-code-pro-fonts alsa-lib alsa-topology-conf alsa-ucm-conf alsa-utils archlinux-wallpaper at-spi2-core avahi blendos-wallpapers blend-web-store bubblewrap cups ffmpeg flatpak fwupd gvfs iio-sensor-proxy iptables intel-media-driver libva-mesa-driver nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse polkit sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xorg-xhost xorg-server xorg-xinput zstd ${custom_packages}"
-	case "${environment}" in
-		'Cinnamon')
-		default_session="cinnamon"
-		install_desktop="
-echo \"track: 'cinnamon'\" >> /system.yaml
-"
-		custom_packages="gnome-terminal nemo network-manager-applet gnome-keyring papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations ${custom_packages}"
-		;;
-		'Gnome')
-		default_session="gnome-wayland"
-		install_desktop="
-echo \"track: 'gnome'\" >> /system.yaml
-"
-		custom_packages=" network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome ${custom_packages}"
-		;;
-		'Lxqt')
-		default_session="lxqt"
-		install_desktop="
-echo \"track: 'lxqt'\" >> /system.yaml
-"
-		custom_packages="network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk ${custom_packages}"
-		;;
-		'Mate')
-		default_session="mate"
-		install_desktop="
-echo \"track: 'mate'\" >> /system.yaml
-"
-		custom_packages="mate-terminal mate-extra network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk ${custom_packages}"
-		;;
-		'Plasma')
-		default_session="plasma"
-		install_desktop="
-echo \"track: 'plasma'\" >> /system.yaml
-"
-		custom_packages="dolphin konsole kscreen kde-gtk-config xsettingsd breeze-gtk breeze-icons xdg-desktop-portal-kde ${custom_packages}"
-		;;
-		'Xfce')
-		default_session="xfce"
-		install_desktop="
-echo \"track: 'xfce'\" >> /system.yaml
-"
-		custom_packages="blueman network-manager-applet gnome-keyring xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk ${custom_packages}"
-		;;
-	esac
-fi
-cat >"${bootstrapdir}"/tmp/linuxloops/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-mkdir -p /usr/etc
-cat >/system.yaml <<'SYSTEMYAML'
-repo: 'https://pkg-repo.blendos.co'
-arch-repo: 'https://geo.mirror.pkgbuild.com'
-impl: 'https://github.com/blend-os/tracks/raw/main'
-SYSTEMYAML
-${install_desktop}
-echo -e "packages:\n  - 'btrfs-progs'\n  - 'glibc-locales'\n  - 'ntfs-3g'\n  - 'sbsigntools'\n  - 'xdg-user-dirs'" >> /system.yaml
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
-		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
-			if [ "${nvidia}" == "Yes" ]; then custom_packages="\${custom_packages} lib32-nvidia-utils"; fi
-			echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf
-		else
-			custom_packages="${custom_packages}"
-		fi
-		sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf
-	fi
-	for i in \${custom_packages}; do echo "  - '\${i}'" >> /system.yaml; done
-fi
-if [ "${nvidia}" == "Yes" ]; then echo "  - 'nvidia-dkms'" >> /system.yaml; fi
-echo -e "aur-packages:\n  - 'shim-signed'" >> /system.yaml
-if [ "${surface}" == "Yes" ]; then echo -e "  - 'binder_linux-dkms'" >> /system.yaml; fi
-echo -e "commands:" >> /system.yaml;
-if [ "${surface}" == "Yes" ]; then
-cat >>/system.yaml <<SYSTEMYAML
-  - 'curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | pacman-key --add -'
-  - 'pacman-key --finger 56C464BAAC421453'
-  - 'pacman-key --lsign-key 56C464BAAC421453'
-  - 'echo -e "[linux-surface]\nServer = https://pkg.surfacelinux.com/arch/" >> /etc/pacman.conf'
-  - 'pacman -Syu'
-  - 'pacman -Rsc --noconfirm linux-zen linux-zen-headers'
-  - 'pacman -S --noconfirm --needed linux-surface linux-surface-headers iptsd libcamera libcamera-tools gst-plugin-libcamera base-devel git fakeroot v4l2loopback-dkms'
-  - 'usermod -aG video "${useraccount_name}"'
-SYSTEMYAML
-fi
-if [ "${root_encryption}" == "Yes" ]; then add_encryption="encrypt "; fi
-cat >>/system.yaml <<SYSTEMYAML
-  - 'ln -s /boot/linuxloops/initcpio-hook/linuxloops /etc/initcpio/install/linuxloops'
-  - 'echo "HOOKS=(base udev autodetect keyboard keymap modconf block \${add_encryption}akshara filesystems fsck linuxloops)" > /etc/mkinitcpio.conf.d/linuxloops.conf'
-  - 'if [ -f /proc/1/cwd/system.yaml ] && [ -d /proc/1/cwd/boot/linuxloops ]; then cp -r /proc/1/cwd/boot/linuxloops /boot/; fi'
-$(cat /tmp/linuxloops/install_custom_script 2>/dev/null)
-SYSTEMYAML
-if [ "${nvidia}" == "Yes" ]; then
-	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-suspend.service ]; then systemctl enable nvidia-suspend.service; fi'" >> /system.yaml
-	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-resume.service ]; then systemctl enable nvidia-resume.service; fi'" >> /system.yaml
-	echo "  - 'if [ -f /usr/lib/systemd/system/nvidia-hibernate.service ]; then systemctl enable nvidia-hibernate.service; fi'" >> /system.yaml
-fi
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_desktop
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_user
-
-cat >"${bootstrapdir}"/tmp/linuxloops/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-case "${environment}" in
-	'Gnome')
-		mkdir -p /etc/gdm
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	'Plasma'|'Lxqt')
-		mkdir -p /etc/sddm.conf.d
-		echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/zz_linuxloops.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			echo -e '\n[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		mkdir -p /etc/lightdm/lightdm.conf.d
-		echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-gtk-greeter' > /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			echo -e 'autologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_dmconfig
-
-initramfs_type="initcpio"
-
 if [ ! -z "${custom_script}" ]; then
 	cp "${custom_script}" "${bootstrapdir}"/tmp/linuxloops/install_custom_script
 	chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_custom_script
@@ -13109,7 +12891,7 @@ generate_initcpio()
 cat >"${bootstrapdir}"/tmp/linuxloops/install_initramfs <<INITCPIOSTART
 #!/bin/bash
 set -e
-if [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "SteamOS" ] || [ "${environment}" == "None" ]; then
+if [ "${distribution}" == "Artix" ] || [ "${distribution}" == "SteamOS" ] || [ "${environment}" == "None" ]; then
 	if [ "${root_encryption}" == "Yes" ]; then
 		sed -i 's@ block filesystems fsck)@ block encrypt filesystems fsck linuxloops)@g' /etc/mkinitcpio.conf
 	else
@@ -13202,7 +12984,7 @@ add_linuxloops_post
 echo -e "LINUXLOOPSBINARY" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 echo -e "chmod 0755 /boot/linuxloops/linuxloops" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 echo -e "(cd /boot/linuxloops && find . | cpio -o -H newc | gzip > /boot/linuxloops/linuxloops-recovery.img)" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
-if [ "${distribution}" != "BlendOS" ]; then echo -e "mkinitcpio -P" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs; fi
+echo -e "mkinitcpio -P" >> "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 chmod 0755 "${bootstrapdir}"/tmp/linuxloops/install_initramfs
 }
 
@@ -13975,11 +13757,11 @@ GRUBINSTALL
 chmod 0755 /usr/sbin/grub-install
 grub-install --target=x86_64-efi --efi-directory=/boot/efi
 REINSTALLBOOTLOADER
-	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "BlendOS" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ] || [ "${distribution}" == "SteamOS" ]; then
+	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ] || [ "${distribution}" == "SteamOS" ]; then
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 pacman -Syu --noconfirm --needed git fakeroot
 git clone --depth=1 -b shim-signed https://github.com/archlinux/aur.git /tmp/shim-signed
-chown -R 'nobody':'nobody' /tmp/shim-signed
+chown -R nobody:nobody /tmp/shim-signed
 sudo -u nobody bin/bash -c "cd /tmp/shim-signed && makepkg -s"
 pacman -U --noconfirm /tmp/shim-signed/*.pkg.tar.*
 mkdir -p /etc/pacman.d/hooks
@@ -14249,17 +14031,6 @@ echo -e '${useraccount_password}\n${useraccount_password}' | passwd '${useraccou
 if [ "${distribution}" == "Proxmox" ]; then echo -e '${useraccount_password}\n${useraccount_password}' | passwd root; fi
 SETUSERPW
 chmod 0755 /mnt/tmp/linuxloops/set_userpw
-if [ "${distribution}" == "BlendOS" ]; then
-	cat >>/mnt/tmp/linuxloops/set_userpw <<BLENDOS_AKSHARA
-akshara update
-if [ "${environment}" != "None" ]; then if [ ! -f /.update_rootfs/usr/share/xsessions/${default_session}.desktop ] && [ ! -f /.update_rootfs/usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi; fi
-cp /.update_rootfs/etc/mkinitcpio.conf.d/* /etc/mkinitcpio.conf.d/
-cp /.update_rootfs/etc/mkinitcpio.d/* /etc/mkinitcpio.d/
-rm -rf /lib/modules
-cp -r /.update_rootfs/lib/modules /lib/
-mkinitcpio -P
-BLENDOS_AKSHARA
-fi
 if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 	sed -i '1d' /mnt/tmp/linuxloops/set_userpw
 	sudo -u temp bash << 'NIXOSSETPW'
@@ -14995,10 +14766,6 @@ case "${1}" in
 	"Artix")
 		if ! curl -sfLo/dev/null -r0-0 "${2}/system/os/x86_64/system.db"; then return 1; fi
 		mirror_Artix="${2}"
-	;;
-	"BlendOS")
-		if ! curl -sfLo/dev/null -r0-0 "${2}/breakfast.db"; then return 1; fi
-		mirror_BlendOS="${2}"
 	;;
 	"CachyOS")
 		if ! curl -sfLo/dev/null -r0-0 "${2}/x86_64/cachyos/cachyos.db"; then return 1; fi
