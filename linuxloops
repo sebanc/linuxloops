@@ -12033,7 +12033,8 @@ mount --bind /install_scripts /mnt/tmp/linuxloops
 mount --make-slave /mnt/tmp/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
 	if [ -d /mnt/sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /mnt/sys/module/apparmor; fi
-	if [ -z \$(tty) ]; then
+	echo "\$(tty)"
+	if [ "\$(tty)" == "" ]; then
 		mount --bind /dev/null /mnt/dev/console
 	else
 		mount --bind \$(tty) /mnt/dev/console
