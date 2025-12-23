@@ -12033,7 +12033,11 @@ mount --bind /install_scripts /mnt/tmp/linuxloops
 mount --make-slave /mnt/tmp/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
 	if [ -d /mnt/sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /mnt/sys/module/apparmor; fi
-	mount --bind \$(tty) /mnt/dev/console
+	if [ -z \$(tty) ]; then
+		mount --bind /dev/null /mnt/dev/console
+	else
+		mount --bind \$(tty) /mnt/dev/console
+	fi
 	mount --make-slave /mnt/dev/console
 	touch /tmp/pid_ns
 	sudo -b container=chroot unshare --pid=/tmp/pid_ns --fork --mount-proc --kill-child --root=/mnt /lib/systemd/systemd --unit=basic.target
