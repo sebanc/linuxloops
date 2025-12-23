@@ -302,7 +302,8 @@ case "${distribution}" in
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="No"
 		surface_supported="No"
-		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
+		systemd_init="Yes"
+		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		;;
 	'BlissOS')
 		available_environments=( "Gapps/Generic" "Gapps/Go" "Gapps/Surface" "FOSS/Generic" "FOSS/Go" "FOSS/Surface" )
@@ -406,7 +407,8 @@ case "${distribution}" in
 		mirrors_supported=()
 		nvidia_supported="Yes"
 		surface_supported="No"
-		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
+		systemd_init="Yes"
+		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		;;
 	'FoxFlake')
 		available_environments=( "Gnome/Minimal" "Gnome/Standard" "Gnome/Gaming" "Gnome/Studio" "Gnome/Standard+Gaming" "Gnome/Standard+Studio" "Gnome/Gaming+Studio" "Gnome/Full" "Plasma/Minimal" "Plasma/Standard" "Plasma/Gaming" "Plasma/Studio" "Plasma/Standard+Gaming" "Plasma/Standard+Studio" "Plasma/Gaming+Studio" "Plasma/Full" )
@@ -712,7 +714,8 @@ case "${distribution}" in
 		mirrors_supported=( "Ubuntu" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
+		systemd_init="Yes"
+		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		case "${version}" in
 			'24.04')
 				ubuntu_version="Noble"
@@ -743,7 +746,8 @@ case "${distribution}" in
 		mirrors_supported=( "Ubuntu" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
+		systemd_init="Yes"
+		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		ubuntu_version="Noble"
 		zorin_version="${version}"
 		;;
@@ -11820,7 +11824,7 @@ if [ -x /install_scripts/setup_and_mount_rootfs ]; then /install_scripts/setup_a
 rm -f /install_scripts/setup_and_mount_rootfs
 if [ -x /install_scripts/mount_efi ]; then /install_scripts/mount_efi; fi
 if [ -x /install_scripts/prepare_chroot ]; then /install_scripts/prepare_chroot; fi
-if ([ ! -z "${github}" ] && [ "${distribution}" == "Bazzite" ]) || ([ ! -z "${github}" ] && [ "${distribution}" == "Fedora-Atomic" ]); then exit 0; fi
+#if ([ ! -z "${github}" ] && [ "${distribution}" == "Bazzite" ]) || ([ ! -z "${github}" ] && [ "${distribution}" == "Fedora-Atomic" ]); then exit 0; fi
 if [ -x /install_scripts/enter_chroot ]; then /install_scripts/enter_chroot; fi
 if [ -x /install_scripts/efi_entry ]; then /install_scripts/efi_entry; fi
 INITCHROOT
