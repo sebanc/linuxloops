@@ -75,7 +75,7 @@ case "${distribution}" in
 		default_version="Stable/Openrc"
 		;;
 	'Bazzite')
-		available_versions=( "Stable" "Testing" "Unstable" )
+		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
 		;;
@@ -210,9 +210,9 @@ case "${distribution}" in
 		default_version="VE9"
 		;;
 	'Qubes')
-		available_versions=( "4.2.4" )
+		available_versions=( "4.3.0" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="4.2.4"
+		default_version="4.3.0"
 		;;
 	'RockyLinux')
 		available_versions=( "10" )
@@ -303,7 +303,6 @@ case "${distribution}" in
 		nvidia_supported="No"
 		surface_supported="No"
 		systemd_init="Yes"
-		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		;;
 	'BlissOS')
 		available_environments=( "Gapps/Generic" "Gapps/Go" "Gapps/Surface" "FOSS/Generic" "FOSS/Go" "FOSS/Surface" )
@@ -408,7 +407,6 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="No"
 		systemd_init="Yes"
-		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		;;
 	'FoxFlake')
 		available_environments=( "Gnome/Minimal" "Gnome/Standard" "Gnome/Gaming" "Gnome/Studio" "Gnome/Standard+Gaming" "Gnome/Standard+Studio" "Gnome/Gaming+Studio" "Gnome/Full" "Plasma/Minimal" "Plasma/Standard" "Plasma/Gaming" "Plasma/Studio" "Plasma/Standard+Gaming" "Plasma/Standard+Studio" "Plasma/Gaming+Studio" "Plasma/Full" )
@@ -660,11 +658,11 @@ case "${distribution}" in
 		available_environments=( "Full" )
 		bootloader_id="qubes"
 		bootloader_name="grubx64.efi"
-		bootstrap="iso https://mirrors.edge.kernel.org/qubes/iso/Qubes-R${version}-x86_64.iso /images/install.img /LiveOS/rootfs.img"
+		bootstrap="iso https://mirrors.edge.kernel.org/qubes/iso/Qubes-R${version}-x86_64.iso /images/install.img"
 		btrfs_supported="Yes"
 		iso_sha256sum="https://mirrors.edge.kernel.org/qubes/iso/Qubes-R${version}-x86_64.iso.DIGESTS"
 		iso_signature="https://mirrors.edge.kernel.org/qubes/iso/Qubes-R${version}-x86_64.iso.asc"
-		master_key="9C884DF3F81064A569A4A9FAE022E58F8E34D89F"
+		master_key="F3FA3F99D6281F7B3A3E5E871C3D9B627F3FADA4"
 		mirrors_supported=( "Fedora" "Qubes" )
 		nvidia_supported="No"
 		qubes_version="${version}"
@@ -715,7 +713,6 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		systemd_init="Yes"
-		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		case "${version}" in
 			'24.04')
 				ubuntu_version="Noble"
@@ -747,7 +744,6 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		systemd_init="Yes"
-		#if [ -z "${chromeos}" ] && [ -z "${brunch}" ] && [ -z "${github}" ]; then systemd_init="Yes"; fi
 		ubuntu_version="Noble"
 		zorin_version="${version}"
 		;;
@@ -3540,7 +3536,11 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 mkdir -p /etc/pki/containers
-curl -L https://github.com/ublue-os/bazzite/raw/refs/heads/main/cosign.pub -o /etc/pki/containers/ublue-os.pub
+if [ "${bazzite_version}" == "Stable" ]; then
+	curl -L https://github.com/ublue-os/bazzite/raw/refs/heads/main/cosign.pub -o /etc/pki/containers/ublue-os.pub
+else
+	curl -L https://github.com/ublue-os/bazzite/raw/refs/heads/$(echo ${bazzite_version} | tr A-Z a-z)/cosign.pub -o /etc/pki/containers/ublue-os.pub
+fi
 cat >/etc/containers/policy.json <<'CONTAINERPOLICY'
 {
     "default": [
@@ -9839,7 +9839,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 set -e
 mkdir -p /etc/yum.fake.repos.d
 echo -e '[local]\nname = local\nbaseurl = file:///source\nenabled=1\ngpgcheck=0\nrepo_gpgcheck=0' > /etc/yum.fake.repos.d/local.repo
-dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d install -y coreutils util-linux
+dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d install -y coreutils util-linux procps-ng
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
 mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
@@ -9867,7 +9867,7 @@ cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 set -e
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-*
 dnf --setopt=reposdir=/etc/yum.repos.d/ update -y
-dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion bubblewrap cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 langpacks-${packages_locale} ntfs-3g openssl os-prober sbsigntools @"Qubes OS with Xfce" @"Qubes UI (Audio/Gui)"
+dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion bubblewrap cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 langpacks-${packages_locale} ntfs-3g openssl os-prober sbsigntools anaconda-gui qubes-anaconda-addon qubes-artwork-anaconda initial-setup-gui-wayland-generic @qubes @qubes-ui @xfce-desktop-qubes
 systemctl set-default graphical.target
 cat >/root/anaconda-ks.cfg <<INITIALSETUP
 #version=DEVEL
@@ -9875,8 +9875,9 @@ cat >/root/anaconda-ks.cfg <<INITIALSETUP
 graphical
 
 %packages
-@^qubes-xfce
+@qubes
 @qubes-ui
+@xfce-desktop-qubes
 
 %end
 
@@ -11824,7 +11825,6 @@ if [ -x /install_scripts/setup_and_mount_rootfs ]; then /install_scripts/setup_a
 rm -f /install_scripts/setup_and_mount_rootfs
 if [ -x /install_scripts/mount_efi ]; then /install_scripts/mount_efi; fi
 if [ -x /install_scripts/prepare_chroot ]; then /install_scripts/prepare_chroot; fi
-#if ([ ! -z "${github}" ] && [ "${distribution}" == "Bazzite" ]) || ([ ! -z "${github}" ] && [ "${distribution}" == "Fedora-Atomic" ]); then exit 0; fi
 if [ -x /install_scripts/enter_chroot ]; then /install_scripts/enter_chroot; fi
 if [ -x /install_scripts/efi_entry ]; then /install_scripts/efi_entry; fi
 INITCHROOT
@@ -12033,7 +12033,6 @@ mount --bind /install_scripts /mnt/tmp/linuxloops
 mount --make-slave /mnt/tmp/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
 	if [ -d /mnt/sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /mnt/sys/module/apparmor; fi
-	echo "\$(tty)"
 	if [ "\$(tty)" == "not a tty" ]; then
 		mount --bind /dev/null /mnt/dev/console
 	else
@@ -13782,7 +13781,7 @@ shim-install --removable --no-nvram
 REINSTALLBOOTLOADER
 	elif [ "${distribution}" == "Qubes" ]; then
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-dnf --setopt=reposdir=/etc/yum.repos.d/ reinstall -y shim-* grub2-efi-* grub2-common
+dnf --setopt=reposdir=/etc/yum.repos.d/ reinstall -y grub2-efi-* grub2-common
 mkdir -p /boot/efi/EFI/BOOT
 cp -r /boot/efi/EFI/qubes/* /boot/efi/EFI/BOOT/
 mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
@@ -14348,11 +14347,6 @@ if [ "${1}" == "iso" ]; then
 			mount "${linuxloopsdir}"/cache/iso/level2"${3}" "${linuxloopsdir}"/cache/iso/level1
 			mount "${linuxloopsdir}"/cache/iso/level1"${4}" "${linuxloopsdir}"/cache/iso/rootfs
 			cp -aT "${linuxloopsdir}"/cache/iso/rootfs "${bootstrapdir}"
-			if [ "${distribution}" == "Qubes" ]; then
-				mkdir -p "${bootstrapdir}"/source
-				cp -a "${linuxloopsdir}"/cache/iso/level2/Packages "${bootstrapdir}"/source/
-				cp -a "${linuxloopsdir}"/cache/iso/level2/repodata "${bootstrapdir}"/source/
-			fi
 			umount "${linuxloopsdir}"/cache/iso/rootfs
 			umount "${linuxloopsdir}"/cache/iso/level1
 			umount "${linuxloopsdir}"/cache/iso/level2
@@ -14361,6 +14355,11 @@ if [ "${1}" == "iso" ]; then
 			mount "${linuxloopsdir}"/cache/"${distribution}".iso "${linuxloopsdir}"/cache/iso/level1
 			mount "${linuxloopsdir}"/cache/iso/level1"${3}" "${linuxloopsdir}"/cache/iso/rootfs
 			cp -aT "${linuxloopsdir}"/cache/iso/rootfs "${bootstrapdir}"
+			if [ "${distribution}" == "Qubes" ]; then
+				mkdir -p "${bootstrapdir}"/source
+				cp -a "${linuxloopsdir}"/cache/iso/level1/Packages "${bootstrapdir}"/source/
+				cp -a "${linuxloopsdir}"/cache/iso/level1/repodata "${bootstrapdir}"/source/
+			fi
 			umount "${linuxloopsdir}"/cache/iso/rootfs
 			umount "${linuxloopsdir}"/cache/iso/level1
 		else
@@ -14538,7 +14537,8 @@ cd "${bootstrapdir}"
 pivot_root "${bootstrapdir}" "${bootstrapdir}"/old
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 chroot . bash -c "umount -l /old"
-mkfifo /stay_alive
+mknod /stay_alive p
+#mkfifo /stay_alive
 cat /stay_alive
 BOOTSTRAP_PREPARE
 chmod 0755 "${bootstrapdir}"/install_scripts/bootstrap_prepare
@@ -14564,7 +14564,6 @@ generate_efi_entry
 generate_exit_chroot
 env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TERM=xterm-256color nsenter --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns /install_scripts/bootstrap_init || return_value=1
 rm -f "${bootstrapdir}"/install_scripts/setup_and_mount_rootfs
-#if ([ ! -z "${github}" ] && [ "${distribution}" == "Bazzite" ]) || ([ ! -z "${github}" ] && [ "${distribution}" == "Fedora-Atomic" ]); then exit 0; fi
 if [ "${return_value}" -eq 0 ]; then
 	generare_install_userpw
 	generate_selinux_fix
@@ -16619,7 +16618,6 @@ chmod 0755 "${linuxloopsdir}" "${linuxloopsdir}/tmp"
 
 set_base_parameters()
 {
-if [ -d /home/runner/work ]; then github=1; fi
 if grep -qi 'Microsoft' /proc/version; then wsl=1; fi
 if [ -z "${wsl}" ] && [ -f /etc/NIXOS ]; then nixos=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi

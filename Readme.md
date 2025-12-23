@@ -76,7 +76,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |AlmaLinux|10|✓||||
 |Arch|Stable<br>Testing|✓ (shim-signed AUR)|✓|✓|[notes][Arch-notes]|
 |Artix|Openrc<br>Runit<br>S6<br>Dinit|✓ (shim-signed AUR)|✓||[notes][Artix-notes]|
-|Bazzite|Stable<br>Testing<br>Unstable|✓ (shim-signed AUR)|✓||[notes][Bazzite-notes]|
+|Bazzite|Stable<br>Testing|✓ (shim-signed AUR)|✓||[notes][Bazzite-notes]|
 |BlissOS|15<br>16|||||
 |Brunch|Stable<br>Unstable|✓||✓|[notes][Brunch-notes]|
 |CachyOS|x86-64<br>x86-64-v3<br>x86-64-v4|✓ (shim-signed AUR)|✓|✓|[notes][CachyOS-notes]|
@@ -103,7 +103,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |PikaOS|Nest|✓|✓|||
 |Pop|24.04|✓|✓|✓||
 |Proxmox|VE9|✓|✓|||
-|Qubes|4.2.4||||[notes][Qubes-notes]|
+|Qubes|4.3.0||||[notes][Qubes-notes]|
 |RockyLinux|10|✓||||
 |SteamOS|Main<br>Staging|✓ (shim-signed AUR)|✓|✓|[notes][SteamOS-notes]|
 |Tails|Stable|✓|||[notes][Tails-notes]|
