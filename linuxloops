@@ -12075,7 +12075,7 @@ if [ -f /mnt/tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linux
 if [ -f /mnt/tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /mnt/tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
 if [ "${systemd_init}" == "Yes" ]; then
-	rm -r /mnt/mnt/usr
+	if [ -d /mnt/mnt/usr ]; then rm -r /mnt/mnt/usr; fi
 	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
@@ -14086,7 +14086,7 @@ if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ 
 cat >"${bootstrapdir}"/install_scripts/install_userpw <<INSTALLUSERPW
 #!/bin/bash
 set -e
-if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then mkdir /mnt/tmp/linuxloops; fi
+mkdir -p /mnt/tmp/linuxloops
 cat >/mnt/tmp/linuxloops/set_userpw <<'SETUSERPW'
 #!/bin/bash
 set -e
@@ -14106,10 +14106,10 @@ NIXOSSETPW
 rm -rf /mnt/tmp/*
 elif [ "${systemd_init}" == "Yes" ]; then
 	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash /tmp/linuxloops/set_userpw
-	if [ -f /install_scripts/selinux_fix ]; then nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash /install_scripts/selinux_fix; fi
+	if [ -f /install_scripts/selinux_fix ]; then nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash /tmp/linuxloops/selinux_fix; fi
 else
 	chroot /mnt /tmp/linuxloops/set_userpw
-	if [ -f /install_scripts/selinux_fix ]; then chroot /mnt /install_scripts/selinux_fix; fi
+	if [ -f /install_scripts/selinux_fix ]; then chroot /mnt /tmp/linuxloops/selinux_fix; fi
 fi
 rm -f /mnt/tmp/linuxloops/set_userpw
 INSTALLUSERPW
@@ -14181,17 +14181,17 @@ cat >"${bootstrapdir}"/install_scripts/exit_chroot <<EXITCHROOT
 #!/bin/bash
 for dir in /proc/[0-9]*/; do
 	pid=\$(basename \${dir})
-	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep sleep) ] && [ ! \${pid} -eq \$\$ ]; then kill -STOP \${pid} > /dev/null 2>&1; fi
+	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep cat) ] && [ ! \${pid} -eq \$\$ ]; then kill -STOP \${pid} > /dev/null 2>&1; fi
 done
 sleep 2
 for dir in /proc/[0-9]*/; do
 	pid=\$(basename \${dir})
-	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep sleep) ] && [ ! \${pid} -eq \$\$ ]; then kill \${pid} > /dev/null 2>&1; fi
+	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep cat) ] && [ ! \${pid} -eq \$\$ ]; then kill \${pid} > /dev/null 2>&1; fi
 done
 sleep 2
 for dir in /proc/[0-9]*/; do
 	pid=\$(basename \${dir})
-	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep sleep) ] && [ ! \${pid} -eq \$\$ ]; then kill -9 \${pid} > /dev/null 2>&1; fi
+	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep cat) ] && [ ! \${pid} -eq \$\$ ]; then kill -9 \${pid} > /dev/null 2>&1; fi
 done
 sleep 2
 if mountpoint -q /mnt/tmp/linuxloops; then umount /mnt/tmp/linuxloops; fi
@@ -14529,7 +14529,8 @@ cd "${bootstrapdir}"
 pivot_root "${bootstrapdir}" "${bootstrapdir}"/old
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 chroot . bash -c "umount -l /old"
-while true; do sleep 100; done
+mkfifo /stay_alive
+cat /stay_alive
 BOOTSTRAP_PREPARE
 chmod 0755 "${bootstrapdir}"/install_scripts/bootstrap_prepare
 unshare --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns --fork --mount-proc /bin/bash -c "${bootstrapdir}"/install_scripts/bootstrap_prepare &
