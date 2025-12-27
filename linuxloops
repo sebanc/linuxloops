@@ -54,7 +54,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Nobara" "Omarchy" "OpenSUSE" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Omarchy" "OpenSUSE" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
 
 distribution_parameters()
 {
@@ -160,7 +160,7 @@ case "${distribution}" in
 		default_version="Gigi"
 		;;
 	'Manjaro')
-		available_versions=( "Stable" "Testing" "Unstable" )
+		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
 		;;
@@ -178,11 +178,6 @@ case "${distribution}" in
 		available_versions=( "25.11" "Unstable" )
 		available_versions_longname=( "25.11_(Stable)" "Unstable" )
 		default_version="25.11"
-		;;
-	'Nobara')
-		available_versions=( "Rolling" )
-		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Rolling"
 		;;
 	'Omarchy')
 		available_versions=( "Master" )
@@ -557,17 +552,6 @@ case "${distribution}" in
 		chroot_function="${distribution}-${version}"
 		mirrors_supported=()
 		nixos_version="${version}"
-		nvidia_supported="Yes"
-		surface_supported="No"
-		;;
-	'Nobara')
-		available_environments=( "None" "Gnome" "Gnome/Full" "Nobara" "Nobara/Full" "Plasma" "Plasma/Full" "SteamDeck" "SteamDeck/Full" )
-		bootloader_id="fedora"
-		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 43 default"
-		btrfs_supported="Yes"
-		mirrors_supported=( "Fedora" "Nobara" )
-		nobara_version="43"
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
@@ -5554,7 +5538,7 @@ CUSTOM_MOUNTS
 fi)
 if [ -f /atomic/root/encryption.key ]; then mv /atomic/root/encryption.key /mnt/root/encryption.key; fi
 mkdir -p /mnt/etc/secureboot_key
-sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp /mnt/usr/lib/bootupd/updates/EFI/fedora/grubx64.efi
+sbattach --signum 1 --detach /mnt/etc/secureboot_key/MOK.tmp \$(find /mnt/usr/lib/efi/grub2 | grep 'grubx64\.efi\$')
 openssl pkcs7 -print_certs -inform der -in /mnt/etc/secureboot_key/MOK.tmp -out /mnt/etc/secureboot_key/MOK.pem
 openssl x509 -outform DER -in /mnt/etc/secureboot_key/MOK.pem -out /mnt/etc/secureboot_key/MOK.der
 PREPARE_CHROOT
@@ -7411,256 +7395,6 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_Manjaro-Unstable()
-{
-cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
-if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
-else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
-fi
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip jq lsof nano openssl sudo strace tar util-linux xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
-
-cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
-sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
-if [ ! -z "${mirror_Manjaro}" ]; then
-	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-else
-	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
-	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
-fi
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
-pacman-key --populate manjaro
-pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
-curl -L https://repo.manjaro.org/mirrors.json | jq -r '.[] | ("## Country : " + .country + "\n#Server = " + .url + "$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch\n")' > /mnt/etc/pacman.d/mirrorlist
-if [ ! -z "${mirror_Manjaro}" ]; then
-	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /mnt/etc/pacman.d/mirrorlist
-else
-	sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /mnt/etc/pacman.d/mirrorlist
-fi
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
-
-cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-pacman-key --init
-pacman-key --populate
-pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
-
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cups cups-filters ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver manjaro-settings-manager manjaro-wallpapers-18.0 matcha-gtk-theme nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse plymouth-theme-manjaro sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-meslo-nerd-font-powerlevel10k udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio wireplumber xdg-user-dirs-gtk xorg-server xorg-xinput"
-desktop_services="avahi-daemon.service cups.service"
-case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter budgie-desktop network-manager-applet gnome-keyring gnome-terminal nemo papirus-maia-icon-theme pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Cinnamon')
-	default_session="cinnamon"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter cinnamon cinnamon-settings-daemon manjaro-cinnamon-settings network-manager-applet gnome-keyring gnome-terminal nemo pamac-gtk blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
-systemctl enable lightdm.service
-"
-	;;
-	'Cosmic')
-	default_session="cosmic"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
-systemctl enable greetd.service
-ln -sf cosmic-greeter.toml /etc/greetd/config.toml
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
-systemctl enable lightdm.service connman.service
-"
-	;;
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
-systemctl enable gdm.service
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} gdm gnome gnome-extra network-manager-applet gnome-keyring manjaro-gnome-settings xdg-desktop-portal-gnome
-systemctl enable gdm.service
-"
-	;;
-	'Lxqt')
-	default_session="lxqt"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Lxqt/Full')
-	default_session="lxqt"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lxqt papirus-maia-icon-theme qterminal pcmanfm-qt network-manager-applet gnome-keyring blueman pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Mate')
-	default_session="mate"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Mate/Full')
-	default_session="mate"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter mate mate-extra papirus-maia-icon-theme mate-terminal caja mate-control-center network-manager-applet gnome-keyring blueman mate-media mate-power-manager pamac-gtk xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma-desktop manjaro-kde-settings plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 pamac-tray-icon-plasma breeze-gtk breeze-icons xdg-desktop-portal-kde
-systemctl enable sddm.service
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard plasma manjaro-kde-settings dolphin discover packagekit-qt6 konsole packagekit-qt6 pamac-tray-icon-plasma manjaro-kde-settings breeze-gtk breeze-icons xdg-desktop-portal-kde
-systemctl enable sddm.service
-"
-	;;
-	'Xfce')
-	default_session="xfce"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-	'Xfce/Full')
-	default_session="xfce"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter xfce4 xfce4-goodies manjaro-xfce-settings xfce4-terminal xfce4-notifyd xfce4-whiskermenu-plugin thunar xfce4-battery-plugin xfce4-power-manager xfce4-pulseaudio-plugin network-manager-applet gnome-keyring blueman pamac-gtk papirus-icon-theme xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
-esac
-cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-${install_desktop}
-systemctl enable ${desktop_services}
-cat >/etc/xdg/autostart/budgie-nemo.desktop <<'NEMODESKTOP'
-[Desktop Entry]
-Type=Application
-Name=Nemo
-Comment=Start Nemo desktop at log in
-Exec=nemo-desktop
-OnlyShowIn=Budgie;
-AutostartCondition=GSettings org.nemo.desktop show-desktop-icons
-X-GNOME-AutoRestart=true
-NoDisplay=true
-NEMODESKTOP
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/install_scripts/install_desktop
-
-cat >"${bootstrapdir}"/install_scripts/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
-cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
-polkit.addAdminRule(function(action, subject) {
-    return ["unix-group:wheel"];
-});
-POLKIT
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/install_scripts/install_user
-
-cat >"${bootstrapdir}"/install_scripts/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Cosmic'|'Cosmic/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			echo -e '\n[initial_session]\ncommand = "cosmic-session"\nuser = "${useraccount_name}"' >> /etc/greetd/cosmic-greeter.toml
-		fi
-	;;
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-	*)
-		mkdir -p /etc/lightdm/lightdm.conf.d
-		echo -e '[LightDM]\nlogind-check-graphical=true\n\n[Seat:*]\nsession-wrapper=/etc/lightdm/Xsession\ngreeter-session=lightdm-slick-greeter' > /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			groupadd -r autologin
-			usermod -aG autologin '${useraccount_name}'
-			echo -e 'autologin-user=${useraccount_name}\nautologin-session=${default_session}' >> /etc/lightdm/lightdm.conf.d/zz_linuxloops.conf
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
-
-surface_remove="linux-meta linux-headers-meta"
-initramfs_type="initcpio"
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
-		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
-			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
-			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/install_scripts/install_custom_packages
-		fi
-	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/install_scripts/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/install_scripts/install_custom_script
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_script
-fi
-}
-
 chroot_MX()
 {
 if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
@@ -8456,197 +8190,6 @@ INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
 
 initramfs_type="nixos_config"
-}
-
-chroot_Nobara()
-{
-cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-if [ ! -z "${mirror_Fedora}" ]; then
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /etc/yum.repos.d/fedora-updates-testing.repo
-	sed -i 's@^metalink=@#metalink=@g' /etc/yum.repos.d/fedora-updates-testing.repo
-fi
-dnf update -y
-dnf install -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
-
-cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-mkdir -p /mnt/proc /mnt/sys
-mount -t proc none /mnt/proc
-mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
-mount --make-slave /mnt/proc/sys
-mount --bind /sys /mnt/sys
-mount --make-slave /mnt/sys
-dnf install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y filesystem
-dnf --setopt=tsflags=noscripts install --installroot=/mnt --use-host-config --releasever $(echo ${nobara_version} | tr A-Z a-z) -y @core dnf-plugin-system-upgrade akmods ca-certificates grubby openssl tar kernel
-if [ ! -z "${mirror_Fedora}" ]; then
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
-	sed -i 's@^#baseurl=http://download.example/pub/fedora/linux@baseurl=${mirror_Fedora}@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
-	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
-fi
-umount /mnt/sys
-umount /mnt/proc/sys
-umount /mnt/proc
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
-
-cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-cat >/etc/selinux/config <<SELINUXCONFIG
-SELINUX=enforcing
-SELINUXTYPE=targeted
-SELINUXCONFIG
-update-ca-trust
-authselect select local with-silent-lastlog with-mdns4 --force
-authselect apply-changes
-systemd-machine-id-setup
-rpm --rebuilddb
-dnf upgrade --refresh -y
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/nobara.repo -o /etc/yum.repos.d/nobara.repo
-curl --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/nobara.repo -o /etc/yum.repos.d/nobara.repo || echo "No new repo file."
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-rolling-pubkey -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-rolling-pubkey
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/${nobara_version}/baseos/nobara-repos/${nobara_version}/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version} -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-${nobara_version}
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} - 1 ))/baseos/nobara-repos/$(( ${nobara_version} - 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 1 ))
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} - 2 ))/baseos/nobara-repos/$(( ${nobara_version} - 2 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 2 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} - 2 ))
-curl --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/Nobara-Project/rpm-sources/raw/refs/heads/$(( ${nobara_version} + 1 ))/baseos/nobara-repos/$(( ${nobara_version} + 1 ))/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) -o /etc/pki/rpm-gpg/RPM-GPG-KEY-nobara-baseos-pubkey-$(( ${nobara_version} + 1 )) || echo "No new repo keys."
-rpm -e --nodeps \$(rpm -q fedora-release-identity-basic) \$(rpm -q fedora-release-common) \$(rpm -q fedora-release)
-dnf install --allowerasing -y --releasever $(echo ${nobara_version} | tr A-Z a-z) nobara-repos nobara-gpg-keys nobara-release nobara-release-common nobara-release-workstation nobara-updater
-nobara-sync cli
-dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl thermald bash-completion gpg polkit xdg-user-dirs zstd fwupd patchutils net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil apparmor dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
-systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
-systemctl --global enable dbus.socket dbus-broker.service
-sed -i 's@enabled=0@enabled=1@g' /etc/yum.repos.d/nobara-pikaos-additional.repo
-dnf upgrade --refresh -y
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
-
-desktop_base="alsa-lib alsa-utils alsa-sof-firmware alsa-topology at-spi2-core avahi cups cups-browsed dbus-x11 desktop-backgrounds dejavu-sans-fonts firefox flatpak gamemode gamescope google-roboto-fonts gvfs-fuse iio-sensor-proxy inputplumber intel-media-driver lutris mangohud mesa-va-drivers-freeworld mesa-vulkan-drivers nobara-bookmarks nobara-controller-config nobara-driver-manager nobara-login nobara-login-sysctl nobara-logos nobara-nvidia-wizard nobara-updater nobara-welcome nss-mdns plymouth-system-theme qt5-qttools steam system-config-printer udisks2 vkBasalt winetricks xdg-user-dirs-gtk xorg-x11-drivers"
-desktop_services="avahi-daemon.service cups.service"
-case "${environment}" in
-	'Gnome')
-	default_session="gnome-wayland"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} gdm gnome-shell network-manager-applet gnome-keyring gnome-keyring-pam gnome-backgrounds gnome-icon-theme nautilus gnome-terminal gnome-extensions-app gnome-software gnome-shell-extension-appindicator xdg-desktop-portal-gnome file-roller
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome-wayland"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} gdm @gnome-desktop network-manager-applet gnome-keyring gnome-keyring-pam gnome-shell-extension-appindicator xdg-desktop-portal-gnome file-roller
-"
-	;;
-	'Nobara')
-	default_session="plasma"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd kde-nobara kde-nobara-extras-wallpapers breeze-gtk breeze-icon-theme xdg-desktop-portal-kde ark
-"
-	;;
-	'Nobara/Full')
-	default_session="plasma"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-nobara-sddm @kde-desktop plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kde-nobara kde-nobara-extras-wallpapers breeze-gtk breeze-icon-theme xdg-desktop-portal-kde ark
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd xdg-desktop-portal-kde ark
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm sddm-breeze @kde-desktop plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet xdg-desktop-portal-kde ark
-"
-	;;
-	'SteamDeck')
-	default_session="gamescope-session-steam"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-steamdeck-sddm plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet kscreen kde-gtk-config xsettingsd gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck xdg-desktop-portal-kde ark
-"
-	;;
-	'SteamDeck/Full')
-	default_session="gamescope-session-steam"
-	install_desktop="
-dnf install --allowerasing -y ${desktop_base} sddm kde-steamdeck-sddm @kde-desktop plasma-desktop plasma-discover plasma-nm bluedevil dolphin konsole pam-kwallet gamescope-session-plus gamescope-session-steam jupiter-fan-control jupiter-hw-support kde-steamdeck xdg-desktop-portal-kde ark
-"
-	;;
-esac
-cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data pipewire-codec-aptx mozilla-openh264.x86_64 x264-libs.x86_64 x265-libs.x86_64 libavcodec-freeworld.x86_64 libavcodec-free.x86_64 openh264.x86_64 mesa-va-drivers-freeworld.x86_64 mesa-libgallium-freeworld.x86_64 gstreamer1-plugins-bad-free-extras.x86_64 libheif-freeworld.x86_64 libheif.x86_64 x264-libs.i686 x265-libs.i686 libavcodec-freeworld.i686 libavcodec-free.i686 openh264.i686 mesa-va-drivers-freeworld.i686 mesa-libgallium-freeworld.i686 gstreamer1-plugins-bad-free-extras.i686 libheif-freeworld.i686 libheif.i686
-${install_desktop}
-systemctl enable ${desktop_services}
-systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/install_scripts/install_desktop
-
-cat >"${bootstrapdir}"/install_scripts/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/install_scripts/install_user
-
-cat >"${bootstrapdir}"/install_scripts/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Gnome'|'Gnome/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
-		fi
-	;;
-	*)
-		if [ "$(echo ${environment} | cut -d'/' -f1)" == "Nobara" ]; then
-			echo -e '[Theme]\nCurrent = nobara' > /etc/sddm.conf.d/zz_linuxloops.conf
-		elif [ "$(echo ${environment} | cut -d'/' -f1)" == "SteamDeck" ]; then
-			echo -e '[Theme]\nCurrent = sugar-steamOS' > /etc/sddm.conf.d/zz_linuxloops.conf
-		else
-			echo -e '[Theme]\nCurrent = breeze' > /etc/sddm.conf.d/zz_linuxloops.conf
-		fi
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
-
-initramfs_type="dracut"
-if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\ndnf install -y ${custom_packages}" > "${bootstrapdir}"/install_scripts/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/install_scripts/install_custom_script
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_script
-fi
 }
 
 chroot_Omarchy()
@@ -12057,7 +11600,7 @@ else
 fi
 if [ "${environment}" == "Enlightenment" ]; then
 	dns_manager="connman/resolv.conf"
-elif [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Nobara" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+elif [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	dns_manager="systemd/resolve/stub-resolv.conf"
 else
 	dns_manager="NetworkManager/resolv.conf"
@@ -12178,7 +11721,7 @@ else
 	cp \${1}/etc/secureboot_key/MOK.der \${1}/boot/efi/${distribution}.der
 	if [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 		exit 0
-	elif [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Nobara" ]; then
+	elif [ "${distribution}" == "Fedora" ]; then
 		chown root:akmods /etc/secureboot_key/*
 		mkdir -p /etc/pki/akmods/certs /etc/pki/akmods/private
 		rm -rf /etc/pki/akmods/certs/public_key.der /etc/pki/akmods/private/private_key.priv
@@ -12316,12 +11859,6 @@ systemd.shutdown.\"nvidia.shutdown\" = pkgs.writeScript \"nvidia.shutdown\" ''
   done
 '';
 "
-elif [ "${distribution}" == "Nobara" ]; then
-	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
-#!/bin/bash
-set -e
-dnf install -y nvidia-driver libva-nvidia-driver
-INSTALLNVIDIA
 elif [ "${distribution}" == "OpenSUSE" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
@@ -14538,7 +14075,6 @@ pivot_root "${bootstrapdir}" "${bootstrapdir}"/old
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 chroot . bash -c "umount -l /old"
 mknod /stay_alive p
-#mkfifo /stay_alive
 cat /stay_alive
 BOOTSTRAP_PREPARE
 chmod 0755 "${bootstrapdir}"/install_scripts/bootstrap_prepare
@@ -14701,7 +14237,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 	loopback loop \"\${img_path}\"
 	linuxloops_args=\"img_path=\${img_path} img_uuid=\${img_uuid}\"
 	export linuxloops_args
-	configfile (loop,2)$(if [ \"${root_fstype}\" == \"btrfs\" ]; then echo /@boot; fi)/grub$(if [ \"${distribution}\" == \"AlmaLinux\" ] || [ \"${distribution}\" == \"Bazzite\" ] || [ \"${distribution}\" == \"Fedora\" ] || [ \"${distribution}\" == \"Fedora-Atomic\" ] || [ \"${distribution}\" == \"Nobara\" ] || [ \"${distribution}\" == \"OpenSUSE\" ] || [ \"${distribution}\" == \"Qubes\" ] || [ \"${distribution}\" == \"RockyLinux\" ]; then echo 2; fi)/grub.cfg
+	configfile (loop,2)$(if [ \"${root_fstype}\" == \"btrfs\" ]; then echo /@boot; fi)/grub$(if [ \"${distribution}\" == \"AlmaLinux\" ] || [ \"${distribution}\" == \"Bazzite\" ] || [ \"${distribution}\" == \"Fedora\" ] || [ \"${distribution}\" == \"Fedora-Atomic\" ] || [ \"${distribution}\" == \"OpenSUSE\" ] || [ \"${distribution}\" == \"Qubes\" ] || [ \"${distribution}\" == \"RockyLinux\" ]; then echo 2; fi)/grub.cfg
 }
 "
 elif [ "${distribution}" == "Tails" ]; then
@@ -14730,7 +14266,7 @@ config="menuentry '${label}' --class '${class}' {${remove_tpm}
 	loopback loop \"\${img_path}\"
 	linuxloops_args=\"rdinit=/linuxloops img_path=\${img_path} img_uuid=\${img_uuid}\"
 	export linuxloops_args
-	configfile (loop,2)$(if [ \"${root_fstype}\" == \"btrfs\" ]; then echo /@boot; fi)/grub$(if [ \"${distribution}\" == \"AlmaLinux\" ] || [ \"${distribution}\" == \"Bazzite\" ] || [ \"${distribution}\" == \"Fedora\" ] || [ \"${distribution}\" == \"Fedora-Atomic\" ] || [ \"${distribution}\" == \"Nobara\" ] || [ \"${distribution}\" == \"OpenSUSE\" ] || [ \"${distribution}\" == \"Qubes\" ] || [ \"${distribution}\" == \"RockyLinux\" ]; then echo 2; fi)/grub.cfg
+	configfile (loop,2)$(if [ \"${root_fstype}\" == \"btrfs\" ]; then echo /@boot; fi)/grub$(if [ \"${distribution}\" == \"AlmaLinux\" ] || [ \"${distribution}\" == \"Bazzite\" ] || [ \"${distribution}\" == \"Fedora\" ] || [ \"${distribution}\" == \"Fedora-Atomic\" ] || [ \"${distribution}\" == \"OpenSUSE\" ] || [ \"${distribution}\" == \"Qubes\" ] || [ \"${distribution}\" == \"RockyLinux\" ]; then echo 2; fi)/grub.cfg
 }
 "
 fi

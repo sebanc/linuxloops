@@ -93,11 +93,10 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |KDE|Rolling|✓ (shim-signed AUR)|✓|✓|[notes][KDE-notes]|
 |Linuxmint|Zara|✓|✓|✓||
 |LMDE|Gigi|✓|✓|✓||
-|Manjaro|Stable<br>Testing<br>Unstable|✓ (shim-signed AUR)|✓|✓|[notes][Manjaro-notes]|
+|Manjaro|Stable<br>Testing|✓ (shim-signed AUR)|✓|✓|[notes][Manjaro-notes]|
 |MX|25|✓|✓|✓||
 |Neon|User<br>Testing|✓|✓|✓||
 |NixOS|25.11<br>Unstable|✓|✓|||
-|Nobara|Rolling|✓|✓|||
 |Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
 |PikaOS|Nest|✓|✓|||
