@@ -170,9 +170,9 @@ case "${distribution}" in
 		default_version="25"
 		;;
 	'Neon')
-		available_versions=( "User" "Testing" )
-		available_versions_longname=( "User_(Stable)" "Testing" )
-		default_version="User"
+		available_versions=( "Stable" )
+		available_versions_longname=( "${available_versions[@]}" )
+		default_version="Stable"
 		;;
 	'NixOS')
 		available_versions=( "25.11" "Unstable" )
@@ -537,7 +537,7 @@ case "${distribution}" in
 		btrfs_supported="Yes"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Ubuntu" "Neon" )
-		neon_version="${version}"
+		if [ "${version}" == "Stable" ]; then neon_version="User"; else neon_version="${version}"; fi
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		ubuntu_release="24.04"
