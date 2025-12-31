@@ -404,7 +404,7 @@ case "${distribution}" in
 		systemd_init="Yes"
 		;;
 	'FoxFlake')
-		available_environments=( "Gnome/Minimal" "Gnome/Standard" "Gnome/Gaming" "Gnome/Studio" "Gnome/Standard+Gaming" "Gnome/Standard+Studio" "Gnome/Gaming+Studio" "Gnome/Full" "Plasma/Minimal" "Plasma/Standard" "Plasma/Gaming" "Plasma/Studio" "Plasma/Standard+Gaming" "Plasma/Standard+Studio" "Plasma/Gaming+Studio" "Plasma/Full" )
+		available_environments=( "Cosmic/Minimal" "Cosmic/Standard" "Cosmic/Gaming" "Cosmic/Studio" "Cosmic/Standard+Gaming" "Cosmic/Standard+Studio" "Cosmic/Gaming+Studio" "Cosmic/Full" "Gnome/Minimal" "Gnome/Standard" "Gnome/Gaming" "Gnome/Studio" "Gnome/Standard+Gaming" "Gnome/Standard+Studio" "Gnome/Gaming+Studio" "Gnome/Full" "Plasma/Minimal" "Plasma/Standard" "Plasma/Gaming" "Plasma/Studio" "Plasma/Standard+Gaming" "Plasma/Standard+Studio" "Plasma/Gaming+Studio" "Plasma/Full" )
 		bootloader_id="foxflake"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -580,18 +580,18 @@ case "${distribution}" in
 		surface_supported="No"
 		case "${version}" in
 			'Leap/15.6')
-				bootstrap="rootfs-xz https://rsync.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://rsync.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://rsync.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
 				;;
 			*)
-				bootstrap="rootfs-xz https://rsync.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://rsync.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://rsync.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
 				;;
 		esac
 		;;
@@ -13726,17 +13726,17 @@ cat >"${bootstrapdir}"/install_scripts/exit_chroot <<EXITCHROOT
 #!/bin/bash
 for dir in /proc/[0-9]*/; do
 	pid=\$(basename \${dir})
-	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep cat) ] && [ ! \${pid} -eq \$\$ ]; then kill -STOP \${pid} > /dev/null 2>&1; fi
+	if [ ! -z \${pid} ] && [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$\$ ]; then kill -STOP \${pid} > /dev/null 2>&1; fi
 done
 sleep 2
 for dir in /proc/[0-9]*/; do
 	pid=\$(basename \${dir})
-	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep cat) ] && [ ! \${pid} -eq \$\$ ]; then kill \${pid} > /dev/null 2>&1; fi
+	if [ ! -z \${pid} ] && [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$\$ ]; then kill \${pid} > /dev/null 2>&1; fi
 done
 sleep 2
 for dir in /proc/[0-9]*/; do
 	pid=\$(basename \${dir})
-	if [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$(pgrep cat) ] && [ ! \${pid} -eq \$\$ ]; then kill -9 \${pid} > /dev/null 2>&1; fi
+	if [ ! -z \${pid} ] && [ ! \${pid} -eq 1 ] && [ ! \${pid} -eq \$\$ ]; then kill -9 \${pid} > /dev/null 2>&1; fi
 done
 sleep 2
 if mountpoint -q /mnt/tmp/linuxloops; then umount /mnt/tmp/linuxloops; fi
@@ -13809,16 +13809,15 @@ if mountpoint -q /dev; then umount /dev; fi
 if mountpoint -q /sys/firmware/efi/efivars; then umount /sys/firmware/efi/efivars; fi
 if mountpoint -q /sys; then umount /sys; fi
 if mountpoint -q /proc; then umount /proc; fi
+echo "exit" > /stay_alive
 EXITCHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/exit_chroot
 }
 
 end_bootstrap()
 {
-if [ -x "${bootstrapdir}"/install_scripts/exit_chroot ]; then
-	env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TERM=xterm-256color nsenter --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns /install_scripts/exit_chroot
-fi
-env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TERM=xterm-256color nsenter --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns /bin/bash -c "kill -9 1"
+env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TERM=xterm-256color nsenter --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns /install_scripts/exit_chroot
+rm -f "${bootstrapdir}"/stay_alive
 if mountpoint -q "${tmpdir}"/mount_ns; then umount "${tmpdir}"/mount_ns; fi
 if mountpoint -q "${tmpdir}"/pid_ns; then umount "${tmpdir}"/pid_ns; fi
 if mountpoint -q "${tmpdir}"; then umount "${tmpdir}"; fi
@@ -14074,8 +14073,12 @@ cd "${bootstrapdir}"
 pivot_root "${bootstrapdir}" "${bootstrapdir}"/old
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 chroot . bash -c "umount -l /old"
-mknod /stay_alive p
-cat /stay_alive
+mkfifo /stay_alive
+while true; do
+	if read stay_alive; then
+		if [ "\${stay_alive}" == "exit" ]; then break; fi
+	fi
+done </stay_alive
 BOOTSTRAP_PREPARE
 chmod 0755 "${bootstrapdir}"/install_scripts/bootstrap_prepare
 unshare --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns --fork --mount-proc /bin/bash -c "${bootstrapdir}"/install_scripts/bootstrap_prepare &
@@ -14705,7 +14708,7 @@ input:not(:disabled), select:not(:disabled) {
     padding: 10px;
     display: none;
     width: fit-content;
-    max-height: 320px;
+    max-height: 280px;
     overflow: auto;
     border: 1px dotted blue;
     text-align: left;
@@ -15843,14 +15846,14 @@ if [ ! -z "${generate_config}" ]; then generate_declarative_config; fi
 if [ "${install_type}" == "disk" ]; then
 	confirmation=$(gui_launch -m confirmation -t "Drive erasing confirmation" -q "WARNING: All data on device ${destination} will be erased, are you sure you want to continue ?")
 	if [ -z "${confirmation}" ]; then exit 1; fi
-	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment on drive ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui.pid" &
+	{ gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment on drive ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui.pid" & } 2>/dev/null
 	start_install
 	kill $(cat /tmp/linuxloops_gui.pid) 2>/dev/null
 	rm /tmp/linuxloops_gui.pid
 	if [ ${return_value} -eq 1 ]; then exit_with_error "Failed to perform the installation of ${distribution} ${version} in chroot."; fi
 	gui_launch -m finished -t "Installation finished" -q "Linuxloops installation process is finished.<br><br>You can now reboot your computer and start ${distribution} by selecting your device in the UEFI boot menu."
 else
-	gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment in the disk image ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui.pid" &
+	{ gui_launch -m progress -t "Installation in progress" -q "Installing ${distribution} ${version} with ${environment} environment in the disk image ${fullpath}.<br><br>You can follow the install process in the terminal window." -w "/tmp/linuxloops_gui.pid" & } 2>/dev/null
 	start_install
 	kill $(cat /tmp/linuxloops_gui.pid) 2>/dev/null
 	rm /tmp/linuxloops_gui.pid
@@ -16159,7 +16162,6 @@ if [ -z "${wsl}" ] && [ -f /etc/NIXOS ]; then nixos=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
-set +H
 set_base_parameters
 if [[ $EUID -ne 0 ]]; then
 	if [ ! -z "${nixos}" ] && [ ${#} -eq 0 ]; then
@@ -16168,6 +16170,7 @@ if [[ $EUID -ne 0 ]]; then
 		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
 fi
+set +H
 if [ ! -z "${wsl}" ]; then
 	if [ ! -e /dev/loop-control ]; then echo "WSL1 is not supported, please enable WSL2 to use this installer."; exit 1; fi
 	for wsl_drive in {a..z}; do
