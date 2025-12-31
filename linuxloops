@@ -13721,7 +13721,6 @@ chmod 0755 "${bootstrapdir}"/install_scripts/selinux_fix
 
 generate_exit_chroot()
 {
-if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ "${distribution}" == "ChromeOS-Flex" ] || [ "${distribution}" == "Tails" ]; then return; fi
 cat >"${bootstrapdir}"/install_scripts/exit_chroot <<EXITCHROOT
 #!/bin/bash
 for dir in /proc/[0-9]*/; do
