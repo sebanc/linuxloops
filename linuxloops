@@ -14073,7 +14073,7 @@ cd "${bootstrapdir}"
 pivot_root "${bootstrapdir}" "${bootstrapdir}"/old
 export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 chroot . bash -c "umount -l /old"
-mkfifo /stay_alive
+mknod /stay_alive p
 while true; do
 	if read stay_alive; then
 		if [ "\${stay_alive}" == "exit" ]; then break; fi
