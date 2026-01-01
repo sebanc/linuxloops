@@ -11745,7 +11745,7 @@ chmod 0755 "${bootstrapdir}"/install_scripts/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -11753,21 +11753,11 @@ curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https:
 echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
 apt update
 if [ ! -z "${surface_remove}" ]; then DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}; fi
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libcamera-ipa libcamera-tools gstreamer1.0-libcamera pipewire-libcamera build-essential
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/umlaeute/v4l2loopback/archive/v0.15.1.tar.gz | tar xz -C /usr/src
-dkms add -m v4l2loopback -v 0.15.1
-dkms install -m v4l2loopback -v 0.15.1 -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
-usermod -aG video '${useraccount_name}'
-SURFACEAPT
-elif [ "${distribution}" == "Pop" ]; then
-	cat >"${bootstrapdir}"/install_scripts/install_surface <<SURFACEAPT
-#!/bin/bash
-set -e
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/linux-surface/linux-surface/raw/refs/heads/master/pkg/keys/surface.asc | gpg --dearmor | dd of=/etc/apt/trusted.gpg.d/linux-surface.gpg
-echo "deb [arch=amd64] https://pkg.surfacelinux.com/debian release main" > /etc/apt/sources.list.d/linux-surface.list
-apt update
-DEBIAN_FRONTEND=noninteractive apt purge -y ${surface_remove}
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-image-surface linux-headers-surface iptsd libcamera-ipa libcamera-tools gstreamer1.0-libcamera pipewire-libcamera build-essential git
+v4l2loopback_version=\$(git ls-remote https://github.com/v4l2loopback/v4l2loopback | cut -f2 | grep 'refs/tags/v' | grep -v '\^' | sed 's@refs/tags/v@@g' | sort -V | tail -1)
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/umlaeute/v4l2loopback/archive/v\${v4l2loopback_version}.tar.gz | tar xz -C /usr/src
+dkms add -m v4l2loopback -v \${v4l2loopback_version}
+dkms install -m v4l2loopback -v \${v4l2loopback_version} -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
 elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ] || [ "${distribution}" == "SteamOS" ]; then
