@@ -1814,7 +1814,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2080,7 +2080,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2349,7 +2349,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2651,7 +2651,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -2935,7 +2935,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3220,7 +3220,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3663,7 +3663,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3820,7 +3820,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -3943,7 +3943,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -4240,7 +4240,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5693,7 +5693,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5750,7 +5750,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -5978,7 +5978,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -6204,7 +6204,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -6493,7 +6493,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -6901,7 +6901,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -7151,7 +7151,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -7796,7 +7796,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -7997,7 +7997,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -8198,7 +8198,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -9603,7 +9603,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
@@ -10395,7 +10395,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.archlinux.org/archlinux/packaging/packages/pacman-mirrorlist/-/raw/main/mirrorlist?ref_type=heads\&inline=false -o /etc/pacman.d/mirrorlist
+curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Arch}" ]; then
 	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
 else
