@@ -433,7 +433,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'GLF-OS')
-		available_environments=( "Gnome/Mini" "Gnome/Standard" "Plasma/Mini" "Plasma/Standard" )
+		available_environments=( "Gnome/Mini" "Gnome/Standard" "Gnome/Studio" "Gnome/Studio-Pro" "Plasma/Mini" "Plasma/Standard" "Plasma/Studio" "Plasma/Studio-Pro" )
 		bootloader_id="glfos"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -5715,7 +5715,7 @@ useradd -u 30000 -g nixbld -G nixbld nixbld
 useradd -s /bin/bash -m 'temp'
 echo -e 'temp\ntemp' | passwd 'temp'
 echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
-sudo -u temp bash << 'NIXOSINSTALL'
+cat >/tmp/nixos_install << 'NIXOSINSTALL'
 set -e
 ulimit -n 4096
 sudo mkdir -p /nix
@@ -5729,8 +5729,10 @@ nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --option substituters "https://foxflake.cachix.org/ https://cache.nixos.org/" --option trusted-public-keys "foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
 NIXOSINSTALL
+chmod 0755 /tmp/nixos_install
+sudo -u temp bash /tmp/nixos_install
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
 
@@ -6226,7 +6228,7 @@ useradd -u 30000 -g nixbld -G nixbld nixbld
 useradd -s /bin/bash -m 'temp'
 echo -e 'temp\ntemp' | passwd 'temp'
 echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
-sudo -u temp bash << 'NIXOSINSTALL'
+cat >/tmp/nixos_install << 'NIXOSINSTALL'
 set -e
 ulimit -n 4096
 sudo mkdir -p /nix
@@ -6240,9 +6242,11 @@ nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --option substituters "http://37.59.123.5:8080/glf/ https://cache.nixos.org/" --option trusted-public-keys "glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
 /install_scripts/install_flatpak
 NIXOSINSTALL
+chmod 0755 /tmp/nixos_install
+sudo -u temp bash /tmp/nixos_install
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
 
@@ -7818,7 +7822,7 @@ useradd -u 30000 -g nixbld -G nixbld nixbld
 useradd -s /bin/bash -m 'temp'
 echo -e 'temp\ntemp' | passwd 'temp'
 echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
-sudo -u temp bash << 'NIXOSINSTALL'
+cat >/tmp/nixos_install << 'NIXOSINSTALL'
 set -e
 ulimit -n 4096
 sudo mkdir -p /nix
@@ -7835,6 +7839,8 @@ sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-p
 /install_scripts/install_channel
 /install_scripts/install_dmconfig
 NIXOSINSTALL
+chmod 0755 /tmp/nixos_install
+sudo -u temp bash /tmp/nixos_install
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
 
@@ -8019,7 +8025,7 @@ useradd -u 30000 -g nixbld -G nixbld nixbld
 useradd -s /bin/bash -m 'temp'
 echo -e 'temp\ntemp' | passwd 'temp'
 echo 'temp      ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/90-wheel
-sudo -u temp bash << 'NIXOSINSTALL'
+cat >/tmp/nixos_install << 'NIXOSINSTALL'
 set -e
 ulimit -n 4096
 sudo mkdir -p /nix
@@ -8036,6 +8042,8 @@ sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-p
 /install_scripts/install_channel
 /install_scripts/install_dmconfig
 NIXOSINSTALL
+chmod 0755 /tmp/nixos_install
+sudo -u temp bash /tmp/nixos_install
 NIXOS_PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
 
@@ -9876,12 +9884,14 @@ fi
 
 tmpdir="\$([[ -n \${XDG_RUNTIME_DIR+x} ]] && mktemp -p "\$XDG_RUNTIME_DIR" -d -t gamescope.XXXXXXX)"
 
+export __GL_SHADER_DISK_CACHE_SIZE=12000000000
 export GAMESCOPE_DISABLE_ASYNC_FLIPS=1
 export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
 export GAMESCOPE_NV12_COLORSPACE=k_EStreamColorspace_BT601
 export GTK_IM_MODULE=Steam
 export INTEL_DEBUG=noccs
 export MANGOHUD_CONFIGFILE="\${tmpdir:+\$tmpdir/mangohud.config}"
+export MESA_SHADER_CACHE_MAX_SIZE=12G
 export QT_IM_MODULE=steam
 export QT_QPA_PLATFORM_THEME=kde
 export R600_DEBUG=nodcc
