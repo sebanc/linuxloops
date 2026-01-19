@@ -80,7 +80,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |BlissOS|15<br>16|||||
 |Brunch|Stable<br>Unstable|✓||✓|[notes][Brunch-notes]|
 |CachyOS|x86-64<br>x86-64-v3<br>x86-64-v4|✓ (shim-signed AUR)|✓|✓|[notes][CachyOS-notes]|
-|ChromeOS-Flex|Stable|not for disk images / devmode|||[notes][ChromeOS-Flex-notes]|
+|ChromeOS-Flex|Stable|not with disk images / devmode|||[notes][ChromeOS-Flex-notes]|
 |Debian|Trixie|✓|✓|✓||
 |Devuan|Excalibur|✓|✓|||
 |Elementary|8|✓|✓|✓||
@@ -91,7 +91,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |GLF-OS|Stable<br>Testing|✓|✓|||
 |Kali|Rolling|disk images only||✓|[notes][Kali-notes]|
 |KDE|Rolling|✓ (shim-signed AUR)|✓|✓|[notes][KDE-notes]|
-|Linuxmint|Zara|✓|✓|✓||
+|Linuxmint|Zena|✓|✓|✓||
 |LMDE|Gigi|✓|✓|✓||
 |Manjaro|Stable<br>Testing|✓ (shim-signed AUR)|✓|✓|[notes][Manjaro-notes]|
 |MX|25|✓|✓|✓||

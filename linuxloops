@@ -150,9 +150,9 @@ case "${distribution}" in
 		default_version="Rolling"
 		;;
 	'Linuxmint')
-		available_versions=( "Zara" )
+		available_versions=( "Zena" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Zara"
+		default_version="Zena"
 		;;
 	'LMDE')
 		available_versions=( "Gigi" )
