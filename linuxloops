@@ -3687,7 +3687,7 @@ mkdir -p /isomount/initramfs /isomount/iso
 echo "Downloading BlissOS iso sha256"
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "http://download.sourceforge.net/sourceforge/blissos-x86/\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g' | cut -d'/' -f11)".sha256 -o /root/bliss.iso.sha256
 echo "Downloading BlissOS iso"
-for i in 1 .. 3; do
+for i in {1..3}; do
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "http://download.sourceforge.net/sourceforge/blissos-x86/\$(curl https://sourceforge.net/projects/blissos-x86/files/Official/BlissOS${blissos_version}/${environment}/ | tr '"' "\n" | grep "sourceforge.net/projects/.*iso/download" | sort -V | tail -1 | sed 's@/download@@g' | cut -d'/' -f11)" -o /root/bliss.iso; then
 		if [ "\$(sha256sum /root/bliss.iso | cut -d' ' -f1)" == "\$(cat /root/bliss.iso.sha256 | cut -d' ' -f1)" ]; then
 			echo "sha256sum verification succeeded"
@@ -3853,7 +3853,7 @@ mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 if [ "${brunch_version}" == "Unstable" ]; then brunch_url="https://api.github.com/repos/sebanc/brunch-unstable/releases/latest"; else brunch_url="https://api.github.com/repos/sebanc/brunch/releases/latest"; fi
 echo "Downloading Brunch ${brunch_version}"
-for i in 1 .. 3; do
+for i in {1..3}; do
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
 		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)" ]; then
 			echo "sha256sum verification succeeded"
@@ -3873,9 +3873,12 @@ else
 	board_url="https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf"
 fi
 echo "Downloading ChromeOS recovery image"
-for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f \$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2) -o /isomount/data/recovery.zip; then
-		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)" ]; then
+for i in {1..3}; do
+	recovery_image_url=\$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2)
+	sha1sum=\$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)
+	if [ -z "\${recovery_image_url}" ] || [ -z "\${sha1sum}" ]; then sleep 10; continue; fi
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\${recovery_image_url}" -o /isomount/data/recovery.zip; then
+		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\${sha1sum}" ]; then
 			echo "sha1sum verification succeeded"
 			break
 		else
@@ -4266,16 +4269,19 @@ mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi /isomount/
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 echo "Downloading ChromeOS-Flex recovery image"
-for i in 1 .. 3; do
-	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f \$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2) -o /isomount/data/recovery.zip; then
-		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)" ]; then
+for i in {1..3}; do
+	recovery_image_url=\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2)
+	sha1sum=\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)
+	if [ -z "\${recovery_image_url}" ] || [ -z "\${sha1sum}" ]; then sleep 10; continue; fi
+	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\${recovery_image_url}" -o /isomount/data/recovery.zip; then
+		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\${sha1sum}" ]; then
 			echo "sha1sum verification succeeded"
 			break
 		else
 			echo "sha1sum verification failed, retrying download..."
 		fi
 	fi
-	if [ "\${i}" -eq 3 ]; then echo "Download of ChromeOS-Flex recovery image failed"; exit 1; fi
+	if [ "\${i}" -eq 3 ]; then echo "Download of ChromeOS recovery image failed"; exit 1; fi
 done
 unzip /isomount/data/recovery.zip -d /root
 rm -f /isomount/data/recovery.zip
@@ -5728,8 +5734,11 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-insta
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --option substituters "https://foxflake.cachix.org/ https://cache.nixos.org/" --option trusted-public-keys "foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+echo "substituters = https://foxflake.cachix.org/ https://cache.nixos.org/" > /tmp/nix.conf
+echo "trusted-public-keys = foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
+if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
 sudo -u temp bash /tmp/nixos_install
@@ -6241,8 +6250,11 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-insta
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --option substituters "http://37.59.123.5:8080/glf/ https://cache.nixos.org/" --option trusted-public-keys "glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+echo "substituters = http://37.59.123.5:8080/glf/ https://cache.nixos.org/" > /tmp/nix.conf
+echo "trusted-public-keys = glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
+if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd
 /install_scripts/install_flatpak
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
@@ -10426,7 +10438,7 @@ cat >"${bootstrapdir}"/install_scripts/install_script <<INSTALL_SCRIPT
 #!/bin/bash
 set -e
 echo "Downloading Tails image"
-for i in 1 .. 3; do
+for i in {1..3}; do
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f \$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"url"' | head -1 | cut -d '"' -f4) -o /tails.img; then
 		if [ "\$(sha256sum tails.img | cut -d' ' -f1)" == "\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://tails.net/install/v2/Tails/amd64/$(echo ${tails_version} | tr A-Z a-z)/latest.json | grep '"sha256"' | head -1 | cut -d '"' -f4)" ]; then
 			echo "sha256sum verification succeeded"
@@ -13848,7 +13860,7 @@ sudo -u ${SUDO_USER} mkdir -p "${linuxloopsdir}"/cache "${linuxloopsdir}"/gnupg
 sudo -u ${SUDO_USER} chmod 0700 "${linuxloopsdir}"/gnupg
 if [ "${1}" == "iso" ]; then
 	echo "Downloading ${distribution} iso image from ${2}"
-	for i in 1 .. 3; do
+	for i in {1..3}; do
 		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "${2}" -o "${linuxloopsdir}"/cache/"${distribution}".iso; then
 			sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f ${iso_sha256sum} -o "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum
 			sudo -u ${SUDO_USER} sed "s@$(basename ${2})@${linuxloopsdir}/cache/${distribution}.iso@g" "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum > "${linuxloopsdir}"/cache/"${distribution}".iso.sha256sum.mod
@@ -13979,7 +13991,7 @@ elif [ "${1}" == "rootfs-xz" ]; then
 	fi
 	rm -f "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz{,.asc}
 	echo "Downloading ${distribution} rootfs image from ${2}"
-	for i in 1 .. 3; do
+	for i in {1..3}; do
 		if sudo -u ${SUDO_USER} curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "${2}" -o "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz; then
 			if sha256sum -c "${linuxloopsdir}"/cache/"${distribution}"-rootfs.tar.xz.sha256sum.mod; then
 				echo "sha256sum verification succeeded"
@@ -14100,7 +14112,7 @@ generate_cleanup
 generate_install_live
 generate_efi_entry
 generate_exit_chroot
-env -i PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TERM=xterm-256color nsenter --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns /install_scripts/bootstrap_init || return_value=1
+env -i GITHUB_TOKEN=$GITHUB_TOKEN PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin TERM=xterm-256color nsenter --mount="${tmpdir}"/mount_ns --pid="${tmpdir}"/pid_ns /install_scripts/bootstrap_init || return_value=1
 rm -f "${bootstrapdir}"/install_scripts/setup_and_mount_rootfs
 if [ "${return_value}" -eq 0 ]; then
 	generare_install_userpw
@@ -16164,9 +16176,9 @@ if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]
 set_base_parameters
 if [[ $EUID -ne 0 ]]; then
 	if [ ! -z "${nixos}" ] && [ ${#} -eq 0 ]; then
-        	exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix eval -f '<nixpkgs>' --raw 'glib-networking')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS bash $0"
+        	exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix eval -f '<nixpkgs>' --raw 'glib-networking')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS GITHUB_TOKEN=\$GITHUB_TOKEN bash $0"
 	else
-		exec sudo --preserve-env=DISPLAY,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
+		exec sudo --preserve-env=DISPLAY,GITHUB_TOKEN,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
 	fi
 fi
 set +H
