@@ -49,7 +49,7 @@ jobs:
         distribution: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
     steps:
       - name: Reclaim disk space
-        uses: wimpysworld/nothing-but-nix@v6
+        uses: wimpysworld/nothing-but-nix@main
         with:
           hatchet-protocol: 'holster'
       - name: Display disk space
