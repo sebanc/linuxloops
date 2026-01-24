@@ -52,10 +52,6 @@ jobs:
         uses: jlumbroso/free-disk-space@main
         with:
           tool-cache: true
-      - name: Reclaim disk space
-        uses: wimpysworld/nothing-but-nix@main
-        with:
-          hatchet-protocol: 'holster'
       - name: Display disk space
         run: |
           echo "Free space:"
@@ -64,4 +60,4 @@ jobs:
         uses: actions/checkout@v4
       - name: Launch distribution build
         run:
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst /nix/test.img -t -s 60 -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9)
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst test.img -t -s 50 -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9)
