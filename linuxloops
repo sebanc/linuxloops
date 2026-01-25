@@ -137,7 +137,7 @@ case "${distribution}" in
 	'GLF-OS')
 		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Omnislash"
+		default_version="Stable"
 		;;
 	'Kali')
 		available_versions=( "Rolling" )
@@ -439,15 +439,12 @@ case "${distribution}" in
 		bootstrap="lxc archlinux current default"
 		btrfs_supported="Yes"
 		chroot_function="${distribution}"
+		mirrors_supported=()
 		if [ "${version}" == "Stable" ]; then
 			glfos_version="Main"
+			nixos_version="25.11"
 		else
 			glfos_version="${version}"
-		fi
-		mirrors_supported=()
-		if [ "${version}" == "Omnislash" ]; then
-			nixos_version="25.05"
-		else
 			nixos_version="Unstable"
 		fi
 		nvidia_supported="Yes"
@@ -12895,6 +12892,8 @@ ${foxflake_nvidia}
   # Timezone configuration
   foxflake.internationalisation.timezone = "${timezone}";
 
+$(cat "${custom_script}" 2>/dev/null)
+
   # Initially installed version (DO NOT TOUCH)
   foxflake.stateVersion = "25.11";
 }
@@ -12942,7 +12941,9 @@ ${nixos_nvidia}
 
 ${autologin_commands}
 
-  system.stateVersion = "25.05"; # DO NOT TOUCH
+$(cat "${custom_script}" 2>/dev/null)
+
+  system.stateVersion = "25.11"; # DO NOT TOUCH
 }
 NIXOSCONFIGURATION
 else
@@ -13002,8 +13003,6 @@ hardware.graphics.extraPackages = with pkgs; [ intel-media-driver ];
 $(if echo "${custom_packages}" | grep -wq 'steam\|wine'; then echo -e 'hardware.graphics.enable32Bit = true;'; fi)
 ${nixos_nvidia}
 
-$(cat "${custom_script}" 2>/dev/null)
-
 nix.gc = {
   automatic = true;
   dates = "weekly";
@@ -13011,6 +13010,8 @@ nix.gc = {
 };
 nix.settings.auto-optimise-store = true;
 nixpkgs.config.allowUnfree = true;
+
+$(cat "${custom_script}" 2>/dev/null)
 
 # This value determines the NixOS release from which the default
 # settings for stateful data, like file locations and database versions
@@ -14436,13 +14437,13 @@ case "${distribution}" in
 		available_space_needed=7
 	;;
 	'ChromeOS-Flex')
-		available_space_needed=7
+		available_space_needed=10
 	;;
 	'Fedora-Atomic')
 		available_space_needed=4
 	;;
 	'Qubes')
-		available_space_needed=7
+		available_space_needed=18
 	;;
 	'Tails')
 		available_space_needed=4

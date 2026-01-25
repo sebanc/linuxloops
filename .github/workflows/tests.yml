@@ -53,7 +53,7 @@ jobs:
         with:
           hatchet-protocol: 'cleave'
           witness-carnage: true
-          root-safe-haven: 10240
+          root-safe-haven: 20480
       - name: Display disk space
         run: |
           echo "Free space:"
