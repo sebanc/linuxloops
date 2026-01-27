@@ -29,13 +29,14 @@ jobs:
               arg5=''
               arg6=''
               environment=$(sudo bash linuxloops --distribution $distribution --version $version --list-environments | tr ' ' '\n' | sort -R | head -1)
+              if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Qubes" ] && [ "${distribution}" != "Tails" ]; then size=45; else size=30; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-btrfs)" == "Yes" ]; then arg1='-b -r'; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-nvidia)" == "Yes" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg2='-n'; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-surface)" == "Yes" ] && [ "${arg2}" == "" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
               if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
               if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg5='-e'; fi
               if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg6='-a'; fi
-              if [ -z "$matrix" ]; then matrix="\"$distribution#$version#$environment#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distribution#$version#$environment#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
+              if [ -z "$matrix" ]; then matrix="\"$distribution#$version#$environment#$size#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distribution#$version#$environment#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
             done
           done
           echo "matrix=[$matrix]" >> $GITHUB_OUTPUT
@@ -60,4 +61,4 @@ jobs:
         uses: actions/checkout@v4
       - name: Launch distribution build
         run:
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst test.img -t -s 30 -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9)
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst test.img -t -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) -s $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9) $(echo ${{ matrix.distribution }} | cut -d'#' -f10)
