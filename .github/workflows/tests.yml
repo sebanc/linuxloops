@@ -29,7 +29,7 @@ jobs:
               arg5=''
               arg6=''
               environment=$(sudo bash linuxloops --distribution $distribution --version $version --list-environments | tr ' ' '\n' | sort -R | head -1)
-              if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-btrfs)" == "Yes" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg1='-b'; fi
+              if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-btrfs)" == "Yes" ]; then arg1='-b -r'; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-nvidia)" == "Yes" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg2='-n'; fi
               if [ "$(sudo bash linuxloops --distribution $distribution --version $version --list-surface)" == "Yes" ] && [ "${arg2}" == "" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg3='-S'; fi
               if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
@@ -48,12 +48,10 @@ jobs:
       matrix:
         distribution: ${{ fromJson(needs.prepare-matrix.outputs.matrix) }}
     steps:
-      - name: Reclaim disk space
-        uses: wimpysworld/nothing-but-nix@main
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
         with:
-          hatchet-protocol: 'cleave'
-          witness-carnage: true
-          root-safe-haven: 20480
+          tool-cache: true
       - name: Display disk space
         run: |
           echo "Free space:"
@@ -62,4 +60,4 @@ jobs:
         uses: actions/checkout@v4
       - name: Launch distribution build
         run:
-          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst /nix/test.img -t -s 65 -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9)
+          GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst test.img -t -s 45 -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9)
