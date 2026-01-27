@@ -36,7 +36,7 @@ jobs:
               if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg4='-z 2'; fi
               if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg5='-e'; fi
               if [ "${distribution}" != "BlissOS" ] && [ "${distribution}" != "Brunch" ] && [ "${distribution}" != "ChimeraOS" ] && [ "${distribution}" != "ChromeOS-Flex" ] && [ "${distribution}" != "Tails" ] && [ $(($RANDOM % 2)) -eq 1 ]; then arg6='-a'; fi
-              if [ -z "$matrix" ]; then matrix="\"$distribution#$version#$environment#$size#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distribution#$version#$environment#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
+              if [ -z "$matrix" ]; then matrix="\"$distribution#$version#$environment#$size#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; else matrix="$matrix,\"$distribution#$version#$environment#$size#$arg1#$arg2#$arg3#$arg4#$arg5#$arg6\""; fi
             done
           done
           echo "matrix=[$matrix]" >> $GITHUB_OUTPUT
