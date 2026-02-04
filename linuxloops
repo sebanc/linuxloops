@@ -11675,6 +11675,7 @@ fi
 echo "LANG=${locale}.UTF-8" > /etc/locale.conf
 echo "LANG=${locale}.UTF-8" > /etc/default/locale
 if [ -f /etc/default/console-setup ]; then sed -i 's@CHARMAP=.*@CHARMAP="UTF-8"@g' /etc/default/console-setup; fi
+rm -f /etc/vconsole.conf
 echo -e "KEYMAP=${keymap}" > /etc/vconsole.conf
 cat >/etc/default/keyboard <<'DEBIANKEYBOARD'
 XKBMODEL="pc105"
@@ -13522,7 +13523,6 @@ ExecStart=/bin/bash -c "/usr/bin/live-configuration"
 WantedBy=local-fs-pre.target
 LIVE_CONFIGURATION_SERVICE
 systemctl enable live-configuration.service
-mkdir -p /boot/linuxloops
 cat >/usr/bin/live-configuration <<'LIVE_CONFIGURATION_SCRIPT'
 #!/bin/bash
 variant=""
