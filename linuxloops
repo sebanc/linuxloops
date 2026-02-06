@@ -4325,7 +4325,7 @@ LD_LIBRARY_PATH=/isomount/roota/lib64:/isomount/roota/usr/lib64 /isomount/roota/
 if [ "${install_type}" == "image" ] || [ "${environment}" == "Devmode" ]; then
 	if  [ "${environment}" == "Devmode" ]; then
 		mount "${partition_path}"12 /isomount/efi
-		rm /isomount/efi/efi/boot/*
+		rm -r /isomount/efi/efi/boot/*
 		curl -L https://github.com/sebanc/brunch-unstable/raw/refs/heads/continuous-integration/efi-partition/efi/boot/grubx32.efi -o /isomount/efi/efi/boot/bootx32.efi
 		curl -L https://github.com/sebanc/brunch-unstable/raw/refs/heads/continuous-integration/efi-partition/efi/boot/grubx64.efi -o /isomount/efi/efi/boot/bootx64.efi
 		cat >>/isomount/efi/efi/boot/grub.cfg <<'GRUBCFG'
