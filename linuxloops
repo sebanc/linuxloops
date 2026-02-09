@@ -6536,10 +6536,10 @@ Server = https://cdn.kde.org/kde-linux/packaging/packages/
 SigLevel = Never
 Server = https://cdn.kde.org/kde-linux/packaging/packages-debug/
 REPOS
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 pacman-key --init
 pacman-key --populate
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-sed -i 's@#DisableSandbox@#DisableSandbox\nDisableDownloadTimeout@g' /etc/pacman.conf
+yes | pacman -Syu iptables-nft
 pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service thermald.service
 CHROOT_INIT
