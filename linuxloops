@@ -12419,7 +12419,13 @@ add_linuxloops_main()
 touch "${bootstrapdir}"/install_scripts/install_initramfs
 cat >>"${bootstrapdir}"/install_scripts/install_initramfs <<'INITSCRIPT'
 if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
-	if [ ! -b /dev/disk/by-partuuid/"$img_uuid" ]; then echo "linuxloops: Boot partition was not found." > /dev/kmsg; recovery_shell; fi
+	linuxloops_timeout=0
+	until false; do
+		if [ -b /dev/disk/by-partuuid/"$img_uuid" ] || [ $linuxloops_timeout == 10 ]; then break; fi
+		linuxloops_timeout=$(( $linuxloops_timeout + 1 ))
+		sleep 1
+	done
+	if [ $linuxloops_timeout == 10 ]; then echo "linuxloops: Boot partition was not found." > /dev/kmsg; recovery_shell; fi
 	mkdir /linuxloops_root || { echo "linuxloops: Root directory cannot be created." > /dev/kmsg; recovery_shell; }
 	if [ ! -z "$linuxloops_debug" ]; then recovery_shell; fi
 
@@ -13078,8 +13084,8 @@ sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
 grub,3,Free Software Foundation,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
 grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
 GRUBSBAT
-  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
+  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
   if [ -f \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest ] && [ -f \${pkgs.shim-signed}/share/shim/mmx64.efi ]; then
     \${pkgs.coreutils}/bin/mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
     \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
@@ -13405,7 +13411,7 @@ PACMANHOOK
 cat >/usr/sbin/secureboot-install <<'SECUREBOOTINSTALL'
 #!/bin/bash
 set -e
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo" --bootloader-id="${bootloader_id}"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/usr/share/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd" --bootloader-id="${bootloader_id}"
 mkdir -p /boot/efi/EFI/BOOT
 cp /boot/efi/EFI/"${bootloader_id}"/grubx64.efi /boot/efi/EFI/BOOT/grubx64.efi
 cp /usr/share/shim-signed/shimx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
@@ -13430,8 +13436,8 @@ sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
 grub,3,Free Software Foundation,grub,2:\\\$(grub-install -V | cut -d' ' -f3),https//www.gnu.org/software/grub/
 grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\\\$(grub-install -V | cut -d' ' -f3),https//www.gnu.org/software/grub/
 GRUBSBAT
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/tmp/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --sbat=/tmp/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/grub/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
 if [ -f /usr/share/shim/BOOTX64.EFI ]; then
 	mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
 	cp /usr/share/shim/BOOTX64.EFI /boot/efi/EFI/BOOT/BOOTX64.EFI
@@ -13442,8 +13448,8 @@ fi
 REINSTALLBOOTLOADER
 	else
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
-grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
 REINSTALLBOOTLOADER
 	fi
 cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
