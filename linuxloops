@@ -16389,7 +16389,7 @@ else
 				echo -e "Available locales:\n"$(list_array "available_locales" | sed -e 's@\n@ @g')
 				exit 0
 			;;
-			-lk | --list-keympas)
+			-lk | --list-keymaps)
 				echo -e "Available keymaps:\n"$(list_array "available_keymaps" | sed -e 's@\n@ @g')
 				exit 0
 			;;
