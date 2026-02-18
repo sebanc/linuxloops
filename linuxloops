@@ -3959,12 +3959,14 @@ set -e
 if [ "${cachyos_version}" == "x86-64-v4" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v4.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v4-mirrorlist/cachyos-v4-mirrorlist -o /etc/pacman.d/cachyos-v4-mirrorlist
+	cp /etc/pacman.d/cachyos-mirrorlist /etc/pacman.d/cachyos-v4-mirrorlist
+	sed -i 's|/\$arch/|/\$arch_v4/|g' /etc/pacman.d/cachyos-v4-mirrorlist
 
 elif [ "${cachyos_version}" == "x86-64-v3" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v3.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-v3-mirrorlist/cachyos-v3-mirrorlist -o /etc/pacman.d/cachyos-v3-mirrorlist
+	cp /etc/pacman.d/cachyos-mirrorlist /etc/pacman.d/cachyos-v3-mirrorlist
+	sed -i 's|/\$arch/|/\$arch_v3/|g' /etc/pacman.d/cachyos-v3-mirrorlist
 else
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
