@@ -5825,7 +5825,7 @@ else
 		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus -debug dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd -test text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
 	else
 		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
@@ -6054,7 +6054,7 @@ else
 		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus -debug dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd -test text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
 	else
 		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
@@ -8591,7 +8591,8 @@ chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
 cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
+bash
+echo 'solver.onlyRequires = true' > /etc/zypp/zypp.conf
 systemd-machine-id-setup
 rpm --rebuilddb
 zypper --non-interactive update
@@ -8840,17 +8841,15 @@ set -e
 rm /etc/apt/sources.list
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/sources.list.d/system.sources -o /etc/apt/sources.list.d/system.sources
 if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
-sed -i 's@/etc/apt/keyrings/pika-keyring.gpg.key@/etc/apt/trusted.gpg.d/pika-keyring.asc@g' /etc/apt/sources.list.d/system.sources
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/keyrings/pika-keyring.gpg.key -o /etc/apt/trusted.gpg.d/pika-keyring.asc
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/keyrings/pika-keyring.gpg.key -o /etc/apt/keyrings/pika-keyring.gpg.key
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/preferences.d/0-pika-apt-settings -o /etc/apt/preferences.d/0-pika-apt-settings
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-echo -e 'Package: *\nPin: release a=pika\nPin-Priority: 1000' > /etc/apt/preferences.d/downgrade
 apt clean
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') pika-sources
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
-rm /etc/apt/preferences.d/downgrade /etc/apt/trusted.gpg.d/pika-keyring.asc
 if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
 cat >/etc/apt/preferences.d/booster <<'BOOSTER'
 Package: booster
@@ -9887,6 +9886,10 @@ if [ ! -z \${GAMESCOPE_SESSION_WIDTH} ] && [ ! -z \${GAMESCOPE_SESSION_HEIGHT} ]
         GAMESCOPE_FLAGS="\${GAMESCOPE_FLAGS} -w \${GAMESCOPE_SESSION_WIDTH} -h \${GAMESCOPE_SESSION_HEIGHT} -r \${GAMESCOPE_SESSION_RERESH_RATE}"
 fi
 
+if [ -f /etc/default/keyboard ]; then
+	source /etc/default/keyboard
+fi
+
 ##
 ## SteamOS session globals
 ##
@@ -9914,10 +9917,15 @@ export STEAM_GAMESCOPE_HDR_SUPPORTED=1
 export STEAM_MANGOAPP_HORIZONTAL_SUPPORTED=1
 export STEAM_MANGOAPP_PRESETS_SUPPORTED=1
 export STEAM_USE_MANGOAPP=1
+export TZ=/etc/localtime
 export vk_xwayland_wait_ready=false
 export VKD3D_SWAPCHAIN_LATENCY_FRAMES=3
 export WINE_CPU_TOPOLOGY=8:0,1,2,3,4,5,6,7
 export XCURSOR_THEME="Breeze"
+export XKB_DEFAULT_MODEL=\${XKBMODEL}
+export XKB_DEFAULT_LAYOUT=\${XKBLAYOUT}
+export XKB_DEFAULT_VARIANT=\${XKBVARIANT}
+export XKB_DEFAULT_OPTIONS=\${XKBOPTIONS}
 
 mkdir -p "\$(dirname "\$MANGOHUD_CONFIGFILE")"
 echo "no_display" > "\$MANGOHUD_CONFIGFILE"
