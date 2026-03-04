@@ -54,7 +54,7 @@ Usage: bash \${HOME}/bin/linuxloops -distro <distribution name> -ver <distributi
 USAGE
 }
 
-available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "Omarchy" "OpenSUSE" "PikaOS" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
+available_distributions=( "AlmaLinux" "Arch" "Artix" "Bazzite" "BlissOS" "Brunch" "CachyOS" "ChromeOS-Flex" "Debian" "Devuan" "Elementary" "Fedora" "Fedora-Atomic" "FoxFlake" "Gentoo" "GLF-OS" "Kali" "KDE" "Linuxmint" "LMDE" "Manjaro" "MX" "Neon" "NixOS" "OpenSUSE" "Pop" "Proxmox" "Qubes" "RockyLinux" "SteamOS" "Tails" "Ubuntu" "Void" "Zorin" )
 
 distribution_parameters()
 {
@@ -179,20 +179,10 @@ case "${distribution}" in
 		available_versions_longname=( "25.11_(Stable)" "Unstable" )
 		default_version="25.11"
 		;;
-	'Omarchy')
-		available_versions=( "Master" )
-		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Master"
-		;;
 	'OpenSUSE')
 		available_versions=( "Leap/16.0" "Tumbleweed" )
 		available_versions_longname=( "Leap/16.0" "Tumbleweed" )
 		default_version="Leap/16.0"
-		;;
-	'PikaOS')
-		available_versions=( "Nest" )
-		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Nest"
 		;;
 	'Pop')
 		available_versions=( "24.04" )
@@ -404,7 +394,7 @@ case "${distribution}" in
 		systemd_init="Yes"
 		;;
 	'FoxFlake')
-		available_environments=( "Cosmic/Minimal" "Cosmic/Standard" "Cosmic/Gaming" "Cosmic/Studio" "Cosmic/Standard+Gaming" "Cosmic/Standard+Studio" "Cosmic/Gaming+Studio" "Cosmic/Full" "Gnome/Minimal" "Gnome/Standard" "Gnome/Gaming" "Gnome/Studio" "Gnome/Standard+Gaming" "Gnome/Standard+Studio" "Gnome/Gaming+Studio" "Gnome/Full" "Plasma/Minimal" "Plasma/Standard" "Plasma/Gaming" "Plasma/Studio" "Plasma/Standard+Gaming" "Plasma/Standard+Studio" "Plasma/Gaming+Studio" "Plasma/Full" )
+		available_environments=( "Cosmic" "Gnome" "Plasma" )
 		bootloader_id="foxflake"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -552,19 +542,6 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="No"
 		;;
-	'Omarchy')
-		arch_version="Stable"
-		available_environments=( "Omarchy" )
-		bootloader_id="arch"
-		bootloader_name="shimx64.efi"
-		bootstrap="lxc archlinux current default"
-		btrfs_supported="Yes"
-		chroot_function="${distribution}"
-		mirrors_supported=( "Arch" )
-		omarchy_version="${version}"
-		nvidia_supported="Yes"
-		surface_supported="Yes"
-		;;
 	'OpenSUSE')
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
@@ -591,19 +568,6 @@ case "${distribution}" in
 				rootfs_signature="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
 				;;
 		esac
-		;;
-	'PikaOS')
-		available_environments=( "None" "Cosmic" "Cosmic/Full" "Gnome" "Gnome/Full" "Hyprland" "Hyprland/Full" "Plasma" "Plasma/Full" )
-		bootloader_id="debian"
-		bootloader_name="grubx64.efi"
-		bootstrap="lxc debian trixie default"
-		btrfs_supported="Yes"
-		debian_version="Sid"
-		grub_disable_recordfail="Yes"
-		mirrors_supported=( "PikaOS" )
-		nvidia_supported="Yes"
-		pikaos_version="${version}"
-		surface_supported="No"
 		;;
 	'Pop')
 		available_environments=( "None" "Full" )
@@ -8211,115 +8175,6 @@ chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
 initramfs_type="nixos_config"
 }
 
-chroot_Omarchy()
-{
-cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/  -o /etc/pacman.d/mirrorlist
-if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
-else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
-fi
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
-
-cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-pacstrap -G /mnt base base-devel
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
-
-cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-pacman-key --init
-pacman-key --populate
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap pipewire-pulse
-systemctl enable bluetooth.service ModemManager.service NetworkManager.service systemd-resolved.service thermald.service
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
-
-cat >"${bootstrapdir}"/install_scripts/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG wheel '${useraccount_name}'
-echo "%wheel      ALL=(ALL) ALL" > /etc/sudoers.d/90-wheel
-cat >/etc/polkit-1/rules.d/50-default.rules <<'POLKIT'
-polkit.addAdminRule(function(action, subject) {
-    return ["unix-group:wheel"];
-});
-POLKIT
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/install_scripts/install_user
-
-cat >"${bootstrapdir}"/install_scripts/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-pacman -Syu --noconfirm --needed git
-echo '${useraccount_name} ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/99_temp
-echo -e '#!/bin/bash\nexit 0' > /usr/local/bin/gum
-echo -e '#!/bin/bash\nexit 0' > /usr/local/bin/tte
-chmod 0755 /usr/local/bin/gum /usr/local/bin/tte
-sudo -u '${useraccount_name}' bash << 'OMARCHY_INSTALL'
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
-hash -r
-git clone -b \$(echo ${omarchy_version} | tr A-Z a-z) "https://github.com/basecamp/omarchy.git" \${HOME}/.local/share/omarchy
-sed -i 's@Server = https://stable-mirror.omarchy.org@Server = https://mirror.omarchy.org@g' \${HOME}/.local/share/omarchy/default/pacman/mirrorlist-stable
-echo -e '#!/bin/bash\necho "Nvidia ignored"' > \${HOME}/.local/share/omarchy/install/config/hardware/nvidia.sh
-echo -e '#!/bin/bash\necho "Presentation ignored"' > \${HOME}/.local/share/omarchy/install/helpers/presentation.sh
-echo -e '#!/bin/bash\necho "Guards ignored"' > \${HOME}/.local/share/omarchy/install/preflight/guard.sh
-export LOGO_WIDTH=512
-export OMARCHY_ONLINE_INSTALL=1
-export OMARCHY_CHROOT_INSTALL=1
-clear_logo() { :; }
-source \${HOME}/.local/share/omarchy/install.sh
-if [ "${nvidia}" == "Yes" ]; then
-	mkdir -p \${HOME}/.config/hypr
-	cat >>\${HOME}/.config/hypr/hyprland.conf <<'NVIDIA'
-
-# NVIDIA environment variables
-env = NVD_BACKEND,direct
-env = LIBVA_DRIVER_NAME,nvidia
-env = __GLX_VENDOR_LIBRARY_NAME,nvidia
-NVIDIA
-fi
-OMARCHY_INSTALL
-rm /etc/sudoers.d/99_temp /usr/local/bin/gum /usr/local/bin/tte
-cat >/etc/NetworkManager/conf.d/wifi_backend.conf <<'IWD_CONFIGURATION'
-[device]
-wifi.backend=iwd
-IWD_CONFIGURATION
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
-
-surface_remove="linux linux-headers"
-initramfs_type="initcpio"
-if [ ! -z "${custom_packages}" ]; then
-	if echo "${custom_packages}" | grep -wq 'lib32\|steam\|wine'; then
-		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
-			custom_packages="${custom_packages} lib32-mesa lib32-vulkan-intel lib32-vulkan-nouveau lib32-vulkan-radeon lib32-vulkan-swrast lib32-vulkan-virtio ttf-liberation"
-			if [ "${nvidia}" == "Yes" ]; then custom_packages="${custom_packages} lib32-nvidia-utils"; fi
-			echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/install_scripts/install_custom_packages
-		fi
-		echo "sed -i -z 's@#\[multilib]\n#Include = /etc/pacman.d/mirrorlist@[multilib]\nInclude = /etc/pacman.d/mirrorlist@g' /etc/pacman.conf" >> "${bootstrapdir}"/install_scripts/install_custom_packages
-		echo "pacman -Sy" >> "${bootstrapdir}"/install_scripts/install_custom_packages
-	fi
-	echo -e "#!/bin/bash\nset -e\npacman -S --noconfirm --needed ${custom_packages}" >> "${bootstrapdir}"/install_scripts/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/install_scripts/install_custom_script
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_script
-fi
-}
-
 chroot_OpenSUSE-Leap-16.0()
 {
 if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
@@ -8809,173 +8664,6 @@ if [ ! -z "${custom_packages}" ]; then
 		echo "echo 'vm.max_map_count = 2147483642' > /etc/sysctl.d/80-gamecompatibility.conf" >> "${bootstrapdir}"/install_scripts/install_custom_packages
 	fi
 	echo -e "#!/bin/bash\nset -e\nzypper --non-interactive install ${custom_packages}" >> "${bootstrapdir}"/install_scripts/install_custom_packages
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_packages
-fi
-if [ ! -z "${custom_script}" ]; then
-	cp "${custom_script}" "${bootstrapdir}"/install_scripts/install_custom_script
-	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_script
-fi
-}
-
-chroot_PikaOS()
-{
-if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
-cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
-#!/bin/bash
-set -e
-sed -i 's@http://deb.debian.org/debian @${mirror_Debian} @g' /etc/apt/sources.list
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr fdisk gzip lsof nano openssl sudo strace tar util-linux xz-utils zstd
-PREPARE_BOOTSTRAP
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
-
-cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y debootstrap
-debootstrap --arch=amd64 --include=ca-certificates,curl,file,gnupg,gpgv,linux-sysctl-defaults,locales,xz-utils $(echo ${debian_version} | tr A-Z a-z) /mnt ${mirror_Debian}
-PREPARE_CHROOT
-chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
-
-cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
-#!/bin/bash
-set -e
-rm /etc/apt/sources.list
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/sources.list.d/system.sources -o /etc/apt/sources.list.d/system.sources
-if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/keyrings/pika-keyring.gpg.key -o /etc/apt/keyrings/pika-keyring.gpg.key
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://git.pika-os.com/general-packages/pika-sources/raw/branch/main/pika-sources/usr/share/apt-pika/etc/apt/preferences.d/0-pika-apt-settings -o /etc/apt/preferences.d/0-pika-apt-settings
-echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
-echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-apt clean
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
-DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') pika-sources
-DEBIAN_FRONTEND=noninteractive dpkg --configure -a
-if [ ! -z "${mirror_PikaOS}" ]; then sed -i 's@https://ppa.pika-os.com@${mirror_PikaOS}@g' /etc/apt/sources.list.d/system.sources; fi
-cat >/etc/apt/preferences.d/booster <<'BOOSTER'
-Package: booster
-Pin: release *
-Pin-Priority: -1
-BOOSTER
-echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-dpkg --add-architecture i386
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y kernel-pika initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap console-setup kbd keyboard-configuration
-# PikaOS packages have missing dependencies on desktop-file-utils, libdrm, glib and mesa.
-DEBIAN_FRONTEND=noninteractive apt install --purge -y desktop-file-utils libdrm2-amdgpu libdrm-amdgpu-common libglib2.0-bin libmesa-stable
-CHROOT_INIT
-chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
-
-desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver-non-free libnss-mdns mesa-va-drivers pika-amdgpu-core pika-amdgpu-config pika-audio-pipewire pika-baseos pika-i915-config pika-package-manager pika-wallpapers python3-requests system-config-printer udisks2 uidmap va-driver-all vdpau-driver-all xdg-user-dirs-gtk xserver-xorg"
-desktop_services="avahi-daemon.service cups.service"
-case "${environment}" in
-	'Cosmic')
-	default_session="cosmic"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-cosmic-desktop mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Cosmic/Full')
-	default_session="cosmic"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-cosmic-desktop mate-polkit xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
-"
-	;;
-	'Gnome')
-	default_session="gnome"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
-"
-	;;
-	'Gnome/Full')
-	default_session="gnome"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
-"
-	;;
-	'Hyprland')
-	default_session="pika-hyprland"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-hyprland-desktop gdm3 network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'Hyprland/Full')
-	default_session="pika-hyprland"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-hyprland-desktop gdm3 network-manager-gnome gnome-keyring libpam-gnome-keyring mate-polkit xdg-desktop-portal-gtk pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
-"
-	;;
-	'Plasma')
-	default_session="plasma"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-kde-desktop polkit-kde-agent-1 xdg-desktop-portal-kde
-"
-	;;
-	'Plasma/Full')
-	default_session="plasma"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} pika-kde-desktop polkit-kde-agent-1 xdg-desktop-portal-kde pika-codecs-meta pika-gameutils-meta pika-libreoffice-meta
-"
-	;;
-esac
-cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-${install_desktop}
-systemctl enable ${desktop_services}
-INSTALL_DESKTOP
-chmod 0755 "${bootstrapdir}"/install_scripts/install_desktop
-
-cat >"${bootstrapdir}"/install_scripts/install_user <<INSTALL_USER
-#!/bin/bash
-set -e
-useradd -s /bin/bash -m '${useraccount_name}'
-usermod -aG sudo '${useraccount_name}'
-INSTALL_USER
-chmod 0755 "${bootstrapdir}"/install_scripts/install_user
-
-cat >"${bootstrapdir}"/install_scripts/install_dmconfig <<INSTALL_DMCONFIG
-#!/bin/bash
-set -e
-if [ "${environment}" == "None" ]; then exit 0; fi
-if [ ! -f /usr/share/xsessions/${default_session}.desktop ] && [ ! -f /usr/share/wayland-sessions/${default_session}.desktop ]; then echo "Default session ${default_session} not found."; exit 1; fi
-case "${environment}" in
-	'Cosmic'|'Cosmic/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			echo -e '\n[initial_session]\ncommand = "cosmic-session"\nuser = "${useraccount_name}"' >> /etc/greetd/cosmic-greeter.toml
-		fi
-	;;
-	'Gnome'|'Gnome/Full'|'Hyprland'|'Hyprland/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			if [ -d /etc/gdm3 ]; then gdm_folder="gdm3"; else gdm_folder="gdm"; fi
-			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/daemon.conf
-		else
-			echo -e '[User]\nSession=${default_session}' > /var/lib/AccountsService/users/${useraccount_name}
-		fi
-	;;
-	'Plasma'|'Plasma/Full')
-		if [ "${useraccount_autologin}" == "Yes" ]; then
-			mkdir -p /etc/sddm.conf.d
-			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
-			sudo -u '${useraccount_name}' bash << 'DISABLE_KWALLET'
-mkdir -p \$HOME/.config
-echo -e '[Wallet]\nEnabled=false' > \$HOME/.config/kwalletrc
-DISABLE_KWALLET
-		fi
-	;;
-esac
-INSTALL_DMCONFIG
-chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
-
-initramfs_type="initramfstools"
-if [ ! -z "${custom_packages}" ]; then
-	echo -e "#!/bin/bash\nset -e\nDEBIAN_FRONTEND=noninteractive apt install --purge -y ${custom_packages}" >> "${bootstrapdir}"/install_scripts/install_custom_packages
 	chmod 0755 "${bootstrapdir}"/install_scripts/install_custom_packages
 fi
 if [ ! -z "${custom_script}" ]; then
@@ -11757,7 +11445,7 @@ else
 		rm -rf /etc/pki/akmods/certs/public_key.der /etc/pki/akmods/private/private_key.priv
 		ln -s /etc/secureboot_key/MOK.der /etc/pki/akmods/certs/public_key.der
 		ln -s /etc/secureboot_key/MOK.key /etc/pki/akmods/private/private_key.priv
-	elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "PikaOS" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+	elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 		mkdir -p /var/lib/shim-signed/mok
 		rm -rf /var/lib/shim-signed/mok/MOK.der /var/lib/shim-signed/mok/MOK.priv
 		ln -s /etc/secureboot_key/MOK.der /var/lib/shim-signed/mok/MOK.der
@@ -11790,7 +11478,7 @@ dkms add -m v4l2loopback -v \${v4l2loopback_version}
 dkms install -m v4l2loopback -v \${v4l2loopback_version} -k \$(ls /usr/lib/modules/*/modules.builtin | sed 's@/usr/lib/modules/@@g' | sed 's@/modules.builtin@@g')
 usermod -aG video '${useraccount_name}'
 SURFACEAPT
-elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ] || [ "${distribution}" == "SteamOS" ]; then
+elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_surface <<SURFACEPACMAN
 #!/bin/bash
 set -e
@@ -11815,7 +11503,7 @@ fi
 generate_install_nvidia()
 {
 if [ ! "${nvidia}" == "Yes" ] || [ "${distribution}" == "Bazzite" ]; then return; fi
-if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ]; then
+if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -11917,12 +11605,6 @@ NVIDIAREPOKEY
 rpm --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-db27fd5a-62589a51.asc
 zypper --non-interactive install openSUSE-repos-$(echo ${opensuse_version} | cut -d '/' -f1)-NVIDIA
 zypper --non-interactive install --auto-agree-with-licenses --force-resolution nvidia-open-driver-G06 nvidia-gl-G06 nvidia-video-G06
-INSTALLNVIDIA
-elif [ "${distribution}" == "PikaOS" ]; then
-	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
-#!/bin/bash
-set -e
-DEBIAN_FRONTEND=noninteractive apt install --purge -y pika-nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "Pop" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
@@ -12843,32 +12525,6 @@ cmdline=\$(echo -n "\"\${cmdline}\"" | sed 's@ @" "@g')
 mkdir -p /mnt/etc/nixos
 if [ "${distribution}" == "FoxFlake" ]; then
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/sebanc/foxflake/raw/refs/heads/$(echo ${foxflake_version} | tr A-Z a-z)/installer/target-configuration/flake.nix -o /mnt/etc/nixos/flake.nix
-case "$(echo ${environment} | cut -d'/' -f2)" in
-	'Minimal')
-		bundles=' '
-	;;
-	'Standard')
-		bundles='"standard"'
-	;;
-	'Gaming')
-		bundles='"gaming"'
-	;;
-	'Studio')
-		bundles='"studio"'
-	;;
-	'Standard+Gaming')
-		bundles='"standard" "gaming"'
-	;;
-	'Standard+Studio')
-		bundles='"standard" "studio"'
-	;;
-	'Gaming+Studio')
-		bundles='"gaming" "studio"'
-	;;
-	'Full')
-		bundles='"standard" "gaming" "studio"'
-	;;
-esac
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
 { pkgs, lib, ... }:
 
@@ -12880,20 +12536,22 @@ esac
       ./linuxloops.nix
     ];
 
+  # Hostname
+  foxflake.networking.hostname = "${hostname}";
+
   # Desktop environment type
-  foxflake.environment.type = "$(echo ${environment} | cut -d'/' -f1 | tr A-Z a-z)";
+  foxflake.environment.type = "$(echo ${environment} | tr A-Z a-z)";
 
 ${autologin_commands}
 
-  # Bundles, system packages, flatpaks and waydroid configuration
-  foxflake.system.bundles = [ \${bundles} ];         # e.g.: "standard" and/or "gaming" and/or "studio"
-  foxflake.system.packages = with pkgs; [ ];         # e.g.: with pkgs; [ firefox ]
+  # Bundles, system packages and flatpaks configuration
+  foxflake.system.bundles = [ "firefox" "thunderbird" "libreoffice" ];                     # e.g.: [ "firefox" "thunderbird" "libreoffice" ];
+  foxflake.system.packages = with pkgs; [ ];         # e.g.: with pkgs; [ vim ]
   foxflake.system.flatpaks = [ ];                    # e.g.: [ "org.mozilla.firefox" ];
-  foxflake.system.waydroid = true;
 
   # User configuration (including user packages and flatpaks)
   foxflake.users.${useraccount_name}.extraGroups = [ "wheel" "networkmanager" ];
-  foxflake.users.${useraccount_name}.packages = with pkgs; [ ];         # e.g.: with pkgs; [ firefox ]
+  foxflake.users.${useraccount_name}.packages = with pkgs; [ ];         # e.g.: with pkgs; [ vim ]
   foxflake.users.${useraccount_name}.flatpaks = [ ];                    # e.g.: [ "org.mozilla.firefox" ];
 
 ${foxflake_nvidia}
@@ -13397,7 +13055,7 @@ GRUBINSTALL
 chmod 0755 /usr/sbin/grub-install
 grub-install --target=x86_64-efi --efi-directory=/boot/efi
 REINSTALLBOOTLOADER
-	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "Omarchy" ] || [ "${distribution}" == "SteamOS" ]; then
+	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
 pacman -Syu --noconfirm --needed git fakeroot
 git clone --depth=1 -b shim-signed https://github.com/archlinux/aur.git /tmp/shim-signed
@@ -13478,7 +13136,7 @@ REINSTALLBOOTLOADER
 chmod 0755 /boot/linuxloops/reinstall-bootloader
 /boot/linuxloops/reinstall-bootloader
 # Due to a bug with certain shim binaries, use the Ubuntu shim for initial key registration.
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Gentoo" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "PikaOS" ] || [ "${distribution}" == "Proxmox" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Gentoo" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Proxmox" ]; then
 	mkdir /tmp/ubuntu_shim
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
 	(cd /tmp/ubuntu_shim && ar p shim.deb data.tar.xz | tar -xJ)
@@ -14380,10 +14038,6 @@ case "${1}" in
 	"OpenSUSE")
 		if ! curl -sfLo/dev/null -r0-0 "${2}/$(echo ${opensuse_version} | tr A-Z a-z)/repo/oss/INDEX.gz"; then return 1; fi
 		mirror_OpenSUSE="${2}"
-	;;
-	"PikaOS")
-		if ! curl -sfLo/dev/null -r0-0 "${2}/dists/pika/Release"; then return 1; fi
-		mirror_PikaOS="${2}"
 	;;
 	"RockyLinux")
 		if ! curl -sfLo/dev/null -r0-0 "${2}/$(echo ${rockylinux_version} | tr A-Z a-z)/BaseOS/x86_64/os/repodata/repomd.xml"; then return 1; fi

@@ -97,9 +97,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |MX|25|✓|✓|✓||
 |Neon|Stable|✓|✓|✓||
 |NixOS|25.11<br>Unstable|✓|✓|||
-|Omarchy|Master|✓ (shim-signed AUR)|✓|✓|[notes][Omarchy-notes]|
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
-|PikaOS|Nest|✓|✓|||
 |Pop|24.04|✓|✓|✓||
 |Proxmox|VE9|✓|✓|||
 |Qubes|4.3.0||||[notes][Qubes-notes]|
@@ -255,7 +253,6 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 [Kali-notes]: ./Readme/Distro-notes.md#Kali
 [KDE-notes]: ./Readme/Distro-notes.md#KDE
 [Manjaro-notes]: ./Readme/Distro-notes.md#Manjaro
-[Omarchy-notes]: ./Readme/Distro-notes.md#Omarchy
 [OpenSUSE-notes]: ./Readme/Distro-notes.md#OpenSUSE
 [Parrot-notes]: ./Readme/Distro-notes.md#Parrot
 [Qubes-notes]: ./Readme/Distro-notes.md#Qubes

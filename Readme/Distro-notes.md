@@ -67,10 +67,7 @@ If you install the nvidia proprietary driver, you will need to disable Secure Bo
 
 ## FoxFlake
 
-FoxFlake proposes 3 bundles of apps that respectively contain:  
-- Standard bundle: Firefox, Thunderbird and LibreOffice.  
-- Gaming bundle: Steam, Heroic and Lutris.  
-- Studio bundle: DaVinci Resolve, OBS Studio, Blender, Kdenlive, GIMP, Audacity.  
+After install, use the "Foxflake environment selection" app to customize your applications choices.
 
 For more information on FoxFlake, please refer to the [FoxFlake readme][foxflake-readme].  
 
@@ -89,11 +86,6 @@ KDE Linux is based on Arch that does not have secure boot support through its of
 ## Manjaro
 
 Manjaro does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
-
-
-## Omarchy
-
-Omarchy does not have secure boot support through its official repository. Linuxloops will install the "shim-signed" bootloader AUR package.  
 
 
 ## OpenSUSE
