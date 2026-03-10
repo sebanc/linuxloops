@@ -254,7 +254,7 @@ case "${distribution}" in
 		;;
 	'Arch')
 		arch_version="${version}"
-		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="arch"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -266,7 +266,7 @@ case "${distribution}" in
 		;;
 	'Artix')
 		artix_version="${version}"
-		available_environments=( "None" "Budgie" "Cinnamon" "Enlightenment" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="artix"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -312,7 +312,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'CachyOS')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="cachyos"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -334,7 +334,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Debian')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -346,7 +346,7 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'Devuan')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc devuan excalibur default"
@@ -371,7 +371,7 @@ case "${distribution}" in
 		ubuntu_version="Noble"
 		;;
 	'Fedora')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc fedora 43 default"
@@ -411,7 +411,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Gentoo')
-		available_environments=( "None" "Cinnamon" "Enlightenment" "Gnome" "i3" "Lxqt" "Mate" "Plasma" "Xfce" )
+		available_environments=( "None" "Cinnamon" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
 		bootloader_id="gentoo"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -441,7 +441,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Kali')
-		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "i3" "i3/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="grubx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -492,7 +492,7 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'Manjaro')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Enlightenment" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="manjaro"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -504,7 +504,7 @@ case "${distribution}" in
 		surface_supported="Yes"
 		;;
 	'MX')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -531,7 +531,7 @@ case "${distribution}" in
 		ubuntu_version="Noble"
 		;;
 	'NixOS')
-		available_environments=( "None" "Budgie/Full" "Cinnamon/Full" "Gnome/Full" "i3/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
+		available_environments=( "None" "Budgie/Full" "Cinnamon/Full" "Gnome/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
 		bootloader_id="nixos"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -543,7 +543,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'OpenSUSE')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Enlightenment/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
 		bootloader_name="shim.efi"
 		btrfs_supported="Yes"
@@ -587,7 +587,7 @@ case "${distribution}" in
 		esac
 		;;
 	'Proxmox')
-		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc debian trixie default"
@@ -647,7 +647,7 @@ case "${distribution}" in
 		tails_version="${version}"
 		;;
 	'Ubuntu')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Enlightenment" "Gnome" "Gnome/Full" "i3" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="ubuntu"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc ubuntu noble default"
@@ -668,7 +668,7 @@ case "${distribution}" in
 		esac
 		;;
 	'Void')
-		available_environments=( "None" "Cinnamon" "Gnome" "Gnome/Full" "i3" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
+		available_environments=( "None" "Cinnamon" "Gnome" "Gnome/Full" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
 		bootloader_id="voidlinux"
 		bootloader_name="grubx64.efi"
 		bootstrap="lxc voidlinux current default"
@@ -1828,14 +1828,6 @@ systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
-systemctl enable lightdm.service connman.service
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -1848,13 +1840,6 @@ systemctl enable gdm.service
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 systemctl enable gdm.service
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
@@ -2096,14 +2081,6 @@ systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
-systemctl enable lightdm.service connman.service
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -2116,13 +2093,6 @@ systemctl enable gdm.service
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 systemctl enable gdm.service
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
@@ -2396,24 +2366,6 @@ rc-update add lightdm default
 	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
-${desktop_services}
-rc-update add lightdm default
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-rc-update delete NetworkManager default
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc enlightenment terminology connman connman-openrc xdg-desktop-portal-gtk
-${desktop_services}
-rc-update add lightdm default
-rc-update add connmand default
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-openrc i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 ${desktop_services}
 rc-update add lightdm default
 "
@@ -2695,21 +2647,6 @@ pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lig
 ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-rm /etc/runit/runsvdir/default/NetworkManager
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit enlightenment terminology connman connman-runit xdg-desktop-portal-gtk
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/sv/connmand /etc/runit/runsvdir/default/
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-runit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
-"
-	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
@@ -2976,21 +2913,6 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-rm /etc/s6/adminsv/default/contents.d/NetworkManager
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 enlightenment terminology connman connman-s6 xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm /etc/s6/adminsv/default/contents.d/connmand
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 "
 	;;
@@ -3261,21 +3183,6 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
-ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-rm /etc/dinit.d/boot.d/NetworkManager
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit enlightenment terminology connman connman-dinit xdg-desktop-portal-gtk
-ln -s ${desktop_services} ../lightdm ../connmand /etc/dinit.d/boot.d/
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-dinit i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
 ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 "
 	;;
@@ -3992,14 +3899,6 @@ systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment connman terminology xdg-desktop-portal-gtk
-systemctl enable lightdm.service connman.service
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -4012,13 +3911,6 @@ systemctl enable gdm.service
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 systemctl enable gdm.service
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter i3-wm i3lock i3status dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman cachyos-i3wm-settings xdg-desktop-portal-gtk
-systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
@@ -4656,14 +4548,6 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -4675,12 +4559,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -4912,20 +4790,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -5293,12 +5157,6 @@ dnf install -y ${desktop_base} gdm gnome-shell network-manager-applet gnome-keyr
 	default_session="gnome-wayland"
 	install_desktop="
 dnf install -y ${desktop_base} gdm @gnome-desktop network-manager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-dnf install -y ${desktop_base} lightdm slick-greeter @i3 volumeicon network-manager-applet gnome-keyring gnome-keyring-pam blueman dnfdragora-updater xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -5788,13 +5646,13 @@ if [ "${environment}" == "None" ]; then
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
 	if [ "${environment}" == "Gnome" ]; then
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
 	else
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	fi
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype\ndev-libs/glib -sysprof' > /etc/portage/package.use/dep_cycle_fix
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-libs/glib dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
@@ -5817,25 +5675,11 @@ emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology sys-apps/xdg-desktop-portal-gtk
-sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
 emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus sys-apps/xdg-desktop-portal-gnome
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"gdm\"@g' /etc/conf.d/display-manager
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11-misc/lightdm x11-wm/i3 x11-misc/i3lock x11-misc/i3status x11-misc/dmenu x11-terms/rxvt-unicode media-sound/volumeicon gnome-extra/nm-applet gnome-base/gnome-keyring net-wireless/blueman sys-apps/xdg-desktop-portal-gtk
-sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/display-manager
 "
 	;;
 	'Lxqt')
@@ -6017,13 +5861,13 @@ if [ "${environment}" == "None" ]; then
 	emerge app-portage/gentoolkit app-eselect/eselect-repository
 else
 	if [ "${environment}" == "Gnome" ]; then
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
 	else
-		echo -e "USE=\"a52 aac accessibility acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vala vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
+		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 	fi
 	echo "SYSTEMD_KERNEL_INSTALL=0" > /etc/env.d/99no-systemd-kernel-install
 	echo -e 'app-crypt/pinentry -gtk\nmedia-libs/tiff -webp\nnet-print/cups -zeroconf\ndev-python/pillow -truetype\ndev-libs/glib -sysprof' > /etc/portage/package.use/dep_cycle_fix
@@ -6045,25 +5889,11 @@ emerge -uDN --noconfmem @world ${desktop_base} x11-misc/lightdm gnome-extra/cinn
 systemctl enable lightdm.service
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} x11-misc/lightdm x11-wm/enlightenment x11-terms/terminology sys-apps/xdg-desktop-portal-gtk
-systemctl enable lightdm.service
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
 emerge -uDN --noconfmem @world ${desktop_base} gnome-base/gdm gnome-base/gnome x11-terms/gnome-terminal gnome-base/nautilus sys-apps/xdg-desktop-portal-gnome
 systemctl enable gdm.service
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} x11-misc/lightdm x11-wm/i3 x11-misc/i3lock x11-misc/i3status x11-misc/dmenu x11-terms/rxvt-unicode media-sound/volumeicon gnome-extra/nm-applet gnome-base/gnome-keyring net-wireless/blueman sys-apps/xdg-desktop-portal-gtk
-systemctl enable lightdm.service
 "
 	;;
 	'Lxqt')
@@ -6099,6 +5929,7 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" != "None" ]; then
+	bash
 	${install_desktop}
 	systemctl enable cups.service
 	systemctl --global enable pulseaudio.service pulseaudio.socket
@@ -6312,21 +6143,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring kali-linux-default xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver kali-defaults-desktop kali-themes-common libnss-mdns mesa-va-drivers mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
-"
-	;;
-	'i3/Full')
-	desktop_base="alsa-utils alsa-ucm-conf alsa-topology-conf at-spi2-core avahi-discover avahi-dnsconfd cups cups-browsed cups-filters dbus-user-session dbus-x11 ffmpeg firmware-sof-signed fonts-dejavu fonts-roboto gvfs-fuse iio-sensor-proxy intel-media-va-driver kali-defaults-desktop kali-themes-common libnss-mdns mesa-va-drivers mesa-vulkan-drivers pulseaudio pulseaudio-module-bluetooth plymouth-themes system-config-printer udisks2 xdg-user-dirs-gtk xserver-xorg"
-	default_session="i3"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-i3 volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit kali-linux-default xdg-desktop-portal-gtk
 "
 	;;
 	'Mate')
@@ -6952,14 +6768,6 @@ systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
-systemctl enable lightdm.service connman.service
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -7200,14 +7008,6 @@ systemctl enable lightdm.service
 pacman -S --noconfirm --needed ${desktop_base} cosmic packagekit xdg-desktop-portal-gtk
 systemctl enable greetd.service
 ln -sf cosmic-greeter.toml /etc/greetd/config.toml
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter enlightenment terminology pamac-gtk connman xdg-desktop-portal-gtk
-systemctl enable lightdm.service connman.service
 "
 	;;
 	'Gnome')
@@ -7458,14 +7258,6 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -7477,12 +7269,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -7864,20 +7650,6 @@ xdg.portal.enable = true;
 xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
 xdg.portal.xdgOpenUsePortal = true;"
 	;;
-	'i3/Full')
-	default_session="none+i3"
-	nixos_desktop="
-${autologin_commands}
-services.displayManager.defaultSession = \"${default_session}\";
-services.xserver.displayManager.lightdm.enable = true;
-services.xserver.enable = true;
-services.xserver.windowManager.i3.enable = true;
-services.xserver.windowManager.i3.extraPackages = with pkgs; [ dmenu i3status i3lock ];
-services.xserver.xkb.layout = \"${keymap}\";
-xdg.portal.enable = true;
-xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-xdg.portal.xdgOpenUsePortal = true;"
-	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	nixos_desktop="
@@ -8067,20 +7839,6 @@ xdg.portal.enable = true;
 xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gnome ];
 xdg.portal.xdgOpenUsePortal = true;"
 	;;
-	'i3/Full')
-	default_session="none+i3"
-	nixos_desktop="
-${autologin_commands}
-services.displayManager.defaultSession = \"${default_session}\";
-services.xserver.displayManager.lightdm.enable = true;
-services.xserver.enable = true;
-services.xserver.windowManager.i3.enable = true;
-services.xserver.windowManager.i3.extraPackages = with pkgs; [ dmenu i3status i3lock ];
-services.xserver.xkb.layout = \"${keymap}\";
-xdg.portal.enable = true;
-xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-xdg.portal.xdgOpenUsePortal = true;"
-	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	nixos_desktop="
@@ -8235,23 +7993,6 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman xdg-desktop-portal-gtk
-systemctl enable connman.service
-"
-	;;
-	'Enlightenment/Full')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman xdg-desktop-portal-gtk
-systemctl enable connman.service
 "
 	;;
 	'Gnome')
@@ -8484,23 +8225,6 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-cinnamon-cinnamon cinnamon-settings-daemon mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam mint-x-icon-theme mint-y-icon-theme blueman papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman xdg-desktop-portal-gtk
-systemctl enable connman.service
-"
-	;;
-	'Enlightenment/Full')
-	default_session="enlightenment"
-	install_desktop="
-systemctl disable NetworkManager.service
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-enlightenment-enlightenment terminology connman xdg-desktop-portal-gtk
-systemctl enable connman.service
 "
 	;;
 	'Gnome')
@@ -8896,14 +8620,6 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology mate-polkit xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -8915,12 +8631,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 task-gnome-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -10263,15 +9973,6 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -10283,12 +9984,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -10527,15 +10222,6 @@ rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter ubuntucinnamon-lightdm-theme ubuntucinnamon-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme notification-daemon update-manager xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
-	'Enlightenment')
-	default_session="enlightenment"
-	install_desktop="
-rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter enlightenment terminology xdg-desktop-portal-gtk
-DEBIAN_FRONTEND=noninteractive apt install --purge -y network-manager- connman
-find /usr/lib -type f -name enlightenment_system -exec chmod 4755 {} \;
-"
-	;;
 	'Gnome')
 	default_session="gnome-wayland"
 	install_desktop="
@@ -10547,12 +10233,6 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter i3 i3lock i3status dmenu rxvt-unicode volumeicon-alsa network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit notification-daemon update-manager xdg-desktop-portal-gtk
 "
 	;;
 	'Lxqt')
@@ -10773,13 +10453,6 @@ ln -s /etc/sv/gdm  /etc/runit/runsvdir/default/
 	install_desktop="
 xbps-install -y ${desktop_base} gdm gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 ln -s /etc/sv/gdm /etc/runit/runsvdir/default/
-"
-	;;
-	'i3')
-	default_session="i3"
-	install_desktop="
-xbps-install -y ${desktop_base} lightdm lightdm-gtk3-greeter i3 i3status i3lock dmenu rxvt-unicode volumeicon network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-ln -s /etc/sv/lightdm /etc/runit/runsvdir/default/
 "
 	;;
 	'Lxqt')
@@ -11315,9 +10988,7 @@ if [ "${systemd_init}" == "Yes" ]; then
 else
 	chroot_cmd="chroot /mnt"
 fi
-if [ "${environment}" == "Enlightenment" ]; then
-	dns_manager="connman/resolv.conf"
-elif [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	dns_manager="systemd/resolve/stub-resolv.conf"
 else
 	dns_manager="NetworkManager/resolv.conf"
