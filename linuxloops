@@ -5929,7 +5929,6 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" != "None" ]; then
-	bash
 	${install_desktop}
 	systemctl enable cups.service
 	systemctl --global enable pulseaudio.service pulseaudio.socket
@@ -8189,7 +8188,6 @@ chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
 cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-bash
 echo 'solver.onlyRequires = true' > /etc/zypp/zypp.conf
 systemd-machine-id-setup
 rpm --rebuilddb
