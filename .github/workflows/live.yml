@@ -19,7 +19,7 @@ jobs:
           echo "Free space:"
           df -h
       - name: Checkout linuxloops script
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Set current date
         run: echo "current_date=$(date '+%Y%m%d')" >> $GITHUB_ENV
       - name: Build Linuxloops Live Disk

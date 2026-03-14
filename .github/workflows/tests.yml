@@ -14,7 +14,7 @@ jobs:
       matrix: ${{ steps.distributions.outputs.matrix }}
     steps:
       - name: Checkout linuxloops source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Create build matrix
         id: distributions
         run: |
@@ -58,7 +58,7 @@ jobs:
           echo "Free space:"
           df -h
       - name: Checkout linuxloops source code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Launch distribution build
         run:
           GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst test.img -t -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) -s $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9) $(echo ${{ matrix.distribution }} | cut -d'#' -f10)
