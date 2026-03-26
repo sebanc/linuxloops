@@ -1679,8 +1679,6 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 set -e
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
-mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
-mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
 dnf install --installroot=/mnt --releasever $(echo ${almalinux_version} | tr A-Z a-z) -y filesystem
@@ -1690,7 +1688,6 @@ if [ ! -z "${mirror_AlmaLinux}" ]; then
 	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/almalinux-*.repo
 fi
 umount /mnt/sys
-umount /mnt/proc/sys
 umount /mnt/proc
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
@@ -5078,8 +5075,6 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 set -e
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
-mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
-mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
 dnf install --installroot=/mnt --use-host-config --releasever $(echo ${fedora_version} | tr A-Z a-z) -y filesystem
@@ -5093,7 +5088,6 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates-testing.repo
 fi
 umount /mnt/sys
-umount /mnt/proc/sys
 umount /mnt/proc
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
@@ -5658,7 +5652,9 @@ else
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-libs/glib dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
+touch /etc/kernel/preinst.d/05-check-chroot.install
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio sys-apps/bubblewrap
+rm /etc/kernel/preinst.d/05-check-chroot.install
 echo -e '[main]\nhostname-mode=none' > /etc/NetworkManager/NetworkManager.conf
 rc-update add dmcrypt boot
 rc-update add bluetooth default
@@ -5874,7 +5870,9 @@ else
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-libs/glib dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
+touch /etc/kernel/preinst.d/05-check-chroot.install
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio sys-apps/bubblewrap
+rm /etc/kernel/preinst.d/05-check-chroot.install
 echo -e '[main]\nhostname-mode=none' > /etc/NetworkManager/NetworkManager.conf
 systemctl enable bluetooth.service NetworkManager.service
 CHROOT_INIT
@@ -8799,8 +8797,6 @@ echo -e '[local]\nname = local\nbaseurl = file:///source\nenabled=1\ngpgcheck=0\
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d install -y coreutils util-linux procps-ng
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
-mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
-mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
 dnf --disablerepo=* --enablerepo=local --setopt=reposdir=/etc/yum.fake.repos.d --installroot=/mnt install -y @core dnf qubes-release qubes-dom0-unwanted-packages
@@ -8811,7 +8807,6 @@ if [ ! -z "${mirror_Fedora}" ]; then
 	sed -i 's@^metalink=@#metalink=@g' /mnt/etc/yum.repos.d/fedora-updates.repo
 fi
 umount /mnt/sys
-umount /mnt/proc/sys
 umount /mnt/proc
 rm -r /etc/yum.fake.repos.d
 mkdir -p /mnt/var/lib/qubes/template-packages
@@ -8921,8 +8916,6 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 set -e
 mkdir -p /mnt/proc /mnt/sys
 mount -t proc none /mnt/proc
-mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
-mount --make-slave /mnt/proc/sys
 mount --bind /sys /mnt/sys
 mount --make-slave /mnt/sys
 dnf install --installroot=/mnt --releasever $(echo ${rockylinux_version} | tr A-Z a-z) -y filesystem
@@ -8932,7 +8925,6 @@ if [ ! -z "${mirror_RockyLinux}" ]; then
 	sed -i 's@^mirrorlist=@#mirrorlist=@g' /mnt/etc/yum.repos.d/rocky*.repo
 fi
 umount /mnt/sys
-umount /mnt/proc/sys
 umount /mnt/proc
 PREPARE_CHROOT
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
@@ -10947,9 +10939,6 @@ if [ "${systemd_init}" == "Yes" ]; then
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service
 	fi
 fi
-mount -t proc none /mnt/proc
-mount --bind -o ro /mnt/proc/sys /mnt/proc/sys
-mount --make-slave /mnt/proc/sys
 mount --bind -o ro /sys /mnt/sys
 mount --make-slave /mnt/sys
 mount --bind /dev /mnt/dev
@@ -10971,19 +10960,18 @@ if [ "${systemd_init}" == "Yes" ]; then
 	fi
 	mount --make-slave /mnt/dev/console
 	touch /tmp/pid_ns
-	sudo -b container=chroot unshare --pid=/tmp/pid_ns --fork --mount-proc --kill-child --root=/mnt /lib/systemd/systemd --unit=basic.target
+	unshare --mount --pid=/tmp/pid_ns --root=/mnt --fork --mount-proc /lib/systemd/systemd --unit=basic.target &
 	sleep 30
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "/lib/systemd/systemd-udevd --daemon"
+	echo \$(lsns -t pid | grep "\$(stat -c %i /tmp/pid_ns)" | awk '{print \$4}') > /tmp/systemd_pid
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /lib/systemd/systemd-udevd --daemon
 	if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
-		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
-		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
-		#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "mkdir -p ${bootstrapdir}"
-		#nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "ln -s / ${bootstrapdir}/mnt"
-		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "mkdir -p /mnt/usr/lib"
-		nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash -c "ln -s /usr/lib/snapd /mnt/usr/lib/snapd"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /bin /mnt/bin && ln -s /snap /mnt/snap"
 	fi
-	chroot_cmd="nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash"
+	chroot_cmd="nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt"
 else
+	mount -t proc none /mnt/proc
 	chroot_cmd="chroot /mnt"
 fi
 if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
@@ -11012,7 +11000,7 @@ if [ -f /mnt/tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linux
 if [ -f /mnt/tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /mnt/tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
 if [ "${systemd_init}" == "Yes" ]; then
-	if [ -d /mnt/mnt/usr ]; then rm -r /mnt/mnt/usr; fi
+	rm -f /mnt/mnt/bin /mnt/mnt/snap
 	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
@@ -12931,6 +12919,7 @@ generate_cleanup()
 cat >"${bootstrapdir}"/install_scripts/cleanup <<CLEANUP
 #!/bin/bash
 set -e
+rm -rf /var/cache/man
 if [ ! -z "\$(command -v apt)" ]; then
 	if [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(check-language-support -l ${packages_locale}); fi
 	rm -f /etc/apt/apt.conf.d/99linuxloops
@@ -13006,8 +12995,8 @@ NIXOSCHROOT
 NIXOSSETPW
 rm -rf /mnt/tmp/*
 elif [ "${systemd_init}" == "Yes" ]; then
-	nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash /tmp/linuxloops/set_userpw
-	if [ -f /install_scripts/selinux_fix ]; then nsenter --pid=/tmp/pid_ns unshare --mount-proc --root=/mnt bash /tmp/linuxloops/selinux_fix; fi
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /tmp/linuxloops/set_userpw
+	if [ -f /install_scripts/selinux_fix ]; then nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /tmp/linuxloops/selinux_fix; fi
 else
 	chroot /mnt /tmp/linuxloops/set_userpw
 	if [ -f /install_scripts/selinux_fix ]; then chroot /mnt /tmp/linuxloops/selinux_fix; fi
@@ -13106,7 +13095,6 @@ if mountpoint -q /mnt/dev; then umount /mnt/dev; fi
 if mountpoint -q /mnt/sys/module/apparmor; then umount /mnt/sys/module/apparmor; fi
 if mountpoint -q /mnt/sys/firmware/efi/efivars; then umount /mnt/sys/firmware/efi/efivars; fi
 if mountpoint -q /mnt/sys; then umount /mnt/sys; fi
-if mountpoint -q /mnt/proc/sys; then umount /mnt/proc/sys; fi
 if mountpoint -q /mnt/proc; then umount /mnt/proc; fi
 if mountpoint -q /mnt/boot/efi; then umount /mnt/boot/efi; fi
 if [ -f /install_scripts/efi_loop ]; then losetup -d \$(cat /install_scripts/efi_loop); fi
@@ -13156,6 +13144,7 @@ if mountpoint -q /isomount/rootc; then umount /isomount/rootc; fi
 if mountpoint -q /isomount/tmp; then umount /isomount/tmp; fi
 if mountpoint -q /isomount; then umount /isomount; fi
 if mountpoint -q /tmp/pid_ns; then umount /tmp/pid_ns; fi
+if mountpoint -q /tmp/mount_ns; then umount /tmp/mount_ns; fi
 if mountpoint -q /tmp; then umount /tmp; fi
 if mountpoint -q /run; then umount /run; fi
 if mountpoint -q /dev/shm; then umount /dev/shm; fi
