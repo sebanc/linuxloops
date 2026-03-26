@@ -5652,6 +5652,7 @@ else
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-libs/glib dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
+mkdir -p /etc/kernel/preinst.d
 touch /etc/kernel/preinst.d/05-check-chroot.install
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio sys-apps/bubblewrap
 rm /etc/kernel/preinst.d/05-check-chroot.install
@@ -5870,6 +5871,7 @@ else
 	emerge app-crypt/pinentry app-portage/gentoolkit app-eselect/eselect-repository dev-libs/glib dev-util/sysprof dev-util/vulkan-headers dev-util/wayland-scanner media-libs/libsdl2 media-libs/tiff net-print/cups x11-base/xorg-server
 	rm /etc/portage/package.use/dep_cycle_fix
 fi
+mkdir -p /etc/kernel/preinst.d
 touch /etc/kernel/preinst.d/05-check-chroot.install
 emerge -uDN --noconfmem @world sys-kernel/gentoo-kernel-bin sys-kernel/linux-firmware sys-firmware/intel-microcode sys-kernel/dracut net-wireless/wireless-regdb app-admin/sudo sys-fs/ntfs3g net-misc/networkmanager sys-fs/cryptsetup app-editors/nano dev-vcs/git sys-power/acpid net-misc/curl sys-power/thermald app-shells/bash-completion app-crypt/gnupg sys-auth/polkit app-arch/zstd sys-auth/pambase sys-boot/grub sys-boot/os-prober sys-boot/shim app-crypt/sbsigntools sys-fs/dosfstools sys-fs/btrfs-progs app-arch/cpio sys-apps/bubblewrap
 rm /etc/kernel/preinst.d/05-check-chroot.install
@@ -13144,7 +13146,6 @@ if mountpoint -q /isomount/rootc; then umount /isomount/rootc; fi
 if mountpoint -q /isomount/tmp; then umount /isomount/tmp; fi
 if mountpoint -q /isomount; then umount /isomount; fi
 if mountpoint -q /tmp/pid_ns; then umount /tmp/pid_ns; fi
-if mountpoint -q /tmp/mount_ns; then umount /tmp/mount_ns; fi
 if mountpoint -q /tmp; then umount /tmp; fi
 if mountpoint -q /run; then umount /run; fi
 if mountpoint -q /dev/shm; then umount /dev/shm; fi
