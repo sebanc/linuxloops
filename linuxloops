@@ -2079,14 +2079,14 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 systemctl enable gdm.service
@@ -5553,7 +5553,7 @@ echo "substituters = https://foxflake.cachix.org/ https://cache.nixos.org/" > /t
 echo "trusted-public-keys = foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
 sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --show-trace
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
 sudo -u temp bash /tmp/nixos_install
@@ -5641,7 +5641,7 @@ if [ "${environment}" == "None" ]; then
 else
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
-		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
+		echo -e 'gnome-extra/evolution-data-server vala\nnet-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
@@ -5859,7 +5859,7 @@ if [ "${environment}" == "None" ]; then
 else
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
-		echo -e 'net-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
+		echo -e 'gnome-extra/evolution-data-server vala\nnet-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
@@ -6047,7 +6047,7 @@ echo "substituters = http://37.59.123.5:8080/glf/ https://cache.nixos.org/" > /t
 echo "trusted-public-keys = glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
 sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --show-trace
 /install_scripts/install_flatpak
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
@@ -7595,7 +7595,7 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-insta
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd --show-trace
 /install_scripts/install_channel
 /install_scripts/install_dmconfig
 NIXOSINSTALL
@@ -7784,7 +7784,7 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-insta
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --no-root-passwd --show-trace
 /install_scripts/install_channel
 /install_scripts/install_dmconfig
 NIXOSINSTALL
@@ -9656,7 +9656,7 @@ fi
 timedatectl set-timezone "$1"
 SETTIMEZONE
 chmod 0755 /usr/bin/steamos-polkit-helpers/steamos-set-timezone
-cat >//usr/bin/steamos-polkit-helpers/steamos-priv-write <<'PRIVWRITE'
+cat >/usr/bin/steamos-polkit-helpers/steamos-priv-write <<'PRIVWRITE'
 #!/bin/bash
 
 set -eu
@@ -15448,6 +15448,14 @@ fi
 rm -f "${linuxloopsdir}"/custom_commands
 }
 
+create_cache_directory()
+{
+linuxloopsdir="$(eval echo ~${SUDO_USER})/.cache/linuxloops"
+mkdir -p "${linuxloopsdir}"/tmp
+chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}" "${linuxloopsdir}/tmp"
+chmod 0755 "${linuxloopsdir}" "${linuxloopsdir}/tmp"
+}
+
 check_dependencies()
 {
 if ( ! test -z {,} ); then echo "Linuxloops must be ran with \"bash\"."; exit 1; fi
@@ -15480,20 +15488,12 @@ if [ -z "$(command -v realpath)" ]; then echo "\"realpath\" binary needs to be i
 if [ -z "$(command -v rm)" ]; then echo "\"rm\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v sed)" ]; then echo "\"sed\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v sha256sum)" ]; then echo "\"sha256sum\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v sudo)" ]; then echo "\"sha256sum\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v tar)" ]; then echo "\"tar\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v touch)" ]; then echo "\"touch\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v tr)" ]; then echo "\"tr\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v umount)" ]; then echo "\"umount\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v xz)" ]; then echo "\"xz\" binary needs to be installed first."; exit 1; fi
-if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; exit 1; fi
-}
-
-create_cache_directory()
-{
-linuxloopsdir="$(eval echo ~${SUDO_USER})"/.cache/linuxloops
-mkdir -p "${linuxloopsdir}"/tmp
-chown ${SUDO_USER}:$(id -g ${SUDO_UID}) "${linuxloopsdir}" "${linuxloopsdir}/tmp"
-chmod 0755 "${linuxloopsdir}" "${linuxloopsdir}/tmp"
 }
 
 set_base_parameters()
@@ -15503,14 +15503,8 @@ if [ -z "${wsl}" ] && [ -f /etc/NIXOS ]; then nixos=1; fi
 if [ "$(grep -o 'NAME=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "Chrome OS" ]; then if [ -f /etc/brunch_version ]; then brunch=1; else chromeos=1; fi; fi
 }
 
+linuxloops_cmdline="${@}"
 set_base_parameters
-if [[ $EUID -ne 0 ]]; then
-	if [ ! -z "${nixos}" ] && [ ${#} -eq 0 ]; then
-        	exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix eval -f '<nixpkgs>' --raw 'glib-networking')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS GITHUB_TOKEN=\$GITHUB_TOKEN bash $0"
-	else
-		exec sudo --preserve-env=DISPLAY,GITHUB_TOKEN,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash "$0" "$@"
-	fi
-fi
 set +H
 if [ ! -z "${wsl}" ]; then
 	if [ ! -e /dev/loop-control ]; then echo "WSL1 is not supported, please enable WSL2 to use this installer."; exit 1; fi
@@ -15525,11 +15519,6 @@ if [ ! -z "${wsl}" ]; then
 		exit 1
 	fi
 fi
-if [ -z ${SUDO_UID} ]; then
-	SUDO_USER=${USER}
-	SUDO_UID=$(id -g ${USER})
-fi
-create_cache_directory
 if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
 	if ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] && [ "${1}" == "--generate-config" ]); then
 		if [ -z "${2}" ]; then echo -e "Please provide a path for the generated config."; exit 1; fi
@@ -15543,6 +15532,18 @@ if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] &
 	gui=1
 	check_dependencies
 	if ! curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
+	if [[ $EUID -ne 0 ]]; then
+		if [ ! -z "${nixos}" ]; then
+			exec sudo nix-shell -p bash curl gnupg1 sudo util-linux xz gtk3 glib-networking python3Packages.pygobject3 webkitgtk_4_1 --run "GIO_MODULE_DIR=\$(nix eval -f '<nixpkgs>' --raw 'glib-networking')/lib/gio/modules XDG_DATA_DIRS=\$XDG_DATA_DIRS:\$GSETTINGS_SCHEMAS_PATH:\$XDG_ICON_DIRS GITHUB_TOKEN=\$GITHUB_TOKEN bash ${0} ${linuxloops_cmdline}"
+		else
+			exec sudo --preserve-env=DISPLAY,GITHUB_TOKEN,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash ${0} ${linuxloops_cmdline}
+		fi
+	fi
+	if [ -z ${SUDO_UID} ]; then
+		SUDO_USER=${USER}
+		SUDO_UID=$(id -g ${USER})
+	fi
+	create_cache_directory
 	gui_installer
 else
 	while [ ${#} -gt 0 ]; do
@@ -15653,7 +15654,7 @@ else
 			;;
 			-C | --custom-script)
 				shift
-				custom_script="$(sudo -u ${SUDO_USER} echo $(realpath ${1}))"
+				custom_script="$(echo $(realpath ${1}))"
 			;;
 			-k | --kernel-parameters)
 				shift
@@ -15771,5 +15772,13 @@ else
 	done
 	check_dependencies
 	if ! curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
+	if [[ $EUID -ne 0 ]]; then
+		exec sudo --preserve-env=DISPLAY,GITHUB_TOKEN,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash ${0} ${linuxloops_cmdline}
+	fi
+	if [ -z ${SUDO_UID} ]; then
+		SUDO_USER=${USER}
+		SUDO_UID=$(id -g ${USER})
+	fi
+	create_cache_directory
 	cli_installer
 fi
