@@ -394,7 +394,7 @@ case "${distribution}" in
 		systemd_init="Yes"
 		;;
 	'FoxFlake')
-		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" )
+		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" "Steam" )
 		bootloader_id="foxflake"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -1826,14 +1826,14 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 systemctl enable gdm.service
@@ -15494,6 +15494,7 @@ if [ -z "$(command -v touch)" ]; then echo "\"touch\" binary needs to be install
 if [ -z "$(command -v tr)" ]; then echo "\"tr\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v umount)" ]; then echo "\"umount\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v xz)" ]; then echo "\"xz\" binary needs to be installed first."; exit 1; fi
+if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; exit 1; fi
 }
 
 set_base_parameters()
@@ -15530,7 +15531,6 @@ if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] &
 	if [ -z "$(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f1)$(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f2)" ] || [ $(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f1)$(python3 -V 2>/dev/null | cut -d' ' -f2 | cut -d'.' -f2) -lt 310 ]; then echo "Please install python version 3.10 or above."; exit 1; fi
 	if ! python3 -c "import venv" 2>/dev/null; then echo "Please install python3-venv package."; exit 1; fi
 	gui=1
-	check_dependencies
 	if ! curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
 	if [[ $EUID -ne 0 ]]; then
 		if [ ! -z "${nixos}" ]; then
@@ -15543,6 +15543,7 @@ if [ ${#} -eq 0 ] || ([ ${#} -eq 2 ] && [ "${1}" == "-G" ]) || ([ ${#} -eq 2 ] &
 		SUDO_USER=${USER}
 		SUDO_UID=$(id -g ${USER})
 	fi
+	check_dependencies
 	create_cache_directory
 	gui_installer
 else
@@ -15770,7 +15771,6 @@ else
 		esac
 		shift
 	done
-	check_dependencies
 	if ! curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
 	if [[ $EUID -ne 0 ]]; then
 		exec sudo --preserve-env=DISPLAY,GITHUB_TOKEN,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash ${0} ${linuxloops_cmdline}
@@ -15779,6 +15779,7 @@ else
 		SUDO_USER=${USER}
 		SUDO_UID=$(id -g ${USER})
 	fi
+	check_dependencies
 	create_cache_directory
 	cli_installer
 fi
