@@ -394,7 +394,7 @@ case "${distribution}" in
 		systemd_init="Yes"
 		;;
 	'FoxFlake')
-		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" "Steam" )
+		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" )
 		bootloader_id="foxflake"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -3897,14 +3897,14 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-terminal gnome-backgrounds nautilus xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 systemctl enable gdm.service
