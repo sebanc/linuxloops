@@ -394,7 +394,7 @@ case "${distribution}" in
 		systemd_init="Yes"
 		;;
 	'FoxFlake')
-		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" "Steam" )
+		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" )
 		bootloader_id="foxflake"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
