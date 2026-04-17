@@ -394,7 +394,7 @@ case "${distribution}" in
 		systemd_init="Yes"
 		;;
 	'FoxFlake')
-		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" )
+		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" "Steam" )
 		bootloader_id="foxflake"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -10071,7 +10071,11 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
+if [ "${systemd_init}" == "Yes" ]; then
+	snap set system experimental.user-daemons=true
+	snap install snap-store
+	snap set system experimental.user-daemons=false
+fi
 if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
 INSTALL_DESKTOP
@@ -10320,7 +10324,11 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-if [ "${systemd_init}" == "Yes" ]; then snap install snap-store; fi
+if [ "${systemd_init}" == "Yes" ]; then
+	snap set system experimental.user-daemons=true
+	snap install snap-store
+	snap set system experimental.user-daemons=false
+fi
 if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
 INSTALL_DESKTOP
@@ -10969,7 +10977,10 @@ if [ "${systemd_init}" == "Yes" ]; then
 	if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
 		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /bin /mnt/bin && ln -s /snap /mnt/snap"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /bin /mnt/bin"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /snap /mnt/snap"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "mkdir -p /mnt/usr/lib"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /usr/lib/snapd /mnt/usr/lib/snapd"
 	fi
 	chroot_cmd="nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt"
 else
@@ -11002,7 +11013,7 @@ if [ -f /mnt/tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linux
 if [ -f /mnt/tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /mnt/tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
 if [ "${systemd_init}" == "Yes" ]; then
-	rm -f /mnt/mnt/bin /mnt/mnt/snap
+	rm -f /mnt/mnt/bin /mnt/mnt/snap /mnt/mnt/usr
 	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
@@ -12444,27 +12455,22 @@ boot.loader.timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" 
 #https://github.com/NixOS/nixpkgs/blob/master/nixos/modules/profiles/all-hardware.nix
 boot.initrd.availableKernelModules = [ "3w-9xxx" "3w-xxxx" "8250_dw" "aes" "ahci" "aic79xx" "aic7xxx" "arcmsr" "ata_piix" "atkbd" "btrfs" "cbc" "dm_crypt" "ehci_hcd" "encrypted_keys" "exfat" "ext4" "fuse" "hv_storvsc" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "mmc_block" "mptspi" "nvme" "ohci1394" "pata_ali" "pata_amd" "pata_artop" "pata_atiixp" "pata_efar" "pata_hpt366" "pata_hpt37x" "pata_hpt3x2n" "pata_hpt3x3" "pata_it8213" "pata_it821x" "pata_jmicron" "pata_marvell" "pata_mpiix" "pata_netcell" "pata_ns87410" "pata_oldpiix" "pata_pcmcia" "pata_pdc2027x" "pata_qdi" "pata_rz1000" "pata_serverworks" "pata_sil680" "pata_sis" "pata_sl82c105" "pata_triflex" "pata_via" "pata_winbond" "quota_v1" "quota_v2" "sata_inic162x" "sata_nv" "sata_promise" "sata_qstor" "sata_sil" "sata_sil24" "sata_sis" "sata_svw" "sata_sx4" "sata_uli" "sata_via" "sata_vsc" "sbp2" "sd_mod" "sdhci_acpi" "sdhci_pci" "serio" "sha256" "sr_mod" "surface_aggregator" "surface_aggregator_registry" "surface_hid" "surface_hid_core" "uas" "uhci_hcd" "usbhid" "usb_storage" "virtio_net" "virtio_pci" "virtio_mmio" "virtio_blk" "virtio_scsi" "virtio_balloon" "virtio_console" "vmxnet3" "vsock" "vmw_balloon" "vmw_vmci" "vmwgfx" "vmw_vsock_vmci_transport" "xhci_pci" ];
 boot.initrd.compressor="gzip";
-boot.initrd.extraUtilsCommands = ''
-  copy_bin_and_libs "\${pkgs.bash}/bin/bash"
-  copy_bin_and_libs "\${pkgs.util-linux}/bin/blkid"
-  copy_bin_and_libs "\${pkgs.cryptsetup}/bin/cryptsetup"
-  copy_bin_and_libs "\${pkgs.coreutils}/bin/cut"
-  copy_bin_and_libs "\${pkgs.e2fsprogs}/bin/e2fsck"
-  copy_bin_and_libs "\${pkgs.findutils}/bin/find"
-  copy_bin_and_libs "\${pkgs.gnugrep}/bin/grep"
-  copy_bin_and_libs "\${pkgs.util-linux}/bin/losetup"
-  copy_bin_and_libs "\${pkgs.util-linux}/bin/lsblk"
-  copy_bin_and_libs "\${pkgs.ntfs3g}/bin/ntfs-3g"
-  copy_bin_and_libs "\${pkgs.ntfs3g}/bin/ntfsfix"
-  copy_bin_and_libs "\${pkgs.procps}/bin/ps"
-  copy_bin_and_libs "\${pkgs.kbd}/bin/setfont"
-  copy_bin_and_libs "\${pkgs.util-linux}/bin/setsid"
-'';
-boot.initrd.preLVMCommands = ''
+boot.initrd.systemd.enable = true;
+boot.initrd.systemd.initrdBin = with pkgs; [ bash coreutils cryptsetup e2fsprogs findutils gnugrep gnused kbd ntfs3g procps util-linux ];
+boot.initrd.systemd.services.linuxloops-image-setup = {
+  description = "Setup linuxloops disk image";
+  wantedBy = [ "initrd.target" ];
+  before = [ "lvm2-activation.service" ];
+  unitConfig.DefaultDependencies = "no";
+  serviceConfig.Type = "oneshot";
+  script = ''
+img_path=\$(cat /proc/cmdline | sed -z 's@ @\n@g' | grep 'img_path=' | cut -d'=' -f2)
+img_uuid=\$(cat /proc/cmdline | sed -z 's@ @\n@g' | grep 'img_uuid=' | cut -d'=' -f2)
+
 INITNIXOS
 add_linuxloops_recovery
 add_linuxloops_main
-echo -e "'';\n}\nNIXOSLINUXLOOPS\n" >> "${bootstrapdir}"/install_scripts/install_initramfs
+echo -e "  '';\n  };\n}\nNIXOSLINUXLOOPS\n" >> "${bootstrapdir}"/install_scripts/install_initramfs
 chmod 0755 "${bootstrapdir}"/install_scripts/install_initramfs
 }
 
@@ -15670,7 +15676,7 @@ else
 				distribution_version_parameters
 				if [ "${1}" == "$(echo ${1} | cut -d'*' -f2)" ]; then echo "Please specify the repository name and the mirror separated with \"*\" such as \"Arch*https://mirrors.kernel.org/archlinux\"."; exit 1; fi
 				if ! echo "$(echo ${1} | cut -d'*' -f2)" | grep -Eq '^(http|https)://[a-zA-Z0-9./?=_%:-]*'; then echo "Mirror should start by \"http://\" or \"https://\"."; exit 1; fi
-				set_mirror "$(echo ${1} | cut -d'*' -f1)" "$(echo ${1} | cut -d'*' -f2)" || { echo "${1} mirror is either invalid or offline."; exit 1; }
+				set_mirror "$(echo ${1} | cut -d'*' -f1)" "$(echo ${1} | cut -d'*' -f2)" || { echo "$(echo ${1} | cut -d'*' -f2) is either invalid or offline."; exit 1; }
 			;;
 			-p | --user-password-for-encryption)
 				user_password_for_encryption="Yes"
