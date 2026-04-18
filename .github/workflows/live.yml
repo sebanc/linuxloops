@@ -26,7 +26,7 @@ jobs:
         run: |
           bash linuxloops -distro Debian -env Cinnamon -dst linuxloops_live_${{ env.current_date }}.img -u -a -H "linuxloops"
       - name: Compress Linuxloops Live Disk
-        run: 7z a linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img -mx9
+        run: 7z a -t7z -m0=lzma2 -md=128m -mpb=0 -ms=on -mx=9 linuxloops_live_${{ env.current_date }}.7z linuxloops_live_${{ env.current_date }}.img
       - name: Generate release details
         run: |
           RELEASE_FILE=linuxloops_live_${{ env.current_date }}.7z
