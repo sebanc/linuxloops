@@ -12918,7 +12918,6 @@ Type=Application
 Categories=System;Filesystem;
 LIVEMENUICON
 INSTALLERICONS
-bash
 INSTALLLIVE
 chmod 0755 "${bootstrapdir}"/install_scripts/install_live
 }
