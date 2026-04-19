@@ -7010,14 +7010,14 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome gnome-extra network-manager-applet gnome-keyring manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
@@ -11013,7 +11013,7 @@ if [ -f /mnt/tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linux
 if [ -f /mnt/tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /mnt/tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
 if [ "${systemd_init}" == "Yes" ]; then
-	rm -r /mnt/mnt/bin /mnt/mnt/snap /mnt/mnt/usr
+	rm -rf /mnt/mnt/bin /mnt/mnt/snap /mnt/mnt/usr
 	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
