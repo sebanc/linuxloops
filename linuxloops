@@ -115,14 +115,14 @@ case "${distribution}" in
 		default_version="8"
 		;;
 	'Fedora')
-		available_versions=( "43" )
+		available_versions=( "44" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="43"
+		default_version="44"
 		;;
 	'Fedora-Atomic')
-		available_versions=( "43" )
+		available_versions=( "44" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="43"
+		default_version="44"
 		;;
 	'FoxFlake')
 		available_versions=( "Stable" "Unstable" "Stable-Test" "Unstable-Test" "Dev" )
@@ -215,9 +215,9 @@ case "${distribution}" in
 		default_version="Stable"
 		;;
 	'Ubuntu')
-		available_versions=( "24.04" "25.10" )
-		available_versions_longname=( "24.04_(LTS)" "25.10_(Interim)" )
-		default_version="24.04"
+		available_versions=( "24.04" "26.04" )
+		available_versions_longname=( "24.04_(LTS)" "26.04_(Interim)" )
+		default_version="26.04"
 		;;
 	'Void')
 		available_versions=( "Current" )
@@ -283,7 +283,7 @@ case "${distribution}" in
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc fedora 43 default"
 		btrfs_supported="Yes"
-		fedora_version="43"
+		fedora_version="44"
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="No"
 		surface_supported="No"
@@ -394,7 +394,7 @@ case "${distribution}" in
 		systemd_init="Yes"
 		;;
 	'FoxFlake')
-		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" )
+		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" "Steam" "SteamDeck" )
 		bootloader_id="foxflake"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -573,7 +573,7 @@ case "${distribution}" in
 		available_environments=( "None" "Full" )
 		bootloader_id="ubuntu"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc ubuntu jammy default"
+		bootstrap="lxc ubuntu noble default"
 		btrfs_supported="Yes"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Pop" "Ubuntu" )
@@ -662,8 +662,8 @@ case "${distribution}" in
 			'24.04')
 				ubuntu_version="Noble"
 				;;
-			'25.10')
-				ubuntu_version="Questing"
+			'26.04')
+				ubuntu_version="Resolute"
 				;;
 		esac
 		;;
@@ -5200,7 +5200,7 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libpostproc-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
+dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
 ${install_desktop}
 systemctl enable ${desktop_services}
 systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
@@ -8226,13 +8226,13 @@ zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-b
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal gnome-backgrounds gnome-icon-theme nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
 zypper --non-interactive install ${desktop_base} gdm-branding-openSUSE patterns-gnome-gnome gnome-session-wayland gnome-terminal nautilus NetworkManager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
@@ -9933,6 +9933,7 @@ DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
+sed -i 's@Prompt=normal@Prompt=lts@g' /etc/update-manager/release-upgrades
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -10144,7 +10145,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_Ubuntu-25.10()
+chroot_Ubuntu-26.04()
 {
 if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
@@ -10940,6 +10941,7 @@ if [ "${systemd_init}" == "Yes" ]; then
 		ln -s /dev/null /mnt/etc/udev/rules.d/50-udev-default.rules
 	fi
 	if [ -d /mnt/etc/systemd/system ]; then
+		ln -s /dev/null /mnt/etc/systemd/system/netplan-configure.service
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-binfmt.service
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-reboot.service
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-resolved.service
@@ -11022,6 +11024,7 @@ if [ "${systemd_init}" == "Yes" ]; then
 	if [ -L /mnt/etc/systemd/system/systemd-resolved.service ]; then rm /mnt/etc/systemd/system/systemd-resolved.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-reboot.service ]; then rm /mnt/etc/systemd/system/systemd-reboot.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-binfmt.service ]; then rm /mnt/etc/systemd/system/systemd-binfmt.service; fi
+	if [ -L /mnt/etc/systemd/system/netplan-configure.service ]; then rm /mnt/etc/systemd/system/netplan-configure.service; fi
 	if [ -L /mnt/etc/udev/rules.d/50-udev-default.rules ]; then rm /mnt/etc/udev/rules.d/50-udev-default.rules; fi
 	if [ -L /mnt/etc/tmpfiles.d/tpm-udev.conf ]; then rm /mnt/etc/tmpfiles.d/tpm-udev.conf; fi
 	if [ -L /mnt/etc/tmpfiles.d/static-nodes-permissions.conf ]; then rm /mnt/etc/tmpfiles.d/static-nodes-permissions.conf; fi
@@ -11734,7 +11737,7 @@ recovery_shell()
 {
 	printk_levels="$(cat /proc/sys/kernel/printk)"
 	echo 0 0 0 0 > /proc/sys/kernel/printk
-	echo -e "\n\nYou are in the recovery shell, you can notably use the included tools to obtain data on your partitions ("blkid" or "lsblk") or to perform an fscheck ("e2fsck" or "ntfsfix").\nOnce you are done with your modifications, type \"exit\" to reboot the computer.\n\n"
+	echo -e "\n\nYou are in the recovery shell, you can notably use the included tools to obtain data on your partitions ("blkid" or "lsblk") or to perform an fscheck.\nOnce you are done with your modifications, type \"exit\" to reboot the computer.\n\n"
 	sh
 	reboot -f
 }
@@ -11933,7 +11936,6 @@ build() {
 	add_binary "losetup"
 	add_binary "lsblk"
 	add_binary "ntfs-3g"
-	add_binary "ntfsfix"
 	add_binary "ps"
 	add_binary "setfont"
 	add_binary "setsid"
@@ -12038,7 +12040,6 @@ esac
 	copy_exec "\$(command -v losetup)"
 	copy_exec "\$(command -v lsblk)"
 	copy_exec "\$(command -v ntfs-3g)"
-	copy_exec "\$(command -v ntfsfix)"
 	copy_exec "\$(command -v ps)"
 	copy_exec "\$(command -v setfont)"
 	copy_exec "\$(command -v setsid)"
@@ -12128,7 +12129,6 @@ install() {
 	inst "\$(command -v losetup)" "/usr/sbin/losetup"
 	inst "\$(command -v lsblk)" "/usr/sbin/lsblk"
 	inst "\$(command -v ntfs-3g)" "/usr/sbin/ntfs-3g"
-	inst "\$(command -v ntfsfix)" "/usr/sbin/ntfsfix"
 	inst "\$(command -v ps)" "/usr/bin/ps"
 	inst "\$(command -v setfont)" "/usr/bin/setfont"
 	inst "\$(command -v setsid)" "/usr/sbin/setsid"
@@ -12170,7 +12170,11 @@ chmod 0755 "${bootstrapdir}"/install_scripts/install_initramfs
 
 generate_nixos_config()
 {
-cmdline="systemd.log_target=null quiet"
+if [ "${distribution}" == "NixOS" ]; then
+	cmdline="quiet systemd.log_target=null"
+else
+	cmdline="systemd.log_target=null"
+fi
 if [ ! -z "${kernel_parameters}" ]; then cmdline="${cmdline} ${kernel_parameters}"; fi
 cat >"${bootstrapdir}"/install_scripts/install_initramfs <<INITNIXOS
 #!/bin/bash
@@ -12196,7 +12200,7 @@ mkdir -p /mnt/etc/nixos
 if [ "${distribution}" == "FoxFlake" ]; then
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/sebanc/foxflake/raw/refs/heads/$(echo ${foxflake_version} | tr A-Z a-z)/installer/target-configuration/flake.nix -o /mnt/etc/nixos/flake.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   # Imports
@@ -12248,7 +12252,7 @@ elif [ "${distribution}" == "GLF-OS" ]; then
 	mkdir /mnt/etc/nixos/customConfig
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/customConfig/default.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
-{ pkgs, lib, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   nix.settings.experimental-features = [ "nix-command" "flakes" ];
@@ -12266,8 +12270,6 @@ ${nixos_nvidia}
     isNormalUser = true;
     extraGroups = [ "wheel" "networkmanager" "scanner" "lp" "disk" ];
   };
-
-  boot.kernelParams = [ \${cmdline} ];
 
   console.earlySetup = true;
   console.keyMap = "${keymap}";
@@ -12297,7 +12299,7 @@ else
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
 imports = [
@@ -12306,7 +12308,6 @@ imports = [
 ];
 
 boot.kernelPackages = pkgs.linuxPackages;
-boot.kernelParams = [ \${cmdline} ];
 boot.plymouth.enable = true;
 
 users.users.${useraccount_name} = {
@@ -12368,7 +12369,7 @@ system.stateVersion = "25.11"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 fi
-cat >/mnt/etc/nixos/shim-signed.nix <<'NIXOSSHIM'
+cat >/mnt/etc/nixos/shim-signed.nix <<NIXOSSHIM
 { pkgs }:
 pkgs.stdenv.mkDerivation rec {
   pname = "shim-signed";
@@ -12379,13 +12380,13 @@ pkgs.stdenv.mkDerivation rec {
   };
   unpackPhase = ''
     runHook preUnpack
-    dpkg-deb -x \$src shim-signed
+    dpkg-deb -x \\\$src shim-signed
     runHook postUnpack
   '';
   installPhase = ''
     runHook preInstall
-    mkdir -p "\$out/share"
-    cp -r shim-signed/usr/lib/shim "\$out/share/"
+    mkdir -p "\\\$out/share"
+    cp -r shim-signed/usr/lib/shim "\\\$out/share/"
     runHook postInstall
   '';
   nativeBuildInputs = with pkgs; [ dpkg ];
@@ -12394,21 +12395,21 @@ NIXOSSHIM
 echo -e '# This file contains the fstab configuration.\n{ config, lib, pkgs, ... }:\n\n{' > /mnt/etc/nixos/hardware-configuration.nix
 cat /install_scripts/fstab >>/mnt/etc/nixos/hardware-configuration.nix
 echo -e "}" >> /mnt/etc/nixos/hardware-configuration.nix
-cat >/mnt/etc/nixos/linuxloops.nix <<'NIXOSLINUXLOOPS'
+cat >/mnt/etc/nixos/linuxloops.nix <<NIXOSLINUXLOOPS
 # Do not modify this file which contains the linuxloops configuration.
 # Please make changes to /etc/nixos/configuration.nix instead.
-{ config, lib, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
 nixpkgs.overlays = [ (final: prev: { shim-signed = prev.callPackage ./shim-signed.nix {}; }) ];
 environment.systemPackages = with pkgs; [ ntfs3g openssl sbsigntool shim-signed ];
 boot.consoleLogLevel = 3;
+boot.kernelParams = [ \${cmdline}$(if [ "${install_type}" == "image" ]; then echo -e " \"\\\\""\\\\\\\${linuxloops_args}\""; fi) ];
 hardware.cpu.intel.updateMicrocode = true;
 hardware.cpu.amd.updateMicrocode = true;
 hardware.enableAllFirmware = true;
 services.logrotate.checkConfig = false;
 
-$(if [ "${install_type}" == "image" ]; then echo -e "boot.kernelParams = [ \"\\\${linuxloops_args}\" ];\n"; fi)
 boot.loader.efi.canTouchEfiVariables = false;
 boot.loader.efi.efiSysMountPoint = "/boot/efi";
 boot.loader.grub.configurationLimit = 5;
@@ -12417,30 +12418,30 @@ boot.loader.grub.efiInstallAsRemovable = true;
 boot.loader.grub.efiSupport = true;
 boot.loader.grub.enable = true;
 boot.loader.grub.extraInstallCommands = ''	
-  \${pkgs.coreutils}/bin/cat >/tmp/sbat.csv <<GRUBSBAT
+  \\\${pkgs.coreutils}/bin/cat >/tmp/sbat.csv <<GRUBSBAT
 sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
-grub,3,Free Software Foundation,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
-grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\$(\${pkgs.grub2_efi}/bin/grub-install -V | \${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
+grub,3,Free Software Foundation,grub,2:\\\$(\\\${pkgs.grub2_efi}/bin/grub-install -V | \\\${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
+grub.$(echo ${distribution} | tr [:upper:] [:lower:]),1,${distribution} Linux,grub,2:\\\$(\\\${pkgs.grub2_efi}/bin/grub-install -V | \\\${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
 GRUBSBAT
-  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
-  \${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
-  if [ -f \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest ] && [ -f \${pkgs.shim-signed}/share/shim/mmx64.efi ]; then
-    \${pkgs.coreutils}/bin/mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
-    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
-    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/${bootloader_id}/shimx64.efi
-    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
-    \${pkgs.coreutils}/bin/cp \${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/${bootloader_id}/mmx64.efi
-    if [ -x \${pkgs.sbsigntool}/bin/sbverify ] && [ -x \${pkgs.sbsigntool}/bin/sbattach ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
-      for grubefi in \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/BOOT/grubx64.efi) \$(\${pkgs.findutils}/bin/find /boot/efi/EFI/"${bootloader_id}"/grubx64.efi); do
-        for sig in \$(\${pkgs.sbsigntool}/bin/sbverify --list "\$grubefi" | \${pkgs.gnugrep}/bin/grep '^signature' | \${pkgs.gnused}/bin/sed 's@signature @@g' | \${pkgs.coreutils}/bin/sort -r); do \${pkgs.sbsigntool}/bin/sbattach --signum "\$sig" --remove "\$grubefi"; done
-        \${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "\$grubefi" "\$grubefi"
+  \\\${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --bootloader-id="${bootloader_id}" --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
+  \\\${pkgs.grub2_efi}/bin/grub-install --target=x86_64-efi --efi-directory=/boot/efi --no-nvram --removable --sbat=/tmp/sbat.csv --modules="all_video boot btrfs cat chain configfile echo efifwsetup efinet ext2 fat font gettext gfxmenu gfxterm gfxterm_background gzio halt help hfsplus iso9660 jpeg keystatus linux loadenv loopback ls lsefi lsefimmap lsefisystab lssal memdisk minicmd normal ntfs part_apple part_msdos part_gpt password_pbkdf2 png probe reboot regexp search search_fs_uuid search_fs_file search_label sleep smbios squash4 terminal test true video xfs zfs zfscrypt zfsinfo zstd"
+  if [ -f \\\${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest ] && [ -f \\\${pkgs.shim-signed}/share/shim/mmx64.efi ]; then
+    \\\${pkgs.coreutils}/bin/mv /boot/efi/EFI/BOOT/BOOTX64.EFI /boot/efi/EFI/BOOT/grubx64.efi
+    \\\${pkgs.coreutils}/bin/cp \\\${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
+    \\\${pkgs.coreutils}/bin/cp \\\${pkgs.shim-signed}/share/shim/shimx64.efi.signed.latest /boot/efi/EFI/${bootloader_id}/shimx64.efi
+    \\\${pkgs.coreutils}/bin/cp \\\${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/BOOT/mmx64.efi
+    \\\${pkgs.coreutils}/bin/cp \\\${pkgs.shim-signed}/share/shim/mmx64.efi /boot/efi/EFI/${bootloader_id}/mmx64.efi
+    if [ -x \\\${pkgs.sbsigntool}/bin/sbverify ] && [ -x \\\${pkgs.sbsigntool}/bin/sbattach ] && [ -x \\\${pkgs.sbsigntool}/bin/sbsign ] && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ]; then
+      for grubefi in \\\$(\\\${pkgs.findutils}/bin/find /boot/efi/EFI/BOOT/grubx64.efi) \\\$(\\\${pkgs.findutils}/bin/find /boot/efi/EFI/${bootloader_id}/grubx64.efi); do
+        for sig in \\\$(\\\${pkgs.sbsigntool}/bin/sbverify --list "''\\\${grubefi}" | \\\${pkgs.gnugrep}/bin/grep '^signature' | \\\${pkgs.gnused}/bin/sed 's@signature @@g' | \\\${pkgs.coreutils}/bin/sort -r); do \\\${pkgs.sbsigntool}/bin/sbattach --signum "''\\\${sig}" --remove "''\\\${grubefi}"; done
+        \\\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output "''\\\${grubefi}" "''\\\${grubefi}"
       done
     fi
   fi
-  if \${pkgs.coreutils}/bin/ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ -x \${pkgs.sbsigntool}/bin/sbsign ] && [ -x \${pkgs.sbsigntool}/bin/sbverify ]; then
-    for i in /boot/kernels/*-linux-*Image; do
-      if ! \${pkgs.sbsigntool}/bin/sbverify --list \$i | \${pkgs.gnugrep}/bin/grep -q 'CN=Linuxloops Machine Owner Key'; then
-        \${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output \$i \$i
+  if \\\${pkgs.coreutils}/bin/ls /boot/kernels/*-linux-*Image >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ -x \\\${pkgs.sbsigntool}/bin/sbsign ] && [ -x \\\${pkgs.sbsigntool}/bin/sbverify ]; then
+    for kernel in /boot/kernels/*-linux-*Image; do
+      if ! \\\${pkgs.sbsigntool}/bin/sbverify --list ''\\\${kernel} | \\\${pkgs.gnugrep}/bin/grep -q 'CN=Linuxloops Machine Owner Key'; then
+        \\\${pkgs.sbsigntool}/bin/sbsign --key /etc/secureboot_key/MOK.key --cert /etc/secureboot_key/MOK.crt --output ''\\\${kernel} ''\\\${kernel}
       fi
     done
   fi
@@ -12461,16 +12462,63 @@ boot.initrd.systemd.services.linuxloops-image-setup = {
   description = "Setup linuxloops disk image";
   wantedBy = [ "initrd.target" ];
   before = [ "lvm2-activation.service" ];
-  unitConfig.DefaultDependencies = "no";
+  unitConfig = {
+    DefaultDependencies = "no";
+    ConditionPathExists = "/etc/initrd-release";
+  };
   serviceConfig.Type = "oneshot";
   script = ''
-img_path=\$(cat /proc/cmdline | sed -z 's@ @\n@g' | grep 'img_path=' | cut -d'=' -f2)
-img_uuid=\$(cat /proc/cmdline | sed -z 's@ @\n@g' | grep 'img_uuid=' | cut -d'=' -f2)
+img_path=\\\$(cat /proc/cmdline | sed -z 's@ @\n@g' | grep 'img_path=' | cut -d'=' -f2)
+img_uuid=\\\$(cat /proc/cmdline | sed -z 's@ @\n@g' | grep 'img_uuid=' | cut -d'=' -f2)
 
+recovery_shell()
+{
+	printk_levels="\\\$(cat /proc/sys/kernel/printk)"
+	echo 0 0 0 0 > /proc/sys/kernel/printk
+	echo -e "\n\nYou are in the recovery shell, you can notably use the included tools to obtain data on your partitions ("blkid" or "lsblk") or to perform an fscheck.\nOnce you are done with your modifications, type \"exit\" to reboot the computer.\n\n"
+	sh
+	reboot -f
+}
+
+if [ ! -z "\\\$img_uuid" ] && [ ! -z "\\\$img_path" ]; then
+	linuxloops_timeout=0
+	until false; do
+		if [ -b /dev/disk/by-partuuid/"\\\$img_uuid" ] || [ \\\$linuxloops_timeout == 10 ]; then break; fi
+		linuxloops_timeout=\\\$(( \\\$linuxloops_timeout + 1 ))
+		sleep 1
+	done
+	if [ \\\$linuxloops_timeout == 10 ]; then echo "linuxloops: Boot partition was not found." > /dev/kmsg; recovery_shell; fi
+	mkdir /linuxloops_root || { echo "linuxloops: Root directory cannot be created." > /dev/kmsg; recovery_shell; }
+	if [ ! -z "\\\$linuxloops_debug" ]; then recovery_shell; fi
+
+	fstype=\\\$(blkid -s TYPE -o value /dev/disk/by-partuuid/"\\\$img_uuid")
+	if [ "\\\$fstype" = "ntfs" ]; then
+		ntfs-3g /dev/disk/by-partuuid/"\\\$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
+	elif [ "\\\$fstype" = "btrfs" ]; then
+		mount -n -t "\\\$fstype" /dev/disk/by-partuuid/"\\\$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
+		if [ ! -f /linuxloops_root/"\\\$img_path" ]; then
+			# If the image file is not found on the boot partition, assume that the default btrfs subvolid is not 5
+			mount -o remount,subvolid=5 /linuxloops_root || { echo "linuxloops: Image file not found on default subvolume, nor on subvolid 5." > /dev/kmsg; recovery_shell; }
+		fi
+	else
+		mount -n -t "\\\$fstype" /dev/disk/by-partuuid/"\\\$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
+	fi
+
+	if [ -f /linuxloops_root/"\\\$img_path" ]; then
+		modprobe loop || { echo "linuxloops: Loop module is not available." > /dev/kmsg; recovery_shell; }
+		if [ ! -b /dev/loop0 ]; then mknod -m 660 /dev/loop0 b 7 0 || { echo "linuxloops: The loop device could not be created." > /dev/kmsg; recovery_shell; }; fi
+		losetup --direct-io=off -P /dev/loop0 /linuxloops_root"\\\$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
+		#losetup -P /dev/loop0 /linuxloops_root"\\\$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
+	else
+		echo "linuxloops: The rootfs image file was not found, it might be due to an incorrect GRUB config or unsupported configuration." > /dev/kmsg
+		recovery_shell
+	fi
+fi
+  '';
+};
+}
+NIXOSLINUXLOOPS
 INITNIXOS
-add_linuxloops_recovery
-add_linuxloops_main
-echo -e "  '';\n  };\n}\nNIXOSLINUXLOOPS\n" >> "${bootstrapdir}"/install_scripts/install_initramfs
 chmod 0755 "${bootstrapdir}"/install_scripts/install_initramfs
 }
 
@@ -12605,7 +12653,7 @@ if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" 
 set -e
 rpm-ostree kargs \${kargs}
 echo -e 'add_drivers+=" 8250_dw aes atkbd btrfs cbc dm-crypt exfat ext4 fuse i8042 intel_lpss intel_lpss_pci loop nvme quota_v1 quota_v2 serio sha256 surface_aggregator surface_aggregator_registry surface_hid surface_hid_core usbhid xhci_pci "' > /etc/dracut.conf.d/99-linuxloops.conf
-echo -e 'install_items+=" /etc/vconsole.conf /usr/bin/bash /usr/sbin/blkid /usr/sbin/cryptsetup /usr/bin/cut /usr/sbin/e2fsck /usr/bin/find /usr/bin/grep /usr/sbin/losetup /usr/bin/lsblk /usr/bin/ntfs-3g /usr/bin/ntfsfix /usr/bin/ps /usr/bin/setfont /usr/bin/setsid /usr/lib/systemd/systemd-sysroot-fstab-check "' >> /etc/dracut.conf.d/99-linuxloops.conf
+echo -e 'install_items+=" /etc/vconsole.conf /usr/bin/bash /usr/sbin/blkid /usr/sbin/cryptsetup /usr/bin/cut /usr/sbin/e2fsck /usr/bin/find /usr/bin/grep /usr/sbin/losetup /usr/bin/lsblk /usr/bin/ntfs-3g /usr/bin/ps /usr/bin/setfont /usr/bin/setsid /usr/lib/systemd/systemd-sysroot-fstab-check "' >> /etc/dracut.conf.d/99-linuxloops.conf
 echo 'hostonly=\"no\"' >> /etc/dracut.conf.d/99-linuxloops.conf
 rpm-ostree initramfs --enable
 mkdir -p /boot/grub2
@@ -12678,8 +12726,7 @@ mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 REINSTALLBOOTLOADER
 	else
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-# Delay the execution as the previous transaction might not be fully settled in some cases
-sleep 5
+mkdir -p /boot/efi/EFI
 dnf reinstall -y shim-* grub2-efi-* grub2-common
 cp /boot/efi/EFI/"${bootloader_id}"/grubx64.efi /boot/efi/EFI/BOOT/grubx64.efi
 cp /boot/efi/EFI/"${bootloader_id}"/grub.cfg /boot/efi/EFI/BOOT/grub.cfg

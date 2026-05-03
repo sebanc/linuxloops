@@ -84,8 +84,8 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Debian|Trixie|✓|✓|✓||
 |Devuan|Excalibur|✓|✓|||
 |Elementary|8|✓|✓|✓||
-|Fedora|43|✓|✓||[notes][Fedora-notes]|
-|Fedora-Atomic|43|✓|✓||[notes][Fedora-Atomic-notes]|
+|Fedora|44|✓|✓||[notes][Fedora-notes]|
+|Fedora-Atomic|44|✓|✓||[notes][Fedora-Atomic-notes]|
 |FoxFlake|Stable<br>Unstable|✓|✓||[notes][FoxFlake-notes]|
 |Gentoo|23/Openrc<br>23/Systemd|✓|✓|||
 |GLF-OS|Stable<br>Testing|✓|✓|||
@@ -104,7 +104,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |RockyLinux|10|✓||||
 |SteamOS|Main<br>Staging|✓ (shim-signed AUR)|✓|✓|[notes][SteamOS-notes]|
 |Tails|Stable|✓|||[notes][Tails-notes]|
-|Ubuntu|24.04<br>25.10|✓|✓|✓||
+|Ubuntu|24.04<br>26.04|✓|✓|✓||
 |Void|Current|||||
 |Zorin|18|✓|✓|✓||
 
