@@ -5469,7 +5469,7 @@ case "${environment}" in
 			echo -e '[daemon]\nAutomaticLoginEnable=True\nAutomaticLogin=${useraccount_name}\nDefaultSession=${default_session}' >> /etc/\${gdm_folder}/custom.conf
 		fi
 	;;
-	'Kinoite'|'Sway-Atomic')
+	'Budgie-Atomic'|'Kinoite'|'Sway-Atomic')
 		if [ "${useraccount_autologin}" == "Yes" ]; then
 			mkdir -p /etc/sddm.conf.d
 			echo -e '[Autologin]\nUser=${useraccount_name}\nSession=${default_session}' >> /etc/sddm.conf.d/zz_linuxloops.conf
@@ -11182,7 +11182,7 @@ if [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${d
 set -e
 pacman -S --noconfirm --needed nvidia-open-dkms libva-nvidia-driver
 INSTALLNVIDIA
-elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Proxmox" ]; then
+elif [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Proxmox" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
@@ -11223,6 +11223,12 @@ set -e
 echo -e 'x11-drivers/nvidia-drivers kernel-open' > /etc/portage/package.use/nvidia
 echo -e 'media-libs/nvidia-vaapi-driver ~amd64' > /etc/portage/package.accept_keywords/linuxloops
 emerge -uN x11-drivers/nvidia-drivers
+INSTALLNVIDIA
+elif [ "${distribution}" == "Kali" ]; then
+	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
+#!/bin/bash
+set -e
+DEBIAN_FRONTEND=noninteractive apt install --purge -y nvidia-driver nvidia-vaapi-driver
 INSTALLNVIDIA
 elif [ "${distribution}" == "NixOS" ]; then
 	nixos_nvidia="
@@ -11942,10 +11948,6 @@ build() {
 
 	cp "/boot/linuxloops/linuxloops" "\$BUILDROOT/linuxloops"
 
-	for i in \$(find /usr/lib/udev/rules.d/*-linuxloops.rules 2>/dev/null); do
-		cp "\${i}" "\$BUILDROOT\$i"
-	done
-
 	if ls /boot/vmlinuz-* >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ ! -z "\$(command -v sbsign)" ] && [ ! -z "\$(command -v sbverify)" ]; then
 		for i in /boot/vmlinuz-*; do
 			if ! sbverify --list \$i | grep -q 'CN=Linuxloops Machine Owner Key'; then
@@ -12046,10 +12048,6 @@ esac
 
 	cp "/boot/linuxloops/linuxloops" "\$DESTDIR/linuxloops"
 
-	for i in \$(find /usr/lib/udev/rules.d/*-linuxloops.rules 2>/dev/null); do
-		cp "\${i}" "\$DESTDIR\$i"
-	done
-
 	if ls /boot/vmlinuz-* >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ ! -z "\$(command -v sbsign)" ] && [ ! -z "\$(command -v sbverify)" ]; then
 		for i in /boot/vmlinuz-*; do
 			if ! sbverify --list \$i | grep -q 'CN=Linuxloops Machine Owner Key'; then
@@ -12134,10 +12132,6 @@ install() {
 	inst "\$(command -v setsid)" "/usr/sbin/setsid"
 
 	cp "/boot/linuxloops/linuxloops" "\${initdir}/linuxloops"
-	
-	for i in \$(find /usr/lib/udev/rules.d/*-linuxloops.rules 2>/dev/null); do
-		cp "\${i}" "\${initdir}\$i"
-	done
 
 	if ls /boot/vmlinuz-* >/dev/null 2>&1 && [ -f /etc/secureboot_key/MOK.key ] && [ -f /etc/secureboot_key/MOK.crt ] && [ ! -z "\$(command -v sbsign)" ] && [ ! -z "\$(command -v sbverify)" ]; then
 		for i in /boot/vmlinuz-*; do
@@ -12375,7 +12369,7 @@ pkgs.stdenv.mkDerivation rec {
   pname = "shim-signed";
   version = "15.8";
   src = pkgs.fetchurl {
-    url = "http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb";
+    url = "https://us.archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb";
     sha256 = "f8ed71ce2d91a304b6d5eb84997f846f331b554578bc02dbfe78e13ad8ac81a9";
   };
   unpackPhase = ''
@@ -12850,7 +12844,7 @@ chmod 0755 /boot/linuxloops/reinstall-bootloader
 # Due to a bug with certain shim binaries, use the Ubuntu shim for initial key registration.
 if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Gentoo" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Proxmox" ]; then
 	mkdir /tmp/ubuntu_shim
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f http://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://us.archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
 	(cd /tmp/ubuntu_shim && ar p shim.deb data.tar.xz | tar -xJ)
 	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
 	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
