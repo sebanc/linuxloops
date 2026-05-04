@@ -2402,7 +2402,7 @@ rc-update add lightdm default
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc artix-sddm-theme plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -2410,7 +2410,7 @@ rc-update add sddm default
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-openrc artix-sddm-theme plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ${desktop_services}
 rc-update add sddm default
 "
@@ -2675,14 +2675,14 @@ ln -s ${desktop_services} /etc/runit/sv/lightdm /etc/runit/runsvdir/default/
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit artix-sddm-theme plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-runit artix-sddm-theme plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} /etc/runit/sv/sddm /etc/runit/runsvdir/default/
 "
 	;;
@@ -2944,14 +2944,14 @@ touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 artix-sddm-theme plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 artix-sddm-theme plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
 "
 	;;
@@ -3214,14 +3214,14 @@ ln -s ${desktop_services} ../lightdm /etc/dinit.d/boot.d/
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit artix-sddm-theme plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
-pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit sddm-theme-artix plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
+pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-dinit artix-sddm-theme plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
 ln -s ${desktop_services} ../sddm /etc/dinit.d/boot.d/
 "
 	;;
@@ -10186,7 +10186,7 @@ apt update
 DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic dracut dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl thermald bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
 if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -10379,7 +10379,7 @@ INSTALL_DMCONFIG
 chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
 
 surface_remove="linux-generic-* linux-headers-* linux-image-* linux-modules-*"
-initramfs_type="initramfstools"
+initramfs_type="dracut"
 if [ ! -z "${custom_packages}" ]; then
 	if echo "${custom_packages}" | grep -wq 'i386\|steam\|wine'; then
 		if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
@@ -11192,7 +11192,12 @@ elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint"
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
+dpkg-divert --local --rename --add /bin/uname
+echo -e '#!/bin/bash\nif [ "\$1" == "-r" ]; then echo "\$(ls /lib/modules/ | head -1)"; else /bin/uname.distrib "\$@"; fi' > /bin/uname
+chmod 0755 /bin/uname
 DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-server' | grep '\-open' | tail -1 | grep -o -P '(nvidia-driver-).*-open' | cut -d' ' -f1 | cut -d '/' -f1) nvidia-vaapi-driver
+rm /bin/uname
+dpkg-divert --rename --remove /bin/uname
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
