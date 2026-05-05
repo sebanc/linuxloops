@@ -5142,13 +5142,13 @@ dnf install -y ${desktop_base} lightdm slick-greeter @cinnamon-desktop-environme
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 dnf install -y ${desktop_base} gdm gnome-shell network-manager-applet gnome-keyring gnome-keyring-pam gnome-backgrounds gnome-icon-theme nautilus gnome-terminal gnome-software xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 dnf install -y ${desktop_base} gdm @gnome-desktop network-manager-applet gnome-keyring gnome-keyring-pam xdg-desktop-portal-gnome
 "
@@ -5380,7 +5380,7 @@ case "${environment}" in
 	flatpaks="app/org.mozilla.firefox app/org.kde.elisa/x86_64/stable app/org.kde.gwenview/x86_64/stable app/org.kde.kcalc/x86_64/stable app/org.kde.kmahjongg/x86_64/stable app/org.kde.kmines/x86_64/stable app/org.kde.kolourpaint/x86_64/stable app/org.kde.krdc/x86_64/stable app/org.kde.okular/x86_64/stable app/org.kde.skanpage/x86_64/stable"
 	;;
 	'Silverblue')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	flatpaks="app/org.mozilla.firefox app/org.gnome.baobab/x86_64/stable app/org.gnome.Calculator/x86_64/stable app/org.gnome.Calendar/x86_64/stable app/org.gnome.Characters/x86_64/stable app/org.gnome.Snapshot/x86_64/stable app/org.gnome.clocks/x86_64/stable app/org.gnome.Connections/x86_64/stable app/org.gnome.Contacts/x86_64/stable app/org.gnome.Evince/x86_64/stable app/org.gnome.Extensions/x86_64/stable app/org.gnome.font-viewer/x86_64/stable app/org.gnome.TextEditor/x86_64/stable app/org.gnome.Loupe/x86_64/stable app/org.gnome.Logs/x86_64/stable app/org.gnome.Maps/x86_64/stable app/org.fedoraproject.MediaWriter/x86_64/stable app/org.gnome.NautilusPreviewer/x86_64/stable app/org.gnome.Weather/x86_64/stable"
 	;;
 	'Sway-Atomic')
@@ -12849,7 +12849,7 @@ chmod 0755 /boot/linuxloops/reinstall-bootloader
 # Due to a bug with certain shim binaries, use the Ubuntu shim for initial key registration.
 if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Devuan" ] || [ "${distribution}" == "Gentoo" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Proxmox" ]; then
 	mkdir /tmp/ubuntu_shim
-	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://us.archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb -o /tmp/ubuntu_shim/shim.deb
 	(cd /tmp/ubuntu_shim && ar p shim.deb data.tar.xz | tar -xJ)
 	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/BOOT/BOOTX64.EFI
 	cp /tmp/ubuntu_shim/usr/lib/shim/shimx64.efi.signed.latest /boot/efi/EFI/"${bootloader_id}"/shimx64.efi
