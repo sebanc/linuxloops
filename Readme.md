@@ -89,7 +89,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |FoxFlake|Stable<br>Unstable|✓|✓||[notes][FoxFlake-notes]|
 |Gentoo|23/Openrc<br>23/Systemd|✓|✓|||
 |GLF-OS|Stable<br>Testing|✓|✓|||
-|Kali|Rolling|disk images only||✓|[notes][Kali-notes]|
+|Kali|Rolling|disk images only|✓||[notes][Kali-notes]|
 |KDE|Rolling|✓ (shim-signed AUR)|✓|✓|[notes][KDE-notes]|
 |Linuxmint|Zena|✓|✓|✓||
 |LMDE|Gigi|✓|✓|✓||

@@ -382,7 +382,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'Fedora-Atomic')
-		available_environments=( "Silverblue" "Kinoite" "Sway-Atomic" "Budgie-Atomic" "Cosmic-Atomic" "Xfce-Atomic" )
+		available_environments=( "Silverblue" "Kinoite" "Sway-Atomic" "Budgie-Atomic" "Cosmic-Atomic" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc fedora 43 default"
@@ -423,7 +423,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'GLF-OS')
-		available_environments=( "Gnome/Mini" "Gnome/Standard" "Gnome/Studio" "Gnome/Studio-Pro" "Plasma/Mini" "Plasma/Standard" "Plasma/Studio" "Plasma/Studio-Pro" )
+		available_environments=( "Gnome/Mini" "Gnome/Standard" "Plasma/Mini" "Plasma/Standard" )
 		bootloader_id="glfos"
 		bootloader_name="shimx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -450,7 +450,7 @@ case "${distribution}" in
 		kali_version="${version}"
 		mirrors_supported=( "Kali" )
 		nvidia_supported="Yes"
-		surface_supported="Yes"
+		surface_supported="No"
 		;;
 	'KDE')
 		arch_version="Stable"
@@ -5387,10 +5387,6 @@ case "${environment}" in
 	default_session="sway"
 	flatpaks="app/org.mozilla.firefox"
 	;;
-	'Xfce-Atomic')
-	default_session="xfce"
-	flatpaks="app/org.mozilla.firefox"
-	;;
 esac
 
 cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
@@ -6768,14 +6764,14 @@ ln -sf cosmic-greeter.toml /etc/greetd/config.toml
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome-shell gnome-control-center network-manager-applet gnome-keyring gnome-software gnome-terminal gnome-backgrounds nautilus manjaro-gnome-settings xdg-desktop-portal-gnome
 systemctl enable gdm.service
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} gdm gnome gnome-extra manjaro-gnome-settings network-manager-applet gnome-keyring xdg-desktop-portal-gnome
 systemctl enable gdm.service
@@ -11136,7 +11132,7 @@ chmod 0755 "${bootstrapdir}"/install_scripts/install_secureboot
 generate_install_surface()
 {
 if [ ! "${surface}" == "Yes" ]; then return; fi
-if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Kali" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+if [ "${distribution}" == "Debian" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "LMDE" ] || [ "${distribution}" == "MX" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_surface <<SURFACEAPT
 #!/bin/bash
 set -e
@@ -12768,7 +12764,11 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi
 REINSTALLBOOTLOADER
 	elif [ "${distribution}" == "Arch" ] || [ "${distribution}" == "Artix" ] || [ "${distribution}" == "CachyOS" ] || [ "${distribution}" == "KDE" ] || [ "${distribution}" == "Manjaro" ] || [ "${distribution}" == "SteamOS" ]; then
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-pacman -Syu --noconfirm --needed git fakeroot
+if [ "${distribution}" == "Artix" ]; then
+	pacman -Syu --noconfirm --needed --ask 4 git fakeroot
+else
+	pacman -Syu --noconfirm --needed git fakeroot
+fi
 git clone --depth=1 -b shim-signed https://github.com/archlinux/aur.git /tmp/shim-signed
 chown -R nobody:nobody /tmp/shim-signed
 sudo -u nobody bin/bash -c "cd /tmp/shim-signed && makepkg -s"
