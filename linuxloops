@@ -12217,7 +12217,7 @@ ${autologin_commands}
   foxflake.system.flatpaks = [ ];                    # e.g.: [ "org.mozilla.firefox" ];
 
   # User configuration (including user packages and flatpaks)
-  foxflake.users.${useraccount_name}.extraGroups = [ "wheel" "networkmanager" ];
+  foxflake.users.${useraccount_name}.extraGroups = [ "wheel" ];
   foxflake.users.${useraccount_name}.packages = with pkgs; [ ];         # e.g.: with pkgs; [ vim ]
   foxflake.users.${useraccount_name}.flatpaks = [ ];                    # e.g.: [ "org.mozilla.firefox" ];
 
@@ -12368,7 +12368,7 @@ pkgs.stdenv.mkDerivation rec {
   pname = "shim-signed";
   version = "15.8";
   src = pkgs.fetchurl {
-    url = "https://us.archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb";
+    url = "https://archive.ubuntu.com/ubuntu/pool/main/s/shim-signed/shim-signed_1.59+15.8-0ubuntu2_amd64.deb";
     sha256 = "f8ed71ce2d91a304b6d5eb84997f846f331b554578bc02dbfe78e13ad8ac81a9";
   };
   unpackPhase = ''
