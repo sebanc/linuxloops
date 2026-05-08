@@ -10275,13 +10275,13 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm ubunt
 "
 	;;
 	'Ubuntu')
-	default_session="ubuntu-wayland"
+	default_session="ubuntu"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop-minimal network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus yaru-theme-gtk yaru-theme-icon yaru-theme-sound notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Ubuntu/Full')
-	default_session="ubuntu-wayland"
+	default_session="ubuntu"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 ubuntu-desktop network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
@@ -11793,11 +11793,11 @@ cat >>"${bootstrapdir}"/install_scripts/install_initramfs <<'INITSCRIPT'
 if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 	linuxloops_timeout=0
 	until false; do
-		if [ -b /dev/disk/by-partuuid/"$img_uuid" ] || [ $linuxloops_timeout == 10 ]; then break; fi
+		if [ -b /dev/disk/by-partuuid/"$img_uuid" ] || [ $linuxloops_timeout -eq 10 ]; then break; fi
 		linuxloops_timeout=$(( $linuxloops_timeout + 1 ))
 		sleep 1
 	done
-	if [ $linuxloops_timeout == 10 ]; then echo "linuxloops: Boot partition was not found." > /dev/kmsg; recovery_shell; fi
+	if [ $linuxloops_timeout -eq 10 ]; then echo "linuxloops: Boot partition was not found." > /dev/kmsg; recovery_shell; fi
 	mkdir /linuxloops_root || { echo "linuxloops: Root directory cannot be created." > /dev/kmsg; recovery_shell; }
 	if [ ! -z "$linuxloops_debug" ]; then recovery_shell; fi
 
@@ -11867,12 +11867,10 @@ fi
 
 echo "linuxloops: boot sequence finished." > /dev/kmsg
 
-umount /run
-umount /sys
-umount /proc
+umount /run > /dev/null 2>&1 || umount -l /run > /dev/null 2>&1 || echo "linuxloops: /run was not properly unmounted" > /dev/kmsg
+umount /sys > /dev/null 2>&1 || umount -l /sys > /dev/null 2>&1 || echo "linuxloops: /sys was not properly unmounted" > /dev/kmsg
+umount /proc > /dev/null 2>&1 || umount -l /proc > /dev/null 2>&1 || echo "linuxloops: /proc was not properly unmounted" > /dev/kmsg
 umount /dev > /dev/null 2>&1 || umount -l /dev > /dev/null 2>&1 || echo "linuxloops: /dev was not properly unmounted" > /dev/kmsg
-
-#sh
 
 exec "$linuxloops_init"
 INITSCRIPT
@@ -13578,6 +13576,7 @@ img_path=$(if [ "$(findmnt -n -o FSTYPE $(findmnt -n -o TARGET -T ${fullpath}))"
 if [ -z "${wsl}" ] && ([ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "debian" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "ubuntu" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "linuxmint" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "fedora" ] || [ "$(grep -o '^ID=[^,]\+' /etc/os-release | cut -d'=' -f2)" == "zorin" ]); then remove_tpm="\n	rmmod tpm"; fi
 if [ "${distribution}" == "BlissOS" ]; then
 config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
+	unset theme
 	insmod regexp
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
@@ -13591,6 +13590,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 elif [ "${distribution}" == "Brunch" ]; then
 config="submenu '${distribution}' {
 menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
+	unset theme
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
 	search --no-floppy --set=root --file \${img_path}
@@ -13607,6 +13607,7 @@ menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:low
 	initrd (loop,7)/lib/firmware/amd-ucode.img (loop,7)/lib/firmware/intel-ucode.img (loop,7)/initramfs.img
 }
 menuentry '${distribution} settings' --class '$(echo ${distribution} | tr [:upper:] [:lower:])-settings' {${remove_tpm}
+	unset theme
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
 	search --no-floppy --set=root --file \${img_path}
@@ -13620,6 +13621,7 @@ menuentry '${distribution} settings' --class '$(echo ${distribution} | tr [:uppe
 "
 elif [ "${distribution}" == "ChromeOS-Flex" ]; then
 config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
+	unset theme
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
 	search --no-floppy --set=root --file \${img_path}
@@ -13631,6 +13633,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 "
 elif [ "${distribution}" == "FoxFlake" ] || [ "${distribution}" == "GLF-OS" ] || [ "${distribution}" == "NixOS" ]; then
 config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
+	unset theme
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
 	search --no-floppy --set=root --file \"\${img_path}\"
@@ -13642,6 +13645,7 @@ config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper
 "
 elif [ "${distribution}" == "Tails" ]; then
 config="menuentry '${distribution}' --class '$(echo ${distribution} | tr [:upper:] [:lower:])' {${remove_tpm}
+	unset theme
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
 	search --no-floppy --set=root --file \"\${img_path}\"
@@ -13660,6 +13664,7 @@ else
 	class="$(echo ${distribution} | tr [:upper:] [:lower:])"
 fi
 config="menuentry '${label}' --class '${class}' {${remove_tpm}
+	unset theme
 	img_path=\"${img_path}\"
 	img_uuid=\"${img_uuid}\"
 	search --no-floppy --set=root --file \"\${img_path}\"
