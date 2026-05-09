@@ -2283,7 +2283,7 @@ if [ ! -z "${mirror_Arch}" ]; then
 else
 	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
 
@@ -2291,11 +2291,15 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/pacman.git /tmp/artix/pacman
+cp /tmp/artix/pacman/pacman.conf /etc/pacman.conf
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/artix-mirrorlist.git /tmp/artix/artix-mirrorlist
+cp /tmp/artix/artix-mirrorlist/mirrorlist /etc/pacman.d/mirrorlist
+git clone -b master --depth 1 https://gitea.artixlinux.org/artix/artix-keyring.git /tmp/artix/artix-keyring
+cp /tmp/artix/artix-keyring/artix.gpg /usr/share/pacman/keyrings/artix.gpg
+cp /tmp/artix/artix-keyring/artix-trusted /usr/share/pacman/keyrings/artix-trusted
+cp /tmp/artix/artix-keyring/artix-revoked /usr/share/pacman/keyrings/artix-revoked
+rm -rf /tmp/artix
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2573,11 +2577,15 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/pacman.git /tmp/artix/pacman
+cp /tmp/artix/pacman/pacman.conf /etc/pacman.conf
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/artix-mirrorlist.git /tmp/artix/artix-mirrorlist
+cp /tmp/artix/artix-mirrorlist/mirrorlist /etc/pacman.d/mirrorlist
+git clone -b master --depth 1 https://gitea.artixlinux.org/artix/artix-keyring.git /tmp/artix/artix-keyring
+cp /tmp/artix/artix-keyring/artix.gpg /usr/share/pacman/keyrings/artix.gpg
+cp /tmp/artix/artix-keyring/artix-trusted /usr/share/pacman/keyrings/artix-trusted
+cp /tmp/artix/artix-keyring/artix-revoked /usr/share/pacman/keyrings/artix-revoked
+rm -rf /tmp/artix
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2840,11 +2848,15 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/pacman.git /tmp/artix/pacman
+cp /tmp/artix/pacman/pacman.conf /etc/pacman.conf
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/artix-mirrorlist.git /tmp/artix/artix-mirrorlist
+cp /tmp/artix/artix-mirrorlist/mirrorlist /etc/pacman.d/mirrorlist
+git clone -b master --depth 1 https://gitea.artixlinux.org/artix/artix-keyring.git /tmp/artix/artix-keyring
+cp /tmp/artix/artix-keyring/artix.gpg /usr/share/pacman/keyrings/artix.gpg
+cp /tmp/artix/artix-keyring/artix-trusted /usr/share/pacman/keyrings/artix-trusted
+cp /tmp/artix/artix-keyring/artix-revoked /usr/share/pacman/keyrings/artix-revoked
+rm -rf /tmp/artix
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -3108,11 +3120,15 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
-curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
-curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/pacman.git /tmp/artix/pacman
+cp /tmp/artix/pacman/pacman.conf /etc/pacman.conf
+git clone -b master --depth 1 https://gitea.artixlinux.org/packages/artix-mirrorlist.git /tmp/artix/artix-mirrorlist
+cp /tmp/artix/artix-mirrorlist/mirrorlist /etc/pacman.d/mirrorlist
+git clone -b master --depth 1 https://gitea.artixlinux.org/artix/artix-keyring.git /tmp/artix/artix-keyring
+cp /tmp/artix/artix-keyring/artix.gpg /usr/share/pacman/keyrings/artix.gpg
+cp /tmp/artix/artix-keyring/artix-trusted /usr/share/pacman/keyrings/artix-trusted
+cp /tmp/artix/artix-keyring/artix-revoked /usr/share/pacman/keyrings/artix-revoked
+rm -rf /tmp/artix
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
