@@ -2291,13 +2291,11 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-pacman -Rdd --noconfirm pacman-mirrorlist
-echo '' > /etc/pacman.d/mirrorlist
-sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
-sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
+curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
+curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2575,13 +2573,11 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-pacman -Rdd --noconfirm pacman-mirrorlist
-echo '' > /etc/pacman.d/mirrorlist
-sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
-sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
+curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
+curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -2844,13 +2840,11 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-pacman -Rdd --noconfirm pacman-mirrorlist
-echo '' > /etc/pacman.d/mirrorlist
-sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
-sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
+curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
+curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
@@ -3114,13 +3108,11 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 cp /etc/pacman.d/mirrorlist /etc/pacman.d/mirrorlist-arch
-pacman -Rdd --noconfirm pacman-mirrorlist
-echo '' > /etc/pacman.d/mirrorlist
-sed -i 's@SigLevel    = Required DatabaseOptional@SigLevel    = Never@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-keyring-' | tail -1 | cut -d '"' -f2)
-sed -i 's@SigLevel    = Never@SigLevel    = Required DatabaseOptional@g' /etc/pacman.conf
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'artix-mirrorlist-' | tail -1 | cut -d '"' -f2)
-pacman -U --noconfirm https://mirror1.artixlinux.org/repos/system/os/x86_64/\$(curl -l https://mirror1.artixlinux.org/repos/system/os/x86_64/ | grep -v '.zst.sig' | grep 'pacman-' | tail -1 | cut -d '"' -f2)
+curl -L https://gitea.artixlinux.org/packages/pacman/raw/branch/master/pacman.conf -o /etc/pacman.conf
+curl -L https://gitea.artixlinux.org/packages/artix-mirrorlist/raw/branch/master/mirrorlist -o /etc/pacman.d/mirrorlist
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix.gpg -o /usr/share/pacman/keyrings/artix.gpg
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-trusted -o /usr/share/pacman/keyrings/artix-trusted
+curl -L https://gitea.artixlinux.org/artix/artix-keyring/raw/branch/master/artix-revoked -o /usr/share/pacman/keyrings/artix-revoked
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 sed -i 's@^Server@#Server@g' /etc/pacman.d/mirrorlist
 if [ ! -z "${mirror_Artix}" ]; then
