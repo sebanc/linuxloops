@@ -2347,7 +2347,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/install_scripts/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-openrc cups cups-openrc ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput xf86-input-wacom"
 desktop_services="
 rc-update add avahi-daemon default
 rc-update add cupsd default
@@ -2631,7 +2631,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/install_scripts/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-runit cups cups-runit ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput xf86-input-wacom"
 desktop_services="/etc/runit/sv/avahi-daemon /etc/runit/sv/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -2902,7 +2902,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/install_scripts/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput xf86-input-wacom"
 desktop_services="/etc/s6/adminsv/default/contents.d/avahi-daemon /etc/s6/adminsv/default/contents.d/cupsd"
 case "${environment}" in
 	'Budgie')
@@ -3174,7 +3174,7 @@ NETWORKMANAGER
 INSTALL_USER
 chmod 0755 "${bootstrapdir}"/install_scripts/install_user
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-dinit cups cups-dinit ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput xf86-input-wacom"
 desktop_services="../avahi-daemon ../cupsd"
 case "${environment}" in
 	'Budgie')
