@@ -2877,6 +2877,8 @@ pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+mkdir -p /etc/s6/adminsv/default/contents.d
+echo "bundle" > /etc/s6/adminsv/default/type
 touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
