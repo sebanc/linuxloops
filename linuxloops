@@ -543,7 +543,7 @@ case "${distribution}" in
 		surface_supported="No"
 		;;
 	'OpenSUSE')
-		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
+		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
 		bootloader_name="shim.efi"
 		btrfs_supported="Yes"
@@ -2319,7 +2319,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
 rc-update add NetworkManager default
@@ -2605,7 +2605,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -2876,10 +2876,8 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
-mkdir -p /etc/s6/adminsv/default/contents.d
-echo "bundle" > /etc/s6/adminsv/default/type
-touch /etc/s6/adminsv/default/contents.d/cryptsetup /etc/s6/adminsv/default/contents.d/bluetoothd /etc/s6/adminsv/default/contents.d/NetworkManager
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
+s6 set enable tmpfiles-setup sysusers swap remount-root random-seed mount-filesystems locale console-setup cleanup elogind dbus-srv dbus-log cryptsetup bluetoothd NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
@@ -2905,76 +2903,76 @@ INSTALL_USER
 chmod 0755 "${bootstrapdir}"/install_scripts/install_user
 
 desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf artix-backgrounds artix-dark-theme artix-desktop-presets artix-gtk-presets artix-icons artix-qt-presets at-spi2-core avahi avahi-s6 cups cups-s6 ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pamac pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse sof-firmware system-config-printer ttf-dejavu ttf-roboto ttf-roboto-mono udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput xf86-input-wacom"
-desktop_services="/etc/s6/adminsv/default/contents.d/avahi-daemon /etc/s6/adminsv/default/contents.d/cupsd"
+desktop_services="avahi-daemon cupsd"
 case "${environment}" in
 	'Budgie')
 	default_session="budgie-desktop"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring papirus-icon-theme xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal network-manager-applet gnome-keyring blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal mate-extra network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 artix-sddm-theme plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
+s6 set enable sddm
 "
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 artix-sddm-theme plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/sddm
+s6 set enable sddm
 "
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
-touch ${desktop_services} /etc/s6/adminsv/default/contents.d/lightdm
+s6 set enable lightdm
 "
 	;;
 esac
@@ -2983,7 +2981,9 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
-s6-db-reload
+s6 set enable ${desktop_services}
+s6 set commit -f
+s6 live install --init
 mkdir -p /usr/share/glib-2.0/schemas
 cat >/usr/share/glib-2.0/schemas/zz_linuxloops.gschema.override <<'DCONF'
 [org.gnome.desktop.background:Budgie]
@@ -3150,7 +3150,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -7974,19 +7974,6 @@ chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
 desktop_base="adobe-sourcecodepro-fonts alsa-utils alsa-firmware at-spi2-core avahi cantarell-fonts cups cups-filters dejavu-fonts ffmpeg google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver Mesa-libva nss-mdns patterns-base-x11 pipewire pipewire-pulseaudio plymouth-branding-openSUSE plymouth-dracut sof-firmware system-config-printer udisks2 wallpaper-branding-openSUSE wireplumber xdg-user-dirs-gtk"
 case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Budgie/Full')
-	default_session="budgie-desktop"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
@@ -8205,19 +8192,6 @@ chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
 desktop_base="adobe-sourcecodepro-fonts alsa-utils alsa-firmware at-spi2-core avahi cantarell-fonts cups cups-filters dejavu-fonts ffmpeg google-roboto-fonts gvfs-fuse iio-sensor-proxy intel-media-driver Mesa-libva nss-mdns patterns-base-x11 pipewire pipewire-pulseaudio plymouth-branding-openSUSE plymouth-dracut sof-firmware system-config-printer udisks2 wallpaper-branding-openSUSE wireplumber xdg-user-dirs-gtk"
 case "${environment}" in
-	'Budgie')
-	default_session="budgie-desktop"
-	install_desktop="
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
-	'Budgie/Full')
-	default_session="budgie-desktop"
-	install_desktop="
-sed -i 's@solver.onlyRequires = true@# solver.onlyRequires = false@g' /etc/zypp/zypp.conf
-zypper --non-interactive install ${desktop_base} lightdm lightdm-slick-greeter-branding-openSUSE patterns-budgie-budgie mate-polkit gnome-terminal nemo NetworkManager-applet gnome-keyring gnome-keyring-pam papirus-icon-theme xdg-desktop-portal-gtk
-"
-	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
