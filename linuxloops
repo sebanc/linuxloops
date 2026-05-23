@@ -6707,14 +6707,15 @@ if [ ! -z "${mirror_Arch}" ]; then
 else
 	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip jq lsof nano openssl sudo strace tar util-linux xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
 
 cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
+git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/pacman.git /tmp/manjaro/pacman
+cp /tmp/manjaro/pacman/pacman.conf /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
@@ -6724,9 +6725,11 @@ else
 	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
+git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/manjaro-keyring.git /tmp/manjaro/manjaro-keyring
+cp /tmp/manjaro/manjaro-keyring/manjaro.gpg /usr/share/pacman/keyrings/manjaro.gpg
+cp /tmp/manjaro/manjaro-keyring/manjaro-trusted /usr/share/pacman/keyrings/manjaro-trusted
+cp /tmp/manjaro/manjaro-keyring/manjaro-revoked /usr/share/pacman/keyrings/manjaro-revoked
+rm -rf /tmp/manjaro
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
 curl -L https://repo.manjaro.org/mirrors.json | jq -r '.[] | ("## Country : " + .country + "\n#Server = " + .url + "$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch\n")' > /mnt/etc/pacman.d/mirrorlist
@@ -6949,14 +6952,15 @@ if [ ! -z "${mirror_Arch}" ]; then
 else
 	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip jq lsof nano openssl sudo strace tar util-linux xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
 
 cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://gitlab.manjaro.org/packages/core/pacman/-/raw/master/pacman.conf?inline=false -o /etc/pacman_manjaro.conf
+git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/pacman.git /tmp/manjaro/pacman
+cp /tmp/manjaro/pacman/pacman.conf /etc/pacman_manjaro.conf
 sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
@@ -6966,9 +6970,11 @@ else
 	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro.gpg?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro.gpg
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-trusted?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-trusted
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f 'https://gitlab.manjaro.org/packages/core/manjaro-keyring/-/raw/master/manjaro-revoked?ref_type=heads&inline=false' -o /usr/share/pacman/keyrings/manjaro-revoked
+git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/manjaro-keyring.git /tmp/manjaro/manjaro-keyring
+cp /tmp/manjaro/manjaro-keyring/manjaro.gpg /usr/share/pacman/keyrings/manjaro.gpg
+cp /tmp/manjaro/manjaro-keyring/manjaro-trusted /usr/share/pacman/keyrings/manjaro-trusted
+cp /tmp/manjaro/manjaro-keyring/manjaro-revoked /usr/share/pacman/keyrings/manjaro-revoked
+rm -rf /tmp/manjaro
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
 curl -L https://repo.manjaro.org/mirrors.json | jq -r '.[] | ("## Country : " + .country + "\n#Server = " + .url + "$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch\n")' > /mnt/etc/pacman.d/mirrorlist
@@ -10200,13 +10206,13 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome-session gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal gnome-icon-theme nautilus notification-daemon update-manager xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 gnome gnome-control-center network-manager-gnome gnome-keyring libpam-gnome-keyring gnome-backgrounds gnome-screensaver gnome-terminal nautilus notification-daemon update-manager xdg-desktop-portal-gnome
