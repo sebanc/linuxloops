@@ -1795,7 +1795,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g ntfsprogs nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -2048,7 +2048,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g ntfsprogs nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -2319,7 +2319,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g nano acpid acpid-openrc curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-openrc wpa_supplicant bluez bluez-openrc cryptsetup cryptsetup-openrc e2fsprogs ntfs-3g ntfsprogs nano acpid acpid-openrc curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
 rc-update add dmcrypt boot
 rc-update add bluetoothd default
 rc-update add NetworkManager default
@@ -2605,7 +2605,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfs-3g nano acpid acpid-runit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-runit wpa_supplicant bluez bluez-runit cryptsetup cryptsetup-runit e2fsprogs ntfsprogs ntfs-3g nano acpid acpid-runit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
 ln -s /etc/runit/sv/cryptsetup /etc/runit/sv/bluetoothd /etc/runit/sv/NetworkManager /etc/runit/runsvdir/default/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -2876,7 +2876,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g nano acpid acpid-s6 curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g ntfsprogs nano acpid acpid-s6 curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
 s6 set enable tmpfiles-setup sysusers swap remount-root random-seed mount-filesystems locale console-setup cleanup elogind dbus-srv dbus-log cryptsetup bluetoothd NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -3150,7 +3150,7 @@ set -e
 pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g nano acpid acpid-dinit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-dinit wpa_supplicant bluez bluez-dinit cryptsetup cryptsetup-dinit e2fsprogs ntfs-3g ntfsprogs nano acpid acpid-dinit curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
 ln -s ../cryptsetup ../bluetoothd ../NetworkManager /etc/dinit.d/boot.d/
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -3544,7 +3544,7 @@ if [ ! -z "${mirror_Arch}" ]; then
 else
 	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g ntfsprogs openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
 
@@ -3876,7 +3876,7 @@ cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-cachyos linux-cachyos-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux-cachyos linux-cachyos-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g ntfsprogs nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -4111,7 +4111,7 @@ if [ ! -z "${mirror_Arch}" ]; then
 else
 	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g openssl sbsigntools sudo strace tar util-linux unzip xz zstd
+pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g ntfsprogs openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
 
@@ -6746,7 +6746,7 @@ cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g ntfsprogs nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -6991,7 +6991,7 @@ cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux-meta linux-headers-meta mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g ntfsprogs nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -9135,7 +9135,7 @@ cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 set -e
 pacman-key --init
 pacman-key --populate
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g ntfsprogs nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -9920,7 +9920,6 @@ echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > 
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
 sed -i 's@Prompt=normal@Prompt=lts@g' /etc/update-manager/release-upgrades
-if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
@@ -10059,9 +10058,14 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 if [ "${systemd_init}" == "Yes" ]; then
-	snap set system experimental.user-daemons=true
-	snap install snap-store
-	snap set system experimental.user-daemons=false
+	systemctl daemon-reload
+	systemctl start snapd
+	snap wait system seed.loaded
+	for attempt in {1..50}; do
+		if snap install snap-store; then break; fi
+		if snap list | grep -q 'snap-store'; then snap remove --purge snap-store; fi
+		if [ \${attempt} -eq 50 ]; then echo "Failed to install snap-store."; exit 1; fi
+	done
 fi
 if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
@@ -10173,7 +10177,6 @@ DEBIAN_FRONTEND=noninteractive apt dist-upgrade -y
 echo -e 'APT::Install-Recommends "0";\nAPT::Get::Install-Recommends "false";' > /etc/apt/apt.conf.d/99linuxloops
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic dracut dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez systemd-cryptsetup cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
-if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
@@ -10312,9 +10315,14 @@ set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
 if [ "${systemd_init}" == "Yes" ]; then
-	snap set system experimental.user-daemons=true
-	snap install snap-store
-	snap set system experimental.user-daemons=false
+	systemctl daemon-reload
+	systemctl start snapd
+	snap wait system seed.loaded
+	for attempt in {1..50}; do
+		if snap install snap-store; then break; fi
+		if snap list | grep -q 'snap-store'; then snap remove --purge snap-store; fi
+		if [ \${attempt} -eq 50 ]; then echo "Failed to install snap-store."; exit 1; fi
+	done
 fi
 if [ -f /etc/default/apport ]; then sed -i 's@enabled=1@enabled=0@g' /etc/default/apport; fi
 update-alternatives --set default.plymouth /usr/share/plymouth/themes/spinner/spinner.plymouth
@@ -10636,7 +10644,6 @@ DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
-if [ "${systemd_init}" == "Yes" ]; then systemctl start snapd; fi
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
@@ -10679,6 +10686,11 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
+if [ "${systemd_init}" == "Yes" ]; then
+	systemctl daemon-reload
+	systemctl start snapd
+	snap wait system seed.loaded
+fi
 INSTALL_DESKTOP
 chmod 0755 "${bootstrapdir}"/install_scripts/install_desktop
 
@@ -10950,7 +10962,6 @@ mkdir -p /mnt/tmp/linuxloops
 mount --bind /install_scripts /mnt/tmp/linuxloops
 mount --make-slave /mnt/tmp/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
-	if [ -d /mnt/sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /mnt/sys/module/apparmor; fi
 	if [ "\$(tty)" == "not a tty" ]; then
 		mount --bind /dev/null /mnt/dev/console
 	else
@@ -10958,19 +10969,18 @@ if [ "${systemd_init}" == "Yes" ]; then
 	fi
 	mount --make-slave /mnt/dev/console
 	touch /tmp/pid_ns
-	unshare --mount --pid=/tmp/pid_ns --root=/mnt --fork --mount-proc /lib/systemd/systemd --unit=basic.target &
+	unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt /lib/systemd/systemd --unit=basic.target &
 	sleep 30
-	echo \$(lsns -t pid | grep "\$(stat -c %i /tmp/pid_ns)" | awk '{print \$4}') > /tmp/systemd_pid
-	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /lib/systemd/systemd-udevd --daemon
+	echo "nsenter --pid=/tmp/pid_ns"
+	nsenter --pid=/tmp/pid_ns mount -t proc none /mnt/proc
+	nsenter --pid=/tmp/pid_ns chroot /mnt /lib/systemd/systemd-udevd --daemon
 	if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /bin /mnt/bin"
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /snap /mnt/snap"
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "mkdir -p /mnt/usr/lib"
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "ln -s /usr/lib/snapd /mnt/usr/lib/snapd"
+		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
+		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
+		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "ln -s /bin /mnt/bin"
+		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "ln -s /usr /mnt/usr"
 	fi
-	chroot_cmd="nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt"
+	chroot_cmd="nsenter --pid=/tmp/pid_ns chroot /mnt"
 else
 	mount -t proc none /mnt/proc
 	chroot_cmd="chroot /mnt"
@@ -11001,7 +11011,7 @@ if [ -f /mnt/tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linux
 if [ -f /mnt/tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /mnt/tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
 if [ "${systemd_init}" == "Yes" ]; then
-	rm -rf /mnt/mnt/bin /mnt/mnt/snap /mnt/mnt/usr
+	rm -f /mnt/mnt/bin /mnt/mnt/usr
 	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
@@ -11177,12 +11187,12 @@ elif [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint"
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
 #!/bin/bash
 set -e
-dpkg-divert --local --rename --add /bin/uname
-echo -e '#!/bin/bash\nif [ "\$1" == "-r" ]; then echo "\$(ls /lib/modules/ | head -1)"; else /bin/uname.distrib "\$@"; fi' > /bin/uname
+dpkg-divert --rename --local --add /bin/uname
+echo -e '#!/bin/bash\nif [ "\$1" == "-r" ]; then echo "\$(ls /lib/modules/ | head -1)"; exit 0; else exec /bin/uname.distrib "\$@"; fi' > /bin/uname
 chmod 0755 /bin/uname
 DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(apt search nvidia | grep nvidia-driver | grep -v '\-bin' | grep -v '\-server' | grep '\-open' | tail -1 | grep -o -P '(nvidia-driver-).*-open' | cut -d' ' -f1 | cut -d '/' -f1) nvidia-vaapi-driver
 rm /bin/uname
-dpkg-divert --rename --remove /bin/uname
+dpkg-divert --rename --local --remove /bin/uname
 INSTALLNVIDIA
 elif [ "${distribution}" == "Fedora" ]; then
 	cat >"${bootstrapdir}"/install_scripts/install_nvidia <<INSTALLNVIDIA
@@ -11792,7 +11802,9 @@ if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 
 	fstype=$(blkid -s TYPE -o value /dev/disk/by-partuuid/"$img_uuid")
 	if [ "$fstype" = "ntfs" ]; then
-		ntfs-3g /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
+		ntfsfix -d /dev/disk/by-partuuid/"$img_uuid" >/ntfsfix.log 2>&1 || { echo "linuxloops: failed to cleanup ntfs partition." > /dev/kmsg; recovery_shell; }
+		modprobe ntfs3 || { echo "linuxloops: ntfs3 module is not available." > /dev/kmsg; recovery_shell; }
+		mount -n -t ntfs3 /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
 	elif [ "$fstype" = "btrfs" ]; then
 		mount -n -t "$fstype" /dev/disk/by-partuuid/"$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
 		if [ ! -f /linuxloops_root/"$img_path" ]; then
@@ -11804,7 +11816,7 @@ if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 	fi
 
 	if [ -f /linuxloops_root/"$img_path" ]; then
-		modprobe loop || { echo "linuxloops: Loop module is not available." > /dev/kmsg; recovery_shell; }
+		modprobe loop || { echo "linuxloops: loop module is not available." > /dev/kmsg; recovery_shell; }
 		if [ ! -b /dev/loop0 ]; then mknod -m 660 /dev/loop0 b 7 0 || { echo "linuxloops: The loop device could not be created." > /dev/kmsg; recovery_shell; }; fi
 		losetup --direct-io=off -P /dev/loop0 /linuxloops_root"$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
 		#losetup -P /dev/loop0 /linuxloops_root"$img_path" || { echo "linuxloops: The loop device could not be configured." > /dev/kmsg; recovery_shell; }
@@ -11908,6 +11920,7 @@ build() {
 	add_module "intel_lpss"
 	add_module "intel_lpss_pci"
 	add_module "loop"
+	add_module "ntfs3"
 	add_module "nvme"
 	add_module "quota_v1"
 	add_module "quota_v2"
@@ -11930,6 +11943,7 @@ build() {
 	add_binary "losetup"
 	add_binary "lsblk"
 	add_binary "ntfs-3g"
+	add_binary "ntfsfix"
 	add_binary "ps"
 	add_binary "setfont"
 	add_binary "setsid"
@@ -12008,6 +12022,7 @@ esac
 	manual_add_modules "intel_lpss"
 	manual_add_modules "intel_lpss_pci"
 	manual_add_modules "loop"
+	manual_add_modules "ntfs3"
 	manual_add_modules "nvme"
 	manual_add_modules "quota_v1"
 	manual_add_modules "quota_v2"
@@ -12030,6 +12045,7 @@ esac
 	copy_exec "\$(command -v losetup)"
 	copy_exec "\$(command -v lsblk)"
 	copy_exec "\$(command -v ntfs-3g)"
+	copy_exec "\$(command -v ntfsfix)"
 	copy_exec "\$(command -v ps)"
 	copy_exec "\$(command -v setfont)"
 	copy_exec "\$(command -v setsid)"
@@ -12091,6 +12107,7 @@ installkernel() {
 	instmods "intel_lpss"
 	instmods "intel_lpss_pci"
 	instmods "loop"
+	instmods "ntfs3"
 	instmods "nvme"
 	instmods "quota_v1"
 	instmods "quota_v2"
@@ -12114,7 +12131,8 @@ install() {
 	inst "\$(command -v grep)" "/usr/sbin/grep"
 	inst "\$(command -v losetup)" "/usr/sbin/losetup"
 	inst "\$(command -v lsblk)" "/usr/sbin/lsblk"
-	inst "\$(command -v ntfs-3g)" "/usr/sbin/ntfs-3g"
+	inst "\$(command -v ntfs-3g)" "/usr/bin/ntfs-3g"
+	inst "\$(command -v ntfsfix)" "/usr/bin/ntfsfix"
 	inst "\$(command -v ps)" "/usr/bin/ps"
 	inst "\$(command -v setfont)" "/usr/bin/setfont"
 	inst "\$(command -v setsid)" "/usr/sbin/setsid"
@@ -12433,7 +12451,7 @@ boot.loader.grub.timeoutStyle = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}"
 boot.loader.grub.useOSProber = false;
 boot.loader.timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo 2; else echo 5; fi);
 
-boot.initrd.availableKernelModules = [ "8250_dw" "aes" "atkbd" "btrfs" "cbc" "dm-crypt" "exfat" "ext4" "fuse" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "nvme" "quota_v1" "quota_v2" "serio" "sha256" "usbhid" "xhci_pci" ];
+boot.initrd.availableKernelModules = [ "8250_dw" "aes" "atkbd" "btrfs" "cbc" "dm-crypt" "exfat" "ext4" "fuse" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "ntfs3" "nvme" "quota_v1" "quota_v2" "serio" "sha256" "usbhid" "xhci_pci" ];
 boot.initrd.compressor="gzip";
 boot.initrd.systemd.enable = true;
 boot.initrd.systemd.initrdBin = with pkgs; [ bash coreutils cryptsetup e2fsprogs findutils gnugrep gnused kbd ntfs3g procps util-linux ];
@@ -12472,7 +12490,9 @@ if [ ! -z "\\\$img_uuid" ] && [ ! -z "\\\$img_path" ]; then
 
 	fstype=\\\$(blkid -s TYPE -o value /dev/disk/by-partuuid/"\\\$img_uuid")
 	if [ "\\\$fstype" = "ntfs" ]; then
-		ntfs-3g /dev/disk/by-partuuid/"\\\$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
+		ntfsfix -d /dev/disk/by-partuuid/"\\\$img_uuid" >/ntfsfix.log 2>&1 || { echo "linuxloops: failed to cleanup ntfs partition." > /dev/kmsg; recovery_shell; }
+		modprobe ntfs3 || { echo "linuxloops: ntfs3 module is not available." > /dev/kmsg; recovery_shell; }
+		mount -n -t ntfs3 /dev/disk/by-partuuid/"\\\$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
 	elif [ "\\\$fstype" = "btrfs" ]; then
 		mount -n -t "\\\$fstype" /dev/disk/by-partuuid/"\\\$img_uuid" /linuxloops_root || { echo "linuxloops: The boot partition could not be mounted." > /dev/kmsg; recovery_shell; }
 		if [ ! -f /linuxloops_root/"\\\$img_path" ]; then
@@ -12957,9 +12977,9 @@ generate_cleanup()
 cat >"${bootstrapdir}"/install_scripts/cleanup <<CLEANUP
 #!/bin/bash
 set -e
-rm -rf /var/cache/man
 if [ ! -z "\$(command -v apt)" ]; then
 	if [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(check-language-support -l ${packages_locale}); fi
+	echo "man-db man-db/auto-update boolean true" | debconf-set-selections
 	rm -f /etc/apt/apt.conf.d/99linuxloops
 	DEBIAN_FRONTEND=noninteractive apt autoremove -y
 elif [ ! -z "\$(command -v dnf)" ]; then
@@ -13033,8 +13053,8 @@ NIXOSCHROOT
 NIXOSSETPW
 rm -rf /mnt/tmp/*
 elif [ "${systemd_init}" == "Yes" ]; then
-	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /tmp/linuxloops/set_userpw
-	if [ -f /install_scripts/selinux_fix ]; then nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /tmp/linuxloops/selinux_fix; fi
+	nsenter --pid=/tmp/pid_ns chroot /mnt /tmp/linuxloops/set_userpw
+	if [ -f /install_scripts/selinux_fix ]; then nsenter --pid=/tmp/pid_ns chroot /mnt /tmp/linuxloops/selinux_fix; fi
 else
 	chroot /mnt /tmp/linuxloops/set_userpw
 	if [ -f /install_scripts/selinux_fix ]; then chroot /mnt /tmp/linuxloops/selinux_fix; fi
@@ -13436,6 +13456,7 @@ set -e
 mount --bind "${bootstrapdir}" "${bootstrapdir}"
 mount --make-slave "${bootstrapdir}"
 mount -t proc none "${bootstrapdir}"/proc
+mount --make-slave "${bootstrapdir}"/proc
 mount -t sysfs -o ro none "${bootstrapdir}"/sys
 mount --make-slave "${bootstrapdir}"/sys
 if mountpoint -q /sys/firmware/efi/efivars; then
@@ -13447,8 +13468,11 @@ mount --make-slave "${bootstrapdir}"/dev
 mount --bind /dev/pts "${bootstrapdir}"/dev/pts
 mount --make-slave "${bootstrapdir}"/dev/pts
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/dev/shm
+mount --make-slave "${bootstrapdir}"/dev/shm
 mount -t tmpfs none "${bootstrapdir}"/run
+mount --make-slave "${bootstrapdir}"/run
 mount -t tmpfs -o mode=1777 none "${bootstrapdir}"/tmp
+mount --make-slave "${bootstrapdir}"/tmp
 mkdir -p "${bootstrapdir}"/old
 cd "${bootstrapdir}"
 pivot_root "${bootstrapdir}" "${bootstrapdir}"/old
