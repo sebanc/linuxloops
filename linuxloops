@@ -5630,6 +5630,7 @@ mkdir /etc/portage/package.license
 echo -e "*/* *" >> /etc/portage/package.license/custom
 echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
+emerge --nodeps sys-apps/portage || emerge --nodeps sys-apps/portage
 emerge media-libs/harfbuzz
 if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
 	echo 'ABI_X86="32 64"' >> /etc/portage/make.conf
@@ -5847,6 +5848,7 @@ mkdir /etc/portage/package.license
 echo -e "*/* *" >> /etc/portage/package.license/custom
 echo -e "FEATURES=\"getbinpkg\"" >> /etc/portage/make.conf
 echo -e "MAKEOPTS=\"--jobs 2\"\nEMERGE_DEFAULT_OPTS=\"--jobs 2\"" >> /etc/portage/make.conf
+emerge --nodeps sys-apps/portage || emerge --nodeps sys-apps/portage
 emerge media-libs/harfbuzz
 if echo "${custom_packages}" | grep -wq 'steam\|wine'; then
 	echo 'ABI_X86="32 64"' >> /etc/portage/make.conf
@@ -6327,7 +6329,7 @@ sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
 pacman-key --init
 pacman-key --populate
 yes | pacman -Syu iptables-nft
-pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
+pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager wpa_supplicant bluez cryptsetup e2fsprogs ntfs-3g ntfsprogs nano acpid curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap
 systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -10962,6 +10964,7 @@ mkdir -p /mnt/tmp/linuxloops
 mount --bind /install_scripts /mnt/tmp/linuxloops
 mount --make-slave /mnt/tmp/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
+	if [ -d /mnt/sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /mnt/sys/module/apparmor; fi
 	if [ "\$(tty)" == "not a tty" ]; then
 		mount --bind /dev/null /mnt/dev/console
 	else
@@ -12979,7 +12982,6 @@ cat >"${bootstrapdir}"/install_scripts/cleanup <<CLEANUP
 set -e
 if [ ! -z "\$(command -v apt)" ]; then
 	if [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then DEBIAN_FRONTEND=noninteractive apt install --purge -y \$(check-language-support -l ${packages_locale}); fi
-	echo "man-db man-db/auto-update boolean true" | debconf-set-selections
 	rm -f /etc/apt/apt.conf.d/99linuxloops
 	DEBIAN_FRONTEND=noninteractive apt autoremove -y
 elif [ ! -z "\$(command -v dnf)" ]; then
