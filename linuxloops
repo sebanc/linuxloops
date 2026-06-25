@@ -63,176 +63,176 @@ case "${distribution}" in
 		available_versions=( "10" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="10"
-		;;
+	;;
 	'Arch')
 		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'Artix')
 		available_versions=( "Openrc" "Runit" "S6" "Dinit" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable/Openrc"
-		;;
+	;;
 	'Bazzite')
 		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'BlissOS')
 		available_versions=( "15" "16" )
 		available_versions_longname=( "15_(Stable)" "16_(Beta)" )
 		default_version="15"
-		;;
+	;;
 	'Brunch')
 		available_versions=( "Stable" "Unstable" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'CachyOS')
 		available_versions=( "x86-64" "x86-64-v3" "x86-64-v4" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="x86-64"
-		;;
+	;;
 	'ChromeOS-Flex')
 		available_versions=( "Stable" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'Debian')
 		available_versions=( "Trixie" )
 		available_versions_longname=( "Trixie" )
 		default_version="Trixie"
-		;;
+	;;
 	'Devuan')
 		available_versions=( "Excalibur" )
 		available_versions_longname=( "Excalibur" )
 		default_version="Excalibur"
-		;;
+	;;
 	'Elementary')
 		available_versions=( "8" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="8"
-		;;
+	;;
 	'Fedora')
 		available_versions=( "44" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="44"
-		;;
+	;;
 	'Fedora-Atomic')
 		available_versions=( "44" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="44"
-		;;
+	;;
 	'FoxFlake')
 		available_versions=( "Stable" "Unstable" "Stable-Test" "Unstable-Test" "Dev" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'Gentoo')
 		available_versions=( "23/Openrc" "23/Systemd" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="23/Openrc"
-		;;
+	;;
 	'GLF-OS')
 		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'Kali')
 		available_versions=( "Rolling" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Rolling"
-		;;
+	;;
 	'KDE')
 		available_versions=( "Rolling" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Rolling"
-		;;
+	;;
 	'Linuxmint')
 		available_versions=( "Zena" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Zena"
-		;;
+	;;
 	'LMDE')
 		available_versions=( "Gigi" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Gigi"
-		;;
+	;;
 	'Manjaro')
 		available_versions=( "Stable" "Testing" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'MX')
 		available_versions=( "25" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="25"
-		;;
+	;;
 	'Neon')
 		available_versions=( "Stable" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'NixOS')
 		available_versions=( "25.11" "Unstable" )
 		available_versions_longname=( "25.11_(Stable)" "Unstable" )
 		default_version="25.11"
-		;;
+	;;
 	'OpenSUSE')
 		available_versions=( "Leap/16.0" "Tumbleweed" )
 		available_versions_longname=( "Leap/16.0" "Tumbleweed" )
 		default_version="Leap/16.0"
-		;;
+	;;
 	'Pop')
 		available_versions=( "24.04" )
 		available_versions_longname=( "24.04_(Stable)" )
 		default_version="24.04"
-		;;
+	;;
 	'Proxmox')
 		available_versions=( "VE9" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="VE9"
-		;;
+	;;
 	'Qubes')
-		available_versions=( "4.3.0" )
+		available_versions=( "4.3.1" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="4.3.0"
-		;;
+		default_version="4.3.1"
+	;;
 	'RockyLinux')
 		available_versions=( "10" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="10"
-		;;
+	;;
 	'SteamOS')
 		available_versions=( "Main" "Staging" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Main"
-		;;
+	;;
 	'Tails')
 		available_versions=( "Stable" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
-		;;
+	;;
 	'Ubuntu')
 		available_versions=( "24.04" "26.04" )
 		available_versions_longname=( "24.04_(LTS)" "26.04_(Interim)" )
 		default_version="26.04"
-		;;
+	;;
 	'Void')
 		available_versions=( "Current" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Current"
-		;;
+	;;
 	'Zorin')
 		available_versions=( "18" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="18"
-		;;
+	;;
 	*)
 		echo "Distribution ${distribution} is not supported."
 		exit 1
-		;;
+	;;
 esac
 if [ -z "${version}" ]; then version="${default_version}"; fi
 }
@@ -251,7 +251,7 @@ case "${distribution}" in
 		mirrors_supported=( "AlmaLinux" )
 		nvidia_supported="No"
 		surface_supported="No"
-		;;
+	;;
 	'Arch')
 		arch_version="${version}"
 		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -263,7 +263,7 @@ case "${distribution}" in
 		mirrors_supported=( "Arch" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
+	;;
 	'Artix')
 		artix_version="${version}"
 		available_environments=( "None" "Budgie" "Cinnamon" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
@@ -275,20 +275,20 @@ case "${distribution}" in
 		mirrors_supported=( "Arch" "Artix" )
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'Bazzite')
 		available_environments=( "Bazzite" "Bazzite/Nvidia" "Bazzite/Gnome" "Bazzite/Gnome/Nvidia" "Bazzite/Deck" "Bazzite/Deck/Gnome" "Bazzite/Deck/Nvidia" "Bazzite/Deck/Nvidia/Gnome" )
 		bazzite_version="${version}"
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 43 default"
+		bootstrap="lxc fedora 44 default"
 		btrfs_supported="Yes"
 		fedora_version="44"
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="No"
 		surface_supported="No"
 		systemd_init="Yes"
-		;;
+	;;
 	'BlissOS')
 		available_environments=( "Gapps/Generic" "Gapps/Go" "Gapps/Surface" "FOSS/Generic" "FOSS/Go" "FOSS/Surface" )
 		blissos_version="${version}"
@@ -299,7 +299,7 @@ case "${distribution}" in
 		mirrors_supported=()
 		nvidia_supported="No"
 		surface_supported="No"
-		;;
+	;;
 	'Brunch')
 		available_environments=( "Bobba" "Gumboz" "Jinlon" "Reven" "Shyvana" "Voxel" )
 		bootloader_id="boot"
@@ -310,7 +310,7 @@ case "${distribution}" in
 		mirrors_supported=()
 		nvidia_supported="No"
 		surface_supported="No"
-		;;
+	;;
 	'CachyOS')
 		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="cachyos"
@@ -321,7 +321,7 @@ case "${distribution}" in
 		mirrors_supported=( "Arch" "CachyOS" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
+	;;
 	'ChromeOS-Flex')
 		available_environments=( "Standard" "Devmode" )
 		bootloader_id="boot"
@@ -332,7 +332,7 @@ case "${distribution}" in
 		mirrors_supported=()
 		nvidia_supported="No"
 		surface_supported="No"
-		;;
+	;;
 	'Debian')
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
@@ -344,7 +344,7 @@ case "${distribution}" in
 		mirrors_supported=( "Debian" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
+	;;
 	'Devuan')
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
@@ -356,7 +356,7 @@ case "${distribution}" in
 		mirrors_supported=( "Devuan" )
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'Elementary')
 		available_environments=( "None" "Full" )
 		bootloader_id="ubuntu"
@@ -369,30 +369,30 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		ubuntu_version="Noble"
-		;;
+	;;
 	'Fedora')
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 43 default"
+		bootstrap="lxc fedora 44 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=( "Fedora" )
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'Fedora-Atomic')
 		available_environments=( "Silverblue" "Kinoite" "Sway-Atomic" "Budgie-Atomic" "Cosmic-Atomic" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 43 default"
+		bootstrap="lxc fedora 44 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=()
 		nvidia_supported="Yes"
 		surface_supported="No"
 		systemd_init="Yes"
-		;;
+	;;
 	'FoxFlake')
 		available_environments=( "Cosmic" "Gnome" "Hyprland" "Plasma" "Steam" "SteamDeck" )
 		bootloader_id="foxflake"
@@ -409,7 +409,7 @@ case "${distribution}" in
 		fi
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'Gentoo')
 		available_environments=( "None" "Cinnamon" "Gnome" "Lxqt" "Mate" "Plasma" "Xfce" )
 		bootloader_id="gentoo"
@@ -421,7 +421,7 @@ case "${distribution}" in
 		mirrors_supported=( "Gentoo" )
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'GLF-OS')
 		available_environments=( "Gnome/Mini" "Gnome/Standard" "Plasma/Mini" "Plasma/Standard" )
 		bootloader_id="glfos"
@@ -439,7 +439,7 @@ case "${distribution}" in
 		fi
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'Kali')
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
@@ -451,7 +451,7 @@ case "${distribution}" in
 		mirrors_supported=( "Kali" )
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'KDE')
 		arch_version="Stable"
 		available_environments=( "None" "Plasma/Full" )
@@ -463,7 +463,7 @@ case "${distribution}" in
 		mirrors_supported=( "Arch" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
+	;;
 	'Linuxmint')
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Mate" "Mate/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="ubuntu"
@@ -476,7 +476,7 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		ubuntu_version="Noble"
-		;;
+	;;
 	'LMDE')
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" )
 		bootloader_id="debian"
@@ -490,7 +490,7 @@ case "${distribution}" in
 		mirrors_supported=( "Debian" "Linuxmint" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
+	;;
 	'Manjaro')
 		available_environments=( "None" "Budgie" "Cinnamon" "Cosmic" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="manjaro"
@@ -502,7 +502,7 @@ case "${distribution}" in
 		mirrors_supported=( "Manjaro" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
+	;;
 	'MX')
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
@@ -515,7 +515,7 @@ case "${distribution}" in
 		mirrors_supported=( "Debian" "MX" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
-		;;
+	;;
 	'Neon')
 		available_environments=( "None" "Essentials" "Full" )
 		bootloader_id="ubuntu"
@@ -529,7 +529,7 @@ case "${distribution}" in
 		surface_supported="Yes"
 		ubuntu_release="24.04"
 		ubuntu_version="Noble"
-		;;
+	;;
 	'NixOS')
 		available_environments=( "None" "Budgie/Full" "Cinnamon/Full" "Gnome/Full" "Lxqt/Full" "Mate/Full" "Pantheon/Full" "Plasma/Full" "Xfce/Full" )
 		bootloader_id="nixos"
@@ -541,7 +541,7 @@ case "${distribution}" in
 		nixos_version="${version}"
 		nvidia_supported="Yes"
 		surface_supported="No"
-		;;
+	;;
 	'OpenSUSE')
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
@@ -559,16 +559,16 @@ case "${distribution}" in
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
 				rootfs_sha256sum="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
 				rootfs_signature="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
-				;;
+			;;
 			*)
 				bootstrap="rootfs-xz https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
 				rootfs_sha256sum="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
 				rootfs_signature="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
-				;;
+			;;
 		esac
-		;;
+	;;
 	'Pop')
 		available_environments=( "None" "Full" )
 		bootloader_id="ubuntu"
@@ -583,9 +583,9 @@ case "${distribution}" in
 		case "${version}" in
 			'24.04')
 				ubuntu_version="Noble"
-				;;
+			;;
 		esac
-		;;
+	;;
 	'Proxmox')
 		available_environments=( "None" "Budgie" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="debian"
@@ -598,7 +598,7 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		proxmox_version="${version}"
 		surface_supported="No"
-		;;
+	;;
 	'Qubes')
 		available_environments=( "Full" )
 		bootloader_id="qubes"
@@ -612,7 +612,7 @@ case "${distribution}" in
 		nvidia_supported="No"
 		qubes_version="${version}"
 		surface_supported="No"
-		;;
+	;;
 	'RockyLinux')
 		available_environments=( "None" "Full" )
 		bootloader_id="rocky"
@@ -623,7 +623,7 @@ case "${distribution}" in
 		nvidia_supported="No"
 		rockylinux_version="${version}"
 		surface_supported="No"
-		;;
+	;;
 	'SteamOS')
 		available_environments=( "None" "Desktop" "Gamescope" )
 		bootloader_id="steamos"
@@ -634,7 +634,7 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		steamos_version="${version}"
 		surface_supported="No"
-		;;
+	;;
 	'Tails')
 		available_environments=( "Full" )
 		bootloader_id="boot"
@@ -645,7 +645,7 @@ case "${distribution}" in
 		nvidia_supported="No"
 		surface_supported="No"
 		tails_version="${version}"
-		;;
+	;;
 	'Ubuntu')
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Studio/Full" "Ubuntu" "Ubuntu/Full" "Unity" "Unity/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="ubuntu"
@@ -661,12 +661,12 @@ case "${distribution}" in
 		case "${version}" in
 			'24.04')
 				ubuntu_version="Noble"
-				;;
+			;;
 			'26.04')
 				ubuntu_version="Resolute"
-				;;
+			;;
 		esac
-		;;
+	;;
 	'Void')
 		available_environments=( "None" "Cinnamon" "Gnome" "Gnome/Full" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" )
 		bootloader_id="voidlinux"
@@ -677,7 +677,7 @@ case "${distribution}" in
 		nvidia_supported="No"
 		surface_supported="No"
 		void_version="${version}"
-		;;
+	;;
 	'Zorin')
 		available_environments=( "None" "Core" "Core/Windows_apps_support" "Education" "Education/Windows_apps_support" )
 		bootloader_id="ubuntu"
@@ -691,11 +691,11 @@ case "${distribution}" in
 		systemd_init="Yes"
 		ubuntu_version="Noble"
 		zorin_version="${version}"
-		;;
+	;;
 	*)
 		echo "Version ${version} is not supported."
 		exit 1
-		;;
+	;;
 esac
 }
 
@@ -7948,7 +7948,7 @@ initramfs_type="nixos_config"
 
 chroot_OpenSUSE-Leap-16.0()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -8166,7 +8166,7 @@ fi
 
 chroot_OpenSUSE-Tumbleweed()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -8553,7 +8553,7 @@ Components: main contrib non-free non-free-firmware
 Signed-By: /usr/share/keyrings/debian-archive-keyring.gpg
 SOURCESLIST
 cat >/etc/apt/sources.list.d/pve-enterprise.sources <<'SOURCESLIST'
-Types: deb deb-src
+Types: deb
 URIs: http://download.proxmox.com/debian/pve
 Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: pve-no-subscription
@@ -8564,16 +8564,15 @@ echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debc
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://enterprise.proxmox.com/debian/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg -o /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y proxmox-archive-keyring
-rm /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
 apt clean
 apt update
 apt purge -y ifupdown
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') proxmox-ve postfix open-iscsi ifenslave
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
-echo 'deb http://download.proxmox.com/debian/pve $(echo ${debian_version} | tr A-Z a-z) pve-no-subscription' > /etc/apt/sources.list.d/pve-enterprise.list
+rm -f /etc/apt/sources.list.d/pve-enterprise.sources.dpkg-old /tmp/proxmox-release-$(echo ${debian_version} | tr A-Z a-z).gpg
 cat >/etc/apt/sources.list.d/pve-enterprise.sources <<'SOURCESLIST'
-Types: deb deb-src
+Types: deb
 URIs: http://download.proxmox.com/debian/pve
 Suites: $(echo ${debian_version} | tr A-Z a-z)
 Components: pve-no-subscription
@@ -8581,7 +8580,7 @@ Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 SOURCESLIST
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y initramfs-tools dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap console-setup kbd keyboard-configuration
+DEBIAN_FRONTEND=noninteractive apt install --purge -y initramfs-tools rfkill dkms pve-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode lsb-release sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap console-setup kbd keyboard-configuration
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
@@ -8809,7 +8808,7 @@ cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 set -e
 rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-*
 dnf --setopt=reposdir=/etc/yum.repos.d/ update -y
-dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion bubblewrap cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 langpacks-${packages_locale} ntfs-3g openssl os-prober sbsigntools anaconda-gui qubes-anaconda-addon qubes-artwork-anaconda initial-setup-gui-wayland-generic @qubes @qubes-ui @xfce-desktop-qubes
+dnf --setopt=reposdir=/etc/yum.repos.d/ install -y akmods bash-completion bubblewrap cpio dkms efibootmgr fwupd-qubes-dom0 glibc-locale-source grub2-efi-x64 iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware langpacks-${packages_locale} linux-firmware ntfs-3g openssl os-prober sbsigntools wireless-regdb anaconda-gui qubes-anaconda-addon qubes-artwork-anaconda initial-setup-gui-wayland-generic @qubes @qubes-ui @xfce-desktop-qubes
 systemctl set-default graphical.target
 cat >/root/anaconda-ks.cfg <<INITIALSETUP
 #version=DEVEL
@@ -10932,6 +10931,13 @@ if [ "${distribution}" == "BlissOS" ] || [ "${distribution}" == "Brunch" ] || [ 
 cat >"${bootstrapdir}"/install_scripts/enter_chroot <<ENTERCHROOT
 #!/bin/bash
 set -e
+mount --bind -o ro /sys /mnt/sys
+mount --bind /dev /mnt/dev
+mount --bind /dev/pts /mnt/dev/pts
+mount -t tmpfs -o mode=1777 none /mnt/dev/shm
+mount -t tmpfs -o mode=1777 none /mnt/tmp
+mkdir -p /mnt/tmp/linuxloops
+mount --bind /install_scripts /mnt/tmp/linuxloops
 if [ "${systemd_init}" == "Yes" ]; then
 	if [ -d /mnt/etc/tmpfiles.d ]; then
 		ln -s /dev/null /mnt/etc/tmpfiles.d/static-nodes-permissions.conf
@@ -10950,21 +10956,6 @@ if [ "${systemd_init}" == "Yes" ]; then
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service
 		ln -s /dev/null /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service
 	fi
-fi
-mount --bind -o ro /sys /mnt/sys
-mount --make-slave /mnt/sys
-mount --bind /dev /mnt/dev
-mount --make-slave /mnt/dev
-mount --bind /dev/pts /mnt/dev/pts
-mount --make-slave /mnt/dev/pts
-mount -t tmpfs -o mode=1777 none /mnt/dev/shm
-mount -t tmpfs none /mnt/run
-mount -t tmpfs -o mode=1777 none /mnt/tmp
-mkdir -p /mnt/tmp/linuxloops
-mount --bind /install_scripts /mnt/tmp/linuxloops
-mount --make-slave /mnt/tmp/linuxloops
-if [ "${systemd_init}" == "Yes" ]; then
-	if [ -d /mnt/sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /mnt/sys/module/apparmor; fi
 	if [ "\$(tty)" == "not a tty" ]; then
 		mount --bind /dev/null /mnt/dev/console
 	else
@@ -10972,31 +10963,40 @@ if [ "${systemd_init}" == "Yes" ]; then
 	fi
 	mount --make-slave /mnt/dev/console
 	touch /tmp/pid_ns
-	unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt /lib/systemd/systemd --unit=basic.target &
+	unshare --pid=/tmp/pid_ns --fork --mount --mount-proc --root=/mnt /lib/systemd/systemd --unit=basic.target &
 	sleep 30
-	echo "nsenter --pid=/tmp/pid_ns"
-	nsenter --pid=/tmp/pid_ns mount -t proc none /mnt/proc
-	nsenter --pid=/tmp/pid_ns chroot /mnt /lib/systemd/systemd-udevd --daemon
+	echo \$(lsns -t pid | grep "\$(stat -c %i /tmp/pid_ns)" | awk '{print \$4}') > /tmp/systemd_pid
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt mount -t proc none /proc
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "if [ -d /sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /sys/module/apparmor; fi"
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /lib/systemd/systemd-udevd --daemon
 	if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
-		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
-		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
-		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "ln -s /bin /mnt/bin"
-		nsenter --pid=/tmp/pid_ns chroot /mnt bash -c "ln -s /usr /mnt/usr"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
+		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
 	fi
-	chroot_cmd="nsenter --pid=/tmp/pid_ns chroot /mnt"
 else
-	mount -t proc none /mnt/proc
-	chroot_cmd="chroot /mnt"
+	touch /tmp/pid_ns
+	unshare --pid=/tmp/pid_ns --fork --mount --mount-proc --root=/mnt sleep infinity &
+	sleep 30
+	echo \$(lsns -t pid | grep "\$(stat -c %i /tmp/pid_ns)" | awk '{print \$4}') > /tmp/systemd_pid
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt mount -t proc none /proc
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt mount -t tmpfs none /run
 fi
+nsenter --target \$(cat /tmp/systemd_pid) --all bash<< 'PIVOT_ROOT'
+mount --make-rslave /mnt/tmp
+mkdir /mnt/tmp/old_root
+pivot_root /mnt /mnt/tmp/old_root
 if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	dns_manager="systemd/resolve/stub-resolv.conf"
 else
 	dns_manager="NetworkManager/resolv.conf"
 fi
-rm -f /mnt/etc/resolv.conf
-ln -s /run/"\${dns_manager}" /mnt/etc/resolv.conf
-mkdir -p \$(dirname /mnt/run/"\${dns_manager}")
-cp /etc/resolv.conf /mnt/run/"\${dns_manager}"
+rm -f /etc/resolv.conf
+ln -s /run/"\${dns_manager}" /etc/resolv.conf
+mkdir -p \$(dirname /run/"\${dns_manager}")
+cp /tmp/old_root/etc/resolv.conf /run/"\${dns_manager}"
+PIVOT_ROOT
+nsenter --target \$(cat /tmp/systemd_pid) --all chroot . bash -c "umount -l /tmp/old_root"
+chroot_cmd="nsenter --target \$(cat /tmp/systemd_pid) --all"
 \${chroot_cmd} /tmp/linuxloops/chroot_init
 if [ -f /mnt/tmp/linuxloops/install_desktop ]; then \${chroot_cmd} /tmp/linuxloops/install_desktop; fi
 if [ -f /mnt/tmp/linuxloops/install_secureboot ]; then \${chroot_cmd} /tmp/linuxloops/install_secureboot; fi
@@ -11780,6 +11780,12 @@ else
 	recovery_shell
 fi
 
+if [ -d /usr/lib/udev/rules.d ]; then
+	cat >/usr/lib/udev/rules.d/01zz-linuxloops.rules <<'UDEVRULELOOP0'
+ACTION!="remove", SUBSYSTEM=="block", KERNEL=="loop0*", ENV{DM_UDEV_DISABLE_DISK_RULES_FLAG}="0", ENV{UDEV_DISABLE_PERSISTENT_STORAGE_RULES_FLAG}="0"
+UDEVRULELOOP0
+fi
+
 $UDEVD --daemon --resolve-names=never >/linuxloops_udev.log 2>&1
 udevadm trigger --action=add --type=subsystems
 udevadm trigger --action=add --type=devices
@@ -11801,7 +11807,8 @@ if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 	done
 	if [ $linuxloops_timeout -eq 10 ]; then echo "linuxloops: Boot partition was not found." > /dev/kmsg; recovery_shell; fi
 	mkdir /linuxloops_root || { echo "linuxloops: Root directory cannot be created." > /dev/kmsg; recovery_shell; }
-	if [ ! -z "$linuxloops_debug" ]; then recovery_shell; fi
+
+	if [ ! -z "$linuxloops_debug" ] && [ "$linuxloops_debug" -eq 1 ]; then recovery_shell; fi
 
 	fstype=$(blkid -s TYPE -o value /dev/disk/by-partuuid/"$img_uuid")
 	if [ "$fstype" = "ntfs" ]; then
@@ -11831,6 +11838,9 @@ if [ ! -z "$img_uuid" ] && [ ! -z "$img_path" ]; then
 	udevadm trigger --action=add --type=subsystems
 	udevadm trigger --action=add --type=devices
 	udevadm settle
+
+	if [ ! -z "$linuxloops_debug" ] && [ "$linuxloops_debug" -eq 2 ]; then recovery_shell; fi
+
 fi
 
 INITSCRIPT
@@ -12252,6 +12262,9 @@ $(cat "${custom_script}" 2>/dev/null)
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/flake.nix
+	if [ "${glfos_version}" == "Testing" ]; then
+		curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customized.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/customized.nix
+	fi
 	mkdir /mnt/etc/nixos/customConfig
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/customConfig/default.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
@@ -13054,13 +13067,9 @@ set -e
 /tmp/linuxloops/set_userpw
 NIXOSCHROOT
 NIXOSSETPW
-rm -rf /mnt/tmp/*
-elif [ "${systemd_init}" == "Yes" ]; then
-	nsenter --pid=/tmp/pid_ns chroot /mnt /tmp/linuxloops/set_userpw
-	if [ -f /install_scripts/selinux_fix ]; then nsenter --pid=/tmp/pid_ns chroot /mnt /tmp/linuxloops/selinux_fix; fi
 else
-	chroot /mnt /tmp/linuxloops/set_userpw
-	if [ -f /install_scripts/selinux_fix ]; then chroot /mnt /tmp/linuxloops/selinux_fix; fi
+	nsenter --target \$(cat /tmp/systemd_pid) --all /tmp/linuxloops/set_userpw
+	if [ -f /install_scripts/selinux_fix ]; then nsenter --target \$(cat /tmp/systemd_pid) --all /tmp/linuxloops/selinux_fix; fi
 fi
 rm -f /mnt/tmp/linuxloops/set_userpw
 INSTALLUSERPW
