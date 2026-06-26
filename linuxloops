@@ -554,18 +554,18 @@ case "${distribution}" in
 		surface_supported="No"
 		case "${version}" in
 			'Leap/15.6')
-				bootstrap="rootfs-xz https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
 			;;
 			*)
-				bootstrap="rootfs-xz https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
 			;;
 		esac
 	;;
@@ -6140,13 +6140,13 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm sl
 "
 	;;
 	'Gnome')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
-	default_session="gnome-wayland"
+	default_session="gnome"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
 DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring kali-linux-default xdg-desktop-portal-gnome
@@ -7948,7 +7948,7 @@ initramfs_type="nixos_config"
 
 chroot_OpenSUSE-Leap-16.0()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://download.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://slc-mirror.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -8166,7 +8166,7 @@ fi
 
 chroot_OpenSUSE-Tumbleweed()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://download.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://slc-mirror.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -10963,40 +10963,48 @@ if [ "${systemd_init}" == "Yes" ]; then
 	fi
 	mount --make-slave /mnt/dev/console
 	touch /tmp/pid_ns
-	unshare --pid=/tmp/pid_ns --fork --mount --mount-proc --root=/mnt /lib/systemd/systemd --unit=basic.target &
+	unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt /lib/systemd/systemd --unit=basic.target &
 	sleep 30
 	echo \$(lsns -t pid | grep "\$(stat -c %i /tmp/pid_ns)" | awk '{print \$4}') > /tmp/systemd_pid
-	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt mount -t proc none /proc
-	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "if [ -d /sys/module/apparmor ]; then mkdir /tmp/apparmor; mount --bind /tmp/apparmor /sys/module/apparmor; fi"
-	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /lib/systemd/systemd-udevd --daemon
-	if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "echo exit 101 > /usr/sbin/policy-rc.d"
-		nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash -c "chmod +x /usr/sbin/policy-rc.d"
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash <<'UNSHARE_INIT'
+mount -t proc none /proc
+/lib/systemd/systemd-udevd --daemon
+if [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
+	if [ -d /sys/module/apparmor ]; then
+		mkdir /tmp/apparmor
+		mount --bind /tmp/apparmor /sys/module/apparmor
+		mount --make-slave /sys/module/apparmor
 	fi
+	echo exit 101 > /usr/sbin/policy-rc.d
+	chmod +x /usr/sbin/policy-rc.d
+	ln -s /bin /mnt/bin
+	ln -s /snap /mnt/snap
+	mkdir -p /mnt/usr/lib
+	ln -s /usr/lib/snapd /mnt/usr/lib/snapd
+fi
+UNSHARE_INIT
 else
 	touch /tmp/pid_ns
-	unshare --pid=/tmp/pid_ns --fork --mount --mount-proc --root=/mnt sleep infinity &
+	unshare --pid=/tmp/pid_ns --fork --mount-proc --root=/mnt sleep infinity &
 	sleep 30
 	echo \$(lsns -t pid | grep "\$(stat -c %i /tmp/pid_ns)" | awk '{print \$4}') > /tmp/systemd_pid
-	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt mount -t proc none /proc
-	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt mount -t tmpfs none /run
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt bash <<'UNSHARE_INIT'
+mount -t proc none /proc
+mount -t tmpfs none /run
+UNSHARE_INIT
 fi
-nsenter --target \$(cat /tmp/systemd_pid) --all bash<< 'PIVOT_ROOT'
-mount --make-rslave /mnt/tmp
-mkdir /mnt/tmp/old_root
-pivot_root /mnt /mnt/tmp/old_root
+nsenter --target \$(cat /tmp/systemd_pid) --all bash <<'PIVOT_ROOT'
 if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Elementary" ] || [ "${distribution}" == "Fedora" ] || [ "${distribution}" == "Fedora-Atomic" ] || [ "${distribution}" == "Linuxmint" ] || [ "${distribution}" == "Neon" ] || [ "${distribution}" == "Pop" ] || [ "${distribution}" == "Qubes" ] || [ "${distribution}" == "Ubuntu" ] || [ "${distribution}" == "Zorin" ]; then
 	dns_manager="systemd/resolve/stub-resolv.conf"
 else
 	dns_manager="NetworkManager/resolv.conf"
 fi
-rm -f /etc/resolv.conf
-ln -s /run/"\${dns_manager}" /etc/resolv.conf
-mkdir -p \$(dirname /run/"\${dns_manager}")
-cp /tmp/old_root/etc/resolv.conf /run/"\${dns_manager}"
+rm -f /mnt/etc/resolv.conf
+ln -s /run/"\${dns_manager}" /mnt/etc/resolv.conf
+mkdir -p \$(dirname /mnt/run/"\${dns_manager}")
+cp /etc/resolv.conf /mnt/run/"\${dns_manager}"
 PIVOT_ROOT
-nsenter --target \$(cat /tmp/systemd_pid) --all chroot . bash -c "umount -l /tmp/old_root"
-chroot_cmd="nsenter --target \$(cat /tmp/systemd_pid) --all"
+chroot_cmd="nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt"
 \${chroot_cmd} /tmp/linuxloops/chroot_init
 if [ -f /mnt/tmp/linuxloops/install_desktop ]; then \${chroot_cmd} /tmp/linuxloops/install_desktop; fi
 if [ -f /mnt/tmp/linuxloops/install_secureboot ]; then \${chroot_cmd} /tmp/linuxloops/install_secureboot; fi
@@ -11014,7 +11022,7 @@ if [ -f /mnt/tmp/linuxloops/install_bootloader ]; then \${chroot_cmd} /tmp/linux
 if [ -f /mnt/tmp/linuxloops/install_custom_script ]; then \${chroot_cmd} /tmp/linuxloops/install_custom_script; fi
 if [ -f /mnt/tmp/linuxloops/cleanup ]; then \${chroot_cmd} /tmp/linuxloops/cleanup; fi
 if [ "${systemd_init}" == "Yes" ]; then
-	rm -f /mnt/mnt/bin /mnt/mnt/usr
+	rm -rf /mnt/mnt/bin /mnt/mnt/snap /mnt/mnt/usr
 	if [ -f /mnt/usr/sbin/policy-rc.d ]; then rm /mnt/usr/sbin/policy-rc.d; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev-early.service; fi
 	if [ -L /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service ]; then rm /mnt/etc/systemd/system/systemd-tmpfiles-setup-dev.service; fi
@@ -13068,8 +13076,8 @@ set -e
 NIXOSCHROOT
 NIXOSSETPW
 else
-	nsenter --target \$(cat /tmp/systemd_pid) --all /tmp/linuxloops/set_userpw
-	if [ -f /install_scripts/selinux_fix ]; then nsenter --target \$(cat /tmp/systemd_pid) --all /tmp/linuxloops/selinux_fix; fi
+	nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /tmp/linuxloops/set_userpw
+	if [ -f /install_scripts/selinux_fix ]; then nsenter --target \$(cat /tmp/systemd_pid) --all chroot /mnt /tmp/linuxloops/selinux_fix; fi
 fi
 rm -f /mnt/tmp/linuxloops/set_userpw
 INSTALLUSERPW
@@ -15563,6 +15571,8 @@ if [ -z "$(command -v mkdir)" ]; then echo "\"mkdir\" binary needs to be install
 if [ -z "$(command -v mktemp)" ]; then echo "\"mktemp\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v mount)" ]; then echo "\"mount\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v mountpoint)" ]; then echo "\"mountpoint\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v nsenter)" ]; then echo "\"nsenter\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v pivot_root)" ]; then echo "\"pivot_root\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v realpath)" ]; then echo "\"realpath\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v rm)" ]; then echo "\"rm\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v sed)" ]; then echo "\"sed\" binary needs to be installed first."; exit 1; fi
@@ -15572,6 +15582,7 @@ if [ -z "$(command -v tar)" ]; then echo "\"tar\" binary needs to be installed f
 if [ -z "$(command -v touch)" ]; then echo "\"touch\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v tr)" ]; then echo "\"tr\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v umount)" ]; then echo "\"umount\" binary needs to be installed first."; exit 1; fi
+if [ -z "$(command -v unshare)" ]; then echo "\"unshare\" binary needs to be installed first."; exit 1; fi
 if [ -z "$(command -v xz)" ]; then echo "\"xz\" binary needs to be installed first."; exit 1; fi
 if [ $(whoami) != "root" ]; then echo "Please run with this script with sudo."; exit 1; fi
 }
