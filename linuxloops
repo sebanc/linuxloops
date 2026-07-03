@@ -3728,7 +3728,7 @@ mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 if [ "${brunch_version}" == "Unstable" ]; then brunch_url="https://api.github.com/repos/sebanc/brunch-unstable/releases/latest"; else brunch_url="https://api.github.com/repos/sebanc/brunch/releases/latest"; fi
 echo "Downloading Brunch ${brunch_version}"
-for i in {1..3}; do
+for i in {1..10}; do
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
 		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)" ]; then
 			echo "sha256sum verification succeeded"
@@ -3737,7 +3737,7 @@ for i in {1..3}; do
 			echo "sha256sum verification failed, retrying download..."
 		fi
 	fi
-	if [ "\${i}" -eq 3 ]; then echo "Download of Brunch failed"; exit 1; fi
+	if [ "\${i}" -eq 10 ]; then echo "Download of Brunch failed"; sleep 10; exit 1; fi
 done
 mkdir -p /isomount/data/brunch
 tar zxf /isomount/data/brunch.tar.gz -C /isomount/data/brunch
@@ -3748,10 +3748,11 @@ else
 	board_url="https://dl.google.com/dl/edgedl/chromeos/recovery/recovery.conf"
 fi
 echo "Downloading ChromeOS recovery image"
-for i in {1..3}; do
+for i in {1..10}; do
 	recovery_image_url=\$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2)
+	if [ "\${recovery_image_url}" == "" ]; then sleep 10; continue; fi
 	sha1sum=\$(curl -L \${board_url} | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep \${board} | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)
-	if [ -z "\${recovery_image_url}" ] || [ -z "\${sha1sum}" ]; then sleep 10; continue; fi
+	if [ "\${sha1sum}" == "" ]; then sleep 10; continue; fi
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\${recovery_image_url}" -o /isomount/data/recovery.zip; then
 		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\${sha1sum}" ]; then
 			echo "sha1sum verification succeeded"
@@ -3760,7 +3761,7 @@ for i in {1..3}; do
 			echo "sha1sum verification failed, retrying download..."
 		fi
 	fi
-	if [ "\${i}" -eq 3 ]; then echo "Download of ChromeOS recovery image failed"; exit 1; fi
+	if [ "\${i}" -eq 10 ]; then echo "Download of ChromeOS recovery image failed"; sleep 10; exit 1; fi
 done
 unzip /isomount/data/recovery.zip -d /root
 rm -f /isomount/data/recovery.zip
@@ -3837,17 +3838,20 @@ set -e
 if [ "${cachyos_version}" == "x86-64-v4" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v4.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	sed -i 's@Server = https://us.cachyos.org/repo@#Server = https://us.cachyos.org/repo@g' /etc/pacman.d/cachyos-mirrorlist
 	cp /etc/pacman.d/cachyos-mirrorlist /etc/pacman.d/cachyos-v4-mirrorlist
 	sed -i 's|/\$arch/|/\$arch_v4/|g' /etc/pacman.d/cachyos-v4-mirrorlist
 
 elif [ "${cachyos_version}" == "x86-64-v3" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v3.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	sed -i 's@Server = https://us.cachyos.org/repo@#Server = https://us.cachyos.org/repo@g' /etc/pacman.d/cachyos-mirrorlist
 	cp /etc/pacman.d/cachyos-mirrorlist /etc/pacman.d/cachyos-v3-mirrorlist
 	sed -i 's|/\$arch/|/\$arch_v3/|g' /etc/pacman.d/cachyos-v3-mirrorlist
 else
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+	sed -i 's@Server = https://us.cachyos.org/repo@#Server = https://us.cachyos.org/repo@g' /etc/pacman.d/cachyos-mirrorlist
 fi
 if [ ! -z "${mirror_CachyOS}" ]; then
 	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch/\$repo' >> /etc/pacman.d/cachyos-mirrorlist; fi
@@ -4131,10 +4135,11 @@ mkdir -p /isomount/data /isomount/roota /isomount/rootc /isomount/efi /isomount/
 mkfs.ext4 -E nodiscard -F -L "H-STATE" "${partition_path}"1
 mount "${partition_path}"1 /isomount/data
 echo "Downloading ChromeOS-Flex recovery image"
-for i in {1..3}; do
+for i in {1..10}; do
 	recovery_image_url=\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'url=' | cut -d'=' -f2)
+	if [ "\${recovery_image_url}" == "" ]; then sleep 10; continue; fi
 	sha1sum=\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://dl.google.com/dl/edgedl/chromeos/recovery/cloudready_recovery.conf | tr '\n' ' ' | sed 's@  @ \n\n@g' | grep reven | tail -1 | tr ' ' '\n' | grep 'sha1=' | cut -d'=' -f2)
-	if [ -z "\${recovery_image_url}" ] || [ -z "\${sha1sum}" ]; then sleep 10; continue; fi
+	if [ "\${sha1sum}" == "" ]; then sleep 10; continue; fi
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f "\${recovery_image_url}" -o /isomount/data/recovery.zip; then
 		if [ "\$(sha1sum /isomount/data/recovery.zip | cut -d' ' -f1)" == "\${sha1sum}" ]; then
 			echo "sha1sum verification succeeded"
@@ -4143,7 +4148,7 @@ for i in {1..3}; do
 			echo "sha1sum verification failed, retrying download..."
 		fi
 	fi
-	if [ "\${i}" -eq 3 ]; then echo "Download of ChromeOS recovery image failed"; exit 1; fi
+	if [ "\${i}" -eq 10 ]; then echo "Download of ChromeOS recovery image failed"; sleep 10; exit 1; fi
 done
 unzip /isomount/data/recovery.zip -d /root
 rm -f /isomount/data/recovery.zip
@@ -7948,7 +7953,7 @@ initramfs_type="nixos_config"
 
 chroot_OpenSUSE-Leap-16.0()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://slc-mirror.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -8166,7 +8171,7 @@ fi
 
 chroot_OpenSUSE-Tumbleweed()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://slc-mirror.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="http://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
