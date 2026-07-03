@@ -175,9 +175,9 @@ case "${distribution}" in
 		default_version="Stable"
 	;;
 	'NixOS')
-		available_versions=( "25.11" "Unstable" )
-		available_versions_longname=( "25.11_(Stable)" "Unstable" )
-		default_version="25.11"
+		available_versions=( "26.05" "Unstable" )
+		available_versions_longname=( "26.05_(Stable)" "Unstable" )
+		default_version="26.05"
 	;;
 	'OpenSUSE')
 		available_versions=( "Leap/16.0" "Tumbleweed" )
@@ -403,7 +403,7 @@ case "${distribution}" in
 		foxflake_version="${version}"
 		mirrors_supported=()
 		if [ "${version}" == "Stable" ] || [ "${version}" == "Stable-Test" ]; then
-			nixos_version="25.11"
+			nixos_version="26.05"
 		else
 			nixos_version="Unstable"
 		fi
@@ -432,7 +432,7 @@ case "${distribution}" in
 		mirrors_supported=()
 		if [ "${version}" == "Stable" ]; then
 			glfos_version="Main"
-			nixos_version="25.11"
+			nixos_version="26.05"
 		else
 			glfos_version="${version}"
 			nixos_version="Unstable"
@@ -3853,14 +3853,14 @@ else
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
 fi
 if [ ! -z "${mirror_CachyOS}" ]; then
-	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch/\$repo' >> /etc/pacman.d/cachyos-mirrorlist; fi
-	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v3/\$repo' >> /etc/pacman.d/cachyos-v3-mirrorlist; fi
-	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v4/\$repo' >> /etc/pacman.d/cachyos-v4-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@# Server@g' /etc/pacman.d/cachyos-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch/\$repo' >> /etc/pacman.d/cachyos-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@# Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v3/\$repo' >> /etc/pacman.d/cachyos-v3-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@# Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v4/\$repo' >> /etc/pacman.d/cachyos-v4-mirrorlist; fi
 else
-	cur_speed=0; for i in https://cdn.cachyos.org/repo https://mirror.cachyos.org/repo; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/x86_64/cachyos/cachyos.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}
-	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-mirrorlist; fi
-	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v3-mirrorlist; fi
-	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v4-mirrorlist; fi
+	cur_speed=0; for i in https://cdn.cachyos.org/repo https://mirror.cachyos.org/repo https://mirror.krfoss.org/cachyos/repo; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/x86_64/cachyos/cachyos.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}
+	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@# Server@g' /etc/pacman.d/cachyos-mirrorlist; sed -i "s@# Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@# Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; sed -i "s@# Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v3-mirrorlist; fi
+	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@# Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; sed -i "s@# Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v4-mirrorlist; fi
 fi
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos.gpg -o /usr/share/pacman/keyrings/cachyos.gpg
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-keyring/cachyos-trusted -o /usr/share/pacman/keyrings/cachyos-trusted
@@ -3884,7 +3884,7 @@ systemctl enable bluetooth.service ModemManager.service NetworkManager.service
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
-desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cachyos-wallpapers cachyos-plymouth-theme cups ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 vulkan-intel vulkan-nouveau vulkan-radeon vulkan-swrast vulkan-virtio xdg-user-dirs-gtk xorg-server xorg-xinput"
+desktop_base="adobe-source-code-pro-fonts alsa-lib alsa-utils alsa-topology-conf alsa-ucm-conf at-spi2-core avahi cachyos-wallpapers cachyos-plymouth-theme cups ffmpeg gvfs iio-sensor-proxy intel-media-driver libva-mesa-driver nss-mdns pipewire-audio pipewire-alsa pipewire-jack pipewire-pulse wireplumber sof-firmware system-config-printer ttf-dejavu ttf-roboto udisks2 xdg-user-dirs-gtk xorg-server xorg-xinput"
 desktop_services="avahi-daemon.service cups.service"
 case "${environment}" in
 	'Budgie')
@@ -5563,7 +5563,7 @@ echo "substituters = https://foxflake.cachix.org/ https://cache.nixos.org/" > /t
 echo "trusted-public-keys = foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
 sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --show-trace
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --show-trace
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
 sudo -u temp bash /tmp/nixos_install
@@ -6059,7 +6059,7 @@ echo "substituters = http://37.59.123.5:8080/glf/ https://cache.nixos.org/" > /t
 echo "trusted-public-keys = glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
 sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --show-trace
+sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --show-trace
 /install_scripts/install_flatpak
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
@@ -7572,7 +7572,7 @@ if [ ! -z "${custom_script}" ]; then
 fi
 }
 
-chroot_NixOS-25.11()
+chroot_NixOS-26.05()
 {
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
@@ -12269,7 +12269,7 @@ ${foxflake_nvidia}
 $(cat "${custom_script}" 2>/dev/null)
 
   # Initially installed version (DO NOT TOUCH)
-  foxflake.stateVersion = "25.11";
+  foxflake.stateVersion = "26.05";
 }
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
@@ -12316,7 +12316,7 @@ ${autologin_commands}
 
 $(cat "${custom_script}" 2>/dev/null)
 
-  system.stateVersion = "25.11"; # DO NOT TOUCH
+  system.stateVersion = "26.05"; # DO NOT TOUCH
 }
 NIXOSCONFIGURATION
 else
@@ -12390,7 +12390,7 @@ $(cat "${custom_script}" 2>/dev/null)
 # this value at the release version of the first install of this system.
 # Before changing this value read the documentation for this option
 # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
-system.stateVersion = "25.11"; # Did you read the comment?
+system.stateVersion = "26.05"; # Did you read the comment?
 }
 NIXOSCONFIGURATION
 fi

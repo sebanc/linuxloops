@@ -96,7 +96,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Manjaro|Stable<br>Testing|✓ (shim-signed AUR)|✓|✓|[notes][Manjaro-notes]|
 |MX|25|✓|✓|✓||
 |Neon|Stable|✓|✓|✓||
-|NixOS|25.11<br>Unstable|✓|✓|||
+|NixOS|26.05<br>Unstable|✓|✓|||
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
 |Pop|24.04|✓|✓|✓||
 |Proxmox|VE9|✓|✓|||
