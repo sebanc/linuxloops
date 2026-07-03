@@ -3729,6 +3729,8 @@ mount "${partition_path}"1 /isomount/data
 if [ "${brunch_version}" == "Unstable" ]; then brunch_url="https://api.github.com/repos/sebanc/brunch-unstable/releases/latest"; else brunch_url="https://api.github.com/repos/sebanc/brunch/releases/latest"; fi
 echo "Downloading Brunch ${brunch_version}"
 for i in {1..10}; do
+	brunch_download_url=\$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g')
+	if [ "\${brunch_download_url}" == "" ]; then sleep 10; continue; fi
 	if curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f \$(curl -L -s "\${brunch_url}" | grep browser_download_url | tr -d '"' | sed 's#browser_download_url: ##g') -o /isomount/data/brunch.tar.gz; then
 		if [ "\$(sha256sum /isomount/data/brunch.tar.gz | cut -d' ' -f1)" == "\$(curl -L "\${brunch_url}" | sed 's@\\\\n@\n@g' | grep 'release_sha256sum=' | sed 's@"\|,@@g' | cut -d'=' -f2)" ]; then
 			echo "sha256sum verification succeeded"
@@ -3838,27 +3840,24 @@ set -e
 if [ "${cachyos_version}" == "x86-64-v4" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v4.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
-	sed -i 's@Server = https://us.cachyos.org/repo@#Server = https://us.cachyos.org/repo@g' /etc/pacman.d/cachyos-mirrorlist
 	cp /etc/pacman.d/cachyos-mirrorlist /etc/pacman.d/cachyos-v4-mirrorlist
 	sed -i 's|/\$arch/|/\$arch_v4/|g' /etc/pacman.d/cachyos-v4-mirrorlist
 
 elif [ "${cachyos_version}" == "x86-64-v3" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman-v3.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
-	sed -i 's@Server = https://us.cachyos.org/repo@#Server = https://us.cachyos.org/repo@g' /etc/pacman.d/cachyos-mirrorlist
 	cp /etc/pacman.d/cachyos-mirrorlist /etc/pacman.d/cachyos-v3-mirrorlist
 	sed -i 's|/\$arch/|/\$arch_v3/|g' /etc/pacman.d/cachyos-v3-mirrorlist
 else
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/docker/raw/refs/heads/master/pacman.conf -o /etc/pacman_cachyos.conf
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/CachyOS/CachyOS-PKGBUILDS/raw/refs/heads/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
-	sed -i 's@Server = https://us.cachyos.org/repo@#Server = https://us.cachyos.org/repo@g' /etc/pacman.d/cachyos-mirrorlist
 fi
 if [ ! -z "${mirror_CachyOS}" ]; then
 	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch/\$repo' >> /etc/pacman.d/cachyos-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v3/\$repo' >> /etc/pacman.d/cachyos-v3-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; echo 'Server = ${mirror_CachyOS}/\$arch_v4/\$repo' >> /etc/pacman.d/cachyos-v4-mirrorlist; fi
 else
-	cur_speed=0; for i in https://cdn.cachyos.org/repo https://mirror.cachyos.org/repo https://us.cachyos.org/repo; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/x86_64/cachyos/cachyos.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}
+	cur_speed=0; for i in https://cdn.cachyos.org/repo https://mirror.cachyos.org/repo; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/x86_64/cachyos/cachyos.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}
 	if [ -f /etc/pacman.d/cachyos-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v3-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v3-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v3-mirrorlist; fi
 	if [ -f /etc/pacman.d/cachyos-v4-mirrorlist ]; then sed -i 's@^Server@#Server@g' /etc/pacman.d/cachyos-v4-mirrorlist; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/cachyos-v4-mirrorlist; fi
@@ -7967,7 +7966,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 zypper --root /mnt addrepo ${mirror_OpenSUSE}/distribution/$(echo ${opensuse_version} | tr A-Z a-z)/repo/oss/ repo-oss
-rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-62b07e22.asc
+rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-6a17fa38.asc
 zypper --root /mnt refresh
 zypper --root /mnt --non-interactive install patterns-base-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper openSUSE-repos-Leap
 PREPARE_CHROOT
@@ -8185,7 +8184,7 @@ cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
 zypper --root /mnt addrepo ${mirror_OpenSUSE}/$(echo ${opensuse_version} | tr A-Z a-z)/repo/oss/ repo-oss
-rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-62b07e22.asc
+rpm --root=/mnt --import /usr/lib/rpm/gnupg/keys/gpg-pubkey-29b700a4-6a17fa38.asc
 zypper --root /mnt refresh
 zypper --root /mnt --non-interactive install patterns-base-base attr coreutils diffutils dirmngr filesystem glibc-locale glibc-i18ndata grep gzip lsof pam permissions rpm sed shadow system-group-wheel zypper openSUSE-repos-${opensuse_version}
 PREPARE_CHROOT
