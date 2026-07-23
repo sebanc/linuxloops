@@ -554,18 +554,18 @@ case "${distribution}" in
 		surface_supported="No"
 		case "${version}" in
 			'Leap/15.6')
-				bootstrap="rootfs-xz https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://slc-mirror.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
 			;;
 			*)
-				bootstrap="rootfs-xz https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://slc-mirror.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
 			;;
 		esac
 	;;
@@ -5575,7 +5575,8 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+# Keep nixos-25.11 until the nixpkgs issue #16005 is solved
+nix-channel --add https://nixos.org/channels/nixos-25.11 nixpkgs
 nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
@@ -5584,8 +5585,8 @@ sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-c
 echo "substituters = https://foxflake.cachix.org/ https://cache.nixos.org/" > /tmp/nix.conf
 echo "trusted-public-keys = foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --show-trace
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo  NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --show-trace
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
 sudo -u temp bash /tmp/nixos_install
@@ -6077,7 +6078,8 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+# Keep nixos-25.11 until the nixpkgs issue #16005 is solved
+nix-channel --add https://nixos.org/channels/nixos-25.11 nixpkgs
 nix-channel --update
 nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
@@ -6086,8 +6088,8 @@ sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-c
 echo "substituters = http://37.59.123.5:8080/glf/ https://cache.nixos.org/" > /tmp/nix.conf
 echo "trusted-public-keys = glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_USER_CONF_FILES=/tmp/nix.conf PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --show-trace
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
+sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --show-trace
 /install_scripts/install_flatpak
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
@@ -7990,7 +7992,7 @@ initramfs_type="nixos_config"
 
 chroot_OpenSUSE-Leap-16.0()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://mirrorcache.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -8209,7 +8211,7 @@ fi
 
 chroot_OpenSUSE-Tumbleweed()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://mirrorcache.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://download.opensuse.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -9326,12 +9328,11 @@ export GAMESCOPE_DISABLE_ASYNC_FLIPS=1
 export GAMESCOPE_LIMITER_FILE=\$(mktemp /tmp/gamescope-limiter.XXXXXXXX)
 export GAMESCOPE_NV12_COLORSPACE=k_EStreamColorspace_BT601
 export GTK_IM_MODULE=Steam
-export INTEL_DEBUG=noccs
+export INTEL_DEBUG=noccs,norbc
 export MANGOHUD_CONFIGFILE="\${tmpdir:+\$tmpdir/mangohud.config}"
 export MESA_SHADER_CACHE_MAX_SIZE=12G
 export QT_IM_MODULE=steam
 export QT_QPA_PLATFORM_THEME=kde
-export R600_DEBUG=nodcc
 export SDL_VIDEO_MINIMIZE_ON_FOCUS_LOSS=0
 export SRT_URLOPEN_PREFER_STEAM=1
 export STEAM_DISABLE_AUDIO_DEVICE_SWITCHING=1
@@ -12482,12 +12483,11 @@ services.logrotate.checkConfig = false;
 
 boot.loader.efi.canTouchEfiVariables = false;
 boot.loader.efi.efiSysMountPoint = "/boot/efi";
-boot.loader.grub.configurationLimit = 5;
 boot.loader.grub.device = "nodev";
 boot.loader.grub.efiInstallAsRemovable = true;
 boot.loader.grub.efiSupport = true;
 boot.loader.grub.enable = true;
-boot.loader.grub.extraInstallCommands = ''	
+boot.loader.grub.extraInstallCommands = ''
   \\\${pkgs.coreutils}/bin/cat >/tmp/sbat.csv <<GRUBSBAT
 sbat,1,SBAT Version,sbat,1,https://github.com/rhboot/shim/blob/main/SBAT.md
 grub,3,Free Software Foundation,grub,2:\\\$(\\\${pkgs.grub2_efi}/bin/grub-install -V | \\\${pkgs.coreutils}/bin/cut -d' ' -f3),https//www.gnu.org/software/grub/
