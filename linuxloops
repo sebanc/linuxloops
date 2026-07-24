@@ -72,10 +72,10 @@ case "${distribution}" in
 	'Artix')
 		available_versions=( "Openrc" "Runit" "S6" "Dinit" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Stable/Openrc"
+		default_version="Openrc"
 	;;
 	'Bazzite')
-		available_versions=( "Stable" "Testing" )
+		available_versions=( "Stable" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
 	;;
@@ -181,7 +181,7 @@ case "${distribution}" in
 	;;
 	'OpenSUSE')
 		available_versions=( "Leap/16.0" "Tumbleweed" )
-		available_versions_longname=( "Leap/16.0" "Tumbleweed" )
+		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Leap/16.0"
 	;;
 	'Pop')
