@@ -5575,10 +5575,9 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-# Keep nixos-25.11 until the nixpkgs issue #16005 is solved
-nix-channel --add https://nixos.org/channels/nixos-25.11 nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
@@ -6078,10 +6077,9 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-# Keep nixos-25.11 until the nixpkgs issue #16005 is solved
-nix-channel --add https://nixos.org/channels/nixos-25.11 nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
@@ -7645,9 +7643,9 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
@@ -7836,9 +7834,9 @@ sudo mkdir -p /nix
 sudo chown -R temp /nix
 curl --proto '=https' --tlsv1.2 --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://nixos.org/nix/install | sh
 source \$HOME/.nix-profile/etc/profile.d/nix.sh
-nix-channel --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixpkgs
+nix-channel --add https://nixos.org/channels/nixos-unstable nixpkgs
 nix-channel --update
-nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nixos-install-tools
+nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs.nixos-install-tools
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
