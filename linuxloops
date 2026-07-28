@@ -554,18 +554,18 @@ case "${distribution}" in
 		surface_supported="No"
 		case "${version}" in
 			'Leap/15.6')
-				bootstrap="rootfs-xz https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://ftp.uni-erlangen.de/opensuse/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://download.opensuse.org/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://ftp.uni-erlangen.de/opensuse/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://ftp.uni-erlangen.de/opensuse/distribution/leap/15.6/appliances/opensuse-leap-image.x86_64-lxc.tar.xz.sha256.asc"
 			;;
 			*)
-				bootstrap="rootfs-xz https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
+				bootstrap="rootfs-xz https://ftp.uni-erlangen.de/opensuse/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
 				gpg_check_extension=".sha256sum"
 				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://download.opensuse.org/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
+				rootfs_sha256sum="https://ftp.uni-erlangen.de/opensuse/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
+				rootfs_signature="https://ftp.uni-erlangen.de/opensuse/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
 			;;
 		esac
 	;;
@@ -7990,7 +7990,7 @@ initramfs_type="nixos_config"
 
 chroot_OpenSUSE-Leap-16.0()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://rsync.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://ftp.uni-erlangen.de/opensuse"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -8209,7 +8209,7 @@ fi
 
 chroot_OpenSUSE-Tumbleweed()
 {
-if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://rsync.opensuse.org"; fi
+if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://ftp.uni-erlangen.de/opensuse"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -12844,6 +12844,7 @@ else
 	pacman -Syu --noconfirm --needed git fakeroot
 fi
 git clone --depth=1 -b shim-signed https://github.com/archlinux/aur.git /tmp/shim-signed
+curl -L https://aur.archlinux.org/cgit/aur.git/plain/PKGBUILD?h=shim-signed\&id=cfe8ab4762612c05120081a127a1165ca211820e -o /tmp/shim-signed/PKGBUILD
 chown -R nobody:nobody /tmp/shim-signed
 sudo -u nobody bin/bash -c "cd /tmp/shim-signed && makepkg -s"
 pacman -U --noconfirm /tmp/shim-signed/*.pkg.tar.*
@@ -15907,6 +15908,9 @@ else
 		shift
 	done
 	if ! curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://github.com/sebanc/linuxloops > /dev/null 2>&1; then echo -e "Internet connection not available, please make sure you are connected to the internet."; exit 1; fi
+	if [ -z "${distribution}" ] || [[ ! " ${available_distributions[*]} " =~ " ${distribution} " ]]; then echo -e "Please select a distribution from the below list:"; list_array "available_distributions"; exit 1; fi
+	distribution_parameters
+	if [ ! -z "${version}" ] && [[ ! " ${available_versions[*]} " =~ " ${version} " ]]; then echo -e "Please select a version from the below list:"; list_array "available_versions"; exit 1; elif [ -z "${version}" ]; then version="${default_version}"; fi
 	if [[ $EUID -ne 0 ]]; then
 		exec sudo --preserve-env=DISPLAY,GITHUB_TOKEN,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash ${0} ${linuxloops_cmdline}
 	fi
