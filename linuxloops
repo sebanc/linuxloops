@@ -13177,10 +13177,10 @@ if [ "${distribution}" == "Bazzite" ] || [ "${distribution}" == "Fedora-Atomic" 
 	sed -i "/(ostree:1)/,/}/d" /boot/grub2/grub.cfg
 	echo "Applying selinux labels..."
 	echo '/var/swap(/.*)?       system_u:object_r:swapfile_t:s0' >> /etc/selinux/targeted/contexts/files/file_contexts.local
-	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /boot
-	for i in \$(ls /ostree/deploy/atomic/deploy | grep -v '\.origin'); do
-		setfiles -r /ostree/deploy/atomic/deploy/\${i} -c /ostree/deploy/atomic/deploy/\${i}/etc/selinux/targeted/policy/policy.* /ostree/deploy/atomic/deploy/\${i}/etc/selinux/targeted/contexts/files/file_contexts /ostree/deploy/atomic/deploy/\${i}
+	for i in \$(ls /sysroot/ostree/deploy/atomic/deploy | grep -v '\.origin'); do
+		setfiles -r /sysroot/ostree/deploy/atomic/deploy/\${i} -c /sysroot/ostree/deploy/atomic/deploy/\${i}/etc/selinux/targeted/policy/policy.* /sysroot/ostree/deploy/atomic/deploy/\${i}/etc/selinux/targeted/contexts/files/file_contexts /sysroot/ostree/deploy/atomic/deploy/\${i}
 	done
+	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /boot
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /etc
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts /var
 	setfiles -c /etc/selinux/targeted/policy/policy.* /etc/selinux/targeted/contexts/files/file_contexts.homedirs /var/home
@@ -15943,6 +15943,8 @@ else
 	if [ -z "${distribution}" ] || [[ ! " ${available_distributions[*]} " =~ " ${distribution} " ]]; then echo -e "Please select a distribution from the below list:"; list_array "available_distributions"; exit 1; fi
 	distribution_parameters
 	if [ ! -z "${version}" ] && [[ ! " ${available_versions[*]} " =~ " ${version} " ]]; then echo -e "Please select a version from the below list:"; list_array "available_versions"; exit 1; elif [ -z "${version}" ]; then version="${default_version}"; fi
+	distribution_version_parameters
+	if [ -z "${environment}" ] || [[ ! " ${available_environments[*]} " =~ " ${environment} " ]]; then echo -e "Please select an environment from the below list:"; list_array "available_environments"; exit 1; fi
 	if [[ $EUID -ne 0 ]]; then
 		exec sudo --preserve-env=DISPLAY,GITHUB_TOKEN,WAYLAND_DISPLAY,XAUTHORITY,XDG_RUNTIME_DIR bash ${0} ${linuxloops_cmdline}
 	fi
