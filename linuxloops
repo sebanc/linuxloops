@@ -546,21 +546,13 @@ case "${distribution}" in
 		available_environments=( "None" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Lxqt/Full" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="opensuse"
 		bootloader_name="shim.efi"
+		bootstrap="lxc opensuse tumbleweed default"
 		btrfs_supported="Yes"
 		chroot_function="${distribution}-$(echo ${version} | sed 's@/@-@g')"
 		mirrors_supported=( "OpenSUSE" )
 		nvidia_supported="Yes"
 		opensuse_version="${version}"
 		surface_supported="No"
-		case "${version}" in
-			*)
-				bootstrap="rootfs-xz https://opensuse.mirror.liteserver.nl/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz"
-				gpg_check_extension=".sha256sum"
-				master_key="AD485664E901B867051AB15F35A2F86E29B700A4"
-				rootfs_sha256sum="https://opensuse.mirror.liteserver.nl/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256"
-				rootfs_signature="https://opensuse.mirror.liteserver.nl/tumbleweed/appliances/opensuse-tumbleweed-image.x86_64-lxc.tar.xz.sha256.asc"
-			;;
-		esac
 	;;
 	'Pop')
 		available_environments=( "None" "Full" )
