@@ -2872,6 +2872,7 @@ pacman-key --init
 pacman-key --populate
 echo -e "\n# Arch\n#[extra-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n[extra]\nInclude = /etc/pacman.d/mirrorlist-arch\n\n#[multilib-testing]\n#Include = /etc/pacman.d/mirrorlist-arch\n\n#[multilib]\n#Include = /etc/pacman.d/mirrorlist-arch" >> /etc/pacman.conf
 pacman -Syu --noconfirm --needed linux linux-headers mkinitcpio dkms linux-firmware sof-firmware wireless-regdb bash sudo modemmanager networkmanager networkmanager-s6 wpa_supplicant bluez bluez-s6 cryptsetup cryptsetup-s6 e2fsprogs ntfs-3g ntfsprogs nano acpid acpid-s6 curl bash-completion gnupg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr grub os-prober shim amd-ucode intel-ucode sbsigntools mokutil dosfstools btrfs-progs cpio bubblewrap fastfetch
+s6 repo sync
 s6 set enable tmpfiles-setup sysusers swap remount-root random-seed mount-filesystems locale console-setup cleanup elogind dbus-srv dbus-log cryptsetup bluetoothd NetworkManager
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -2904,71 +2905,71 @@ case "${environment}" in
 	default_session="budgie-desktop"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 budgie-desktop nemo gnome-terminal network-manager-applet gnome-keyring papirus-icon-theme xdg-desktop-portal-gtk
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 cinnamon cinnamon-settings-daemon gnome-terminal nemo network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk cinnamon-translations
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 	'Lxqt')
 	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt-config lxqt-notificationd lxqt-panel lxqt-policykit lxqt-powermanagement lxqt-qtplugin lxqt-session lxqt-themes openbox pcmanfm-qt qterminal network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 	'Lxqt/Full')
 	default_session="lxqt"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 lxqt network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal network-manager-applet gnome-keyring blueman mate-media mate-power-manager mate-applets xdg-desktop-portal-gtk
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 mate mate-terminal mate-extra network-manager-applet gnome-keyring blueman xdg-desktop-portal-gtk
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 artix-sddm-theme plasma-desktop plasma-nm plasma-pa kwin dolphin konsole bluedevil powerdevil systemsettings discover kwallet-pam kscreen kde-gtk-config xsettingsd packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
-s6 set enable sddm
 "
+	desktop_services="${desktop_services} sddm"
 	;;
 	'Plasma/Full')
 	default_session="plasma"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} sddm qt6-virtualkeyboard sddm-s6 artix-sddm-theme plasma dolphin konsole packagekit-qt6 falkon breeze-gtk breeze-icons xdg-desktop-portal-kde
-s6 set enable sddm
 "
+	desktop_services="${desktop_services} sddm"
 	;;
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-whiskermenu-plugin network-manager-applet gnome-keyring blueman xfce4-pulseaudio-plugin papirus-icon-theme xdg-desktop-portal-gtk
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 pacman -S --noconfirm --needed ${desktop_base} lightdm lightdm-slick-greeter lightdm-s6 xfce4 xfce4-goodies network-manager-applet gnome-keyring blueman papirus-icon-theme xdg-desktop-portal-gtk
-s6 set enable lightdm
 "
+	desktop_services="${desktop_services} lightdm"
 	;;
 esac
 cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
@@ -2976,6 +2977,7 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
 ${install_desktop}
+s6 repo sync
 s6 set enable ${desktop_services}
 s6 set commit -f
 s6 live install --init
