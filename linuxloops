@@ -6148,40 +6148,40 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Gnome')
 	default_session="gnome"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-applet gnome-keyring libpam-gnome-keyring xdg-desktop-portal-gnome
 "
 	;;
 	'Gnome/Full')
 	default_session="gnome"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-gnome gnome-keyring libpam-gnome-keyring kali-linux-default xdg-desktop-portal-gnome
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} gdm3 kali-desktop-gnome gnome-backgrounds gnome-icon-theme network-manager-applet gnome-keyring libpam-gnome-keyring kali-linux-default xdg-desktop-portal-gnome
 "
 	;;
 	'Mate')
 	default_session="mate"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-media network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-media network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit xdg-desktop-portal-gtk
 "
 	;;
 	'Mate/Full')
 	default_session="mate"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-media network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit kali-linux-default xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-mate mate-media network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit kali-linux-default xdg-desktop-portal-gtk
 "
 	;;
 	'Plasma')
@@ -6200,14 +6200,14 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} sddm kali-
 	'Xfce')
 	default_session="xfce"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk
 "
 	;;
 	'Xfce/Full')
 	default_session="xfce"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-gnome gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter kali-desktop-xfce xfce4-whiskermenu-plugin network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk
 "
 	;;
 esac
@@ -13778,10 +13778,15 @@ config="menuentry '${label}' --class '${class}' {${remove_tpm}
 "
 fi
 if [ ! -z "${nixos}" ]; then
-	config="boot.loader.grub.extraEntries = ''
+	config="{ config, pkgs, lib, ... }:
+{
+boot.loader.grub.extraEntries = ''
 "$(echo "${config}" | sed "s@\\\$@''\\\$@g")"
 '';
+}
 "
+mkdir -p /etc/nixos/linuxloops
+echo -e "${config}" > /etc/nixos/linuxloops/$(basename "${fullpath}" | cut -d'.' -f1).nix
 fi
 echo -e "${config}" > "${fullpath}".grub.txt
 chown ${SUDO_UID}:$(id -g ${SUDO_UID}) "${fullpath}".grub.txt
@@ -15371,7 +15376,7 @@ else
 	else
 		if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
 		if [ ! -z "${nixos}" ]; then
-			grubinstall="The nixos config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have grub as bootloader, add this configuration to your /etc/nixos/configuration.nix and run the below command to update grub:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo nixos-rebuild boot</textarea><br><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>You can then reboot your computer and start ${distribution}."
+			grubinstall="The NixOS configuration needed to boot ${distribution} has been generated in the file \"/etc/nixos/linuxloops/$(basename "${fullpath}" | cut -d'.' -f1).nix\".<br><br>Ensure that you use grub as bootloader, import this configuration from your /etc/nixos/configuration.nix and rebuild your configuration.<br><br>You can then reboot your computer and start ${distribution}."
 		else
 			grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".<br><br>If you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:<br><textarea id=\"configuration\" cols=\"80\" rows=\"4\" style=\"font-size: 14px;\">sudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)</textarea><br><button onclick=\"copy_configuration()\">Copy command to clipboard</button><br><br>Otherwise, add the grub config manually to another grub bootloader.<br><br>You can then reboot your computer and start ${distribution}."
 		fi
@@ -15581,10 +15586,14 @@ if [ "${install_type}" == "disk" ]; then
 	read -p "WARNING: All data on device ${destination} will be erased, are you sure you want to continue ? (type yes to continue)"$'\n' confirm
 	if [ -z ${confirm} ] || [ ! ${confirm} == "yes" ]; then echo "Invalid answer ${confirm}, exiting"; exit 1; fi
 	start_install || exit_with_error "Failed to install ${distribution} in chroot."
+	echo -e "\nLinuxloops installation process successfully completed.\n"
+	echo -e "--------------------------------------------------------------------------------\n"
 	echo -e "\nLinuxloops installation process is finished.\nYou can now reboot your computer and start ${distribution} by selecting your device in the UEFI boot menu."
 else
 	start_install || exit_with_error "Failed to install ${distribution} in chroot."
 	grub_config
+	echo -e "\nLinuxloops installation process successfully completed.\n"
+	echo -e "--------------------------------------------------------------------------------\n"
 	if [ ! -z "${wsl}" ]; then
 		grubinstall="The ${distribution} disk image has been created at $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g'). You can either write this disk image to a usb flashdrive / sdcard with a tool like DiskImager or boot it directly using Grub2Win.\n\n********************************************************************************************\nIf you want to boot the image directly using Grub2Win:\nThe grub config needed to boot ${distribution} has been generated in the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt\nYou need to install Grub2Win and launch it, click on \"Manage Boot Menu\" -> \"Add a new entry\" -> set \"Type\" as \"Create user section\", open the file $(echo ${fullpath:5:1} | tr a-z A-Z):\\\\$(echo ${fullpath:7} | sed 's@\/@\\\\@g').grub.txt and copy its content in the Grub2Win notepad window, save and close the Grub2Win notepad window then click \"Apply\" and \"OK\".\nPlease note that ${distribution} will not be bootable and / or stable if you do not perform the below actions (Refer to Windows online resources if needed):\n- Ensure that bitlocker is disabled on the drive which contains the ${distribution} image or disable it.\n- Disable fast startup.\n- Disable hibernation.\n\nOnce done, reboot your computer and select ${distribution} from the Grub2Win menu.\n********************************************************************************************"
 		echo -e "\n${grubinstall}"
@@ -15597,7 +15606,7 @@ else
 	else
 		if [ -d /boot/grub2 ]; then grub="grub2"; else grub="grub"; fi
 		if [ ! -z "${nixos}" ]; then
-			grubinstall="The nixos config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have grub as bootloader, add this configuration to your /etc/nixos/configuration.nix and run the below command to update grub:\n********************************************************************************************\nsudo nixos-rebuild boot\n********************************************************************************************\n\nYou can then reboot your computer and start ${distribution}."
+			grubinstall="The NixOS configuration needed to boot ${distribution} has been generated in the file \"/etc/nixos/linuxloops/$(basename "${fullpath}" | cut -d'.' -f1).nix\".\n\nEnsure that you use grub as bootloader, import this configuration from your /etc/nixos/configuration.nix and rebuild your configuration.\n\nYou can then reboot your computer and start ${distribution}."
 		else
 			grubinstall="The grub config needed to boot ${distribution} has been generated in the file \"${fullpath}.grub.txt\".\n\nIf you have a linux distribution installed which uses grub as bootloader, run the below command to generate the grub config automatically:\n********************************************************************************************\nsudo cat /etc/grub.d/40_custom ${fullpath}.grub.txt | sudo tee /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo chmod 0755 /etc/grub.d/99_linuxloops_$(echo ${distribution} | tr [:upper:] [:lower:]); sudo ${grub}-mkconfig -o $(if cat /etc/os-release | grep 'VARIANT_ID=' | grep -q 'silverblue\|kinoite'; then echo /etc/grub2.cfg; else echo /boot/${grub}/grub.cfg; fi)\n********************************************************************************************\n\nOtherwise, add the below grub config manually to another grub bootloader:\n********************************************************************************************\n${config}*******************************************************************************************\n\nYou can then reboot your computer and start ${distribution}."
 		fi
