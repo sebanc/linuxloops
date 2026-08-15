@@ -1756,15 +1756,21 @@ chroot_Arch-Stable()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -2009,15 +2015,21 @@ chroot_Arch-Testing()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -2265,15 +2277,21 @@ chroot_Artix-Openrc()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -2553,15 +2571,21 @@ chroot_Artix-Runit()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -2826,15 +2850,21 @@ chroot_Artix-S6()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -3104,15 +3134,21 @@ chroot_Artix-Dinit()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -3536,15 +3572,21 @@ chroot_BlissOS()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g ntfsprogs openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -3695,15 +3737,21 @@ chroot_Brunch()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano openssl sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -3826,15 +3874,21 @@ chroot_CachyOS()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -4112,15 +4166,21 @@ chroot_ChromeOS-Flex()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion busybox bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr gzip libarchive lsof nano ntfs-3g ntfsprogs openssl sbsigntools sudo strace tar util-linux unzip xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -5530,15 +5590,21 @@ chroot_FoxFlake()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -5594,15 +5660,21 @@ chroot_Gentoo-Openrc()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -5814,15 +5886,21 @@ chroot_Gentoo-Systemd()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -6032,15 +6110,21 @@ chroot_GLF-OS()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -6313,15 +6397,21 @@ chroot_KDE()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -6723,15 +6813,21 @@ chroot_Manjaro-Stable()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -6970,15 +7066,21 @@ chroot_Manjaro-Testing()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr git gzip jq lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -7598,15 +7700,21 @@ chroot_NixOS-26.05()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -7789,15 +7897,21 @@ chroot_NixOS-Unstable()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -9028,15 +9142,21 @@ chroot_SteamOS()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed aria2 bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cryptsetup curl dosfstools e2fsprogs efibootmgr gzip lsof nano openssl sudo strace tar util-linux wget xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
@@ -9832,15 +9952,21 @@ chroot_Tails()
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
-sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
-curl https://archlinux.org/mirrorlist/all/ -o /etc/pacman.d/mirrorlist
+sed "s@/etc/pacman.d/mirrorlist@/tmp/pacman-mirrorlist@g" /etc/pacman.conf > /tmp/pacman.conf
 if [ ! -z "${mirror_Arch}" ]; then
-	echo 'Server = ${mirror_Arch}/\$repo/os/\$arch' >> /etc/pacman.d/mirrorlist
+	default_mirror=${mirror_Arch}
 else
-	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; for i in https://geo.mirror.pkgbuild.com https://mirrors.rit.edu/archlinux https://archlinux.mirror.digitalpacific.com.au; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/core/os/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done
 fi
-pacman-key --init
-pacman-key --populate
+echo Using mirror \${default_mirror}
+echo "Server = \${default_mirror}/\\\$repo/os/\\\$arch" > /tmp/pacman-mirrorlist
+rm /etc/pacman.conf /etc/pacman.d/mirrorlist
+pacman-key --config /tmp/pacman.conf --init
+pacman-key --config /tmp/pacman.conf --populate
+pacman --config /tmp/pacman.conf -Syu --noconfirm pacman pacman-mirrorlist
+rm /tmp/pacman.conf /tmp/pacman-mirrorlist
+sed -i 's@#ParallelDownloads@ParallelDownloads@g' /etc/pacman.conf
+sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 pacman -Syu --noconfirm --needed bash bash-completion btrfs-progs bzip2 ca-certificates coreutils cpio cryptsetup curl dosfstools e2fsprogs efibootmgr fatresize gzip lsof nano openssl parted sbsigntools sudo strace tar util-linux xz zstd
 PREPARE_BOOTSTRAP
 chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
