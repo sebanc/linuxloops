@@ -12910,7 +12910,7 @@ mv /boot/efi/EFI/BOOT/grubx64.efi /boot/efi/EFI/BOOT/BOOTX64.EFI
 REINSTALLBOOTLOADER
 	else
 		cat >>/boot/linuxloops/reinstall-bootloader <<REINSTALLBOOTLOADER
-mkdir -p /boot/efi/EFI
+mkdir -p /boot/efi/EFI/"${bootloader_id}"
 dnf reinstall -y shim-* grub2-efi-* grub2-common
 cp /boot/efi/EFI/"${bootloader_id}"/grubx64.efi /boot/efi/EFI/BOOT/grubx64.efi
 cp /boot/efi/EFI/"${bootloader_id}"/grub.cfg /boot/efi/EFI/BOOT/grub.cfg
