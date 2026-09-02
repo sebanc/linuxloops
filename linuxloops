@@ -5190,7 +5190,7 @@ dnf upgrade --refresh -y
 dnf install -y kernel kernel-headers dracut dkms linux-firmware iwlegacy-firmware iwlwifi-dvm-firmware iwlwifi-mvm-firmware wireless-regdb glibc-locale-source ntfs-3g bash sudo ModemManager NetworkManager-bluetooth NetworkManager-tui NetworkManager-wifi wpa_supplicant bluez cryptsetup e2fsprogs ntfsprogs nano acpid curl bash-completion gpg polkit xdg-user-dirs zstd fwupd net-tools upower efibootmgr nss-mdns grub2-efi-x64 os-prober shim microcode_ctl sbsigntools mokutil selinux-policy-targeted dosfstools btrfs-progs cpio bubblewrap langpacks-${packages_locale}
 systemctl enable bluetooth.service dbus.socket dbus-broker.service ModemManager.service NetworkManager.service systemd-resolved.service
 systemctl --global enable dbus.socket dbus-broker.service
-dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
+dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(echo ${fedora_version} | tr A-Z a-z).noarch.rpm
 dnf upgrade --refresh -y
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
@@ -5516,7 +5516,7 @@ else
 fi
 /usr/lib/ostree/ostree-remount
 rpm-ostree start-daemon
-rpm-ostree -y install --apply-live https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
+rpm-ostree -y install --apply-live https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-\$(rpm -E %fedora).noarch.rpm https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-\$(rpm -E %fedora).noarch.rpm
 rpm-ostree update --uninstall rpmfusion-free-release --uninstall rpmfusion-nonfree-release --install rpmfusion-free-release --install rpmfusion-nonfree-release
 rpm-ostree override remove firefox firefox-langpacks
 flatpak remote-add --if-not-exists --system flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -6835,22 +6835,22 @@ chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
 cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/pacman.git /tmp/manjaro/pacman
-cp /tmp/manjaro/pacman/pacman.conf /etc/pacman_manjaro.conf
-sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
+echo 'Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+pacman -Syy
+mkdir /tmp/manjaro
+curl -L https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/manjaro-keyring-\$(pacman -Ss manjaro-keyring | grep '^core/manjaro-keyring ' | cut -d' ' -f2)-any.pkg.tar.zst -o /tmp/manjaro/manjaro-keyring.tar.zst
+pacman -U --noconfirm /tmp/manjaro/manjaro-keyring.tar.zst
+curl -L https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/pacman-\$(pacman -Ss pacman | grep '^core/pacman ' | cut -d' ' -f2)-x86_64.pkg.tar.zst -o /tmp/manjaro/pacman.tar.zst
+tar -xOf /tmp/manjaro/pacman.tar.zst etc/pacman.conf > /etc/pacman_manjaro.conf
+rm -r /tmp/manjaro
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
 	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/manjaro-keyring.git /tmp/manjaro/manjaro-keyring
-cp /tmp/manjaro/manjaro-keyring/manjaro.gpg /usr/share/pacman/keyrings/manjaro.gpg
-cp /tmp/manjaro/manjaro-keyring/manjaro-trusted /usr/share/pacman/keyrings/manjaro-trusted
-cp /tmp/manjaro/manjaro-keyring/manjaro-revoked /usr/share/pacman/keyrings/manjaro-revoked
-rm -rf /tmp/manjaro
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
 curl -L https://repo.manjaro.org/mirrors.json | jq -r '.[] | ("## Country : " + .country + "\n#Server = " + .url + "$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch\n")' > /mnt/etc/pacman.d/mirrorlist
@@ -7088,22 +7088,22 @@ chmod 0755 "${bootstrapdir}"/install_scripts/prepare_bootstrap
 cat >"${bootstrapdir}"/install_scripts/prepare_chroot <<PREPARE_CHROOT
 #!/bin/bash
 set -e
-git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/pacman.git /tmp/manjaro/pacman
-cp /tmp/manjaro/pacman/pacman.conf /etc/pacman_manjaro.conf
-sed -i '/SyncFirst/d' /etc/pacman_manjaro.conf
+echo 'Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
+pacman -Syy
+mkdir /tmp/manjaro
+curl -L https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/manjaro-keyring-\$(pacman -Ss manjaro-keyring | grep '^core/manjaro-keyring ' | cut -d' ' -f2)-any.pkg.tar.zst -o /tmp/manjaro/manjaro-keyring.tar.zst
+pacman -U --noconfirm /tmp/manjaro/manjaro-keyring.tar.zst
+curl -L https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/pacman-\$(pacman -Ss pacman | grep '^core/pacman ' | cut -d' ' -f2)-x86_64.pkg.tar.zst -o /tmp/manjaro/pacman.tar.zst
+tar -xOf /tmp/manjaro/pacman.tar.zst etc/pacman.conf > /etc/pacman_manjaro.conf
+rm -r /tmp/manjaro
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
 	echo '#Server = https://mirrors.ocf.berkeley.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
-	echo '#Server = https://mirror.math.princeton.edu/pub/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	echo '#Server = https://repo.ialab.dsu.edu/manjaro/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
+	echo '#Server = https://mirrors.manjaro.org/repo/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' >> /etc/pacman.d/mirrorlist
 	cur_speed=0; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
-git clone -b master --depth 1 https://gitlab.manjaro.org/packages/core/manjaro-keyring.git /tmp/manjaro/manjaro-keyring
-cp /tmp/manjaro/manjaro-keyring/manjaro.gpg /usr/share/pacman/keyrings/manjaro.gpg
-cp /tmp/manjaro/manjaro-keyring/manjaro-trusted /usr/share/pacman/keyrings/manjaro-trusted
-cp /tmp/manjaro/manjaro-keyring/manjaro-revoked /usr/share/pacman/keyrings/manjaro-revoked
-rm -rf /tmp/manjaro
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
 curl -L https://repo.manjaro.org/mirrors.json | jq -r '.[] | ("## Country : " + .country + "\n#Server = " + .url + "$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch\n")' > /mnt/etc/pacman.d/mirrorlist
