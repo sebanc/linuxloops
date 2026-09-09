@@ -301,7 +301,7 @@ case "${distribution}" in
 		surface_supported="No"
 	;;
 	'Brunch')
-		available_environments=( "Bobba" "Gumboz" "Jinlon" "Reven" "Shyvana" "Voxel" )
+		available_environments=( "Gumboz" "Jinlon" "Reven" "Voxel" )
 		bootloader_id="boot"
 		bootloader_name="bootx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -11406,10 +11406,18 @@ hardware.nvidia.nvidiaSettings = true;
 systemd.services.nvidia-suspend.enable = true;
 systemd.services.nvidia-resume.enable = true;
 systemd.services.nvidia-hibernate.enable = true;
-systemd.shutdown.\"nvidia.shutdown\" = pkgs.writeScript \"nvidia.shutdown\" ''
-  #!/bin/sh
+systemd.shutdown.\"nvidia-shutdown\" = pkgs.writeShellScript \"nvidia-shutdown.sh\" ''
+  # Dynamically unbind all VT consoles bound to a driver
+  for vtcon in /sys/class/vtconsole/vtcon*; do
+    if [ -f \"\\\$vtcon/bind\" ] && [ \"\\\$(\\\${pkgs.coreutils}/bin/cat \"\\\$vtcon/bind\")\" -eq 1 ]; then
+      echo 0 > \"\\\$vtcon/bind\" 2>/dev/null || true
+    fi
+  done
+  # Recursively unload modules
   for MODULE in nvidia_drm nvidia_modeset nvidia_uvm nvidia; do
-    if lsmod | grep \"''\\\${MODULE}\" &> /dev/null; then rmmod ''\\\${MODULE}; fi
+    if \\\${pkgs.kmod}/bin/lsmod | \\\${pkgs.gnugrep}/bin/grep \"\\\$MODULE\" > /dev/null 2>&1; then
+      \\\${pkgs.kmod}/bin/rmmod \"\\\$MODULE\"
+    fi
   done
 '';
 "
@@ -11474,8 +11482,17 @@ if [ -x /usr/lib/systemd/systemd ]; then
 	mkdir -p /etc/systemd/system-shutdown
 	cat >/etc/systemd/system-shutdown/nvidia.shutdown <<'SHUTDOWNFIX'
 #!/bin/sh
+# Dynamically unbind all VT consoles bound to a driver
+for vtcon in /sys/class/vtconsole/vtcon*; do
+	if [ -f "\$vtcon/bind" ] && [ "\$(cat "\$vtcon/bind")" -eq 1 ]; then
+		echo 0 > "\$vtcon/bind" 2>/dev/null || true
+	fi
+done
+# Recursively unload modules
 for MODULE in nvidia_drm nvidia_modeset nvidia_uvm nvidia; do
-	if lsmod | grep "\${MODULE}" &> /dev/null; then rmmod \${MODULE}; fi
+	if lsmod | grep "\$MODULE" > /dev/null 2>&1; then
+		rmmod "\$MODULE"
+	fi
 done
 SHUTDOWNFIX
 	chmod 0755 /etc/systemd/system-shutdown/nvidia.shutdown
@@ -12426,9 +12443,7 @@ $(cat "${custom_script}" 2>/dev/null)
 NIXOSCONFIGURATION
 elif [ "${distribution}" == "GLF-OS" ]; then
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/flake.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/flake.nix
-	if [ "${glfos_version}" == "Testing" ]; then
-		curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customized.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/customized.nix
-	fi
+	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customized.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/customized.nix
 	mkdir /mnt/etc/nixos/customConfig
 	curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://framagit.org/gaming-linux-fr/glf-os/glf-os/-/raw/$(echo ${glfos_version} | tr A-Z a-z)/iso-cfg/customConfig/default.nix?ref_type=heads\&inline=false -o /mnt/etc/nixos/customConfig/default.nix
 	cat >/mnt/etc/nixos/configuration.nix <<NIXOSCONFIGURATION
