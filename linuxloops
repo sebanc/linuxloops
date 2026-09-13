@@ -6191,7 +6191,7 @@ initramfs_type="nixos_config"
 chroot_Kali()
 {
 if [ -z "${mirror_Debian}" ]; then mirror_Debian="http://deb.debian.org/debian"; fi
-if [ -z "${mirror_Kali}" ]; then mirror_Kali="http://http.kali.org/kali"; fi
+if [ -z "${mirror_Kali}" ]; then mirror_Kali="https://archive.kali.org/kali"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -6234,14 +6234,14 @@ case "${environment}" in
 	'Cinnamon')
 	default_session="cinnamon"
 	install_desktop="
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon-desktop-environment gnome-terminal network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Cinnamon/Full')
 	default_session="cinnamon"
 	install_desktop="
 rm -f /etc/apt/apt.conf.d/99linuxloops
-DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter task-cinnamon-desktop gnome-terminal network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk cinnamon-l10n
+DEBIAN_FRONTEND=noninteractive apt install --purge -y ${desktop_base} lightdm slick-greeter cinnamon-desktop-environment gnome-terminal network-manager-applet gnome-keyring libpam-gnome-keyring blueman mate-polkit papirus-icon-theme kali-linux-default xdg-desktop-portal-gtk cinnamon-l10n
 "
 	;;
 	'Gnome')
