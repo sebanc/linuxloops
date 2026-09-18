@@ -5408,7 +5408,11 @@ docker:
 CONTAINERREGISTRY
 ostree admin init-fs /mnt
 ostree admin os-init atomic --sysroot=/mnt
-ostree container image deploy --sysroot=/mnt --stateroot=atomic --imgref=ostree-image-signed:docker://quay.io/fedora-ostree-desktops/$(echo ${environment} | tr A-Z a-z):$(echo ${fedora_version} | tr A-Z a-z)
+for i in {1..5}; do
+	ostree container image deploy --sysroot=/mnt --stateroot=atomic --imgref=ostree-image-signed:docker://quay.io/fedora-ostree-desktops/$(echo ${environment} | tr A-Z a-z):$(echo ${fedora_version} | tr A-Z a-z) && break
+	if [ \${i} -eq 5 ]; then exit 1; fi
+	sleep 15
+done
 mkdir /atomic
 mount --move /mnt /atomic
 ostreedir=\$(find /atomic/ostree/deploy/atomic/deploy/ -maxdepth 1 | grep "\.0$")
@@ -5634,7 +5638,9 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-echo "http-connections = 10" > /tmp/nix.conf
+echo "http-connections = 5" > /tmp/nix.conf
+echo "download-attempts = 10" >> /tmp/nix.conf
+echo "stalled-download-timeout = 60" >> /tmp/nix.conf
 echo "substituters = https://foxflake.cachix.org/ https://cache.nixos.org/" >> /tmp/nix.conf
 echo "trusted-public-keys = foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
@@ -6155,7 +6161,9 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-echo "http-connections = 10" > /tmp/nix.conf
+echo "http-connections = 5" > /tmp/nix.conf
+echo "download-attempts = 10" >> /tmp/nix.conf
+echo "stalled-download-timeout = 60" >> /tmp/nix.conf
 echo "substituters = http://37.59.123.5:8080/glf/ https://cache.nixos.org/" >> /tmp/nix.conf
 echo "trusted-public-keys = glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
@@ -7740,7 +7748,9 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-echo "http-connections = 10" > /tmp/nix.conf
+echo "http-connections = 5" > /tmp/nix.conf
+echo "download-attempts = 10" >> /tmp/nix.conf
+echo "stalled-download-timeout = 60" >> /tmp/nix.conf
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --no-root-passwd --show-trace
 /install_scripts/install_channel
 /install_scripts/install_dmconfig
@@ -7938,7 +7948,9 @@ nix-env -iA nixpkgs.coreutils nixpkgs.util-linux nixpkgs.git nixpkgs.nix nixpkgs
 nix-channel --remove nixpkgs
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --add https://nixos.org/channels/nixos-$(echo ${nixos_version} | tr A-Z a-z) nixos
 sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-channel) --update
-echo "http-connections = 10" > /tmp/nix.conf
+echo "http-connections = 5" > /tmp/nix.conf
+echo "download-attempts = 10" >> /tmp/nix.conf
+echo "stalled-download-timeout = 60" >> /tmp/nix.conf
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --no-root-passwd --show-trace
 /install_scripts/install_channel
 /install_scripts/install_dmconfig

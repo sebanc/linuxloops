@@ -52,13 +52,15 @@ jobs:
       - name: Free Disk Space (Ubuntu)
         uses: jlumbroso/free-disk-space@main
         with:
-          tool-cache: true
+          preinstalled-runtimes: true
       - name: Display disk space
         run: |
           echo "Free space:"
           df -h
       - name: Checkout linuxloops source code
         uses: actions/checkout@v6
+      - name: Disable IPv6 (Fastly HTTPS+IPv6 workaround)
+        run: sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
       - name: Launch distribution build
         run:
           GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} bash linuxloops -dst test.img -t -distro $(echo ${{ matrix.distribution }} | cut -d'#' -f1) -ver $(echo ${{ matrix.distribution }} | cut -d'#' -f2) -env $(echo ${{ matrix.distribution }} | cut -d'#' -f3) -s $(echo ${{ matrix.distribution }} | cut -d'#' -f4) $(echo ${{ matrix.distribution }} | cut -d'#' -f5) $(echo ${{ matrix.distribution }} | cut -d'#' -f6) $(echo ${{ matrix.distribution }} | cut -d'#' -f7) $(echo ${{ matrix.distribution }} | cut -d'#' -f8) $(echo ${{ matrix.distribution }} | cut -d'#' -f9) $(echo ${{ matrix.distribution }} | cut -d'#' -f10)
