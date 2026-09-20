@@ -4803,7 +4803,7 @@ fi
 
 chroot_Devuan()
 {
-if [ -z "${mirror_Devuan}" ]; then mirror_Devuan="http://deb.devuan.org"; fi
+if [ -z "${mirror_Devuan}" ]; then mirror_Devuan="https://pkgmaster.devuan.org"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
 set -e
@@ -6856,7 +6856,7 @@ rm -r /tmp/manjaro
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; rm /etc/pacman.d/mirrorlist; touch /etc/pacman.d/mirrorlist; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do echo "#Server = \${i}/$(echo ${manjaro_version} | tr A-Z a-z)/\\\$repo/\\\$arch" >> /etc/pacman.d/mirrorlist; if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; rm /etc/pacman.d/mirrorlist; touch /etc/pacman.d/mirrorlist; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirrors2.manjaro.org https://repo.ialab.dsu.edu/manjaro; do echo "#Server = \${i}/$(echo ${manjaro_version} | tr A-Z a-z)/\\\$repo/\\\$arch" >> /etc/pacman.d/mirrorlist; if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
@@ -7106,7 +7106,7 @@ rm -r /tmp/manjaro
 if [ ! -z "${mirror_Manjaro}" ]; then
 	echo 'Server = ${mirror_Manjaro}/$(echo ${manjaro_version} | tr A-Z a-z)/\$repo/\$arch' > /etc/pacman.d/mirrorlist
 else
-	cur_speed=0; rm /etc/pacman.d/mirrorlist; touch /etc/pacman.d/mirrorlist; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirror.math.princeton.edu/pub/manjaro https://repo.ialab.dsu.edu/manjaro; do echo "#Server = \${i}/$(echo ${manjaro_version} | tr A-Z a-z)/\\\$repo/\\\$arch" >> /etc/pacman.d/mirrorlist; if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
+	cur_speed=0; rm /etc/pacman.d/mirrorlist; touch /etc/pacman.d/mirrorlist; for i in https://mirrors.ocf.berkeley.edu/manjaro https://mirrors2.manjaro.org https://repo.ialab.dsu.edu/manjaro; do echo "#Server = \${i}/$(echo ${manjaro_version} | tr A-Z a-z)/\\\$repo/\\\$arch" >> /etc/pacman.d/mirrorlist; if ! avg_speed=\$(curl -fsS -m 5 -r 0-1048576 -w '%{speed_download}' -o /dev/null --url "\${i}/$(echo ${manjaro_version} | tr A-Z a-z)/core/x86_64/core.db" 2> /dev/null); then avg_speed=0; fi; echo Download speed rating for mirror \${i} is \${avg_speed}; if [ \${avg_speed} -gt \${cur_speed} ]; then cur_speed=\${avg_speed}; default_mirror=\${i}; fi; done; echo Using mirror \${default_mirror}; sed -i "s@#Server = \${default_mirror}@Server = \${default_mirror}@g" /etc/pacman.d/mirrorlist
 fi
 pacman-key --populate manjaro
 pacstrap -M -C /etc/pacman_manjaro.conf -G /mnt base base-devel manjaro-system archlinux-keyring manjaro-keyring manjaro-base-skel systemd
@@ -15335,7 +15335,7 @@ until false; do
 						if [ ! -z "${wsl}" ] && [ "${destination}" == "return" ]; then break 2; continue; elif [ "${destination}" == "return" ]; then break; continue; fi
 						if [ "$(echo -n ${destination} | tail -c 4)" != ".img" ]; then destination="${destination}.img"; fi
 						if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's@[^/]*$@@')" ]); then gui_launch -m messagebox -t "Error in image file path selection" -q "Desination path does not exist, please provide an existing path."; continue; fi
-						if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then gui_launch -m messagebox -t "Error in image file path selection" -q "Linuxloops disk images cannot be booted from an encrypted partition."; continue; fi
+						if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then confirmation=$(gui_launch -m confirmation -t "Image file path selection warning" -q "WARNING: The disk image will not be bootable if it is stored on an encrypted partition (but it can be booted in a Virtual Machine), are you sure you want to continue ?"); if [ -z "${confirmation}" ]; then continue; fi; fi
 						if [[ ! ${destination} == *"/"* ]]; then path="${PWD}/"; else path="$(realpath ${destination})"; path="$(echo ${path} | sed 's@[^/]*$@@')"; fi
 						fullpath="${path}$(basename ${destination})"
 						if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*/*}" ]; then gui_launch -m messagebox -t "Error in image file path selection" -q "The ${distribution} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/\&lt;drive letter\&gt;/..."; continue; fi
@@ -15570,7 +15570,6 @@ if [ -z "${destination}" ]; then
 			done
 		else
 			if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's![^/]*$!!')" ]); then echo -e "Desination path does not exist, please provide an existing path.\n\n"; continue; fi
-			if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then echo -e "Linuxloops disk images cannot be booted from an encrypted partition.\n\n"; continue; fi
 			if [[ ! "${destination}" == *"/"* ]]; then path="${PWD}/"; else path="$(echo $(realpath ${destination}) | sed 's![^/]*$!!')"; fi
 			fullpath="${path}$(basename ${destination})"
 			if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*}" ]; then echo -e "The ${distribution} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/<drive letter>/...\n\n"; continue; fi
@@ -15622,7 +15621,6 @@ else
 		if [ -z "${install_size}" ]; then install_sizeMB=$(( ($(lsblk -drnbpf -o SIZE "${destination}") / 1024 / 1024) )); else install_sizeMB=$(( install_size * 1024 )); fi
 	else
 		if [[ "${destination}" == *"/"* ]] && ([ -z "$(realpath ${destination} 2> /dev/null)" ] || [ ! -d "$(echo $(realpath ${destination}) | sed 's![^/]*$!!')" ]); then echo "Desination path does not exist, please provide an existing path."; exit 1; fi
-		if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then echo "Linuxloops disk images cannot be booted from an encrypted partition."; exit 1; fi
 		if [[ ! "${destination}" == *"/"* ]]; then path="${PWD}/"; else path="$(echo $(realpath ${destination}) | sed 's![^/]*$!!')"; fi
 		fullpath="${path}$(basename ${destination})"
 		if [ ! -z "${wsl}" ] && [ ! -z "${path##/mnt/*}" ]; then echo "The ${distribution} disk image has to be installed outside of the WSL VM, please specify a path such as /mnt/<drive letter>/..."; exit 1; fi
@@ -15712,6 +15710,10 @@ if [ "${install_type}" == "disk" ]; then
 	echo -e "--------------------------------------------------------------------------------\n"
 	echo -e "\nLinuxloops installation process is finished.\nYou can now reboot your computer and start ${distribution} by selecting your device in the UEFI boot menu."
 else
+	if [ "$(lsblk $(df -h --output=source $(echo $(realpath ${destination}) | sed 's![^/]*$!!') | tail -1) -no TYPE)" == "crypt" ]; then
+		read -p "WARNING: The disk image will not be bootable if it is stored on an encrypted partition (but it can be booted in a Virtual Machine), are you sure you want to continue ? (type yes to continue)"$'\n' confirm
+		if [ -z ${confirm} ] || [ ! ${confirm} == "yes" ]; then echo "Invalid answer ${confirm}, exiting"; exit 1; fi
+	fi
 	start_install || exit_with_error "Failed to install ${distribution} in chroot."
 	grub_config
 	echo -e "\nLinuxloops installation process successfully completed.\n"
