@@ -5281,7 +5281,7 @@ cat >"${bootstrapdir}"/install_scripts/install_desktop <<INSTALL_DESKTOP
 #!/bin/bash
 set -e
 if [ "${environment}" == "None" ]; then exit 0; fi
-dnf install --allowerasing -y rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
+dnf install -y @multimedia rpmfusion-free-appstream-data rpmfusion-nonfree-appstream-data ffmpeg-free gstreamer1-plugins-bad-free-extras libavcodec-free libavdevice-free libavfilter-free libavformat-free libavutil-free libswresample-free libswscale-free mozilla-openh264 openh264 x264-libs x265-libs
 ${install_desktop}
 systemctl enable ${desktop_services}
 systemctl --global enable wireplumber.service pipewire.service pipewire-pulse.service
