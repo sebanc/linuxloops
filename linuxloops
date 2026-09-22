@@ -5645,7 +5645,11 @@ echo "substituters = https://foxflake.cachix.org/ https://cache.nixos.org/" >> /
 echo "trusted-public-keys = foxflake.cachix.org-1:6CgKI4ifg2+w55WTG/RNEcthi2sZULhggnG4Bru7tqY= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo  NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --show-trace
+for i in {1..5}; do
+	sudo  NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --flake /mnt/etc/nixos#$(echo ${distribution} | tr A-Z a-z) --no-root-passwd --show-trace && break
+	if [ \${i} -eq 5 ]; then exit 1; fi
+	sleep 15
+done
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
 sudo -u temp bash /tmp/nixos_install
@@ -6168,7 +6172,11 @@ echo "substituters = http://37.59.123.5:8080/glf/ https://cache.nixos.org/" >> /
 echo "trusted-public-keys = glf:gLU8OSnfaopb5atQHiNJDgvS7/VbQ8HDQn3GOWT8w7Y= cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" >> /tmp/nix.conf
 if [ ! -z ${GITHUB_TOKEN} ]; then echo "access-tokens = github.com=${GITHUB_TOKEN}" >> /tmp/nix.conf; fi
 sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nix) --extra-experimental-features "nix-command flakes" flake update --flake /mnt/etc/nixos
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --show-trace
+for i in {1..5}; do
+	sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --flake /mnt/etc/nixos#${distribution} --no-root-passwd --show-trace && break
+	if [ \${i} -eq 5 ]; then exit 1; fi
+	sleep 15
+done
 /install_scripts/install_flatpak
 NIXOSINSTALL
 chmod 0755 /tmp/nixos_install
@@ -7751,7 +7759,11 @@ sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-c
 echo "http-connections = 5" > /tmp/nix.conf
 echo "download-attempts = 10" >> /tmp/nix.conf
 echo "stalled-download-timeout = 60" >> /tmp/nix.conf
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --no-root-passwd --show-trace
+for i in {1..5}; do
+	sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --no-root-passwd --show-trace && break
+	if [ \${i} -eq 5 ]; then exit 1; fi
+	sleep 15
+done
 /install_scripts/install_channel
 /install_scripts/install_dmconfig
 NIXOSINSTALL
@@ -7951,7 +7963,11 @@ sudo PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin \$(command -v nix-c
 echo "http-connections = 5" > /tmp/nix.conf
 echo "download-attempts = 10" >> /tmp/nix.conf
 echo "stalled-download-timeout = 60" >> /tmp/nix.conf
-sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --no-root-passwd --show-trace
+for i in {1..5}; do
+	sudo NIX_PATH=\$HOME/.nix-defexpr/channels_root/nixos NIX_PROFILES=\$HOME/.nix-profile PATH=\$HOME/.nix-profile/bin:/run/current-system/sw/bin NIX_USER_CONF_FILES=/tmp/nix.conf \$(command -v nixos-install) --no-root-passwd --show-trace && break
+	if [ \${i} -eq 5 ]; then exit 1; fi
+	sleep 15
+done
 /install_scripts/install_channel
 /install_scripts/install_dmconfig
 NIXOSINSTALL
