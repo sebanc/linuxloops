@@ -301,7 +301,7 @@ case "${distribution}" in
 		surface_supported="No"
 	;;
 	'Brunch')
-		available_environments=( "Gumboz" "Jinlon" "Reven" "Voxel" )
+		available_environments=( "Bobba" "Gumboz" "Jinlon" "Kanix" "Reven" "Voxel" )
 		bootloader_id="boot"
 		bootloader_name="bootx64.efi"
 		bootstrap="lxc archlinux current default"
@@ -3770,8 +3770,8 @@ case "${environment}" in
 	'Bobba') board="octopus" ;;
 	'Gumboz') board="zork" ;;
 	'Jinlon') board="hatch" ;;
+	'Kanix') board="rex" ;;
 	'Reven') board="reven" ;;
-	'Shyvana') board="rammus" ;;
 	'Voxel') board="volteer" ;;
 esac
 mkdir -p /isomount/data /isomount/efi /isomount/rootc /isomount/tmp
