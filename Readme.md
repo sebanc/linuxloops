@@ -100,7 +100,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
 |Pop|24.04|✓|✓|✓||
 |Proxmox|VE9|✓|✓|||
-|Qubes|4.3.1||||[notes][Qubes-notes]|
+|Qubes|4.3.2||||[notes][Qubes-notes]|
 |RockyLinux|10|✓||||
 |SteamOS|Main<br>Staging|✓ (shim-signed AUR)|✓|✓|[notes][SteamOS-notes]|
 |Tails|Stable|✓|||[notes][Tails-notes]|

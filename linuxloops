@@ -135,7 +135,7 @@ case "${distribution}" in
 		default_version="23/Openrc"
 	;;
 	'GLF-OS')
-		available_versions=( "Stable" "Testing" )
+		available_versions=( "Stable" )
 		available_versions_longname=( "${available_versions[@]}" )
 		default_version="Stable"
 	;;
@@ -195,9 +195,9 @@ case "${distribution}" in
 		default_version="VE9"
 	;;
 	'Qubes')
-		available_versions=( "4.3.1" )
+		available_versions=( "4.3.2" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="4.3.1"
+		default_version="4.3.2"
 	;;
 	'RockyLinux')
 		available_versions=( "10" )
@@ -429,14 +429,9 @@ case "${distribution}" in
 		bootstrap="lxc archlinux current default"
 		btrfs_supported="Yes"
 		chroot_function="${distribution}"
+		glfos_version="Main"
 		mirrors_supported=()
-		if [ "${version}" == "Stable" ]; then
-			glfos_version="Main"
-			nixos_version="26.05"
-		else
-			glfos_version="${version}"
-			nixos_version="Unstable"
-		fi
+		nixos_version="26.05"
 		nvidia_supported="Yes"
 		surface_supported="No"
 	;;
@@ -524,7 +519,7 @@ case "${distribution}" in
 		btrfs_supported="Yes"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Ubuntu" "Neon" )
-		if [ "${version}" == "Stable" ]; then neon_version="User"; else neon_version="${version}"; fi
+		neon_version="User"
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		ubuntu_release="24.04"
@@ -7578,7 +7573,7 @@ fi
 
 chroot_Neon()
 {
-if [ -z "${mirror_Neon}" ]; then mirror_Neon="http://archive.neon.kde.org"; fi
+if [ -z "${mirror_Neon}" ]; then mirror_Neon="https://archive.neon.kde.org"; fi
 if [ -z "${mirror_Ubuntu}" ]; then mirror_Ubuntu="http://archive.ubuntu.com/ubuntu"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
 #!/bin/bash
@@ -7623,17 +7618,13 @@ echo 'deb [signed-by=/tmp/neon-archive-keyring.gpg] ${mirror_Neon}/$(echo ${neon
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
 curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring | tr '>' '\n' | grep '<a href=' | grep '24.04' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y neon-keyring
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
+DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') neon-keyring neon-repositories-mozilla-firefox neon-settings
+DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 DEBIAN_FRONTEND=noninteractive apt install --purge -y --reinstall neon-keyring
 rm /tmp/neon-archive-keyring.gpg
-sed -i 's@ \[signed-by=/tmp/neon-archive-keyring.gpg]@@g' /etc/apt/sources.list.d/neon.list
-apt clean
-apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
-DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') neon-settings
-DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-apt update
+apt update || true
 DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
