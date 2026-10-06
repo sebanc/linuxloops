@@ -368,6 +368,7 @@ case "${distribution}" in
 		mirrors_supported=( "Ubuntu" )
 		nvidia_supported="Yes"
 		surface_supported="Yes"
+		ubuntu_release="24.04"
 		ubuntu_version="Noble"
 	;;
 	'Fedora')
@@ -519,7 +520,7 @@ case "${distribution}" in
 		btrfs_supported="Yes"
 		grub_disable_recordfail="Yes"
 		mirrors_supported=( "Ubuntu" "Neon" )
-		neon_version="User"
+		neon_version="${version}"
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		ubuntu_release="24.04"
@@ -669,6 +670,7 @@ case "${distribution}" in
 		nvidia_supported="Yes"
 		surface_supported="Yes"
 		systemd_init="Yes"
+		ubuntu_release="24.04"
 		ubuntu_version="Noble"
 		zorin_version="${version}"
 	;;
@@ -5066,7 +5068,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic-hwe-${ubuntu_release} linux-headers-generic-hwe-${ubuntu_release} initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
@@ -7594,12 +7596,6 @@ chmod 0755 "${bootstrapdir}"/install_scripts/prepare_chroot
 cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
-cat >/etc/lsb-release <<'LSB_RELEASE'
-DISTRIB_ID=neon
-DISTRIB_RELEASE=${ubuntu_release}
-DISTRIB_CODENAME=$(echo ${ubuntu_version} | tr A-Z a-z)
-DISTRIB_DESCRIPTION="KDE neon ${neon_version}"
-LSB_RELEASE
 rm /etc/apt/sources.list
 cat >/etc/apt/sources.list.d/ubuntu.sources <<'SOURCESLIST'
 Types: deb deb-src
@@ -7615,8 +7611,9 @@ Components: main restricted universe multiverse
 Signed-By: /usr/share/keyrings/ubuntu-archive-keyring.gpg
 SOURCESLIST
 echo 'deb [signed-by=/tmp/neon-archive-keyring.gpg] ${mirror_Neon}/$(echo ${neon_version} | tr A-Z a-z) $(echo ${ubuntu_version} | tr A-Z a-z) main' > /etc/apt/sources.list.d/neon.list
+curl -L https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/dists/$(echo ${ubuntu_version} | tr A-Z a-z)/main/neon/pins -o /etc/apt/preferences.d/99-noble-overrides
 echo -e 'Dpkg::Options {\n  "--force-confnew";\n};' > /etc/apt/apt.conf.d/71debconf
-curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring | tr '>' '\n' | grep '<a href=' | grep '24.04' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
+curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring/\$(curl --progress-bar --connect-timeout 60 --retry 10 --retry-delay 1 -L -f https://origin.archive.neon.kde.org/$(echo ${neon_version} | tr A-Z a-z)/pool/main/n/neon-keyring | tr '>' '\n' | grep '<a href=' | grep '${ubuntu_release}' | grep '\.tar\.xz' | cut -d'"' -f2 | tail -1) | tar -Jx -C /tmp source/keyrings/neon-archive-keyring.gpg --strip-components 2
 apt update
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades libc6
 DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configure=false --reinstall --allow-downgrades \$(apt list --installed | cut -d'/' -f1 | sed '1d' | sed -z 's@\n@ @g') neon-keyring neon-repositories-mozilla-firefox neon-settings
@@ -7624,8 +7621,8 @@ DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 DEBIAN_FRONTEND=noninteractive apt install --purge -y --reinstall neon-keyring
 rm /tmp/neon-archive-keyring.gpg
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
-apt update || true
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
+apt update
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic-hwe-${ubuntu_release} linux-headers-generic-hwe-${ubuntu_release} initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed amd64-microcode intel-microcode update-manager-core sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
@@ -10823,7 +10820,7 @@ DEBIAN_FRONTEND=noninteractive apt install --purge -y -o APT::Immediate-Configur
 DEBIAN_FRONTEND=noninteractive dpkg --configure -a
 echo -e 'Dpkg::Options {\n  "--force-confdef";\n};' > /etc/apt/apt.conf.d/71debconf
 apt update
-DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic linux-headers-generic initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
+DEBIAN_FRONTEND=noninteractive apt install --purge -y linux-generic-hwe-${ubuntu_release} linux-headers-generic-hwe-${ubuntu_release} initramfs-tools dkms linux-firmware wireless-regdb bash sudo modemmanager network-manager wpasupplicant bluez cryptsetup-initramfs e2fsprogs ntfs-3g nano acpid curl bash-completion gnupg-utils pkexec xdg-user-dirs zstd fwupd fwupd-signed net-tools upower efibootmgr grub-efi grub-efi-amd64-signed os-prober shim-signed update-manager-core snapd sbsigntool mokutil dosfstools btrfs-progs cpio bubblewrap language-selector-common console-setup kbd keyboard-configuration
 CHROOT_INIT
 chmod 0755 "${bootstrapdir}"/install_scripts/chroot_init
 
