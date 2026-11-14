@@ -115,14 +115,14 @@ case "${distribution}" in
 		default_version="8"
 	;;
 	'Fedora')
-		available_versions=( "44" )
+		available_versions=( "45" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="44"
+		default_version="45"
 	;;
 	'Fedora-Atomic')
-		available_versions=( "44" )
+		available_versions=( "45" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="44"
+		default_version="45"
 	;;
 	'FoxFlake')
 		available_versions=( "Stable" "Unstable" "Stable-Test" "Unstable-Test" "Dev" )
@@ -180,9 +180,9 @@ case "${distribution}" in
 		default_version="26.05"
 	;;
 	'OpenSUSE')
-		available_versions=( "Leap/16.0" "Tumbleweed" )
+		available_versions=( "Leap/16.1" "Tumbleweed" )
 		available_versions_longname=( "${available_versions[@]}" )
-		default_version="Leap/16.0"
+		default_version="Leap/16.1"
 	;;
 	'Pop')
 		available_versions=( "24.04" )
@@ -281,9 +281,9 @@ case "${distribution}" in
 		bazzite_version="${version}"
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 44 default"
+		bootstrap="lxc fedora 45 default"
 		btrfs_supported="Yes"
-		fedora_version="44"
+		fedora_version="45"
 		mirrors_supported=( "Fedora-Atomic" )
 		nvidia_supported="No"
 		surface_supported="No"
@@ -375,7 +375,7 @@ case "${distribution}" in
 		available_environments=( "None" "Budgie" "Budgie/Full" "Cinnamon" "Cinnamon/Full" "Gnome" "Gnome/Full" "Lxqt" "Mate" "Mate/Full" "Plasma" "Plasma/Full" "Xfce" "Xfce/Full" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 44 default"
+		bootstrap="lxc fedora 45 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=( "Fedora" )
@@ -386,7 +386,7 @@ case "${distribution}" in
 		available_environments=( "Silverblue" "Kinoite" "Sway-Atomic" "Budgie-Atomic" "Cosmic-Atomic" )
 		bootloader_id="fedora"
 		bootloader_name="shimx64.efi"
-		bootstrap="lxc fedora 44 default"
+		bootstrap="lxc fedora 45 default"
 		btrfs_supported="Yes"
 		fedora_version="${version}"
 		mirrors_supported=()
@@ -445,7 +445,7 @@ case "${distribution}" in
 		grub_disable_recordfail="Yes"
 		kali_version="${version}"
 		mirrors_supported=( "Kali" )
-		nvidia_supported="Yes"
+		nvidia_supported="No"
 		surface_supported="No"
 	;;
 	'KDE')
@@ -544,7 +544,7 @@ case "${distribution}" in
 		bootloader_name="shim.efi"
 		bootstrap="lxc opensuse tumbleweed default"
 		btrfs_supported="Yes"
-		chroot_function="${distribution}-$(echo ${version} | sed 's@/@-@g')"
+		chroot_function="${distribution}-$(echo ${version} | cut -d'/' -f1)"
 		mirrors_supported=( "OpenSUSE" )
 		nvidia_supported="Yes"
 		opensuse_version="${version}"
@@ -5743,7 +5743,7 @@ if [ "${environment}" == "None" ]; then
 else
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
-		echo -e 'gnome-extra/evolution-data-server vala\nnet-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
+		echo -e 'gnome-extra/evolution-data-server vala\nmedia-libs/glycin vala\nnet-libs/ngtcp2 gnutls\nnet-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof -systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
@@ -5798,7 +5798,7 @@ sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"lightdm\"@g' /etc/conf.d/displ
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/xdg-desktop-portal-kde
+emerge -uDN --noconfmem @world ${desktop_base} gui-libs/display-manager-init gui-apps/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/xdg-desktop-portal-kde
 sed -i 's@DISPLAYMANAGER=\"xdm\"@DISPLAYMANAGER=\"sddm\"@g' /etc/conf.d/display-manager
 "
 	;;
@@ -5970,7 +5970,7 @@ if [ "${environment}" == "None" ]; then
 else
 	if [ "${environment}" == "Gnome" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
-		echo -e 'gnome-extra/evolution-data-server vala\nnet-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
+		echo -e 'gnome-extra/evolution-data-server vala\nmedia-libs/glycin vala\nnet-libs/ngtcp2 gnutls\nnet-misc/freerdp server\nx11-wm/mutter screencast' > /etc/portage/package.use/linuxloops
 	elif [ "${environment}" == "Lxqt" ] || [ "${environment}" == "Plasma" ]; then
 		echo -e "USE=\"a52 aac acl alsa appindicator avif bindist bluetooth boost branding cairo cdda cdr client colord cryptsetup cups dbus dracut drm dts dvd eds egl -elogind exif flac gif gles2 grub gstreamer gtk gtk3 harfbuzz icu initramfs inspector introspection jpeg jpegxl keyring lame lcms libei libnotify lock mbim mdnsresponder-compat minizip modemmanager mount mp3 mpeg networkmanager nss ogg opengl opus pam pango pdf png policykit profiler pulseaudio python qml quick screencast sdl secureboot spell svg sysprof systemd text theora tiff tracker truetype udev udisks usb vorbis vpx vulkan wayland webchannel webp wpasupplicant X x264 xml xorg xvid zeroconf\"" >> /etc/portage/make.conf
 		echo -e 'dev-qt/qtbase libproxy\napp-crypt/qca qt6\napp-text/poppler qt6\nmedia-libs/opencv -gtk3 qt6' > /etc/portage/package.use/linuxloops
@@ -6024,7 +6024,7 @@ systemctl enable lightdm.service
 	'Plasma')
 	default_session="plasma"
 	install_desktop="
-emerge -uDN --noconfmem @world ${desktop_base} x11-misc/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/xdg-desktop-portal-kde
+emerge -uDN --noconfmem @world ${desktop_base} gui-apps/sddm kde-plasma/plasma-meta kde-apps/konsole kde-plasma/plasma-nm kde-apps/dolphin kde-plasma/xdg-desktop-portal-kde
 systemctl enable sddm.service
 "
 	;;
@@ -8103,7 +8103,7 @@ chmod 0755 "${bootstrapdir}"/install_scripts/install_dmconfig
 initramfs_type="nixos_config"
 }
 
-chroot_OpenSUSE-Leap-16.0()
+chroot_OpenSUSE-Leap()
 {
 if [ -z "${mirror_OpenSUSE}" ]; then mirror_OpenSUSE="https://opensuse.mirror.liteserver.nl"; fi
 cat >"${bootstrapdir}"/install_scripts/prepare_bootstrap <<PREPARE_BOOTSTRAP
@@ -8129,7 +8129,7 @@ cat >"${bootstrapdir}"/install_scripts/chroot_init <<CHROOT_INIT
 #!/bin/bash
 set -e
 sed -i 's@http://cdn.opensuse.org@${mirror_OpenSUSE}@g' /usr/share/zypp/local/service/openSUSE/repo/opensuse-leap-repoindex.xml
-sed -i 's@# solver.onlyRequires = false@solver.onlyRequires = true@g' /etc/zypp/zypp.conf
+echo 'solver.onlyRequires = true' > /etc/zypp/zypp.conf
 systemd-machine-id-setup
 rpm --rebuilddb
 zypper --non-interactive update
@@ -12637,8 +12637,6 @@ boot.loader.grub.useOSProber = false;
 boot.loader.timeout = $(if [ ! -z "${grub_hide}" ] && [ "${grub_hide}" == "Yes" ]; then echo 2; else echo 5; fi);
 
 boot.initrd.availableKernelModules = [ "8250_dw" "aes" "atkbd" "btrfs" "cbc" "dm-crypt" "exfat" "ext4" "fuse" "i8042" "intel_lpss" "intel_lpss_pci" "loop" "ntfs3" "nvme" "quota_v1" "quota_v2" "serio" "sha256" "usbhid" "xhci_pci" ];
-boot.initrd.compressor="gzip";
-boot.initrd.systemd.enable = true;
 boot.initrd.systemd.initrdBin = with pkgs; [ bash coreutils cryptsetup e2fsprogs findutils gnugrep gnused kbd ntfs3g procps util-linux ];
 boot.initrd.systemd.services.linuxloops-image-setup = {
   description = "Setup linuxloops disk image";

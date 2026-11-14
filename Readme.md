@@ -84,12 +84,12 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |Debian|Trixie|✓|✓|✓||
 |Devuan|Excalibur|✓|✓|||
 |Elementary|8|✓|✓|✓||
-|Fedora|44|✓|✓||[notes][Fedora-notes]|
-|Fedora-Atomic|44|✓|✓||[notes][Fedora-Atomic-notes]|
+|Fedora|45|✓|✓||[notes][Fedora-notes]|
+|Fedora-Atomic|45|✓|✓||[notes][Fedora-Atomic-notes]|
 |FoxFlake|Stable<br>Unstable|✓|✓||[notes][FoxFlake-notes]|
 |Gentoo|23/Openrc<br>23/Systemd|✓|✓|||
 |GLF-OS|Stable<br>Testing|✓|✓|||
-|Kali|Rolling|disk images only|✓||[notes][Kali-notes]|
+|Kali|Rolling|disk images only|||[notes][Kali-notes]|
 |KDE|Rolling|✓ (shim-signed AUR)|✓|✓|[notes][KDE-notes]|
 |Linuxmint|Zena|✓|✓|✓||
 |LMDE|Gigi|✓|✓|✓||
@@ -97,7 +97,7 @@ Support for Linuxloops is provided in the dedicated section of the Brunch Discor
 |MX|25|✓|✓|✓||
 |Neon|Stable|✓|✓|✓||
 |NixOS|26.05<br>Unstable|✓|✓|||
-|OpenSUSE|Leap/16.0<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
+|OpenSUSE|Leap/16.1<br>Tumbleweed|✓|✓||[notes][OpenSUSE-notes]|
 |Pop|24.04|✓|✓|✓||
 |Proxmox|VE9|✓|✓|||
 |Qubes|4.3.2||||[notes][Qubes-notes]|
